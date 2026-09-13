@@ -63,6 +63,8 @@ services:
       API_HOST: 0.0.0.0
       TENANT_KEY: ${TENANT_KEY:?Configure TENANT_KEY}
       CONTROL_DATABASE_URL: postgresql://varejo_control:${CONTROL_DB_PASSWORD}@postgres:5432/varejo_control
+      MILLENNIUM_BASE_URL: ${MILLENNIUM_BASE_URL:?Configure MILLENNIUM_BASE_URL}
+      MILLENNIUM_BASIC_TOKEN: ${MILLENNIUM_BASIC_TOKEN:?Configure MILLENNIUM_BASIC_TOKEN}
       TENANT_DATABASE_URL: postgresql://varejo_aeropostale:${TENANT_DB_PASSWORD}@postgres:5432/varejo_aeropostale
     ports:
       - "127.0.0.1:${PORT:-3000}:3000"

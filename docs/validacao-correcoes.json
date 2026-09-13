@@ -1,0 +1,15 @@
+{
+  "base": "https://aeropostale.joinnetwork.com.br",
+  "verificadoEm": "2026-09-13T13:43:33.427Z",
+  "loginMobile": true,
+  "movimentacoesMobile": true,
+  "clienteConsultado": true,
+  "clienteEncontrado": true,
+  "telefoneEncontrado": true,
+  "imagensCarregadas": 1,
+  "errors": [],
+  "testesUnitarios": 32,
+  "testesIntegracao": 20,
+  "origemFotos404ContinuaIndisponivel": true,
+  "validacao": "Chrome com viewport mobile; sem aparelho físico"
+}

@@ -24,3 +24,9 @@ O teste de interface usa o Chrome local e as credenciais do `.env`, sem imprimi-
 A verificação cobre login válido/inválido, filtros, gráfico, paginação, itens, período vazio, falha de consulta com retentativa, layouts mobile/tablet, revogação da sessão e logout. Evidência em [validacao-interface.json](../docs/validacao-interface.json). Capturas ficam em `artifacts/ui/`, ignoradas no controle de versão e no contexto Docker porque contêm dados comerciais.
 
 O navegador integrado estava indisponível nesta sessão; a verificação foi realizada com Playwright e Chrome local. A aplicação está restrita ao ambiente local e à filial ITUPEVA; publicação e demais filiais seguem no roadmap.
+
+## Correções de 13/09/2026
+
+Login mobile com campos de 16 px para evitar zoom automático ao focar no iPhone; tabela mantém o conteúdo excedente em sua área de rolagem. Fotos são carregadas pela rota autenticada da API e exibidas como blobs temporários, evitando acesso HTTP direto no navegador HTTPS.
+
+Detalhes consultam nome e telefones do cliente no ERP sob demanda, com indicador de carregamento, ausência e retentativa. Esses dados não são persistidos no banco. O fechamento dos detalhes aborta consultas e libera as imagens temporárias.

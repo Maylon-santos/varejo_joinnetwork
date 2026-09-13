@@ -10,3 +10,18 @@
 .product-cell>div{display:inline-block;vertical-align:middle;max-width:calc(100% - 56px)}.product-photo{position:relative;display:inline-block;vertical-align:middle;width:40px;height:40px;padding:0;margin-right:12px;border:1px solid var(--line);border-radius:5px;background:#f6f7f9;flex-shrink:0}.product-photo img{width:100%;height:100%;object-fit:contain;border-radius:5px}.photo-plus{position:absolute;right:-4px;bottom:-4px;width:16px;height:16px;background:white;border:1px solid var(--line);border-radius:50%;font-size:12px;line-height:14px;color:var(--navy)}#photo-dialog{padding:38px 18px 18px;max-width:min(90vw,700px);width:auto}#photo-close{position:absolute;right:7px;top:7px}#photo-large{display:block;max-width:100%;max-height:75dvh;object-fit:contain}#photo-error{padding:35px}.ranking-panel table{min-width:740px}
 
 #quality-filter{padding:0 24px 18px}#quality-filter select{margin-left:10px}.status-badge.confirmed{background:#edf1f7;color:#294269}
+
+/* Mantém elementos acessíveis dentro do scroll da tabela, sem ampliar a página. */
+.table-scroll{position:relative;max-width:100%}
+.sr-only{clip-path:inset(50%)}
+.detail-customer{margin:0 24px 22px;padding:18px;background:#f6f8fb;border:1px solid var(--line);border-radius:10px}
+.detail-customer h3{font-size:14px;margin:0 0 12px}.detail-customer p{margin:8px 0;line-height:1.6}.detail-customer ul{padding-left:18px}.detail-customer a{color:var(--navy)}
+@media(max-width:760px){
+ html,body{width:100%;min-width:0}
+ .login-main{min-height:100svh;padding:max(28px,env(safe-area-inset-top)) 22px max(24px,env(safe-area-inset-bottom));gap:32px}
+ .login-box{margin:0;width:100%;max-width:360px}
+ #login-form input{font-size:16px}#login-form,.password-wrap{min-width:0;max-width:100%}
+ .filters>div{min-width:0;max-width:100%}.filters input,.filters select{font-size:16px;max-width:100%;min-width:0}
+ .filters input[type=date]{appearance:none;-webkit-appearance:none;width:100%}
+ .sales-options{flex-wrap:wrap;justify-content:flex-end}.detail-customer{margin:0 16px 18px;padding:14px;overflow-wrap:anywhere}
+}

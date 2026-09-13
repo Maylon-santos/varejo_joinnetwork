@@ -20,7 +20,7 @@ async function lerJson(req){
  try{const v=JSON.parse(Buffer.concat(chunks).toString('utf8'));if(!v||typeof v!=='object'||Array.isArray(v))throw new Error();return v;}
  catch{throw new ErroApi(400,'JSON_INVALIDO');}
 }
-export function criarServidor({auth,painel,filiais,frontend,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
+export function criarServidor({auth,painel,filiais,frontend,clienteOperacao,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
  const server=createServer(async(req,res)=>{
   const requestId=randomUUID();
   res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
@@ -46,6 +46,20 @@ export function criarServidor({auth,painel,filiais,frontend,health=async()=>{},l
    if(path==='/api/v1/auth/logout'&&req.method==='POST'){await auth.logout(token);return enviar(200,{ok:true});}
    if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');
    if(path==='/api/v1/filiais')return enviar(200,await painel.filiais());
+   const cliente=/^\/api\/v1\/operacoes\/([^/]+)\/([^/]+)\/([^/]+)\/cliente$/.exec(path);
+   if(cliente){
+    const d=await painel.detalhe(cliente[1],cliente[2],cliente[3]);
+    if(!clienteOperacao)throw new ErroApi(503,'CLIENTE_INDISPONIVEL');
+    try{return enviar(200,await clienteOperacao(d.operacao));}catch{throw new ErroApi(502,'CLIENTE_INDISPONIVEL');}
+   }
+   const imagem=/^\/api\/v1\/operacoes\/([^/]+)\/([^/]+)\/([^/]+)\/itens\/(\d+)\/imagem$/.exec(path);
+   if(imagem){
+    const d=await painel.detalhe(imagem[1],imagem[2],imagem[3]);
+    const item=d.itens.find(i=>i.ordem===Number(imagem[4]));
+    if(!item?.imagem_url||!imagemProduto)throw new ErroApi(404,'IMAGEM_INDISPONIVEL');
+    let asset;try{asset=await imagemProduto(item.imagem_url);}catch{throw new ErroApi(502,'IMAGEM_INDISPONIVEL');}
+    res.setHeader('Content-Type',asset.type);res.setHeader('Content-Length',asset.body.length);res.writeHead(200);res.end(asset.body);return;
+   }
    const detalhe=/^\/api\/v1\/operacoes\/([^/]+)\/([^/]+)\/([^/]+)$/.exec(path);
    if(detalhe)return enviar(200,await painel.detalhe(detalhe[1],detalhe[2],detalhe[3]));
    if(!['/api/v1/indicadores','/api/v1/vendas','/api/v1/ranking'].includes(path))throw new ErroApi(404,'ROTA_NAO_ENCONTRADA');

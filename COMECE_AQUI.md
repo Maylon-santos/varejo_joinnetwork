@@ -1,4 +1,16 @@
-# Comece aqui — estado atual em 11/09/2026
+# Comece aqui — estado atual em 13/09/2026
+
+## Correções publicadas — 13/09/2026
+
+- [x] Login e movimentações ajustados para celular, sem largura excedente da página.
+- [x] Imagens entregues pela API autenticada em HTTPS e ampliação validada; URLs 404 na origem continuam com marcador de indisponibilidade.
+- [x] Nome, DDD e telefones do cliente consultados no ERP ao abrir os detalhes, sem persistência de cadastros.
+- [x] Mapa de progresso no início do roadmap; etapa atual: homologação dos números com Maylon.
+- [x] GitHub configurado em `Maylon-santos/varejo_joinnetwork`; central pessoal e capturas permanecem ignoradas.
+
+Validação: 32 testes unitários e 20 de integração aprovados. Verificação no domínio publicado com viewport mobile: login, cliente, telefone, foto, ampliação e logout. Evidência: [validacao-correcoes.json](docs/validacao-correcoes.json).
+
+A central pessoal é atualizada com `python3 scripts/gerar-central.py`. O gerador preserva edições incorporadas ao HTML e guarda a versão anterior em `artifacts/central/`. Notas no armazenamento do navegador continuam nesse navegador; use o botão de exportação para levá-las a outro computador.
 
 ## Publicação — 12/09/2026
 

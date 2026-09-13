@@ -19,3 +19,6 @@ backups/
 # Metadados de arquivos do macOS
 ._*
 **/._*
+
+# Arquivos privados usados na migração do servidor
+/importacao/

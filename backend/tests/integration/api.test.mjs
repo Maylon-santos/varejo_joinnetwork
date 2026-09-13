@@ -29,7 +29,7 @@ before(async()=>{
  await pool.query("INSERT INTO operacao_itens(cod_operacao,tipo_operacao,filial,ordem,quantidade,preco_centavos) VALUES(1,'S',1,0,2,5000)");
  await pool.query("INSERT INTO sync_checkpoints(filial,recurso,ate) VALUES(1,'vendas','2026-09-02'),(1,'cancelamentos','2026-09-02')");
  auth=await criarAuth(control,'teste');
- server=criarServidor({auth,painel:criarPainel(pool,'teste',['1']),filiais:['1'],limitar:()=>true,limitarLogin:()=>true});
+ server=criarServidor({auth,clienteOperacao:async op=>({clientes:[{nome:'Cliente da operação '+op.cod_operacao,contatos:[{tipo:'Telefone',ddd:'11',telefone:'33330000'}]}]}),imagemProduto:async()=>({type:'image/jpeg',body:Buffer.from([1,2,3])}),painel:criarPainel(pool,'teste',['1']),filiais:['1'],limitar:()=>true,limitarLogin:()=>true});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));base=`http://127.0.0.1:${server.address().port}`;
  const session=await auth.login('admin@teste.local',senha);token=session.token;
 });
@@ -94,4 +94,19 @@ test('Erro ERP confirmado sai das pendências, mantém cabeçalho e sobrevive à
   const detalhe=await painel.detalhe('1','S','6');assert.equal(detalhe.operacao.conciliacao,'erro_erp_confirmado');assert.equal(detalhe.operacao.conciliacao_original,'quantidade_divergente');assert.equal(detalhe.operacao.erro_erp_confirmado_por,'Maylon');
   const rank=await painel.ranking(f);assert.equal(rank.ranking.find(r=>r.vendedor_codigo==='20').vendas_com_pendencia,0);
  }finally{await pool.query('UPDATE operacoes SET erro_erp_confirmado_por=NULL,erro_erp_confirmado_em=NULL WHERE cod_operacao=6 AND filial=1');}
+});
+
+
+test('Dados do cliente e fotos exigem autenticação e filial autorizada',async()=>{
+ const customer='/api/v1/operacoes/1/S/1/cliente';
+ assert.equal((await get(customer,'')).status,401);
+ const r=await get(customer);assert.equal(r.status,200);assert.equal((await r.json()).clientes[0].nome,'Cliente da operação 1');
+ assert.equal((await get('/api/v1/operacoes/999/S/7/cliente')).status,403);
+ await pool.query("UPDATE operacao_itens SET imagem_url='http://aeropostale1.hospedagemdesites.ws/fotosaero/exemplo.jpg' WHERE cod_operacao=1");
+ try{
+  const path='/api/v1/operacoes/1/S/1/itens/0/imagem';assert.equal((await get(path,'')).status,401);
+  const image=await get(path);assert.equal(image.status,200);assert.equal(image.headers.get('content-type'),'image/jpeg');assert.equal(image.headers.get('cache-control'),'no-store');assert.deepEqual([...new Uint8Array(await image.arrayBuffer())],[1,2,3]);
+  assert.equal((await get('/api/v1/operacoes/999/S/7/itens/0/imagem')).status,403);
+  assert.equal((await get('/api/v1/operacoes/1/S/1/itens/99/imagem')).status,404);
+ }finally{await pool.query('UPDATE operacao_itens SET imagem_url=NULL WHERE cod_operacao=1');}
 });

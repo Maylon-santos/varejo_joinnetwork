@@ -1,5 +1,24 @@
 # Roadmap — Aeropostale Varejo
 
+## Mapa de progresso — 13/09/2026
+
+**Estamos na etapa 5: homologação dos indicadores com Maylon. As correções do piloto foram publicadas e verificadas.**
+
+| Etapa | Situação | Entrega / próximo passo |
+| --- | --- | --- |
+| 1. Importação e banco | Concluída | Histórico de ITUPEVA, cancelamentos e checkpoints |
+| 2. Painel e Admin | Concluída | Vendas, PA, ticket, ranking e conferência |
+| 3. Publicação Locaweb | Concluída | Domínio .com.br, HTTPS e backup diário |
+| 4. Correções do piloto | Concluída | Login e movimentações mobile, fotos via API, cliente nos detalhes |
+| 5. Homologação ERP | Pendente de Maylon | Conferir os indicadores com relatório da origem |
+| 6. Outras filiais e cargos | Pendente | Confirmar agrupamento e implementar permissões |
+| 7. SaaS comercial | Planejamento futuro | Provisionamento, planos e cobrança |
+
+Fluxo: importação → painel → publicação → correções → **homologação (agora)** → expansão → SaaS.
+
+Retomada: confira esta tabela, as evidências de validação e a última seção de tarefas. Não usar checklists históricos como status vigente.
+
+
 ## Publicação — 12/09/2026
 
 - Piloto publicado em **https://aeropostale.joinnetwork.com.br** na Locaweb.

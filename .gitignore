@@ -23,3 +23,6 @@ backups/
 
 # Central pessoal de documentação e anotações
 /docs/central/
+
+# Arquivos privados usados na migração do servidor
+/importacao/

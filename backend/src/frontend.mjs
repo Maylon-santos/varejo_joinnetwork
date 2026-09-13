@@ -11,7 +11,7 @@ export async function criarFrontend(root=new URL('../../frontend/',import.meta.u
  return async(req,res,path)=>{
   const asset=files.get(path);if(!asset||!['GET','HEAD'].includes(req.method))return false;
   res.setHeader('Content-Type',asset.type);res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');
-  res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' http: https:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
+  res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
   res.setHeader('Referrer-Policy','same-origin');res.setHeader('Content-Length',asset.body.length);res.writeHead(200);res.end(req.method==='HEAD'?undefined:asset.body);return true;
  };
 }

@@ -68,3 +68,10 @@ Parar apenas a API: `docker compose stop api`. O banco e o worker continuam ativ
 Contrato de rotas importável: [painel.openapi.json](painel.openapi.json). Evidência da validação local: [validacao-api.json](../docs/validacao-api.json).
 
 O ranking também retorna `pecas_por_venda` (PA), string decimal com quatro casas, calculada com a mesma população elegível dos demais indicadores. O detalhe inclui `imagem_url` por item, nula quando não fornecida. A interface exibe PA com duas casas e miniatura ampliável.
+
+## Detalhes complementares — 13/09/2026
+
+- `GET /api/v1/operacoes/:filial/:tipo/:codigo/cliente`: exige Admin e filial autorizada; consulta o ERP pela data da operação e confere a chave composta. Retorna `{clientes:[{nome,contatos:[{tipo,ddd,telefone}]}]}`. Ausência de cadastro retorna lista vazia. ERP indisponível retorna 502 `CLIENTE_INDISPONIVEL`; a tela oferece retentativa sem impedir os itens. Cadastros não são persistidos, logados nem incluídos em backups.
+- `GET /api/v1/operacoes/:filial/:tipo/:codigo/itens/:ordem/imagem`: exige a mesma autenticação; obtém somente a URL persistida do item e aceita a origem fixa de fotos do ERP. Responde imagem raster de até 5 MB, sem redirecionamentos, timeout de 12 segundos e `Cache-Control: no-store`. A interface usa um blob temporário e o libera ao fechar os detalhes. Origem HTTP é consultada pelo servidor; o navegador recebe HTTPS.
+
+Alguns arquivos de fotos não existem na origem (404). A tela mantém o marcador de indisponibilidade nesses casos. O proxy não inventa fotos nem permite URLs arbitrárias.
