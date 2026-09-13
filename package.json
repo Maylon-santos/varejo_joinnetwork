@@ -1,0 +1,26 @@
+{
+  "name": "aeropostale-varejo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test backend/tests/*.test.mjs",
+    "db:migrate": "node --env-file=.env scripts/migrar.mjs",
+    "test:integration": "node --env-file=.env --test backend/tests/integration/*.test.mjs",
+    "sync:cancelamentos": "node --env-file=.env scripts/sincronizar-cancelamentos.mjs",
+    "sync:historico": "node --env-file=.env scripts/sync-worker.mjs --once",
+    "sync:worker": "node --env-file=.env scripts/sync-worker.mjs",
+    "api": "node --env-file=.env scripts/api.mjs",
+    "admin:create": "node --env-file=.env scripts/criar-admin.mjs",
+    "test:ui": "node --env-file=.env scripts/verificar-interface.mjs"
+  },
+  "dependencies": {
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}

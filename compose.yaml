@@ -1,0 +1,81 @@
+name: aeropostale-varejo
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_ADMIN_PASSWORD:?Configure POSTGRES_ADMIN_PASSWORD no .env}
+      POSTGRES_DB: postgres
+      CONTROL_DB_PASSWORD: ${CONTROL_DB_PASSWORD:?Configure CONTROL_DB_PASSWORD no .env}
+      TENANT_DB_PASSWORD: ${TENANT_DB_PASSWORD:?Configure TENANT_DB_PASSWORD no .env}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-55432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    stop_grace_period: 30s
+  sync-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    restart: unless-stopped
+    init: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      TZ: America/Sao_Paulo
+      TENANT_KEY: ${TENANT_KEY:?Configure TENANT_KEY}
+      TENANT_DATABASE_URL: postgresql://varejo_aeropostale:${TENANT_DB_PASSWORD}@postgres:5432/varejo_aeropostale
+      MILLENNIUM_BASE_URL: ${MILLENNIUM_BASE_URL:?Configure MILLENNIUM_BASE_URL}
+      MILLENNIUM_BASIC_TOKEN: ${MILLENNIUM_BASIC_TOKEN:?Configure MILLENNIUM_BASIC_TOKEN}
+      SYNC_ENABLED: ${SYNC_ENABLED:-false}
+      SYNC_INTERVAL_SECONDS: ${SYNC_INTERVAL_SECONDS:-360}
+      SYNC_INITIAL_DATE: ${SYNC_INITIAL_DATE:-2026-01-01}
+      SYNC_INITIAL_END_DATE: ${SYNC_INITIAL_END_DATE:-2026-09-09}
+    stop_grace_period: 60s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    restart: unless-stopped
+    init: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      TZ: America/Sao_Paulo
+      PORT: 3000
+      API_HOST: 0.0.0.0
+      TENANT_KEY: ${TENANT_KEY:?Configure TENANT_KEY}
+      CONTROL_DATABASE_URL: postgresql://varejo_control:${CONTROL_DB_PASSWORD}@postgres:5432/varejo_control
+      TENANT_DATABASE_URL: postgresql://varejo_aeropostale:${TENANT_DB_PASSWORD}@postgres:5432/varejo_aeropostale
+    ports:
+      - "127.0.0.1:${PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+volumes:
+  postgres_data:

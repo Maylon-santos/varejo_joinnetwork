@@ -1,0 +1,40 @@
+{
+  "verificadoEm": "2026-09-11T00:17:08.700Z",
+  "confirmadoPor": "Maylon",
+  "filial": "30098297",
+  "tipo": "S",
+  "operacoes": [
+    {
+      "cod_operacao": "30816297",
+      "quantidade": 3,
+      "valor_final_centavos": "50997",
+      "conciliacao": "quantidade_divergente"
+    },
+    {
+      "cod_operacao": "30817402",
+      "quantidade": 4,
+      "valor_final_centavos": "61996",
+      "conciliacao": "quantidade_divergente"
+    },
+    {
+      "cod_operacao": "30824570",
+      "quantidade": 2,
+      "valor_final_centavos": "32494",
+      "conciliacao": "quantidade_divergente"
+    },
+    {
+      "cod_operacao": "30824900",
+      "quantidade": 2,
+      "valor_final_centavos": "33750",
+      "conciliacao": "quantidade_divergente"
+    },
+    {
+      "cod_operacao": "30826165",
+      "quantidade": 8,
+      "valor_final_centavos": "149983",
+      "conciliacao": "quantidade_divergente"
+    }
+  ],
+  "contabilizacao": "Cabeçalho",
+  "valoresEQuantidadesPreservados": true
+}

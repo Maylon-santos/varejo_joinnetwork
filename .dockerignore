@@ -1,0 +1,21 @@
+.env
+.env.*
+.git
+node_modules
+coverage
+teste
+logs
+*.log
+docs
+logos
+backend/tests
+
+artifacts
+playwright-report
+test-results
+
+backups/
+
+# Metadados de arquivos do macOS
+._*
+**/._*

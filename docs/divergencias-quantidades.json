@@ -1,0 +1,65 @@
+{
+  "verificadoEm": "2026-09-10T02:29:36.408Z",
+  "operacoes": [
+    {
+      "cod_operacao": "30816297",
+      "tipo_operacao": "S",
+      "filial": "30098297",
+      "data_operacao": "2026-05-19",
+      "quantidade_cabecalho": 3,
+      "quantidade_itens": 5,
+      "valor_final_centavos": "50997",
+      "ajuste_centavos": "0",
+      "subtotal_itens_centavos": "80995",
+      "diferenca_valor_centavos": "29998"
+    },
+    {
+      "cod_operacao": "30817402",
+      "tipo_operacao": "S",
+      "filial": "30098297",
+      "data_operacao": "2026-05-24",
+      "quantidade_cabecalho": 4,
+      "quantidade_itens": 6,
+      "valor_final_centavos": "61996",
+      "ajuste_centavos": "0",
+      "subtotal_itens_centavos": "81994",
+      "diferenca_valor_centavos": "19998"
+    },
+    {
+      "cod_operacao": "30824570",
+      "tipo_operacao": "S",
+      "filial": "30098297",
+      "data_operacao": "2026-06-27",
+      "quantidade_cabecalho": 2,
+      "quantidade_itens": 3,
+      "valor_final_centavos": "32494",
+      "ajuste_centavos": "-32495",
+      "subtotal_itens_centavos": "104979",
+      "diferenca_valor_centavos": "39990"
+    },
+    {
+      "cod_operacao": "30824900",
+      "tipo_operacao": "S",
+      "filial": "30098297",
+      "data_operacao": "2026-06-28",
+      "quantidade_cabecalho": 2,
+      "quantidade_itens": 3,
+      "valor_final_centavos": "33750",
+      "ajuste_centavos": "0",
+      "subtotal_itens_centavos": "50500",
+      "diferenca_valor_centavos": "16750"
+    },
+    {
+      "cod_operacao": "30826165",
+      "tipo_operacao": "S",
+      "filial": "30098297",
+      "data_operacao": "2026-07-07",
+      "quantidade_cabecalho": 8,
+      "quantidade_itens": 10,
+      "valor_final_centavos": "149983",
+      "ajuste_centavos": "0",
+      "subtotal_itens_centavos": "207963",
+      "diferenca_valor_centavos": "57980"
+    }
+  ]
+}

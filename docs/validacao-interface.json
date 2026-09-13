@@ -1,0 +1,23 @@
+{
+  "verificadoEm": "2026-09-10T11:52:15.440Z",
+  "browser": "Chrome headless local (navegador integrado indisponível)",
+  "checks": [
+    "login_renderizado",
+    "login_invalido",
+    "login_real",
+    "filtros_indicadores_grafico",
+    "paginacao_ranking",
+    "conferencia_detalhes_escape",
+    "movimentacoes_paginacao_tipo",
+    "periodo_vazio",
+    "erro_e_retentativa",
+    "mobile_sem_overflow",
+    "tablet_sem_overflow",
+    "sessao_revogada_retorna_login",
+    "logout"
+  ],
+  "errosJavascript": 0,
+  "desktop": "1440x1000",
+  "mobile": "390x844",
+  "tablet": "820x1180"
+}

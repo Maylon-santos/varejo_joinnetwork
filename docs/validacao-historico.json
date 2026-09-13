@@ -1,0 +1,60 @@
+{
+  "verificadoEm": "2026-09-10T02:29:05.133Z",
+  "operacoes": [
+    {
+      "tipo_operacao": "E",
+      "quantidade": 133,
+      "primeira_data": "2026-01-02",
+      "ultima_data": "2026-09-07"
+    },
+    {
+      "tipo_operacao": "S",
+      "quantidade": 3835,
+      "primeira_data": "2026-01-02",
+      "ultima_data": "2026-09-09"
+    }
+  ],
+  "itens": 9477,
+  "cancelamentos": 75,
+  "conciliacao": [
+    {
+      "conciliacao": "conciliada",
+      "total": 3769
+    },
+    {
+      "conciliacao": "nao_elegivel",
+      "total": 194
+    },
+    {
+      "conciliacao": "quantidade_divergente",
+      "total": 5
+    }
+  ],
+  "checkpoints": [
+    {
+      "recurso": "cancelamentos",
+      "ate": "2026-09-09"
+    },
+    {
+      "recurso": "vendas",
+      "ate": "2026-09-09"
+    }
+  ],
+  "status": [
+    {
+      "recurso": "cancelamentos",
+      "falhas_consecutivas": 0,
+      "ultimo_erro_codigo": null,
+      "ultimo_sucesso": "2026-09-10T02:27:46.591Z",
+      "proxima_tentativa": "2026-09-10T02:33:46.591Z"
+    },
+    {
+      "recurso": "vendas",
+      "falhas_consecutivas": 0,
+      "ultimo_erro_codigo": null,
+      "ultimo_sucesso": "2026-09-10T02:27:46.231Z",
+      "proxima_tentativa": "2026-09-10T02:33:46.231Z"
+    }
+  ],
+  "duplicidades": 0
+}

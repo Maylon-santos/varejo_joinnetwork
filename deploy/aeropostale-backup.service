@@ -1,0 +1,10 @@
+[Unit]
+Description=Backup dos bancos do piloto Aeropostale
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/aeropostale-varejo
+ExecStart=/usr/bin/flock -n /run/aeropostale-backup.lock /bin/bash /opt/aeropostale-varejo/deploy/backup.sh
+UMask=0077

@@ -1,0 +1,15 @@
+{
+  "verificadoEm": "2026-09-10T02:00:19.868Z",
+  "tabelas": [
+    "cancelamentos",
+    "operacoes",
+    "schema_migrations",
+    "sync_checkpoints",
+    "tenant_identity"
+  ],
+  "operacao": "30836007",
+  "tipo": "S",
+  "filial": "30098297",
+  "registrosAposReprocessar": 1,
+  "checkpoint": null
+}

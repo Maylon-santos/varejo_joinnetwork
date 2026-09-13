@@ -1,0 +1,66 @@
+{
+  "checkedAt": "2026-09-09T03:51:32.037Z",
+  "branch": "30098297",
+  "from": "2026-09-06",
+  "through": "2026-09-07",
+  "httpStatus": 200,
+  "count": 80,
+  "declaredCount": 80,
+  "rootFields": [
+    "odata.count",
+    "value"
+  ],
+  "fields": [
+    "acerto",
+    "cancelada",
+    "cod_filial",
+    "cod_operacao",
+    "codigo",
+    "cortesia",
+    "customers",
+    "data",
+    "data_cancelou",
+    "descricao_evento",
+    "fantasia",
+    "filial",
+    "limite_desconto",
+    "produtos",
+    "qtde",
+    "revisar_limite",
+    "tipo_operacao",
+    "usuario_cancelou",
+    "v_acerto",
+    "v_frete",
+    "valor_final",
+    "vendedor"
+  ],
+  "reconciliation": {
+    "conciliada": 80
+  },
+  "exceptions": [],
+  "knownOperations": [
+    {
+      "operation": 30835576,
+      "status": "conciliada",
+      "subtotalItensCentavos": "38998",
+      "ajusteCentavos": "-7800",
+      "totalEsperadoCentavos": "31198",
+      "totalInformadoCentavos": "31198",
+      "diferencaCentavos": "0"
+    },
+    {
+      "operation": 30835456,
+      "status": "conciliada",
+      "subtotalItensCentavos": "45988",
+      "ajusteCentavos": "-4599",
+      "totalEsperadoCentavos": "41389",
+      "totalInformadoCentavos": "41389",
+      "diferencaCentavos": "0"
+    }
+  ],
+  "adjustmentNull": 0,
+  "adjustmentMissing": 0,
+  "duplicateKeys": 0,
+  "unexpectedBranches": 0,
+  "transIdPresent": 0
+}

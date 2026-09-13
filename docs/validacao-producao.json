@@ -1,0 +1,15 @@
+{
+  "verificadoEm": "2026-09-12T12:37:37.607Z",
+  "dominio": "aeropostale.joinnetwork.com.br",
+  "tlsValidado": true,
+  "login": 200,
+  "indicadores": 200,
+  "ranking": 200,
+  "vendas": 200,
+  "detalhe": 200,
+  "anonimo": 401,
+  "filialNaoAutorizada": 403,
+  "logout": 200,
+  "sessaoRevogada": 401,
+  "contagemConsistente": true
+}

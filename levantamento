@@ -1,0 +1,146 @@
+Precisamos montar um app para analisamos nossas lojas, 
+onde consiga concentrar o maior numero de informacao das vendas possiveis para ajudar o vendedores a venderem mais, ajudar os gerentes a anlisar os numeros das vendas,
+ auxiliar a diretoria a tomar decisoes acertivas com o melhores indicadores de performace para analisar o desempenho das filiais e das equipes 
+
+ Precisamos criar um tela inicial com dashboard 
+ com indicadores de vendas 
+ vendas por vendedor (por quantidade valor e ticket medio )
+ ranking de vendedores (por quantidade valor e ticket medio )
+
+
+ enviar menssagem pela api do whatsapp com api da talk 
+
+podemos criar campanhas e disparos em massa 
+
+
+
+ vendas por dia,semana,mes e ano 
+
+ clientes novos 
+ aniversariantes do mes, semana e do dia 
+
+ fila de atendimento 
+
+
+ consultar vendas do dia resumida e detalhada 
+
+
+
+ consulta de estoques 
+ consulta de produtos 
+
+
+oque nosso app precisa ter 
+
+Separacao de usuarios para acessar o app 
+
+Admin (pode ver tudo e tem acesso a configuracoes)
+
+diretoria (nao tem acesso as configuracoes, visualisa todos os indicadores e pode criar notificacoes para ser repassado para supervisores, gerentes e vendedores)
+
+supervisoes (nao tem acesso as configuracoes, visualisa todos os indicadores e pode criar notificacoes para ser repassado para supervisores, gerentes e vendedores )
+
+vendedor
+
+visualisar o dashboad da loja e so pode consultar a propria venda e seus atendimentos 
+
+
+nosso app tem que ter foco para no futuro ser um SaaS (Software as a Service) de sucesso !
+
+
+vamos usar node.js 
+
+visando escalabilidade e desempenho com multicanalidade podendo ser acesado por celular ipad e browser desktop 
+
+banco de dados postgree, docker 
+
+
+
+
+vamos criar um MVP (Produto Mínimo Viável)
+
+
+
+Com **10 clientes**, teremos **uma plataforma Join Network**, acessada pelo navegador, com os dados de cada empresa separados.
+
+**Cliente é a empresa contratante; filial é uma loja dessa empresa.** Por exemplo: a Aeropostale seria um cliente com 14 filiais, e outra marca poderia ser um segundo cliente com 5 filiais.
+
+O desenho abaixo representa a arquitetura proposta para essa expansão. Hoje temos o piloto local de ITUPEVA implementado.
+
+```mermaid
+flowchart TB
+    U["Pessoas dos 10 clientes<br/>Computador ou celular"] --> P["Portal Join Network<br/>Login"]
+    P --> A["Aplicação central<br/>Identifica o cliente e verifica as permissões"]
+
+    A --> C["Banco central<br/>Empresas, usuários e acessos"]
+
+    A --> B1["Banco do cliente 1<br/>Aeropostale<br/>14 filiais"]
+    A --> B2["Banco do cliente 2<br/>Marca B<br/>5 filiais"]
+    A --> B3["Bancos dos clientes 3 a 9<br/>Lojas de cada empresa"]
+    A --> B10["Banco do cliente 10<br/>Marca J<br/>3 filiais"]
+```
+
+**Uma empresa não acessa os dados da outra.** Depois do login, o servidor identifica a empresa do usuário e quais filiais ele pode consultar. Essa proteção precisa existir na API, além dos filtros da tela.
+
+O banco central funciona como um cadastro de acesso. As vendas, os itens, os vendedores e os dados operacionais ficam no banco de cada cliente.
+
+**Como as vendas chegam ao painel:**
+
+```mermaid
+flowchart LR
+    E["ERP de cada cliente"] --> S["Sincronização<br/>Credencial própria por cliente"]
+    S --> V["Validar e importar<br/>Evitar duplicidades<br/>Registrar cancelamentos"]
+    V --> B["Banco exclusivo<br/>daquele cliente"]
+    B --> API["API<br/>Calcula os indicadores"]
+    API --> D["Painel das lojas<br/>Vendas, PA, ticket e ranking"]
+
+    S --> F["Se houver falha<br/>Registrar e tentar novamente"]
+    F --> S
+```
+
+O painel consulta nosso banco. Assim, a navegação não precisa esperar uma consulta ao ERP a cada clique. No piloto atual, a sincronização tem intervalo base de **6 minutos**; o painel deve mostrar até quando os dados foram atualizados.
+
+Para 10 clientes, o agendamento deve distribuir as consultas e controlar falhas separadamente. Se o ERP de um cliente ficar indisponível, os demais devem continuar sincronizando.
+
+**Dentro de cada cliente, o acesso seguiria a hierarquia que você definiu:**
+
+```mermaid
+flowchart TB
+    A["Admin do cliente<br/>Todas as filiais da empresa"]
+    A --> D["Diretoria<br/>Visão consolidada das filiais autorizadas"]
+    D --> S["Supervisão<br/>Grupo de lojas sob sua responsabilidade"]
+    S --> G["Gerentes<br/>Lojas autorizadas"]
+    G --> V["Vendas<br/>Visão permitida para o vendedor"]
+```
+
+O alcance exato de cada cargo será configurável. **Admin de um cliente continua restrito à própria empresa.** Um eventual acesso seu como administrador da plataforma seria uma função separada, ainda a implementar.
+
+| Exemplo de usuário | O que poderia visualizar |
+|---|---|
+| Diretoria da Aeropostale | Consolidado das 14 filiais autorizadas |
+| Supervisor da Aeropostale | Apenas as lojas da sua região |
+| Gerente de ITUPEVA | Indicadores de ITUPEVA |
+| Vendedor de ITUPEVA | Seus resultados, conforme a regra definida |
+| Diretor da Marca B | Apenas os dados da Marca B |
+
+**Não precisamos criar 10 cópias do sistema.** Podemos compartilhar a aplicação e manter **10 bancos separados**, como já foi definido no projeto. Uma atualização da aplicação atende todos os clientes.
+
+Isso também permite crescer por etapas:
+
+| Etapa | Organização |
+|---|---|
+| Piloto atual | Uma empresa, uma filial, acesso Admin |
+| Expansão da Aeropostale | Mais filiais no banco da Aeropostale |
+| Entrada de novos clientes | Novo cadastro, banco, credenciais ERP e usuários |
+| Crescimento de volume | Distribuir bancos e sincronizações entre servidores |
+
+Os 10 bancos podem inicialmente compartilhar um servidor PostgreSQL, mas isso compartilha também os recursos e o risco de indisponibilidade. **Ainda precisamos medir carga para saber se a Locaweb atual comporta os 10 clientes**, considerando quantidade de lojas, vendas e usuários simultâneos.
+
+Para o endereço, minha proposta é **um portal único da Join Network**: a pessoa entra, faz login e vê a marca e as lojas da empresa dela. Podemos acrescentar endereços próprios por cliente depois; a separação dos dados continuará sendo responsabilidade do servidor.
+
+
+
+
+
+
+

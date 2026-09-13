@@ -1,0 +1,14 @@
+{
+  "productName": "Join Network",
+  "brandName": "Aeropostale",
+  "status": "preparation",
+  "tenantGroupingConfirmed": false,
+  "initialRole": "Admin",
+  "plannedHierarchy": ["Admin", "Diretoria", "Supervisao", "Gerentes", "Vendas"],
+  "branchIds": ["30098400", "30098401", "30098409", "30098495", "30098696", "30098697", "30098704", "30098702", "30098708", "30098795", "30098802", "30098797", "30098699", "30098297"],
+  "initialImport": {"from": "2026-01-01", "through": "2026-09-09", "timezone": "America/Sao_Paulo"},
+  "pollingIntervalSeconds": null,
+  "billingDuringPilot": false,
+  "hosting": "Locaweb — servidor existente",
+  "operationalOwner": "Maylon"
+}

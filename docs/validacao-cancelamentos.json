@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-09-10T01:40:52.615Z",
+  "httpStatus": 200,
+  "branch": "30098297",
+  "from": "2026-09-09",
+  "through": "2026-09-09",
+  "dateFilter": "data_caninicial/data_canfinal",
+  "count": 1,
+  "declaredCount": 1,
+  "fields": [
+    "cod_operacao",
+    "tipo_operacao",
+    "data_cancelou",
+    "usuario_cancelou",
+    "obs_canc",
+    "motivo",
+    "filial"
+  ],
+  "operations": [
+    {
+      "cod_operacao": 30836007,
+      "tipo_operacao": "S",
+      "data_cancelou": "/Date(1788922800000-180)/",
+      "filialRetornada": 30098297
+    }
+  ]
+}

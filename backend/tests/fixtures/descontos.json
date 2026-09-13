@@ -1,0 +1,50 @@
+[
+  {
+    "cod_operacao": 30835456,
+    "filial": 30098297,
+    "tipo_operacao": "S",
+    "cancelada": false,
+    "valor_final": 413.89,
+    "qtde": 3,
+    "v_acerto": -45.99,
+    "v_frete": null,
+    "acerto": -10,
+    "cortesia": null,
+    "produtos": [
+      {
+        "quantidade": 1,
+        "preco": 189.99
+      },
+      {
+        "quantidade": 1,
+        "preco": 79.9
+      },
+      {
+        "quantidade": 1,
+        "preco": 189.99
+      }
+    ]
+  },
+  {
+    "cod_operacao": 30835576,
+    "filial": 30098297,
+    "tipo_operacao": "S",
+    "cancelada": false,
+    "valor_final": 311.98,
+    "qtde": 2,
+    "v_acerto": -78,
+    "v_frete": null,
+    "acerto": -20,
+    "cortesia": null,
+    "produtos": [
+      {
+        "quantidade": 1,
+        "preco": 199.99
+      },
+      {
+        "quantidade": 1,
+        "preco": 189.99
+      }
+    ]
+  }
+]

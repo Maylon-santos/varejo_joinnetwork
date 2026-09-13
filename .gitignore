@@ -1,0 +1,25 @@
+.env
+.env.*
+!.env.exemple
+!.env.example
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+# Pasta de ideias inserida por engano; não faz parte do produto.
+teste/
+
+# Capturas locais podem conter dados comerciais.
+artifacts/
+playwright-report/
+test-results/
+
+backups/
+
+# Metadados de arquivos do macOS
+._*
+**/._*
+
+# Central pessoal de documentação e anotações
+/docs/central/

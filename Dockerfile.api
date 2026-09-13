@@ -1,0 +1,11 @@
+FROM node:22-bookworm-slim
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+COPY --chown=node:node backend/src ./backend/src
+COPY --chown=node:node config ./config
+COPY --chown=node:node scripts/api.mjs scripts/migrar.mjs scripts/criar-admin.mjs ./scripts/
+COPY --chown=node:node database/migrations ./database/migrations
+COPY --chown=node:node frontend ./frontend
+USER node
+CMD ["node", "scripts/api.mjs"]

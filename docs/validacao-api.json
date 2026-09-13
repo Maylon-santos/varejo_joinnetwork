@@ -1,0 +1,21 @@
+{
+  "verificadoEm": "2026-09-10T03:28:15.913Z",
+  "health": 200,
+  "login": 200,
+  "indicadores": 200,
+  "ranking": 200,
+  "vendas": 200,
+  "detalhe": 200,
+  "anonimo": 401,
+  "filialNaoAutorizada": 403,
+  "logout": 200,
+  "vendasElegiveis": 3774,
+  "valorVendasCentavos": "169583861",
+  "pecasCabecalho": "9128",
+  "ticketMedioCentavos": "44935",
+  "pecasPorVenda": "2.4187",
+  "vendasComPendencia": 5,
+  "totalVendedores": 16,
+  "totalListagem": 3774,
+  "checkpointsCobremFim": true
+}

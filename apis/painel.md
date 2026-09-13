@@ -1,0 +1,70 @@
+# API do painel — v1
+
+API local: `http://127.0.0.1:3100`. O piloto usa o tenant Aeropostale e, por enquanto, autoriza apenas a filial ITUPEVA (`30098297`). A interface visual é servida na raiz `/`, na mesma origem da API. Veja [frontend/README.md](../frontend/README.md).
+
+## Acesso Admin
+
+`ADMIN_EMAIL` e `ADMIN_PASSWORD` estão no `.env`. Criar o usuário com `npm run admin:create`; repetir esse comando preserva a senha existente. Não há cadastro público. O banco armazena hash scrypt com salt aleatório. A senha gerada no `.env` não é enviada ao container da API: serve apenas para criar o Admin e para acesso local.
+
+`POST /api/v1/auth/login`, com `Content-Type: application/json`:
+
+```json
+{"email":"admin@aeropostale.local","senha":"SUA_SENHA_DO_ENV"}
+```
+
+Retorna `token` e `expires_at`. Enviar `Authorization: Bearer TOKEN` nas demais rotas. Sessão expira após 8 horas; o banco guarda somente o hash do token. `POST /api/v1/auth/logout` revoga a sessão. `GET /api/v1/auth/me` retorna id, email, role e tenant do usuário autenticado. Um usuário desativado perde acesso imediatamente.
+
+Não há cookies nem autenticação por parâmetros de URL. O frontend mantém o token em memória e usa a mesma origem; CORS não está liberado nesta entrega. HTTPS será necessário ao publicar o acesso fora do ambiente local. Limites por IP do socket: 120 requisições/minuto e 10 tentativas de login/15 minutos, em memória por instância. Não confia em `X-Forwarded-For`. Proxy e limites distribuídos ficam para a implantação.
+
+## Rotas de consulta
+
+Todas exigem sessão Admin, exceto `/health`. Tenant é resolvido no servidor, nunca recebido do cliente.
+
+| Método | Caminho | Resultado |
+|---|---|---|
+| GET | `/health` | Saúde da conexão e correspondência entre tenant e bancos, sem detalhes internos |
+| GET | `/api/v1/filiais` | IDs das filiais autorizadas |
+| GET | `/api/v1/indicadores` | Valor das vendas, quantidade de vendas, peças, ticket, PA, série diária e qualidade |
+| GET | `/api/v1/vendas` | Operações paginadas, filtros de tipo/estado/conciliação |
+| GET | `/api/v1/ranking` | Vendas por código do vendedor, ordenadas por valor, peças ou ticket |
+| GET | `/api/v1/operacoes/{filial}/{tipo}/{codigo}` | Cabeçalho, itens e cancelamento efetivo da chave composta |
+
+Indicadores, vendas e ranking exigem `filial`, `inicio` e `fim` (datas `AAAA-MM-DD`, inclusivas, até 366 dias). Paginação: `pagina` a partir de 1, `limite` entre 1 e 100 (padrão 50). Ranking aceita `ordenar=valor|pecas|ticket`; desempate por código do vendedor. Vendas aceita `tipo=S|E|todas`, `estado=ativas|canceladas|todas` e `conciliacao` (por exemplo `quantidade_divergente`). Padrões: S e ativas. Parâmetros desconhecidos ou repetidos são rejeitados nas rotas de listagem/indicadores.
+
+Exemplo de caminho:
+
+```text
+/api/v1/indicadores?filial=30098297&inicio=2026-01-01&fim=2026-09-09
+```
+
+## Significado dos indicadores
+
+- `valor_vendas_centavos`: soma do valor final de operações S não canceladas. Valores monetários são strings de centavos inteiros; não converter para float para fazer cálculos financeiros.
+- `vendas`: quantidade de operações elegíveis, pela chave composta.
+- `pecas_cabecalho`: soma da quantidade do cabeçalho; string inteira para preservar precisão. Não usa soma de itens divergentes.
+- `ticket_medio_centavos`: valor de vendas / quantidade de vendas, arredondado a centavos. `null` se não há vendas.
+- `pecas_por_venda`: peças do cabeçalho / quantidade de vendas, string decimal com quatro casas. `null` se não há vendas.
+- Ranking usa a mesma população e agrupa por código do vendedor; o nome mais recente do período é exibido. Vendas sem código ficam em um grupo sem identificação.
+- Cancelamentos são reconhecidos tanto pelo cabeçalho quanto pela tabela de cancelamentos. Entradas não são abatidas como devoluções enquanto essa regra não for homologada.
+- `vendas_com_pendencia`, `qualidade` e `indicadores_provisorios` explicitam registros ainda não homologados. As cinco operações divergentes permanecem incluídas pelos valores de cabeçalho do ERP e sinalizadas; não foram corrigidas silenciosamente.
+- `sincronizacao` mostra checkpoint, último sucesso e falhas. `checkpoints_cobrem_fim` verifica se ambos os recursos alcançam o fim solicitado, mas não comprova cobertura antes da data de início da importação nem substitui a conferência com o ERP. Dia atual contém dados somente até o último ciclo.
+- Não são publicados indicadores com os nomes “bruto” ou “líquido” ainda: as deduções comerciais continuam pendentes de definição.
+
+## Respostas de erro
+
+JSON com `erro` e `request_id`. 400: parâmetro inválido; 401: login/sessão inválidos; 403: filial não autorizada; 404: recurso inexistente; 405: método não permitido; 415: corpo não JSON; 429: limite excedido; 500: erro interno sem detalhes sensíveis. Respostas usam `Cache-Control: no-store`.
+
+## Execução e validação
+
+```sh
+npm run db:migrate
+npm run admin:create
+docker compose up -d --build --wait api
+node --env-file=.env scripts/verificar-api.mjs
+```
+
+Parar apenas a API: `docker compose stop api`. O banco e o worker continuam ativos. A API tem porta publicada somente em loopback; logs não incluem senha, token ou corpos de requisições. A imagem Docker não recebe o `.env` nem as credenciais Millennium/Talk.
+
+Contrato de rotas importável: [painel.openapi.json](painel.openapi.json). Evidência da validação local: [validacao-api.json](../docs/validacao-api.json).
+
+O ranking também retorna `pecas_por_venda` (PA), string decimal com quatro casas, calculada com a mesma população elegível dos demais indicadores. O detalhe inclui `imagem_url` por item, nula quando não fornecida. A interface exibe PA com duas casas e miniatura ampliável.
