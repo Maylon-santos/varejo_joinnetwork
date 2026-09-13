@@ -1,5 +1,9 @@
 # Comece aqui — estado atual em 13/09/2026
 
+## Próximo ajuste definido — 13/09/2026
+
+Maylon solicitou sincronizar os dados cadastrais das filiais usando `trans_id`. Próxima entrega: persistência do cadastro/cursor e atualização incremental pelo worker, com seletor lendo o banco. Hoje os códigos ainda vêm da configuração local. Vendas e cancelamentos mantêm checkpoints próprios por filial; detalhes no roadmap.
+
 ## Seletor de filiais corrigido — 13/09/2026
 
 - [x] Exibir `COD_FILIAL` do ERP nas 14 opções: ITUPEVA, AERO-009, AERO-010 e demais códigos conferidos na origem.

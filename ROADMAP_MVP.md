@@ -26,6 +26,18 @@ Expansão publicada em 13/09: 14 cadastros ERP verificados; seletor Admin e troc
 
 Correção de apresentação em 13/09: seletor das 14 filiais passa a exibir `COD_FILIAL` conferido no ERP; IDs internos continuam nos filtros. Publicado e validado em celular, com 24 testes de integração aprovados. Evidência: `docs/validacao-codigos-filiais.json`.
 
+## Próxima prioridade: cadastro incremental de filiais — 13/09/2026
+
+Maylon determinou que a sincronização dos dados cadastrais das filiais siga o `trans_id` retornado por `listafiliais`. Implementação pendente; o seletor ainda lê `branchCodes` da configuração.
+
+1. Validar o filtro incremental, sua borda inclusiva/exclusiva e a indicação de resposta completa, usando consultas de leitura.
+2. Persistir cadastro (`filial`, `cod_filial`, `trans_id`) no banco do tenant e guardar o cursor da consulta. Gravar cadastro e avanço do cursor na mesma transação; falhas preservam o cursor.
+3. Atualizar o cadastro pelo worker e fazer o seletor ler o banco, sem consultar ERP no login e sem precisar republicar a API para alterar códigos.
+4. Preservar a lista de filiais autorizadas. Descobrir uma nova filial no ERP não deve conceder acesso nem iniciar importação automaticamente.
+5. Concluir e conferir os históricos das 13 novas filiais; implementar os cargos e permissões por recurso/filial.
+
+O `trans_id` deste endpoint controla o cadastro de filiais. Vendas e cancelamentos conservam seus checkpoints independentes por filial e data; usar o cursor cadastral como condição para buscar vendas poderia omitir operações. Alterar esse mecanismo exige contrato incremental próprio para cada endpoint.
+
 Retomada: confira esta tabela, as evidências de validação e a última seção de tarefas. Não usar checklists históricos como status vigente.
 
 

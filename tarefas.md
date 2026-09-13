@@ -1,5 +1,13 @@
 # Lista de tarefas — Aeropostale Varejo
 
+## Prioridade definida por Maylon — 13/09/2026
+
+- [ ] Validar e implementar sincronização do cadastro de filiais por `trans_id`, conforme `listafiliais`.
+- [ ] Persistir cadastro e cursor transacionalmente; seletor lê os códigos do banco.
+- [ ] Manter autorização das filiais separada da descoberta cadastral e preservar os checkpoints próprios de vendas/cancelamentos.
+
+O cadastro incremental ainda não está implementado. Esta prioridade antecede os cargos e permissões.
+
 ## Próxima etapa — 13/09/2026
 
 - [x] **Maylon:** confirmar conferência dos indicadores de ITUPEVA. Resposta recebida: “sim conferido !”. Evidência em `docs/validacao-homologacao.json`.
