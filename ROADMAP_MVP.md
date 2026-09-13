@@ -9,10 +9,12 @@
 | 1. Importação e banco | Concluída | Histórico de ITUPEVA, cancelamentos e checkpoints |
 | 2. Painel e Admin | Concluída | Vendas, PA, ticket, ranking e conferência |
 | 3. Publicação Locaweb | Concluída | Domínio .com.br, HTTPS e backup diário |
-| 4. Correções do piloto | Concluída | Login e movimentações mobile, fotos via API, cliente nos detalhes |
+| 4. Correções do piloto | Concluída | Login e movimentações mobile, fotos via API, cliente persistido junto com a venda |
 | 5. Homologação ERP | Pendente de Maylon | Conferir os indicadores com relatório da origem |
 | 6. Outras filiais e cargos | Pendente | Confirmar agrupamento e implementar permissões |
 | 7. SaaS comercial | Planejamento futuro | Provisionamento, planos e cobrança |
+
+Atualização de clientes em 13/09: persistência publicada e histórico de 4.031 operações preenchido, sem alterar números ou checkpoints. Detalhes leem somente o banco. 31 testes unitários, 22 de integração e validação pública em celular/desktop aprovados. Evidência: `docs/validacao-clientes.json`. Futuro envio de mensagens usará contatos locais; cadastro unificado e automações continuam pendentes.
 
 Fluxo: importação → painel → publicação → correções → **homologação (agora)** → expansão → SaaS.
 

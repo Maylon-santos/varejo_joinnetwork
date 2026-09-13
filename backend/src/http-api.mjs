@@ -20,7 +20,7 @@ async function lerJson(req){
  try{const v=JSON.parse(Buffer.concat(chunks).toString('utf8'));if(!v||typeof v!=='object'||Array.isArray(v))throw new Error();return v;}
  catch{throw new ErroApi(400,'JSON_INVALIDO');}
 }
-export function criarServidor({auth,painel,filiais,frontend,clienteOperacao,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
+export function criarServidor({auth,painel,filiais,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
  const server=createServer(async(req,res)=>{
   const requestId=randomUUID();
   res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
@@ -49,8 +49,7 @@ export function criarServidor({auth,painel,filiais,frontend,clienteOperacao,imag
    const cliente=/^\/api\/v1\/operacoes\/([^/]+)\/([^/]+)\/([^/]+)\/cliente$/.exec(path);
    if(cliente){
     const d=await painel.detalhe(cliente[1],cliente[2],cliente[3]);
-    if(!clienteOperacao)throw new ErroApi(503,'CLIENTE_INDISPONIVEL');
-    try{return enviar(200,await clienteOperacao(d.operacao));}catch{throw new ErroApi(502,'CLIENTE_INDISPONIVEL');}
+    return enviar(200,{clientes:d.operacao.clientes,importados_em:d.operacao.clientes_importados_em});
    }
    const imagem=/^\/api\/v1\/operacoes\/([^/]+)\/([^/]+)\/([^/]+)\/itens\/(\d+)\/imagem$/.exec(path);
    if(imagem){

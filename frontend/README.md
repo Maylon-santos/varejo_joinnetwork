@@ -29,4 +29,4 @@ O navegador integrado estava indisponível nesta sessão; a verificação foi re
 
 Login mobile com campos de 16 px para evitar zoom automático ao focar no iPhone; tabela mantém o conteúdo excedente em sua área de rolagem. Fotos são carregadas pela rota autenticada da API e exibidas como blobs temporários, evitando acesso HTTP direto no navegador HTTPS.
 
-Detalhes consultam nome e telefones do cliente no ERP sob demanda, com indicador de carregamento, ausência e retentativa. Esses dados não são persistidos no banco. O fechamento dos detalhes aborta consultas e libera as imagens temporárias.
+Detalhes exibem nome, DDD e telefones importados junto com a venda e persistidos no banco. Abrir a operação não consulta o ERP: a resposta do próprio detalhe já traz o cliente. A interface distingue histórico aguardando importação de cliente/telefone não informado na origem. O fechamento dos detalhes aborta consultas de imagens e libera os arquivos temporários.

@@ -28,8 +28,9 @@ before(async()=>{
  await pool.query("INSERT INTO cancelamentos(cod_operacao,tipo_operacao,filial,data_cancelou) VALUES(4,'S',1,now())");
  await pool.query("INSERT INTO operacao_itens(cod_operacao,tipo_operacao,filial,ordem,quantidade,preco_centavos) VALUES(1,'S',1,0,2,5000)");
  await pool.query("INSERT INTO sync_checkpoints(filial,recurso,ate) VALUES(1,'vendas','2026-09-02'),(1,'cancelamentos','2026-09-02')");
+ await pool.query(`UPDATE operacoes SET clientes=$1::jsonb,clientes_importados_em=now() WHERE cod_operacao=1 AND filial=1`,[JSON.stringify([{nome:'Cliente da operação 1',contatos:[{tipo:'Telefone',ddd:'11',telefone:'33330000'}]}])]);
  auth=await criarAuth(control,'teste');
- server=criarServidor({auth,clienteOperacao:async op=>({clientes:[{nome:'Cliente da operação '+op.cod_operacao,contatos:[{tipo:'Telefone',ddd:'11',telefone:'33330000'}]}]}),imagemProduto:async()=>({type:'image/jpeg',body:Buffer.from([1,2,3])}),painel:criarPainel(pool,'teste',['1']),filiais:['1'],limitar:()=>true,limitarLogin:()=>true});
+ server=criarServidor({auth,imagemProduto:async()=>({type:'image/jpeg',body:Buffer.from([1,2,3])}),painel:criarPainel(pool,'teste',['1']),filiais:['1'],limitar:()=>true,limitarLogin:()=>true});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));base=`http://127.0.0.1:${server.address().port}`;
  const session=await auth.login('admin@teste.local',senha);token=session.token;
 });
@@ -97,7 +98,9 @@ test('Erro ERP confirmado sai das pendências, mantém cabeçalho e sobrevive à
 });
 
 
-test('Dados do cliente e fotos exigem autenticação e filial autorizada',async()=>{
+test('Cliente persistido é servido sem conector ERP; cliente e fotos exigem autenticação e filial autorizada',async()=>{
+ const detail=await (await get('/api/v1/operacoes/1/S/1')).json();assert.equal(detail.operacao.clientes[0].nome,'Cliente da operação 1');
+ const pending=await (await get('/api/v1/operacoes/1/S/2/cliente')).json();assert.equal(pending.clientes,null);
  const customer='/api/v1/operacoes/1/S/1/cliente';
  assert.equal((await get(customer,'')).status,401);
  const r=await get(customer);assert.equal(r.status,200);assert.equal((await r.json()).clientes[0].nome,'Cliente da operação 1');

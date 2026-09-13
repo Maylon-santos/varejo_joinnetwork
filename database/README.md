@@ -52,7 +52,7 @@ O adaptador usa consultas parametrizadas e uma conexão por transação, seguind
 
 O worker usa um bloqueio de sessão PostgreSQL para garantir uma única instância por tenant. Vendas e cancelamentos têm checkpoints e estado de falhas separados. Após três falhas, o intervalo dobra progressivamente até 16 vezes o intervalo base; o estado persiste em `sync_status`. Cancelamentos continuam sendo consultados se uma janela de vendas falhar. Talk permanece desabilitada e não há envio automático de mensagens nesta entrega.
 
-São persistidos cabeçalho operacional, itens, identificação do vendedor e estado de conciliação. Cadastros/endereço/telefone de clientes não são copiados. Duplicatas com conteúdo operacional normalizado idêntico são colapsadas e registradas; conteúdo conflitante interrompe o lote. Respostas com indicação de página parcial são recusadas. O indicador `conciliacao` não transforma entradas ou canceladas em vendas elegíveis.
+São persistidos cabeçalho operacional, itens, identificação do vendedor e estado de conciliação. Nome, DDD e telefones dos clientes são importados na mesma resposta da venda e armazenados em `operacoes.clientes` (JSONB), com `clientes_importados_em`. São snapshots por operação, atualizados na reimportação; não constituem ainda um cadastro unificado para campanhas. CPF e endereço completo não são copiados. Os backups do tenant incluem esses dados. Duplicatas com conteúdo operacional normalizado idêntico são colapsadas e registradas; conteúdo conflitante interrompe o lote. Respostas com indicação de página parcial são recusadas. O indicador `conciliacao` não transforma entradas ou canceladas em vendas elegíveis.
 
 A execução por datas inclui o dia anterior ao checkpoint para reprocessar bordas. Sem um filtro incremental de código documentado, não se assume `cod_operacao` como parâmetro “maior que”. Alterações de valor/itens fora da janela recente precisam de reconciliação histórica adicional. Cancelamentos antigos são detectados pelas datas de cancelamento. O modo periódico acompanha a data atual em America/Sao_Paulo; o fim da carga inicial não congela o histórico permanentemente.
 
@@ -61,3 +61,11 @@ Limitação operacional: o processamento é local e depende do Docker Desktop li
 ## API local
 
 Após `npm run db:migrate` e `npm run admin:create`, iniciar com `docker compose up -d --build --wait api`. Porta publicada em `127.0.0.1:3100` (`PORT` no `.env`). Credenciais iniciais em `ADMIN_EMAIL` e `ADMIN_PASSWORD`; o banco guarda apenas hash de senha e hash das sessões. Não expor o `.env`. Validar com `node --env-file=.env scripts/verificar-api.mjs`. Documentação: `apis/painel.md`. Parar API não interrompe o worker.
+
+## Preenchimento dos clientes no histórico
+
+A migration `005_clientes.sql` adiciona os campos sem modificar o histórico operacional. `NULL` significa importação pendente; `[]` significa que o ERP não informou cliente. O worker grava cliente, venda e checkpoint na mesma transação.
+
+Com o worker remoto pausado, executar `docker compose run --rm --no-deps sync-worker node scripts/preencher-clientes.mjs`. A rotina verifica o tenant, usa somente filiais autorizadas na configuração e consulta um dia por vez, com intervalo de um segundo e até três tentativas. Atualiza somente clientes ainda nulos, por chave composta e data; não altera valores, itens, cancelamentos, timestamps operacionais ou checkpoints. Pode ser retomada: dias já preenchidos não são consultados novamente. Ausências de operações na resposta permanecem pendentes e fazem a rotina encerrar com código 1.
+
+O futuro envio de mensagens utilizará os contatos locais. Cadastro unificado, preferências de contato, fila, deduplicação e histórico de envios serão uma etapa própria; nenhum envio é realizado nesta entrega.

@@ -174,16 +174,12 @@ $('detail-dialog').addEventListener('click',e=>{if(e.target===$('detail-dialog')
 window.addEventListener('resize',()=>{if(lastIndicators&&page==='overview'&&token)renderChart(lastIndicators);});
 
 function operationPath(o){return `/operacoes/${encodeURIComponent(o.filial)}/${encodeURIComponent(o.tipo_operacao)}/${encodeURIComponent(o.cod_operacao)}`;}
-async function loadCustomer(o,container,version){
- container.replaceChildren(el('h3','Cliente'),el('p','Consultando dados do cliente…'));container.setAttribute('aria-busy','true');
- try{
-  const data=await api(operationPath(o)+'/cliente',{signal:detailAbort.signal});
-  if(version!==detailGeneration)return;
-  container.replaceChildren(el('h3','Cliente'));
-  if(!data.clientes.length)container.append(el('p','Cliente não informado pelo ERP.'));
-  for(const customer of data.clientes){container.append(el('strong',customer.nome));const contacts=el('ul');for(const c of customer.contatos){const li=el('li');li.append(el('span',`${c.tipo}: `));const display=[c.ddd,c.telefone].filter(Boolean).join(' ');const link=el('a',display);link.href='tel:'+display.replace(/[^+0-9]/g,'');li.append(link);contacts.append(li);}container.append(customer.contatos.length?contacts:el('p','Telefone não informado pelo ERP.'));}
- }catch(e){if(version!==detailGeneration||e.name==='AbortError')return;container.replaceChildren(el('h3','Cliente'),el('p','Os dados do cliente não estão disponíveis agora.'));const retry=el('button','Tentar novamente','button subtle');retry.type='button';retry.addEventListener('click',()=>loadCustomer(o,container,version));container.append(retry);}
- finally{if(version===detailGeneration)container.setAttribute('aria-busy','false');}
+function loadCustomer(o,container,version){
+ if(version!==detailGeneration)return;
+ container.replaceChildren(el('h3','Cliente'));container.setAttribute('aria-busy','false');
+ if(o.clientes==null){container.append(el('p','Os dados do cliente aguardam importação.'));return;}
+ if(!o.clientes.length)container.append(el('p','Cliente não informado pelo ERP.'));
+ for(const customer of o.clientes){container.append(el('strong',customer.nome));const contacts=el('ul');for(const c of customer.contatos){const li=el('li');li.append(el('span',`${c.tipo}: `));const display=[c.ddd,c.telefone].filter(Boolean).join(' ');const link=el('a',display);link.href='tel:'+display.replace(/[^+0-9]/g,'');li.append(link);contacts.append(li);}container.append(customer.contatos.length?contacts:el('p','Telefone não informado pelo ERP.'));}
 }
 async function addProductImage(cell,item,operacao,version){
  if(!item.imagem_url)return;

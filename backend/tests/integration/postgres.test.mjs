@@ -91,3 +91,30 @@ test('Checkpoint de vendas não altera checkpoint de cancelamentos',async()=>{
  assert.equal(await repo.transacao(escopo,tx=>tx.lerCheckpoint('vendas')),'2026-01-01');
  assert.equal(await repo.transacao(escopo,tx=>tx.lerCheckpoint('cancelamentos')),'2026-09-11');
 });
+
+test('Cliente acompanha venda, reimportação atualiza snapshot e rollback preserva dados anteriores',async()=>{
+ const clientes=[{nome:'Cliente teste',contatos:[{tipo:'Celular',ddd:'11',telefone:'999990000'}]}];
+ const op={...operacao(201),clientes};
+ await repo.transacao(escopo,tx=>tx.salvarOperacoes([op]));
+ const ler=async()=> (await pool.query('SELECT clientes,clientes_importados_em FROM operacoes WHERE cod_operacao=201')).rows[0];
+ assert.deepEqual((await ler()).clientes,clientes);assert.ok((await ler()).clientes_importados_em);
+ await assert.rejects(repo.transacao(escopo,async tx=>{await tx.salvarOperacoes([{...op,clientes:[]}]);throw Error('rollback');}));
+ assert.deepEqual((await ler()).clientes,clientes);
+ await repo.transacao(escopo,tx=>tx.salvarOperacoes([operacao(201)]));assert.deepEqual((await ler()).clientes,clientes);
+ await repo.transacao(escopo,tx=>tx.salvarOperacoes([{...op,clientes:[]}]));assert.deepEqual((await ler()).clientes,[]);
+});
+test('Preenchimento histórico é retomável e preserva campos comerciais, itens, cancelamentos e checkpoints',async()=>{
+ await repo.transacao(escopo,tx=>tx.salvarOperacoes([operacao(202),{...operacao(202),tipo_operacao:'E'}]));
+ const snapshot=async()=>{
+  const result={};
+  for(const table of ['operacoes','operacao_itens','cancelamentos','sync_checkpoints'])result[table]=(await pool.query(`SELECT (to_jsonb(t)-'clientes'-'clientes_importados_em')::text AS valor FROM ${table} t ORDER BY 1`)).rows;
+  return result;
+ };
+ const antes=await snapshot();const op={...operacao(202),clientes:[{nome:'Histórico',contatos:[]}]};
+ assert.equal(await repo.transacao(escopo,tx=>tx.preencherClientes([{...op,data_operacao:'2026-09-02'}])),0);
+ assert.equal(await repo.transacao(escopo,tx=>tx.preencherClientes([op])),1);
+ assert.equal(await repo.transacao(escopo,tx=>tx.preencherClientes([{...op,clientes:[]}])),0);
+ await assert.rejects(repo.transacao(escopo,tx=>tx.preencherClientes([{...op,filial:'999'}])));
+ assert.deepEqual(await snapshot(),antes);
+ assert.equal((await pool.query("SELECT clientes FROM operacoes WHERE cod_operacao=202 AND tipo_operacao='E'")).rows[0].clientes,null);
+});

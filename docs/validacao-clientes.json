@@ -1,0 +1,26 @@
+{
+  "base": "https://aeropostale.joinnetwork.com.br",
+  "verificadoEm": "2026-09-13T19:04:59.529Z",
+  "clientePersistido": true,
+  "telefoneEncontrado": true,
+  "mobile": true,
+  "desktop": true,
+  "aberturasDetalhe": 2,
+  "consultasSeparadasCliente": 0,
+  "errors": [],
+  "testesUnitarios": 31,
+  "testesIntegracao": 22,
+  "historico": {
+    "dias": 253,
+    "operacoesAtualizadas": 4031,
+    "pendentes": 0,
+    "falhas": 0,
+    "itensPreservados": 9660,
+    "cancelamentosPreservados": 75,
+    "totalCentavosPreservado": "179415240",
+    "hashesOperacoesItensCancelamentosIguais": true,
+    "checkpointsIguais": true
+  },
+  "workerRemotoRetomado": true,
+  "validacao": "Chrome com viewport mobile e desktop; sem aparelho físico"
+}

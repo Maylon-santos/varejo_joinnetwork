@@ -71,7 +71,7 @@ O ranking também retorna `pecas_por_venda` (PA), string decimal com quatro casa
 
 ## Detalhes complementares — 13/09/2026
 
-- `GET /api/v1/operacoes/:filial/:tipo/:codigo/cliente`: exige Admin e filial autorizada; consulta o ERP pela data da operação e confere a chave composta. Retorna `{clientes:[{nome,contatos:[{tipo,ddd,telefone}]}]}`. Ausência de cadastro retorna lista vazia. ERP indisponível retorna 502 `CLIENTE_INDISPONIVEL`; a tela oferece retentativa sem impedir os itens. Cadastros não são persistidos, logados nem incluídos em backups.
+- `GET /api/v1/operacoes/:filial/:tipo/:codigo/cliente`: exige Admin e filial autorizada; lê somente o banco do tenant. Retorna `{clientes:[{nome,contatos:[{tipo,ddd,telefone}]}],importados_em}`. `clientes: null` indica histórico ainda não importado; lista vazia indica cliente não informado pelo ERP. O detalhe da operação já inclui `operacao.clientes` e `operacao.clientes_importados_em`, usados pela interface sem uma segunda chamada. Dados de clientes são persistidos e incluídos nos backups privados; não aparecem nos logs.
 - `GET /api/v1/operacoes/:filial/:tipo/:codigo/itens/:ordem/imagem`: exige a mesma autenticação; obtém somente a URL persistida do item e aceita a origem fixa de fotos do ERP. Responde imagem raster de até 5 MB, sem redirecionamentos, timeout de 12 segundos e `Cache-Control: no-store`. A interface usa um blob temporário e o libera ao fechar os detalhes. Origem HTTP é consultada pelo servidor; o navegador recebe HTTPS.
 
 Alguns arquivos de fotos não existem na origem (404). A tela mantém o marcador de indisponibilidade nesses casos. O proxy não inventa fotos nem permite URLs arbitrárias.

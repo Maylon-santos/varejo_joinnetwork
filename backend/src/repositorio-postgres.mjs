@@ -39,6 +39,18 @@ export class RepositorioPostgres {
               WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3`, [evento.cod_operacao, evento.tipo_operacao, filial]);
           }
         },
+        preencherClientes: async operacoes => {
+          let atualizadas=0;
+          for(const op of operacoes){
+            chaveOperacao(op.cod_operacao,op.tipo_operacao,op.filial);
+            if(String(op.filial)!==String(filial)||!Array.isArray(op.clientes))throw new Error('CLIENTES_INVALIDOS');
+            const r=await client.query(`UPDATE operacoes SET clientes=$4::jsonb,clientes_importados_em=now()
+              WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 AND data_operacao=$5 AND clientes IS NULL`,
+              [op.cod_operacao,op.tipo_operacao,filial,JSON.stringify(op.clientes),op.data_operacao]);
+            atualizadas+=r.rowCount;
+          }
+          return atualizadas;
+        },
         salvarOperacoes: async operacoes => {
           for (const op of operacoes) {
             chaveOperacao(op.cod_operacao, op.tipo_operacao, op.filial);
@@ -53,6 +65,11 @@ export class RepositorioPostgres {
                 valor_final_centavos=EXCLUDED.valor_final_centavos,
                 cancelada=operacoes.cancelada OR EXCLUDED.cancelada,atualizado_em=now()`,
             [String(op.cod_operacao), op.tipo_operacao, filial, op.data_operacao, op.quantidade, String(op.valor_final_centavos), op.cancelada]);
+            if (Array.isArray(op.clientes)) {
+              await client.query(`UPDATE operacoes SET clientes=$4::jsonb,clientes_importados_em=now()
+                WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3`,
+              [op.cod_operacao,op.tipo_operacao,filial,JSON.stringify(op.clientes)]);
+            }
             if (op.produtos) {
               await client.query(`UPDATE operacoes SET ajuste_centavos=$4,subtotal_itens_centavos=$5,conciliacao=$6,
                 vendedor_codigo=$7,vendedor_nome=$8,evento_codigo=$9 WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3`,

@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {normalizarVenda,consultarVendas} from '../src/vendas.mjs';
 import {dias,atrasoAposFalhas,sincronizarRecurso} from '../src/ciclo-sync.mjs';
-const v={cod_operacao:1,tipo_operacao:'S',filial:30098297,data:'/Date(1788922800000-180)/',qtde:1,valor_final:90,cancelada:false,v_acerto:-10,v_frete:null,cortesia:null,customers:[{nome:'Não persistir'}],vendedor:[{funcionario:5,nome:'Vendedor teste'}],produtos:[{quantidade:1,preco:100,cod_produto:'A'}]};
-test('Normaliza itens, centavos e vendedor sem copiar cadastro de cliente',()=>{
+const v={cod_operacao:1,tipo_operacao:'S',filial:30098297,data:'/Date(1788922800000-180)/',qtde:1,valor_final:90,cancelada:false,v_acerto:-10,v_frete:null,cortesia:null,customers:[{nome:'Cliente teste'}],vendedor:[{funcionario:5,nome:'Vendedor teste'}],produtos:[{quantidade:1,preco:100,cod_produto:'A'}]};
+test('Importa cliente na mesma resposta de itens, centavos e vendedor',()=>{
  const op=normalizarVenda(v,'30098297','2026-09-09','2026-09-09');
  assert.equal(op.valor_final_centavos,'9000');assert.equal(op.conciliacao,'conciliada');
- assert.equal(op.produtos[0].preco_centavos,'10000');assert.equal('customers' in op,false);
+ assert.equal(op.produtos[0].preco_centavos,'10000');assert.equal('customers' in op,false);assert.deepEqual(op.clientes,[{nome:'Cliente teste',contatos:[]}]);
  assert.throws(()=>normalizarVenda(v,'999','2026-09-09','2026-09-09'));
 });
 test('Preserva canceladas e sinaliza divergência monetária',()=>{

@@ -1,10 +1,20 @@
 # Comece aqui — estado atual em 13/09/2026
 
+## Clientes armazenados — 13/09/2026
+
+- [x] Cliente gravado na mesma transação da venda, com atualização na reimportação.
+- [x] Histórico preenchido: 4.031 operações em 253 dias, sem falhas ou pendências.
+- [x] Valores, 9.660 itens, 75 cancelamentos e checkpoints preservados por comparação antes/depois.
+- [x] Publicação validada em celular e desktop: cliente e telefone disponíveis sem consulta separada; worker remoto retomado.
+- [x] 31 testes unitários e 22 de integração aprovados. Evidência: [validacao-clientes.json](docs/validacao-clientes.json).
+
+Esta atualização substitui a consulta de clientes sob demanda publicada anteriormente. Os snapshots de clientes entram nos backups do tenant. O fluxo de mensagens será implementado futuramente sobre os contatos locais.
+
 ## Correções publicadas — 13/09/2026
 
 - [x] Login e movimentações ajustados para celular, sem largura excedente da página.
 - [x] Imagens entregues pela API autenticada em HTTPS e ampliação validada; URLs 404 na origem continuam com marcador de indisponibilidade.
-- [x] Nome, DDD e telefones do cliente consultados no ERP ao abrir os detalhes, sem persistência de cadastros.
+- [x] Nome, DDD e telefones do cliente importados junto com a venda e armazenados no banco. Abrir detalhes consulta somente o painel, sem chamada ao ERP.
 - [x] Mapa de progresso no início do roadmap; etapa atual: homologação dos números com Maylon.
 - [x] GitHub configurado em `Maylon-santos/varejo_joinnetwork`; central pessoal e capturas permanecem ignoradas.
 

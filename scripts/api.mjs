@@ -3,7 +3,7 @@ import {criarPool,erroSeguro} from '../backend/src/postgres.mjs';
 import {criarAuth} from '../backend/src/admin-auth.mjs';
 import {criarPainel} from '../backend/src/painel.mjs';
 import {criarServidor} from '../backend/src/http-api.mjs';
-import {consultarClienteOperacao,carregarImagemProduto} from '../backend/src/detalhes-erp.mjs';
+import {carregarImagemProduto} from '../backend/src/detalhes-erp.mjs';
 import {criarFrontend} from '../backend/src/frontend.mjs';
 const control=criarPool(process.env.CONTROL_DATABASE_URL),tenantDb=criarPool(process.env.TENANT_DATABASE_URL);
 let server;
@@ -21,7 +21,7 @@ try{
  };
  await health();
  const auth=await criarAuth(control,tenant),painel=criarPainel(tenantDb,tenant,filiais);
- server=criarServidor({auth,painel,filiais,clienteOperacao:operacao=>consultarClienteOperacao({operacao,baseUrl:process.env.MILLENNIUM_BASE_URL,token:process.env.MILLENNIUM_BASIC_TOKEN}),imagemProduto:carregarImagemProduto,frontend:await criarFrontend(),health,log:e=>console.error(JSON.stringify(e))});
+ server=criarServidor({auth,painel,filiais,imagemProduto:carregarImagemProduto,frontend:await criarFrontend(),health,log:e=>console.error(JSON.stringify(e))});
  const port=Number(process.env.PORT||3000);
  if(!Number.isInteger(port)||port<1||port>65535)throw new Error('PORTA_INVALIDA');
  await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,process.env.API_HOST||'127.0.0.1',resolve);});

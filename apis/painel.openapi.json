@@ -862,7 +862,7 @@
     },
     "/api/v1/operacoes/{filial}/{tipo}/{codigo}/cliente": {
       "get": {
-        "summary": "Nome e contatos do cliente consultados no ERP",
+        "summary": "Nome e contatos do cliente armazenados junto com a venda",
         "responses": {
           "200": {
             "description": "Sucesso",
@@ -933,9 +933,6 @@
                 }
               }
             }
-          },
-          "502": {
-            "description": "Origem indisponível"
           }
         },
         "parameters": [
@@ -963,7 +960,8 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "description": "Consulta somente o banco do tenant. clientes=null indica histórico pendente de importação; [] indica cliente não informado pelo ERP. Os mesmos dados constam em operacao.clientes no detalhe."
       }
     },
     "/api/v1/operacoes/{filial}/{tipo}/{codigo}/itens/{ordem}/imagem": {

@@ -1,3 +1,4 @@
+import {clientesDaVenda} from './clientes.mjs';
 import {chaveOperacao} from './cancelamentos.mjs';
 import {validarDia} from './sincronizar-cancelamentos.mjs';
 import {centavos,reconciliarVenda} from './reconciliar-venda.mjs';
@@ -26,7 +27,7 @@ export function normalizarVenda(v,filial,inicio,fim){
   ajuste_centavos:v.v_acerto==null?null:centavos(v.v_acerto).toString(),
   subtotal_itens_centavos:produtos.reduce((s,p)=>s+BigInt(p.preco_centavos)*BigInt(p.quantidade),0n).toString(),
   conciliacao:reconciliacao.status,vendedor_codigo:vendedor?.funcionario==null?null:String(vendedor.funcionario),
-  vendedor_nome:vendedor?.nome??null,evento_codigo:v.codigo??null,produtos,
+  vendedor_nome:vendedor?.nome??null,evento_codigo:v.codigo??null,produtos,clientes:clientesDaVenda(v),
  };
 }
 export async function consultarVendas({baseUrl,token,filial,inicio,fim,fetchImpl=fetch,onDuplicado=()=>{}}){
