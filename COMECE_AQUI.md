@@ -1,5 +1,11 @@
 # Comece aqui — estado atual em 13/09/2026
 
+## Seletor de filiais corrigido — 13/09/2026
+
+- [x] Exibir `COD_FILIAL` do ERP nas 14 opções: ITUPEVA, AERO-009, AERO-010 e demais códigos conferidos na origem.
+- [x] Preservar os IDs internos nos filtros e relacionamentos; códigos carregados da configuração local.
+- [x] Publicação e troca de filial verificadas no celular; 24 testes de integração aprovados. Evidência: `docs/validacao-codigos-filiais.json`.
+
 ## Expansão iniciada — 13/09/2026
 
 - [x] Cadastros das 14 filiais verificados no ERP após retentativas de consultas que expiraram.

@@ -375,7 +375,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Retorna filiais autorizadas com filial (ID interno usado nos filtros) e cod_filial (código ERP exibido no seletor). Os códigos são lidos da configuração local, sem consulta ao ERP no login."
       }
     },
     "/api/v1/indicadores": {

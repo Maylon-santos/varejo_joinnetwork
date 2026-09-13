@@ -38,5 +38,21 @@
   "operationalOwner": "Maylon",
   "tenantGroupingConfirmedBy": "Maylon",
   "tenantGroupingConfirmedOn": "2026-09-13",
-  "syncMaxDaysPerCycle": 7
+  "syncMaxDaysPerCycle": 7,
+  "branchCodes": {
+    "30098297": "ITUPEVA",
+    "30098400": "AERO-009",
+    "30098401": "AERO-010",
+    "30098409": "AERO-014",
+    "30098495": "AERO-015",
+    "30098696": "AERO-018",
+    "30098697": "AERO-019",
+    "30098699": "BABIES-002",
+    "30098704": "AERO-019-2",
+    "30098708": "AERO-021",
+    "30098795": "AERO-022",
+    "30098702": "AERO-020",
+    "30098797": "AERO-MKTP",
+    "30098802": "AERO-023"
+  }
 }

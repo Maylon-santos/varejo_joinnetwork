@@ -13,7 +13,7 @@ const efetiva="(o.cancelada OR EXISTS(SELECT 1 FROM cancelamentos c WHERE c.cod_
 const statusConciliacao="(CASE WHEN o.erro_erp_confirmado_por IS NOT NULL AND o.conciliacao IN ('quantidade_divergente','divergente') THEN 'erro_erp_confirmado' ELSE o.conciliacao END)";
 const scope='o.filial=$1 AND o.data_operacao BETWEEN $2::date AND $3::date';
 const elegivel=`o.tipo_operacao='S' AND NOT ${efetiva}`;
-export function criarPainel(pool,tenant,filiais){
+export function criarPainel(pool,tenant,filiais,codigosFiliais={}){
  async function snapshot(executar){
   const client=await pool.connect();
   try{
@@ -33,7 +33,7 @@ export function criarPainel(pool,tenant,filiais){
    observacao:'Checkpoints não substituem homologação com o ERP; períodos anteriores ao início importado podem não ter cobertura.'};
  }
  return {
-  filiais:()=>snapshot(async db=>({filiais:filiais.map(id=>({filial:id})),tenant})),
+  filiais:()=>snapshot(async db=>({filiais:filiais.map(id=>({filial:id,cod_filial:codigosFiliais[id]??null})),tenant})),
   indicadores:f=>snapshot(async db=>{
    const args=[f.filial,f.inicio,f.fim];
    const total=(await db.query(`SELECT count(*)::integer AS vendas,

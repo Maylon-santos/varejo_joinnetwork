@@ -20,7 +20,7 @@ try{
   if(registry.rows[0]?.database_name!==db)throw new Error('REGISTRO_INCORRETO');
  };
  await health();
- const auth=await criarAuth(control,tenant),painel=criarPainel(tenantDb,tenant,filiais);
+ const auth=await criarAuth(control,tenant),painel=criarPainel(tenantDb,tenant,filiais,config.branchCodes);
  server=criarServidor({auth,painel,filiais,imagemProduto:carregarImagemProduto,frontend:await criarFrontend(),health,log:e=>console.error(JSON.stringify(e))});
  const port=Number(process.env.PORT||3000);
  if(!Number.isInteger(port)||port<1||port>65535)throw new Error('PORTA_INVALIDA');

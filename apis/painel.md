@@ -23,7 +23,7 @@ Todas exigem sessão Admin, exceto `/health`. Tenant é resolvido no servidor, n
 | Método | Caminho | Resultado |
 |---|---|---|
 | GET | `/health` | Saúde da conexão e correspondência entre tenant e bancos, sem detalhes internos |
-| GET | `/api/v1/filiais` | IDs das filiais autorizadas |
+| GET | `/api/v1/filiais` | IDs internos e `cod_filial` das filiais autorizadas |
 | GET | `/api/v1/indicadores` | Valor das vendas, quantidade de vendas, peças, ticket, PA, série diária e qualidade |
 | GET | `/api/v1/vendas` | Operações paginadas, filtros de tipo/estado/conciliação |
 | GET | `/api/v1/ranking` | Vendas por código do vendedor, ordenadas por valor, peças ou ticket |
@@ -75,3 +75,7 @@ O ranking também retorna `pecas_por_venda` (PA), string decimal com quatro casa
 - `GET /api/v1/operacoes/:filial/:tipo/:codigo/itens/:ordem/imagem`: exige a mesma autenticação; obtém somente a URL persistida do item e aceita a origem fixa de fotos do ERP. Responde imagem raster de até 5 MB, sem redirecionamentos, timeout de 12 segundos e `Cache-Control: no-store`. A interface usa um blob temporário e o libera ao fechar os detalhes. Origem HTTP é consultada pelo servidor; o navegador recebe HTTPS.
 
 Alguns arquivos de fotos não existem na origem (404). A tela mantém o marcador de indisponibilidade nesses casos. O proxy não inventa fotos nem permite URLs arbitrárias.
+
+## Código exibido das filiais
+
+`GET /api/v1/filiais` retorna `{filiais:[{filial,cod_filial}],tenant}`. O seletor exibe o `cod_filial` do ERP (ex.: `AERO-009`), mantendo `filial` (ex.: `30098400`) como valor interno dos filtros e relacionamentos. Os 14 códigos foram conferidos no ERP em 13/09/2026 e registrados em `config/piloto.json`, campo `branchCodes`. Mudanças futuras dos códigos na origem exigem atualizar esse mapeamento e publicar a API; o login não consulta o ERP. Código ausente é apresentado como “Filial sem código cadastrado”.

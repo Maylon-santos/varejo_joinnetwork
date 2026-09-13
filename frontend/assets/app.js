@@ -39,7 +39,7 @@ $('login-form').addEventListener('submit',async e=>{
   const session=await api('/auth/login',{method:'POST',body:JSON.stringify({email:$('email').value,senha:$('password').value})});token=session.token;$('password').value='';
   const [me,branches]=await Promise.all([api('/auth/me'),api('/filiais')]);
   $('user-email').textContent=me.usuario.email;$('branch').replaceChildren();
-  for(const item of branches.filiais){const opt=el('option',item.filial==='30098297'?'Aeropostale · Itupeva':`Loja ${item.filial}`);opt.value=item.filial;$('branch').append(opt);}
+  for(const item of branches.filiais){const opt=el('option',item.cod_filial||'Filial sem código cadastrado');opt.value=item.filial;$('branch').append(opt);}
   if(!branches.filiais.length)throw new Error('Nenhuma loja está liberada para este acesso.');
   $('login-view').hidden=true;$('app-view').hidden=false;page='overview';rankPage=1;salesPage=1;$('period').value='month';setPeriod();setPage('overview',false);applyFilters();
   clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&!document.hidden&&!$('detail-dialog').open)loadData();},360000);

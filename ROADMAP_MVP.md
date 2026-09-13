@@ -24,6 +24,8 @@ Agrupamento confirmado por Maylon em 13/09: as 14 filiais pertencem ao mesmo amb
 
 Expansão publicada em 13/09: 14 cadastros ERP verificados; seletor Admin e troca de filial no celular aprovados. Carga em lotes de sete dias por recurso/filial, com checkpoint persistente e indicação de histórico parcial. Validação: 32 testes unitários e 23 de integração. Ainda pendentes: conclusão e conferência dos históricos novos, além dos cargos e permissões.
 
+Correção de apresentação em 13/09: seletor das 14 filiais passa a exibir `COD_FILIAL` conferido no ERP; IDs internos continuam nos filtros. Publicado e validado em celular, com 24 testes de integração aprovados. Evidência: `docs/validacao-codigos-filiais.json`.
+
 Retomada: confira esta tabela, as evidências de validação e a última seção de tarefas. Não usar checklists históricos como status vigente.
 
 

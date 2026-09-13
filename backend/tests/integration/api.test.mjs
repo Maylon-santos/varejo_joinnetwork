@@ -124,3 +124,8 @@ test('Admin com duas filiais autorizadas mantém indicadores e detalhes separado
  await assert.rejects(painel.detalhe('1','S','7'),{status:404});
  await assert.rejects(painel.indicadores({...f,filial:'999'}).then(()=>criarPainel(pool,'outro',['1','999']).filiais()));
 });
+
+test('Lista de filiais exibe COD_FILIAL e preserva ID usado nos filtros sem expor filiais não autorizadas',async()=>{
+ const painel=criarPainel(pool,'teste',['1'],{'1':'AERO-009','999':'OUTRA'});
+ assert.deepEqual((await painel.filiais()).filiais,[{filial:'1',cod_filial:'AERO-009'}]);
+});
