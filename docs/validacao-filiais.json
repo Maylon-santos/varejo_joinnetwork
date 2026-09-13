@@ -1,0 +1,62 @@
+{
+  "verificadoEm": "2026-09-13T19:30:12.502Z",
+  "somenteLeitura": true,
+  "filiais": [
+    {
+      "filial": "30098297",
+      "presente": true
+    },
+    {
+      "filial": "30098400",
+      "presente": true
+    },
+    {
+      "filial": "30098401",
+      "presente": true
+    },
+    {
+      "filial": "30098409",
+      "presente": true
+    },
+    {
+      "filial": "30098495",
+      "presente": true
+    },
+    {
+      "filial": "30098696",
+      "presente": true
+    },
+    {
+      "filial": "30098697",
+      "presente": true
+    },
+    {
+      "filial": "30098704",
+      "presente": true
+    },
+    {
+      "filial": "30098702",
+      "presente": true
+    },
+    {
+      "filial": "30098708",
+      "presente": true
+    },
+    {
+      "filial": "30098795",
+      "presente": true
+    },
+    {
+      "filial": "30098802",
+      "presente": true
+    },
+    {
+      "filial": "30098797",
+      "presente": true
+    },
+    {
+      "filial": "30098699",
+      "presente": true
+    }
+  ]
+}

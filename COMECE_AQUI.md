@@ -1,5 +1,27 @@
 # Comece aqui — estado atual em 13/09/2026
 
+## Expansão iniciada — 13/09/2026
+
+- [x] Cadastros das 14 filiais verificados no ERP após retentativas de consultas que expiraram.
+- [x] Admin com 14 filiais no seletor; ITUPEVA continua como opção inicial.
+- [x] Worker remoto publicado com limite de sete dias por recurso/filial em cada rodada, sem consultas paralelas ao ERP.
+- [x] 32 testes unitários e 23 de integração aprovados, incluindo isolamento entre filiais autorizadas. API pública e troca de filial no celular verificadas.
+- [ ] Histórico das 13 novas filiais em carga; a interface sinaliza cobertura parcial. A conclusão será verificada por checkpoints.
+- [ ] Próxima entrega: cargos e permissões por recurso/filial; somente Admin está ativo.
+
+Evidências: `docs/validacao-filiais.json`, `docs/validacao-producao.json` e `docs/validacao-expansao-ui.json`. A confirmação de ITUPEVA não homologa automaticamente os números das outras filiais.
+
+## Homologação confirmada — 13/09/2026
+
+- [x] Maylon confirmou a conferência dos indicadores de ITUPEVA após a pergunta sobre o período de 01/01 a 09/09/2026.
+- [x] Referência do painel extraída e soma diária conferida contra os totais, sem nova consulta ao ERP. Relatório e ficha de aceite disponíveis na central pessoal.
+- [x] Confirmação registrada em [validacao-homologacao.json](docs/validacao-homologacao.json). O relatório externo do ERP não foi anexado; não se trata de uma comparação automatizada com a origem.
+- [x] Maylon confirmou as 14 filiais no mesmo ambiente Aeropostale.
+- [x] Publicar acesso Admin às 14 filiais e iniciar carga gradual; novas lojas ainda com histórico parcial.
+- [ ] Concluir históricos e implementar permissões para usuários restritos.
+
+Esta confirmação encerra a homologação do piloto no escopo apresentado. Regras adicionais de bruto/líquido, devoluções e novas filiais continuam separadas. As 14 filiais autorizadas foram ativadas para Admin; o histórico das novas lojas está em carga.
+
 ## Clientes armazenados — 13/09/2026
 
 - [x] Cliente gravado na mesma transação da venda, com atualização na reimportação.

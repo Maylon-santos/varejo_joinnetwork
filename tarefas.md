@@ -1,5 +1,17 @@
 # Lista de tarefas — Aeropostale Varejo
 
+## Próxima etapa — 13/09/2026
+
+- [x] **Maylon:** confirmar conferência dos indicadores de ITUPEVA. Resposta recebida: “sim conferido !”. Evidência em `docs/validacao-homologacao.json`.
+- [x] **Responsável técnico:** preparar extração de referência na central, com totais e tabelas mensal/diária; soma diária confere com os indicadores.
+- [x] **Maylon:** confirmou as 14 filiais no mesmo ambiente Aeropostale, com acesso limitado por filial para cada usuário.
+- [x] **Responsável técnico:** validar os 14 cadastros e publicar carga gradual, com checkpoints por filial e teste de isolamento.
+- [ ] **Responsável técnico:** acompanhar conclusão dos históricos das 13 novas filiais; validar totais por filial após cobertura completa.
+- [ ] **Responsável técnico:** implementar permissões por recurso e filial para os cargos previstos, antes de liberar usuários com acesso restrito.
+
+Este estado prevalece sobre as pendências históricas abaixo. As 14 filiais estão liberadas para Admin e o histórico das 13 novas está em carga.
+
+
 ## Correções publicadas — 13/09/2026
 
 - [x] Login e movimentações ajustados para celular, sem largura excedente da página.

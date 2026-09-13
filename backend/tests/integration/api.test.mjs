@@ -113,3 +113,14 @@ test('Cliente persistido é servido sem conector ERP; cliente e fotos exigem aut
   assert.equal((await get('/api/v1/operacoes/1/S/1/itens/99/imagem')).status,404);
  }finally{await pool.query('UPDATE operacao_itens SET imagem_url=NULL WHERE cod_operacao=1');}
 });
+
+test('Admin com duas filiais autorizadas mantém indicadores e detalhes separados por filial',async()=>{
+ const painel=criarPainel(pool,'teste',['1','999']);
+ assert.equal((await painel.filiais()).filiais.length,2);
+ const f={inicio:'2026-09-01',fim:'2026-09-02',pagina:1,limite:50};
+ assert.equal((await painel.indicadores({...f,filial:'1'})).valor_vendas_centavos,'37000');
+ assert.equal((await painel.indicadores({...f,filial:'999'})).valor_vendas_centavos,'999999');
+ const lista=await painel.vendas({...f,filial:'999'});assert.equal(lista.total,1);assert.equal(lista.operacoes[0].filial,'999');
+ await assert.rejects(painel.detalhe('1','S','7'),{status:404});
+ await assert.rejects(painel.indicadores({...f,filial:'999'}).then(()=>criarPainel(pool,'outro',['1','999']).filiais()));
+});

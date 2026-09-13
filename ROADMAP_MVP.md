@@ -2,7 +2,7 @@
 
 ## Mapa de progresso — 13/09/2026
 
-**Estamos na etapa 5: homologação dos indicadores com Maylon. As correções do piloto foram publicadas e verificadas.**
+**Estamos na etapa 6: expansão de filiais e permissões. Maylon confirmou a conferência dos indicadores do piloto.**
 
 | Etapa | Situação | Entrega / próximo passo |
 | --- | --- | --- |
@@ -10,13 +10,19 @@
 | 2. Painel e Admin | Concluída | Vendas, PA, ticket, ranking e conferência |
 | 3. Publicação Locaweb | Concluída | Domínio .com.br, HTTPS e backup diário |
 | 4. Correções do piloto | Concluída | Login e movimentações mobile, fotos via API, cliente persistido junto com a venda |
-| 5. Homologação ERP | Pendente de Maylon | Conferir os indicadores com relatório da origem |
-| 6. Outras filiais e cargos | Pendente | Confirmar agrupamento e implementar permissões |
+| 5. Homologação ERP | Confirmada por Maylon | ITUPEVA; pergunta de referência: 01/01 a 09/09/2026 |
+| 6. Outras filiais e cargos | Em andamento | 14 filiais liberadas para Admin; histórico em carga; permissões pendentes |
 | 7. SaaS comercial | Planejamento futuro | Provisionamento, planos e cobrança |
 
 Atualização de clientes em 13/09: persistência publicada e histórico de 4.031 operações preenchido, sem alterar números ou checkpoints. Detalhes leem somente o banco. 31 testes unitários, 22 de integração e validação pública em celular/desktop aprovados. Evidência: `docs/validacao-clientes.json`. Futuro envio de mensagens usará contatos locais; cadastro unificado e automações continuam pendentes.
 
-Fluxo: importação → painel → publicação → correções → **homologação (agora)** → expansão → SaaS.
+Fluxo: importação → painel → publicação → correções → homologação → **expansão (agora)** → SaaS.
+
+Confirmação em 13/09: Maylon respondeu “sim conferido !” à pergunta sobre homologação de ITUPEVA. Registro em `docs/validacao-homologacao.json`; relatório do painel e ficha de aceite na central pessoal. O relatório independente do ERP não foi anexado. A confirmação não altera automaticamente regras de bruto/líquido, devoluções ou filiais autorizadas.
+
+Agrupamento confirmado por Maylon em 13/09: as 14 filiais pertencem ao mesmo ambiente Aeropostale. Admin permanece o único cargo ativo; permissões de usuários restritos ainda serão implementadas.
+
+Expansão publicada em 13/09: 14 cadastros ERP verificados; seletor Admin e troca de filial no celular aprovados. Carga em lotes de sete dias por recurso/filial, com checkpoint persistente e indicação de histórico parcial. Validação: 32 testes unitários e 23 de integração. Ainda pendentes: conclusão e conferência dos históricos novos, além dos cargos e permissões.
 
 Retomada: confira esta tabela, as evidências de validação e a última seção de tarefas. Não usar checklists históricos como status vigente.
 

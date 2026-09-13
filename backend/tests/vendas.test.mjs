@@ -34,3 +34,13 @@ test('Colapsa apenas cópias normalizadas idênticas e informa a ocorrência',as
  const rows=await consultarVendas({baseUrl:'http://example.invalid/api',token:'fake',filial:'30098297',inicio:'2026-09-09',fim:'2026-09-09',onDuplicado:x=>vistos.push(x),fetchImpl:async()=>({ok:true,json:async()=>({'odata.count':2,value:[v,v]})})});
  assert.equal(rows.length,1);assert.equal(vistos.length,1);
 });
+
+test('Histórico limitado libera a próxima filial e retoma com sobreposição sem pular datas',async()=>{
+ let checkpoint=null;const consultados=[];
+ const repositorio={transacao:async(_,fn)=>fn({lerCheckpoint:async()=>checkpoint,salvarOperacoes:async()=>{},salvarCheckpoint:async d=>{checkpoint=d;}})};
+ const base={repositorio,tenant:'teste',filial:'1',recurso:'vendas',inicioHistorico:'2026-01-01',fim:'2026-01-10',maxDias:7,consultar:async({inicio})=>{consultados.push(inicio);return [];}};
+ const primeiro=await sincronizarRecurso(base);assert.equal(primeiro.fim,'2026-01-07');assert.equal(primeiro.pendente,true);assert.equal(primeiro.janelas,7);
+ const segundo=await sincronizarRecurso(base);assert.equal(segundo.inicio,'2026-01-06');assert.equal(segundo.fim,'2026-01-10');assert.equal(segundo.pendente,false);
+ assert.equal(new Set(consultados).size,10);assert.equal(checkpoint,'2026-01-10');
+ for(const maxDias of [0,1,2,3.5])await assert.rejects(sincronizarRecurso({...base,maxDias}));
+});

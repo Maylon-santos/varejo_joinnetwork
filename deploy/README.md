@@ -47,4 +47,12 @@ Certificado emitido para o hostname exato, com vencimento inicial em 11/12/2026.
 
 Verificação externa autenticada: `node --env-file=.env scripts/verificar-producao.mjs`, no computador que possui as credenciais Admin. Nunca imprimir token/senha. Opcionalmente `DEPLOY_VERIFY_IP` permite testar um IP preservando a verificação TLS do hostname.
 
-O piloto continua limitado a ITUPEVA. Homologação de indicadores, expansão para outras filiais e SaaS são etapas separadas. O limitador da API atual usa o IP de conexão do proxy: limites ficam compartilhados entre os usuários neste piloto, devendo ser revisados antes da expansão.
+Em 13/09/2026, Maylon confirmou o agrupamento das 14 filiais no mesmo tenant Aeropostale. Admin acessa as 14; o histórico das novas filiais é carregado gradualmente. ITUPEVA foi homologada por confirmação de Maylon; os totais das outras lojas e o SaaS permanecem etapas separadas. O limitador da API atual usa o IP de conexão do proxy: limites ficam compartilhados entre os usuários neste piloto, devendo ser revisados antes da expansão.
+
+## Conferência da expansão
+
+`node --env-file=.env scripts/verificar-filiais.mjs` verifica os cadastros ERP; `--retomar` repete somente os cadastros não confirmados no relatório anterior. São consultas de leitura, sem importação. A sincronização periódica usa `config/piloto.json`, com ITUPEVA primeiro e até sete dias por recurso/filial por rodada. O evento `lote_historico_concluido` significa que um lote terminou, não que o histórico está completo.
+
+`node --env-file=.env scripts/verificar-producao.mjs` confere a lista autorizada, indicadores por filial, TLS, login e rejeição de filial não autorizada. A evidência inclui cobertura por filial; novas lojas continuam parciais até seus checkpoints cobrirem o período consultado.
+
+Para preparar uma referência de homologação de ITUPEVA: `node --env-file=.env scripts/preparar-homologacao.mjs`. O relatório lê somente o painel, verifica somas e gera arquivos privados na central. `HOMOLOGACAO_INICIO` e `HOMOLOGACAO_FIM` mudam o período. Cada execução cria uma extração nova e preserva a ficha de aceite existente; não comprova, por si só, equivalência com o ERP. Atualize o HTML com `python3 scripts/gerar-central.py`.

@@ -15,6 +15,8 @@ try{
  const intervalo=Number(process.env.SYNC_INTERVAL_SECONDS);
  if(!Number.isSafeInteger(intervalo)||intervalo<30)throw new Error('INTERVALO_INVALIDO');
  const config=JSON.parse(await readFile(new URL('../config/piloto.json',import.meta.url)));
+ const maxDias=config.syncMaxDaysPerCycle??7;
+ if(!Number.isSafeInteger(maxDias)||maxDias<3)throw new Error('LIMITE_DIAS_INVALIDO');
  const tenant=process.env.TENANT_KEY;
  const inicioHistorico=process.env.SYNC_INITIAL_DATE||config.initialImport.from;validarDia(inicioHistorico);
  // A execução única carrega o período inicial; modo contínuo acompanha a data atual.
@@ -37,12 +39,12 @@ try{
    const state=await pool.query('SELECT falhas_consecutivas,proxima_tentativa > now() AS aguardar FROM sync_status WHERE filial=$1 AND recurso=$2',[filial,recurso]);
    if(!once&&state.rows[0]?.aguardar)continue;
    try{
-    const result=await sincronizarRecurso({repositorio:repo,tenant,filial,recurso,inicioHistorico,fim,consultar:consultas[recurso],parar:()=>encerrar,progresso:p=>{
+    const result=await sincronizarRecurso({repositorio:repo,tenant,filial,recurso,inicioHistorico,fim,maxDias:once?Infinity:maxDias,consultar:consultas[recurso],parar:()=>encerrar,progresso:p=>{
      if(p.janelas===1||p.janelas%10===0||p.dia===fim)console.log(JSON.stringify({evento:'progresso',...p}));
     }});
     await pool.query(`INSERT INTO sync_status(filial,recurso,ultimo_sucesso,proxima_tentativa) VALUES($1,$2,now(),now()+$3*interval '1 second')
       ON CONFLICT(filial,recurso) DO UPDATE SET falhas_consecutivas=0,ultimo_sucesso=now(),ultimo_erro_codigo=NULL,proxima_tentativa=EXCLUDED.proxima_tentativa`,[filial,recurso,intervalo]);
-    console.log(JSON.stringify({evento:'ciclo_concluido',...result}));
+    console.log(JSON.stringify({evento:result.pendente?'lote_historico_concluido':'ciclo_concluido',...result}));
    }catch(error){
     if(encerrar)break;
     const falhas=(state.rows[0]?.falhas_consecutivas||0)+1;

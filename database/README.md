@@ -69,3 +69,11 @@ A migration `005_clientes.sql` adiciona os campos sem modificar o histórico ope
 Com o worker remoto pausado, executar `docker compose run --rm --no-deps sync-worker node scripts/preencher-clientes.mjs`. A rotina verifica o tenant, usa somente filiais autorizadas na configuração e consulta um dia por vez, com intervalo de um segundo e até três tentativas. Atualiza somente clientes ainda nulos, por chave composta e data; não altera valores, itens, cancelamentos, timestamps operacionais ou checkpoints. Pode ser retomada: dias já preenchidos não são consultados novamente. Ausências de operações na resposta permanecem pendentes e fazem a rotina encerrar com código 1.
 
 O futuro envio de mensagens utilizará os contatos locais. Cadastro unificado, preferências de contato, fila, deduplicação e histórico de envios serão uma etapa própria; nenhum envio é realizado nesta entrega.
+
+## Expansão autorizada — 13/09/2026
+
+Maylon confirmou as 14 filiais no mesmo tenant Aeropostale. O modo contínuo limita cada recurso/filial a sete dias por rodada (`syncMaxDaysPerCycle`), começando por ITUPEVA. As consultas continuam sequenciais; o intervalo base é contado por recurso/filial após cada lote. A duração total da rodada pode ampliar o tempo entre atualizações de uma loja.
+
+O checkpoint avança somente até o último dia gravado; o log `lote_historico_concluido` informa `pendente: true` e o alvo quando falta histórico. A rodada seguinte preserva a sobreposição de um dia anterior ao checkpoint. Limites menores que três dias são recusados para evitar que a sobreposição impeça avanço. `--once` mantém a carga integral até o fim inicial configurado.
+
+O Admin acessa as filiais configuradas. Usuários restritos continuam dependentes da implementação de permissões por cargo e filial. A interface sinaliza períodos sem cobertura; totais das novas filiais não são homologados automaticamente pela aprovação de ITUPEVA.

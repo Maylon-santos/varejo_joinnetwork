@@ -1,0 +1,18 @@
+{
+  "registradoEm": "2026-09-13",
+  "filial": "30098297",
+  "loja": "ITUPEVA",
+  "periodoProposto": {
+    "inicio": "2026-01-01",
+    "fim": "2026-09-09"
+  },
+  "confirmacaoResponsavel": {
+    "nome": "Maylon",
+    "resposta": "sim conferido !",
+    "contexto": "Resposta à pergunta de homologação de ITUPEVA com período proposto de 01/01 a 09/09/2026"
+  },
+  "relatorioERPAnexado": false,
+  "consistenciaInternaPainel": true,
+  "comparacaoAutomaticaComERP": false,
+  "escopo": "Confirmação dos indicadores do piloto; não libera outras filiais nem define bruto/líquido ou devoluções."
+}
