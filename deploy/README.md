@@ -20,7 +20,7 @@ Não habilitar workers locais e remotos simultaneamente com bancos separados. O 
 
 `bash deploy/backup.sh` gera dumps customizados de ambos os bancos, checksums SHA-256 e marcador COMPLETE. O diretório usa permissões privadas. Sessões Admin são excluídas dos dados do backup, exigindo novo login após restauração; usuários e hashes de senha são preservados.
 
-O timer `aeropostale-backup.timer` executa diariamente às 03:30 UTC (00:30 de São Paulo), com até cinco minutos de variação. Verificar com `systemctl list-timers aeropostale-backup.timer` e `journalctl -u aeropostale-backup.service`. Os backups diários ficam em `/opt/aeropostale-varejo/backups`. Não há exclusão automática; retenção e cópia externa recorrente ainda precisam ser definidas. Há uma cópia inicial fora do servidor em `artifacts/deploy/backups` no computador de origem, ignorada pelo Git.
+O timer `aeropostale-backup.timer` executa diariamente às 03:30 UTC (00:30 de São Paulo), com até cinco minutos de variação. Verificar com `systemctl list-timers aeropostale-backup.timer` e `journalctl -u aeropostale-backup.service`. Os backups diários ficam em `/opt/aeropostale-varejo/backups`. Retenção ativa: 5 dias na Locaweb após confirmação externa e 90 dias no mabookhome, preservando sempre a última cópia completa. Há uma cópia inicial fora do servidor em `artifacts/deploy/backups` no computador de origem, ignorada pelo Git.
 
 Os dumps são consistentes individualmente; não são um snapshot simultâneo entre os dois bancos. Para uma migração coordenada, pausar escritas/sincronização antes da cópia. O backup inicial foi restaurado nos bancos novos antes da publicação e conferido contra contagens, totais, hashes de operações/itens/cancelamentos, tenant e checkpoints da origem.
 
@@ -81,4 +81,23 @@ Executar `python3 scripts/verificar-backup.py CAMINHO_DO_BACKUP` no computador c
 
 Relatório agregado: `docs/validacao-backup.json` (pode escolher outro caminho com `--relatorio`). Logs privados: `artifacts/deploy/varejo-restore-test-*/restore.log`. O teste verifica recuperação do backup indicado, sem comparação com a produção em alteração. Dumps e logs continuam fora do Git. Cinco testes de validação: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-verificar-backup.py`.
 
-A restauração do backup de 14/09 às 11h56 UTC foi validada. Retenção e cópia externa recorrente aguardam definição do destino. Proposta para decisão: manter 30 dias no servidor e pelo menos 7 cópias válidas; só habilitar limpeza após cópia externa verificada. Essa proposta ainda não está aplicada e nenhum arquivo foi excluído. A retenção externa dependerá do destino escolhido.
+A restauração do backup de 14/09 às 11h56 UTC foi validada. Destino e política definidos posteriormente por Maylon: mabookhome, 5 dias na Locaweb e 90 dias no Mac. A política de 30 dias não foi aplicada.
+
+
+## Cópia automática para mabookhome
+
+Pasta no Mac: `/Users/maylonsantos/Backups/JoinNetwork/Aeropostale`. No Finder, usar ⌘⇧G e colar esse caminho. Cada backup contém `control.dump`, `tenant.dump`, `SHA256SUMS` e `COMPLETE`; os dumps são arquivos PostgreSQL para restauração.
+
+O Mac busca os backups pela conexão SSH ao endereço público da Locaweb. Acesso ao Mac pelo alias `mabookhome` já funciona via rede Tailscale; não foi necessário instalar Tailscale no servidor. A chave privada exclusiva `~/.ssh/aeropostale_backup_ed25519` fica somente no Mac. O known_hosts dedicado foi copiado da conexão confiável existente; o coletor exige verificação estrita da identidade do servidor.
+
+Na Locaweb, a chave pública tem `restrict` e comando forçado `/usr/bin/python3 /opt/aeropostale-varejo/deploy/exportar-backups.py`. O comando permite apenas `exportar-backups` e `confirmar-copias`; não libera shell, terminal ou encaminhamento de portas. O helper usa `scripts/backup_retencao.py`, valida os backups completos e limita a confirmação aos nomes e hashes existentes. O acesso deve continuar restrito ao reinstalar; nunca autorizar essa chave como login geral.
+
+No Mac, `scripts/receber-backups-mac.py` e `scripts/backup_retencao.py` ficam em `Backups/JoinNetwork/Aeropostale/automacao/`, junto de `locaweb-known-hosts`. O coletor transfere os backups completos, aceita somente os quatro arquivos esperados, rejeita links e caminhos externos, confere o lote antes de publicar cópias novas e preserva cópias existentes diferentes para análise. Um lock impede execuções concorrentes. Não há exclusão por espelhamento. A transferência atual envia todos os backups completos ainda retidos na origem; somente as cópias novas são adicionadas ao destino.
+
+`deploy/instalar-coleta-mac.py`, executado no Mac como o usuário do backup, mantém um bloco próprio no crontab, preservando as demais tarefas. Frequência definitiva: `17 * * * *`. O teste temporário por minuto foi removido após execuções automáticas confirmadas. Não exige sudo nem sessão gráfica. Quando o computador estiver desligado, dormindo ou sem internet, a tentativa ocorrerá no próximo horário em que puder executar; a rotina não acorda o Mac. Não houve alteração das configurações de energia.
+
+Após conferir os hashes no destino, o Mac envia confirmação por SSH. O servidor então remove somente backups completos confirmados com mais de **5 dias**. Depois do sucesso remoto, o Mac remove cópias completas com mais de **90 dias**. Em ambos os lados, a última cópia completa é preservada. Idade calculada pelo timestamp UTC do nome do backup; cópias incompletas, diretórios inesperados, links e diretórios com arquivos adicionais não são apagados. Dados corrompidos interrompem a limpeza. Se a cópia/confirmacão externa falhar, a retenção remota não avança; o disco pode conservar backups além dos cinco dias até a conexão voltar.
+
+Status local: `automacao/ultima-copia.json`; execuções e falhas: `automacao/coleta.log`. Status remoto: `/opt/aeropostale-varejo/backups/.confirmacao-mabookhome.json`. O JSON local representa a última execução bem-sucedida; conferir também sua data e o log para identificar falhas posteriores. Revogar o acesso removendo somente a chave pública identificada como `aeropostale-backup-mabookhome` do authorized_keys do servidor; desativar a coleta removendo somente o bloco JOINNETWORK AEROPOSTALE BACKUP do crontab do Mac. Preservar as outras chaves e tarefas.
+
+Testes: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-receber-backups.py` e `PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-retencao-backups.py`, além do teste de integridade citado acima. A retenção foi testada com datas antigas sintéticas; a primeira execução real não precisou excluir arquivos.

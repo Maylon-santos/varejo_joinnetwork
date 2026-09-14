@@ -3,11 +3,11 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-13 de 23 tarefas deste quadro concluídas. Atualização: 2026-09-14. A contagem não representa prazo ou esforço.
+14 de 23 tarefas deste quadro concluídas. Atualização: 2026-09-14. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
-| R11 — Conferir totais das novas filiais | R14 — Retenção e cópia externa dos backups | — | R01 — Importação e banco do piloto |
+| R11 — Conferir totais das novas filiais | — | — | R01 — Importação e banco do piloto |
 | R15 — Cadastro unificado e aniversariantes | — | — | R02 — Painel e acesso Admin |
 | R16 — Fila de atendimento | — | — | R03 — Publicação com HTTPS e backup diário |
 | R17 — Notificações internas e alertas | — | — | R04 — Correções de celular e fotos |
@@ -19,12 +19,12 @@
 | — | — | — | R10 — Concluir históricos das novas filiais |
 | — | — | — | R12 — Cargos e permissões por filial |
 | — | — | — | R13 — Gestão de usuários e acessos |
+| — | — | — | R14 — Retenção e cópia externa dos backups |
 | — | — | — | R21 — Kanban na central e no roadmap |
 
 ### Pendências e dependências
 
 - [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
-- [ ] **R14 — Retenção e cópia externa dos backups:** Backup recente copiado para pasta privada local e restaurado em PostgreSQL 17 isolado, sem rede: checksums, 26.062 operações, 14 filiais e perfis conferidos. Falta definir destino externo e retenção para configurar cópia recorrente e limpeza. Nenhum backup excluído. Evidência: docs/validacao-backup.json.
 - [ ] **R15 — Cadastro unificado e aniversariantes:** Evoluir snapshots dos clientes para cadastro e validar fonte de aniversário.
 - [ ] **R16 — Fila de atendimento:** Próximo módulo operacional previsto; detalhar regras com Maylon.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
@@ -35,6 +35,18 @@
 - [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
 
 <!-- KANBAN:FIM -->
+
+## Backups externos e retenção ativados — 14/09/2026
+
+- [x] Destino confirmado: **mabookhome**, pasta `/Users/maylonsantos/Backups/JoinNetwork/Aeropostale`. Dez backups completos recebidos e verificados por checksum.
+- [x] Coleta automática a cada hora, no minuto 17, via crontab do usuário; execuções reais em segundo plano confirmadas. Não depende de sessão gráfica. O Mac precisa estar ligado, acordado e conectado.
+- [x] Chave SSH exclusiva no Mac; o servidor aceita somente exportação e confirmação de backups, sem shell ou encaminhamento de portas. Nenhuma instalação de Tailscale foi necessária.
+- [x] Política final de Maylon: **5 dias na Locaweb e 90 dias no Mac**. Limpeza remota somente após confirmação dos hashes externos; sem cópia confirmada, preserva os arquivos mesmo além do prazo. A última cópia completa é preservada.
+- [x] Recuperação isolada previamente aprovada; 14 testes de integridade, transferência e retenção aprovados. Nenhuma exclusão necessária na primeira execução porque todos os backups estão dentro do prazo.
+
+R14 concluída; Kanban em **14 de 23 tarefas**. Evidências: `docs/validacao-backup-externo.json` e `docs/validacao-backup.json`. Próxima tarefa: R15, cadastro unificado de clientes e validação da fonte de aniversário. Conferência mensal/anual continua aguardando os novos indicadores.
+
+
 
 ## Backups: recuperação testada — 14/09/2026
 

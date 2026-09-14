@@ -1,0 +1,18 @@
+{
+  "verificadoEm": "2026-09-14T15:42:44.304462+00:00",
+  "destino": "mabookhome",
+  "pasta": "/Users/maylonsantos/Backups/JoinNetwork/Aeropostale",
+  "copiasVerificadas": 10,
+  "backupMaisRecente": "backup-20260914T115644Z-MXjfBi",
+  "checksumsConferidos": true,
+  "cron": "17 * * * *",
+  "execucoesAutomaticasConfirmadas": true,
+  "chaveRestritaSemShell": true,
+  "retencaoLocawebDias": 5,
+  "retencaoMacDias": 90,
+  "exclusoesLocaweb": 0,
+  "exclusoesMac": 0,
+  "testesIntegridadeTransferenciaRetencao": 14,
+  "recuperacao": "docs/validacao-backup.json",
+  "limite": "O Mac precisa estar ligado, acordado e conectado no horário. Sem confirmação externa, a Locaweb preserva as cópias além do prazo. A última cópia completa é sempre preservada."
+}

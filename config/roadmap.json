@@ -83,8 +83,8 @@
     {
       "id": "R14",
       "titulo": "Retenção e cópia externa dos backups",
-      "status": "em_andamento",
-      "detalhe": "Backup recente copiado para pasta privada local e restaurado em PostgreSQL 17 isolado, sem rede: checksums, 26.062 operações, 14 filiais e perfis conferidos. Falta definir destino externo e retenção para configurar cópia recorrente e limpeza. Nenhum backup excluído. Evidência: docs/validacao-backup.json."
+      "status": "concluido",
+      "detalhe": "Cópia automática no mabookhome a cada hora (minuto 17); 10 backups conferidos. Retenção aprovada: 5 dias na Locaweb após confirmação externa e 90 dias no Mac, preservando a última cópia completa. SSH restrito sem shell, recuperação isolada e 14 testes aprovados. Evidências: docs/validacao-backup.json e docs/validacao-backup-externo.json."
     },
     {
       "id": "R15",

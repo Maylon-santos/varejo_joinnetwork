@@ -1,5 +1,15 @@
 # Comece aqui — estado atual em 14/09/2026
 
+## Backups externos e retenção ativados — 14/09/2026
+
+- [x] Destino confirmado: **mabookhome**, pasta `/Users/maylonsantos/Backups/JoinNetwork/Aeropostale`. Dez backups completos recebidos e verificados por checksum.
+- [x] Coleta automática a cada hora, no minuto 17, via crontab do usuário; execuções reais em segundo plano confirmadas. Não depende de sessão gráfica. O Mac precisa estar ligado, acordado e conectado.
+- [x] Chave SSH exclusiva no Mac; o servidor aceita somente exportação e confirmação de backups, sem shell ou encaminhamento de portas. Nenhuma instalação de Tailscale foi necessária.
+- [x] Política final de Maylon: **5 dias na Locaweb e 90 dias no Mac**. Limpeza remota somente após confirmação dos hashes externos; sem cópia confirmada, preserva os arquivos mesmo além do prazo. A última cópia completa é preservada.
+- [x] Recuperação isolada previamente aprovada; 14 testes de integridade, transferência e retenção aprovados. Nenhuma exclusão necessária na primeira execução porque todos os backups estão dentro do prazo.
+
+R14 concluída; Kanban em **14 de 23 tarefas**. Evidências: `docs/validacao-backup-externo.json` e `docs/validacao-backup.json`. Próxima tarefa: R15, cadastro unificado de clientes e validação da fonte de aniversário. Conferência mensal/anual continua aguardando os novos indicadores.
+
 ## Backups: recuperação testada — 14/09/2026
 
 - [x] Timer remoto ativo; última execução bem-sucedida. Na inspeção, backups ocupavam 11 MB e o servidor tinha 3,8 GB livres.
