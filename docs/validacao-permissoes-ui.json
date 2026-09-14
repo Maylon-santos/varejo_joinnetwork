@@ -1,0 +1,13 @@
+{
+  "verificadoEm": "2026-09-14T09:46:12.443Z",
+  "ambiente": "schemas isolados com dados sintéticos",
+  "cargos": 5,
+  "selecaoCargo": true,
+  "abasRecursosDados": true,
+  "salvarERecarregar": true,
+  "dependenciasRecursos": true,
+  "vendasRestritaProtegida": true,
+  "navegacaoVendedor": true,
+  "mobileSemOverflow": true,
+  "errors": []
+}

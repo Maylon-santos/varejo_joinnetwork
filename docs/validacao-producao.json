@@ -1,5 +1,5 @@
 {
-  "verificadoEm": "2026-09-14T00:30:21.153Z",
+  "verificadoEm": "2026-09-14T10:07:07.463Z",
   "dominio": "aeropostale.joinnetwork.com.br",
   "tlsValidado": true,
   "login": 200,
@@ -21,55 +21,55 @@
     },
     {
       "filial": "30098400",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098401",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098409",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098495",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098696",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098697",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098704",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098702",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098708",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098795",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098802",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098797",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     },
     {
       "filial": "30098699",
-      "coberturaCompleta": false
+      "coberturaCompleta": true
     }
   ]
 }

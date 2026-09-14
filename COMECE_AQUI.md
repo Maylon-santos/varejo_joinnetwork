@@ -1,4 +1,17 @@
-# Comece aqui — estado atual em 13/09/2026
+# Comece aqui — estado atual em 14/09/2026
+
+## Permissões publicadas e históricos atualizados — 14/09/2026
+
+- [x] Gerenciador **Permissões** no painel: cargos à esquerda; abas Recursos e Acesso aos dados. Somente Admin pode editar, com configurações separadas por empresa.
+- [x] Vendas limitado às próprias vendas por código de vendedor e filial; bloqueios verificados também em indicadores, ranking, detalhes, clientes e fotos.
+- [x] Backup concluído, migration aplicada e API publicada saudável, mantendo a sincronização ativa.
+- [x] 36 testes unitários e 30 de integração aprovados. Gravação/recarga, navegação de vendedor e celular validados em dados sintéticos; gerenciador e 14 filiais conferidos no domínio.
+- [x] Os 28 checkpoints de vendas/cancelamentos alcançaram 14/09/2026. As 14 filiais estão com histórico atualizado até o dia corrente; a sincronização continua.
+- [ ] Configurar os recursos de Diretoria, Supervisão e Gerentes na tela; esses cargos iniciam sem permissões para o Admin definir.
+- [ ] Próximo passo R13: cadastro/desativação de usuários, cargo e vínculos de filial/vendedor. Grupos personalizados e hierarquia do exemplo permanecem evolução futura.
+- [ ] R11: conferir com o ERP os totais das novas lojas. Carga concluída não representa homologação.
+
+Evidências: `docs/validacao-permissoes-ui.json`, `docs/validacao-permissoes-producao.json` e `docs/validacao-producao.json`. O Kanban passou a 12 de 23 tarefas concluídas. Nenhum usuário real foi criado nesta entrega.
 
 ## Cadastro incremental e Kanban — 13/09/2026
 

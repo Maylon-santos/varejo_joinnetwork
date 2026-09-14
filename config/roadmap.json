@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-09-13",
+  "atualizadoEm": "2026-09-14",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -59,8 +59,8 @@
     {
       "id": "R10",
       "titulo": "Concluir históricos das novas filiais",
-      "status": "em_andamento",
-      "detalhe": "Em 13/09 às 21h30 (Brasília), os checkpoints das 13 novas lojas estavam entre 18 e 25/08/2026. ITUPEVA cobre 13/09. Carga segue em lotes; esta informação é uma fotografia da consulta."
+      "status": "concluido",
+      "detalhe": "Em 14/09, os 28 checkpoints das 14 filiais (vendas e cancelamentos) alcançaram 14/09/2026. API pública confirmou cobertura das 14 lojas. Sincronização incremental continua; conferência dos novos totais permanece em R11."
     },
     {
       "id": "R11",
@@ -71,14 +71,14 @@
     {
       "id": "R12",
       "titulo": "Cargos e permissões por filial",
-      "status": "pendente",
-      "detalhe": "Admin, Diretoria, Supervisão, Gerentes e Vendas; regras por recurso e filial."
+      "status": "concluido",
+      "detalhe": "Gerenciador Permissões publicado: cargos à esquerda, recursos e acesso aos dados à direita. Configuração por empresa, Admin protegido e Vendas somente próprias vendas. 36 testes unitários, 30 de integração e navegador local/público aprovados."
     },
     {
       "id": "R13",
       "titulo": "Gestão de usuários e acessos",
       "status": "pendente",
-      "detalhe": "Depende de R12. Criar, desativar e associar usuários aos acessos autorizados."
+      "detalhe": "Próxima entrega: cadastro/desativação de usuários e associação a cargo, filiais e código de vendedor. Usar a referência de gerenciador enviada por Maylon; evolução para grupos personalizados e hierarquia ainda pendente."
     },
     {
       "id": "R14",

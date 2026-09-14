@@ -10,9 +10,11 @@ const decimal=v=>v==null?'—':new Intl.NumberFormat('pt-BR',{minimumFractionDig
 const dateBR=d=>d?d.slice(0,10).split('-').reverse().join('/'):'—';
 const when=d=>d?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(d)):'Ainda sem atualização';
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const errorText={LOGIN_INVALIDO:'E-mail ou senha incorretos. Confira os dados e tente novamente.',LIMITE_DE_LOGIN:'Muitas tentativas de acesso. Aguarde 15 minutos antes de tentar novamente.',NAO_AUTENTICADO:'Sua sessão expirou. Entre novamente para continuar.',FILIAL_NAO_AUTORIZADA:'Esta loja ainda não está disponível para o seu acesso.',PERIODO_INVALIDO:'Escolha um período válido de até 366 dias.',LIMITE_DE_REQUISICOES:'Muitas consultas em sequência. Aguarde um minuto e tente novamente.',ERRO_INTERNO:'Não foi possível consultar os dados agora. Tente novamente.'};
+const errorText={PERFIL_INVALIDO:'Confira o nome e as opções do cargo.',PERMISSAO_DEPENDENTE_DE_VENDAS:'Clientes, fotos e conferência precisam de acesso às movimentações.',VENDAS_REQUER_ESCOPO_PROPRIO:'O cargo Vendas deve acessar apenas as próprias vendas.',ESCOPO_INCOMPATIVEL:'Escolha filiais atribuídas para limitar às próprias vendas.',PERFIL_ADMIN_PROTEGIDO:'O perfil Admin mantém o acesso completo.',RECURSO_NAO_AUTORIZADO:'Seu acesso não permite consultar este recurso.',LOGIN_INVALIDO:'E-mail ou senha incorretos. Confira os dados e tente novamente.',LIMITE_DE_LOGIN:'Muitas tentativas de acesso. Aguarde 15 minutos antes de tentar novamente.',NAO_AUTENTICADO:'Sua sessão expirou. Entre novamente para continuar.',FILIAL_NAO_AUTORIZADA:'Esta loja ainda não está disponível para o seu acesso.',PERIODO_INVALIDO:'Escolha um período válido de até 366 dias.',LIMITE_DE_REQUISICOES:'Muitas consultas em sequência. Aguarde um minuto e tente novamente.',ERRO_INTERNO:'Não foi possível consultar os dados agora. Tente novamente.'};
 let token=null,page='overview',filters=null,rankPage=1,salesPage=1,abort=null,generation=0,refreshTimer=null,detailGeneration=0;
-let lastIndicators=null;
+let lastIndicators=null,permissoes=new Set(),isAdmin=false;
+const pode=recurso=>permissoes.has(recurso);
+const podePagina=next=>next==='permissions'?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='sales'&&pode('vendas:ler');
 let detailAbort=null;const detailImageUrls=new Set();
 function clearDetailMedia(){detailAbort?.abort();$('photo-dialog').close();for(const url of detailImageUrls)URL.revokeObjectURL(url);detailImageUrls.clear();}
 async function api(path,options={}){
@@ -22,7 +24,7 @@ async function api(path,options={}){
  return body;
 }
 function showToast(text){$('toast').textContent=text;$('toast').hidden=false;setTimeout(()=>$('toast').hidden=true,4000);}
-function busy(active){$('loading').hidden=!active;$('overview-panel').hidden=active||page!=='overview';$('sales-panel').hidden=active||page==='overview';$('filters').setAttribute('aria-busy',String(active));}
+function busy(active){$('loading').hidden=!active;$('overview-panel').hidden=active||page!=='overview';$('sales-panel').hidden=active||!['sales','quality'].includes(page);$('filters').setAttribute('aria-busy',String(active));}
 function resetError(){$('page-error').hidden=true;}
 function displayError(e){$('page-error-text').textContent=e.message;$('page-error').hidden=false;}
 function exitSession(message=''){
@@ -38,11 +40,17 @@ $('login-form').addEventListener('submit',async e=>{
  try{
   const session=await api('/auth/login',{method:'POST',body:JSON.stringify({email:$('email').value,senha:$('password').value})});token=session.token;$('password').value='';
   const [me,branches]=await Promise.all([api('/auth/me'),api('/filiais')]);
+  isAdmin=me.usuario.role==='Admin';permissoes=new Set(me.usuario.permissoes||[]);
+  $('user-role').textContent=me.usuario.role_nome||me.usuario.role;
+  $('workspace-scope').textContent=me.usuario.somente_proprias_vendas?'Minhas vendas':'Filiais autorizadas';
+  for(const button of document.querySelectorAll('[data-page]'))button.hidden=!podePagina(button.dataset.page);
+  const inicial=['overview','sales','quality'].find(podePagina);
+  if(!inicial)throw new Error('Seu perfil ainda não possui recursos liberados. Entre em contato com o administrador.');
   $('user-email').textContent=me.usuario.email;$('branch').replaceChildren();
   for(const item of branches.filiais){const opt=el('option',item.cod_filial||'Filial sem código cadastrado');opt.value=item.filial;$('branch').append(opt);}
   if(!branches.filiais.length)throw new Error('Nenhuma loja está liberada para este acesso.');
-  $('login-view').hidden=true;$('app-view').hidden=false;page='overview';rankPage=1;salesPage=1;$('period').value='month';setPeriod();setPage('overview',false);applyFilters();
-  clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&!document.hidden&&!$('detail-dialog').open)loadData();},360000);
+  $('login-view').hidden=true;$('app-view').hidden=false;page=inicial;rankPage=1;salesPage=1;$('period').value='month';setPeriod();setPage(inicial,false);applyFilters();
+  clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&page!=='permissions'&&!document.hidden&&!$('detail-dialog').open)loadData();},360000);
  }catch(e){if(token){await api('/auth/logout',{method:'POST'}).catch(()=>{});token=null;}$('login-error').textContent=e.message;$('login-error').hidden=false;}
  finally{$('login-submit').disabled=false;$('login-submit').replaceChildren(document.createTextNode('Entrar no painel '),el('span','→'));}
 });
@@ -62,8 +70,11 @@ function applyFilters(){
 $('filters').addEventListener('submit',e=>{e.preventDefault();applyFilters();});$('refresh').addEventListener('click',()=>loadData());$('retry').addEventListener('click',()=>loadData());
 function query(extra={}){return new URLSearchParams({...filters,...extra}).toString();}
 function setPage(next,load=true){
+ if(!podePagina(next))return;
  page=next;salesPage=1;rankPage=1;
- const info={overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.']}[page];
+ $('permissions-panel').hidden=page!=='permissions';$('filters').hidden=page==='permissions';document.querySelector('.data-caption').hidden=page==='permissions';
+ if(page==='permissions'){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
+ const info={overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
  $('page-title').textContent=info[0];$('breadcrumb-page').textContent=info[0];$('page-subtitle').textContent=info[1];
  for(const button of document.querySelectorAll('[data-page]')){const active=button.dataset.page===page;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');}
  $('sales-title').textContent=page==='quality'?'Conferência das operações':'Todas as movimentações';
@@ -74,13 +85,15 @@ function setPage(next,load=true){
 for(const b of document.querySelectorAll('[data-page]'))b.addEventListener('click',()=>setPage(b.dataset.page));
 $('review-notice').addEventListener('click',()=>setPage('quality'));
 async function loadData(){
- if(!token||!filters)return;
+ if(!token)return;
+ if(page==='permissions'){await loadPermissions();return;}
+ if(!filters)return;
  const version=++generation;abort?.abort();abort=new AbortController();resetError();busy(true);$('data-notice').hidden=true;
  try{
   const params=page==='quality'?{tipo:'S',estado:'ativas',conciliacao:$('quality-state').value}:{tipo:$('sales-type').value,estado:$('sales-state').value};
-  const [ind,data]=await Promise.all([api('/indicadores?'+query(),{signal:abort.signal}),api(page==='overview'?'/ranking?'+query({pagina:rankPage,limite:5,ordenar:$('ranking-sort').value}):'/vendas?'+query({...params,pagina:salesPage,limite:10}),{signal:abort.signal})]);
+  const [ind,data]=await Promise.all([pode('indicadores:ler')?api('/indicadores?'+query(),{signal:abort.signal}):null,page==='overview'?(pode('ranking:ler')?api('/ranking?'+query({pagina:rankPage,limite:5,ordenar:$('ranking-sort').value}),{signal:abort.signal}):null):api('/vendas?'+query({...params,pagina:salesPage,limite:10}),{signal:abort.signal})]);
   if(version!==generation)return;
-  lastIndicators=ind;renderContext(ind);if(page==='overview'){renderOverview(ind);renderRanking(data);}else renderSales(data);
+  lastIndicators=ind;renderContext(ind||data);document.querySelector('.metrics').hidden=!ind;document.querySelector('.overview-grid').hidden=!ind;document.querySelector('.ranking-panel').hidden=!pode('ranking:ler');if(page==='overview'){if(ind)renderOverview(ind);if(data)renderRanking(data);}else renderSales(data);
   busy(false);
  }catch(e){if(e.name==='AbortError'||version!==generation)return;busy(false);$('overview-panel').hidden=true;$('sales-panel').hidden=true;displayError(e);}
 }
@@ -94,7 +107,7 @@ function renderContext(d){
  if(!d.checkpoints_cobrem_fim)messages.push('O período tem dados ainda não sincronizados.');
  if(d.sincronizacao.some(x=>x.ultimo_erro_codigo))messages.push('Uma atualização está pendente. Exibindo os dados já recebidos.');
  if(d.vendas_com_pendencia)messages.push(`${number(d.vendas_com_pendencia)} ${d.vendas_com_pendencia===1?'venda precisa':'vendas precisam'} de conferência. Os totais do cabeçalho foram preservados.`);
- $('data-notice').hidden=messages.length===0;$('data-notice-text').textContent=messages.join(' ');$('review-notice').hidden=!d.vendas_com_pendencia||page==='quality';
+ $('data-notice').hidden=messages.length===0;$('data-notice-text').textContent=messages.join(' ');$('review-notice').hidden=!podePagina('quality')||!d.vendas_com_pendencia||page==='quality';
 }
 function renderOverview(d){
  $('metric-value').textContent=money(d.valor_vendas_centavos);$('metric-ticket').textContent=money(d.ticket_medio_centavos);$('metric-pa').textContent=decimal(d.pecas_por_venda);$('metric-sales').textContent=number(d.vendas);$('metric-pieces').textContent=number(d.pecas_cabecalho);
@@ -161,7 +174,7 @@ async function openDetail(o){
   if(version!==detailGeneration||!$('detail-dialog').open)return;
   const content=$('detail-content');content.replaceChildren();const summary=el('div',null,'detail-summary');
   for(const[label,value]of [['Data',dateBR(d.operacao.data_operacao)],['Situação',d.operacao.cancelada?'Cancelada':'Ativa'],['Vendedor',d.operacao.vendedor_nome||'Sem identificação'],['Valor da operação',money(d.operacao.valor_final_centavos)],['Peças no cabeçalho',number(d.operacao.quantidade)],['Ajuste da operação',money(d.operacao.ajuste_centavos)]]){const cell=el('div');cell.append(el('small',label),el('strong',value));summary.append(cell);}content.append(summary);
-  const customer=el('section',null,'detail-customer');customer.id='detail-customer';customer.setAttribute('aria-live','polite');content.append(customer);loadCustomer(d.operacao,customer,version);
+  if(pode('clientes:ler')){const customer=el('section',null,'detail-customer');customer.id='detail-customer';customer.setAttribute('aria-live','polite');content.append(customer);loadCustomer(d.operacao,customer,version);}
   if(d.operacao.conciliacao!=='conciliada'&&!d.operacao.cancelada)content.append(el('div',d.operacao.conciliacao==='erro_erp_confirmado'?`Erro no ERP confirmado por ${d.operacao.erro_erp_confirmado_por}. Contabilização pelo valor e pela quantidade do cabeçalho. Itens originais preservados.`:`Conferência: ${statusText[d.operacao.conciliacao]||'pendente'}. Cabeçalho e itens foram preservados conforme recebidos.`, 'detail-notice'));
   if(d.cancelamento)content.append(el('div',`Cancelamento registrado em ${when(d.cancelamento.data_cancelou)}. Esta operação não compõe o valor das vendas.`, 'detail-notice'));
   const wrap=el('div',null,'detail-table');wrap.append(el('h3','Itens da operação'));const scroll=el('div',null,'table-scroll'),table=el('table'),head=el('thead'),headrow=el('tr');for(const t of ['Produto','Qtd.','Unitário','Subtotal'])headrow.append(el('th',t));head.append(headrow);table.append(head);const tbody=el('tbody');
@@ -182,7 +195,7 @@ function loadCustomer(o,container,version){
  for(const customer of o.clientes){container.append(el('strong',customer.nome));const contacts=el('ul');for(const c of customer.contatos){const li=el('li');li.append(el('span',`${c.tipo}: `));const display=[c.ddd,c.telefone].filter(Boolean).join(' ');const link=el('a',display);link.href='tel:'+display.replace(/[^+0-9]/g,'');li.append(link);contacts.append(li);}container.append(customer.contatos.length?contacts:el('p','Telefone não informado pelo ERP.'));}
 }
 async function addProductImage(cell,item,operacao,version){
- if(!item.imagem_url)return;
+ if(!pode('imagens:ler')||!item.imagem_url)return;
  const button=el('button',null,'product-photo');button.type='button';button.disabled=true;button.setAttribute('aria-label','Carregando imagem do produto');button.append(el('span','…'));cell.prepend(button);
  try{
   const response=await fetch('/api/v1'+operationPath(operacao)+`/itens/${item.ordem}/imagem`,{headers:{Authorization:`Bearer ${token}`},signal:detailAbort.signal});
@@ -200,3 +213,38 @@ $('photo-close').addEventListener('click',()=>$('photo-dialog').close());
 $('photo-dialog').addEventListener('close',()=>{$('photo-large').removeAttribute('src');});
 
 $('quality-state').addEventListener('change',()=>{salesPage=1;loadData();});
+
+async function loadPermissions(){
+ const version=++generation;abort?.abort();abort=new AbortController();resetError();$('loading').hidden=true;
+ $('permissions-message').textContent='Carregando cargos…';
+ try{
+  const data=await api('/acessos/perfis',{signal:abort.signal});if(version!==generation||page!=='permissions')return;
+  const list=$('permissions-list');list.replaceChildren();
+  const cargos=el('nav',null,'permission-roles');cargos.setAttribute('aria-label','Cargos da empresa');cargos.append(el('h2','Cargos'));const editor=el('div',null,'permission-editor');list.append(cargos,editor);
+  let selected=false;
+  for(const perfil of data.perfis){
+   const form=el('form',null,'permission-card');form.dataset.role=perfil.role;
+   const protectedRole=perfil.role==='Admin',vendas=perfil.role==='Vendas';
+   const choose=el('button',perfil.nome,'permission-role');choose.type='button';choose.setAttribute('aria-pressed',String(!selected));cargos.append(choose);form.hidden=selected;selected=true;choose.addEventListener('click',()=>{for(const card of editor.children)card.hidden=card!==form;for(const button of cargos.querySelectorAll('button'))button.setAttribute('aria-pressed',String(button===choose));});
+   const title=el('h2',perfil.nome);form.append(title);
+   const nameLabel=el('label','Nome do cargo');const name=el('input');name.type='text';name.value=perfil.nome;name.maxLength=80;name.required=true;name.disabled=protectedRole;nameLabel.append(name);form.append(nameLabel);
+   const group=el('fieldset');group.append(el('legend','Recursos disponíveis'));const checks=new Map();
+   for(const recurso of data.recursos){const label=el('label',null,'permission-check');const input=el('input');input.type='checkbox';input.value=recurso.codigo;input.checked=perfil.permissoes.includes(recurso.codigo);input.disabled=protectedRole;label.append(input,el('span',recurso.nome));group.append(label);checks.set(recurso.codigo,input);}
+   const tabs=el('div',null,'permission-tabs');tabs.setAttribute('aria-label','Configuração do cargo');const resources=el('button','Recursos');resources.type='button';resources.setAttribute('aria-pressed','true');const access=el('button','Acesso aos dados');access.type='button';access.setAttribute('aria-pressed','false');tabs.append(resources,access);const scope=el('fieldset');scope.hidden=true;scope.append(el('legend','Filiais e vendas'));form.append(tabs,group,scope);for(const [button,show] of [[resources,true],[access,false]])button.addEventListener('click',()=>{group.hidden=!show;scope.hidden=show;resources.setAttribute('aria-pressed',String(show));access.setAttribute('aria-pressed',String(!show));});
+   const allLabel=el('label',null,'permission-check');const all=el('input');all.type='checkbox';all.checked=perfil.todas_filiais;all.disabled=protectedRole||vendas;allLabel.append(all,el('span','Todas as filiais autorizadas da empresa'));scope.append(allLabel);
+   const ownLabel=el('label',null,'permission-check');const own=el('input');own.type='checkbox';own.checked=perfil.somente_proprias_vendas;own.disabled=protectedRole||vendas;ownLabel.append(own,el('span','Somente as próprias vendas'));scope.append(ownLabel);
+   form.append(el('p',protectedRole?'Admin mantém acesso completo e administra as permissões.':vendas?'Vendas acessa somente as filiais atribuídas e as operações do vendedor vinculado.':'Com “Todas as filiais” desmarcado, o usuário acessa apenas as lojas atribuídas a ele.','muted permission-help'));
+   own.addEventListener('change',()=>{if(own.checked)all.checked=false;});all.addEventListener('change',()=>{if(all.checked)own.checked=false;});
+   for(const key of ['conferencia:ler','clientes:ler','imagens:ler'])checks.get(key).addEventListener('change',()=>{if(checks.get(key).checked)checks.get('vendas:ler').checked=true;});
+   checks.get('vendas:ler').addEventListener('change',()=>{if(!checks.get('vendas:ler').checked)for(const key of ['conferencia:ler','clientes:ler','imagens:ler'])checks.get(key).checked=false;});
+   const message=el('p',null,'permission-result');message.setAttribute('role','status');
+   if(!protectedRole){const save=el('button','Salvar permissões','button primary');save.type='submit';form.append(save);form.addEventListener('submit',async e=>{
+    e.preventDefault();save.disabled=true;message.textContent='Salvando…';
+    try{const atualizado=await api('/acessos/perfis/'+encodeURIComponent(perfil.role),{method:'PUT',body:JSON.stringify({nome:name.value,permissoes:[...checks].filter(([,input])=>input.checked).map(([key])=>key),todas_filiais:all.checked,somente_proprias_vendas:own.checked})});title.textContent=atualizado.nome;choose.textContent=atualizado.nome;message.textContent='Permissões salvas. Valem a partir da próxima consulta do usuário.';}
+    catch(e){message.textContent=e.message;}finally{save.disabled=false;}
+   });}
+   form.append(message);editor.append(form);
+  }
+  $('permissions-message').textContent='Configurações da empresa Aeropostale. Filiais e vendedor de cada usuário serão definidos no cadastro de usuários.';
+ }catch(e){if(e.name!=='AbortError'&&version===generation)$('permissions-message').textContent=e.message;}
+}

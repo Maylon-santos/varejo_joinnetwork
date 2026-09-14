@@ -66,3 +66,7 @@ Acompanhar eventos `cadastro_filiais_sincronizado` e `cadastro_filiais_falhou`, 
 ## Kanban pessoal
 
 Editar tarefas e estados em `config/roadmap.json`, então executar `python3 scripts/gerar-central.py`. O gerador atualiza somente o bloco delimitado `KANBAN` do roadmap e gera o quadro na central pessoal. Notas e edições pessoais anteriores são preservadas; o HTML continua ignorado pelo Git. O quadro é uma fotografia do planejamento, sem consulta automática ao servidor.
+
+## Permissões por cargo — 14/09/2026
+
+Fazer backup e aplicar `control/003_permissoes.sql` antes de subir a API nova. Não requer atualizar o worker. O Admin existente mantém suas credenciais e acesso completo. Testar `/auth/me`, `/acessos/perfis` e filiais após a atualização. O gerenciamento de permissões exige Admin; os demais usuários dependem dos recursos do cargo e vínculos cadastrados. Perfis e vínculos entram no backup central. A tela de cadastro de usuários continua em R13.

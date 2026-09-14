@@ -6,6 +6,7 @@ import {migrar} from '../../src/migracoes.mjs';
 import {criarAuth,criarAdmin,hashToken} from '../../src/admin-auth.mjs';
 import {criarPainel} from '../../src/painel.mjs';
 import {criarServidor} from '../../src/http-api.mjs';
+import {criarGestaoPermissoes} from '../../src/gestao-permissoes.mjs';
 const schema='api_'+randomUUID().replaceAll('-','');
 let controlAdmin,tenantAdmin,control,pool,server,base,auth,token;
 const senha='Senha longa somente para integração!';
@@ -30,7 +31,7 @@ before(async()=>{
  await pool.query("INSERT INTO sync_checkpoints(filial,recurso,ate) VALUES(1,'vendas','2026-09-02'),(1,'cancelamentos','2026-09-02')");
  await pool.query(`UPDATE operacoes SET clientes=$1::jsonb,clientes_importados_em=now() WHERE cod_operacao=1 AND filial=1`,[JSON.stringify([{nome:'Cliente da operação 1',contatos:[{tipo:'Telefone',ddd:'11',telefone:'33330000'}]}])]);
  auth=await criarAuth(control,'teste');
- server=criarServidor({auth,imagemProduto:async()=>({type:'image/jpeg',body:Buffer.from([1,2,3])}),painel:criarPainel(pool,'teste',['1']),filiais:['1'],limitar:()=>true,limitarLogin:()=>true});
+ server=criarServidor({auth,gestaoPermissoes:criarGestaoPermissoes(control,'teste'),imagemProduto:async()=>({type:'image/jpeg',body:Buffer.from([1,2,3])}),painel:criarPainel(pool,'teste',['1']),filiais:['1'],limitar:()=>true,limitarLogin:()=>true});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));base=`http://127.0.0.1:${server.address().port}`;
  const session=await auth.login('admin@teste.local',senha);token=session.token;
 });
@@ -131,4 +132,53 @@ test('Lista de filiais exibe COD_FILIAL e preserva ID usado nos filtros sem expo
  assert.deepEqual((await painel.filiais()).filiais,[{filial:'1',cod_filial:'AERO-009',trans_id:'10'}]);
  await pool.query("UPDATE cadastro_filiais SET cod_filial='AERO-NOVO',trans_id=12 WHERE filial=1");
  assert.equal((await painel.filiais()).filiais[0].cod_filial,'AERO-NOVO');
+});
+
+test('Vendedor consulta somente suas vendas em indicadores, lista, ranking, detalhes, clientes e imagens',async()=>{
+ await criarAdmin(control,{tenant:'teste',email:'vendas@teste.local',senha});
+ const id=(await control.query("SELECT id FROM admin_users WHERE email='vendas@teste.local'")).rows[0].id;
+ await control.query("UPDATE admin_users SET role='Vendas' WHERE id=$1",[id]);
+ await control.query("INSERT INTO user_branches(user_id,tenant_key,filial,vendedor_codigo) VALUES($1,'teste',1,'10')",[id]);
+ const session=await auth.login('vendas@teste.local',senha);const t=session.token;
+ const filiais=await (await get('/api/v1/filiais',t)).json();assert.deepEqual(filiais.filiais.map(f=>f.filial),['1']);
+ const d=await (await get('/api/v1/indicadores?'+filtro,t)).json();assert.equal(d.vendas,2);assert.equal(d.valor_vendas_centavos,'30000');assert.equal(d.pecas_cabecalho,'5');assert.equal(d.serie_diaria.reduce((n,r)=>n+r.vendas,0),2);
+ const list=await (await get('/api/v1/vendas?'+filtro+'&limite=1&pagina=2',t)).json();assert.equal(list.total,2);assert.ok(list.operacoes.every(o=>o.vendedor_codigo==='10'));
+ const ranking=await (await get('/api/v1/ranking?'+filtro,t)).json();assert.equal(ranking.total,1);assert.equal(ranking.ranking[0].vendedor_codigo,'10');
+ for(const suffix of ['','/cliente','/itens/0/imagem'])assert.equal((await get('/api/v1/operacoes/1/S/6'+suffix,t)).status,404);
+ assert.equal((await get('/api/v1/operacoes/1/S/1',t)).status,200);
+ assert.equal((await get('/api/v1/indicadores?filial=999&inicio=2026-09-01&fim=2026-09-02',t)).status,403);
+ assert.equal((await get('/api/v1/vendas?'+filtro+'&conciliacao=divergente',t)).status,403);
+ // Alteração de vínculo vale já na próxima requisição, sem depender de novo login.
+ await control.query("UPDATE user_branches SET vendedor_codigo='20' WHERE user_id=$1",[id]);
+ assert.equal((await (await get('/api/v1/indicadores?'+filtro,t)).json()).valor_vendas_centavos,'7000');
+ assert.equal((await get('/api/v1/operacoes/1/S/1',t)).status,404);
+ await control.query('DELETE FROM user_branches WHERE user_id=$1',[id]);assert.equal((await get('/api/v1/indicadores?'+filtro,t)).status,403);
+ assert.equal((await fetch(base+'/api/v1/auth/logout',{method:'POST',headers:{Authorization:`Bearer ${t}`}})).status,200);
+});
+test('Permissão de recurso não pode ser contornada por detalhe ou URL de cliente e imagem',async()=>{
+ await criarAdmin(control,{tenant:'teste',email:'restrito@teste.local',senha});
+ await control.query(`INSERT INTO access_roles(tenant_key,role,nome,permissoes) VALUES('teste','Restrito','Consulta','["vendas:ler"]')`);
+ const id=(await control.query("SELECT id FROM admin_users WHERE email='restrito@teste.local'")).rows[0].id;
+ await control.query("UPDATE admin_users SET role='Restrito' WHERE id=$1",[id]);
+ await control.query("INSERT INTO user_branches(user_id,tenant_key,filial) VALUES($1,'teste',1)",[id]);
+ const {token:t}=await auth.login('restrito@teste.local',senha);
+ const detail=await (await get('/api/v1/operacoes/1/S/1',t)).json();assert.equal('clientes' in detail.operacao,false);assert.ok(detail.itens.every(i=>!('imagem_url' in i)));
+ for(const url of ['/api/v1/indicadores?'+filtro,'/api/v1/ranking?'+filtro,'/api/v1/operacoes/1/S/1/cliente','/api/v1/operacoes/1/S/1/itens/0/imagem'])assert.equal((await get(url,t)).status,403);
+ await assert.rejects(control.query("INSERT INTO user_branches(user_id,tenant_key,filial) VALUES($1,'outro',999)",[id]));
+ await control.query("UPDATE access_roles SET permissoes='[]' WHERE tenant_key='teste' AND role='Restrito'");
+ assert.equal((await get('/api/v1/vendas?'+filtro,t)).status,403);
+});
+
+test('Gerenciador permite editar cargos só ao Admin, sem alterar outra empresa ou remover a proteção de Vendas',async()=>{
+ const url='/api/v1/acessos/perfis';
+ assert.equal((await get(url,'')).status,401);
+ const data=await (await get(url)).json();assert.ok(data.perfis.some(p=>p.role==='Admin'));assert.equal(data.recursos.length,6);
+ const payload={nome:'Direção',permissoes:['indicadores:ler','vendas:ler'],todas_filiais:true,somente_proprias_vendas:false};
+ const put=(role,body,t=token)=>fetch(base+url+'/'+role,{method:'PUT',headers:{Authorization:`Bearer ${t}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+ assert.equal((await put('Diretoria',payload)).status,200);
+ assert.equal((await control.query("SELECT nome FROM access_roles WHERE tenant_key='outro' AND role='Diretoria'")).rows[0].nome,'Diretoria');
+ assert.equal((await put('Admin',payload)).status,403);assert.equal((await put('Vendas',payload)).status,400);
+ assert.equal((await put('Gerentes',{...payload,tenant:'outro'})).status,400);
+ assert.equal((await put('Gerentes',{...payload,permissoes:['clientes:ler']})).status,400);
+ const vendedor=await auth.login('vendas@teste.local',senha);assert.equal((await get(url,vendedor.token)).status,403);assert.equal((await put('Gerentes',payload,vendedor.token)).status,403);
 });

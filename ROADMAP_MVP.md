@@ -3,29 +3,27 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-10 de 23 tarefas deste quadro concluídas. Atualização: 2026-09-13. A contagem não representa prazo ou esforço.
+12 de 23 tarefas deste quadro concluídas. Atualização: 2026-09-14. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
-| R11 — Conferir totais das novas filiais | R10 — Concluir históricos das novas filiais | — | R01 — Importação e banco do piloto |
-| R12 — Cargos e permissões por filial | — | — | R02 — Painel e acesso Admin |
-| R13 — Gestão de usuários e acessos | — | — | R03 — Publicação com HTTPS e backup diário |
-| R14 — Retenção e cópia externa dos backups | — | — | R04 — Correções de celular e fotos |
-| R15 — Cadastro unificado e aniversariantes | — | — | R05 — Clientes importados junto com a venda |
-| R16 — Fila de atendimento | — | — | R06 — Homologação de ITUPEVA |
-| R17 — Notificações internas e alertas | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
-| R18 — Campanhas e mensagens | — | — | R08 — Exibir COD_FILIAL no seletor |
-| R19 — Produtos, estoque e indicadores adicionais | — | — | R09 — Sincronizar cadastro por trans_id |
-| R20 — SaaS: provisionamento, planos e cobrança | — | — | R21 — Kanban na central e no roadmap |
-| R22 — Definir bruto, líquido e devoluções | — | — | — |
-| R23 — Fotos dos vendedores | — | — | — |
+| R11 — Conferir totais das novas filiais | — | — | R01 — Importação e banco do piloto |
+| R13 — Gestão de usuários e acessos | — | — | R02 — Painel e acesso Admin |
+| R14 — Retenção e cópia externa dos backups | — | — | R03 — Publicação com HTTPS e backup diário |
+| R15 — Cadastro unificado e aniversariantes | — | — | R04 — Correções de celular e fotos |
+| R16 — Fila de atendimento | — | — | R05 — Clientes importados junto com a venda |
+| R17 — Notificações internas e alertas | — | — | R06 — Homologação de ITUPEVA |
+| R18 — Campanhas e mensagens | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
+| R19 — Produtos, estoque e indicadores adicionais | — | — | R08 — Exibir COD_FILIAL no seletor |
+| R20 — SaaS: provisionamento, planos e cobrança | — | — | R09 — Sincronizar cadastro por trans_id |
+| R22 — Definir bruto, líquido e devoluções | — | — | R10 — Concluir históricos das novas filiais |
+| R23 — Fotos dos vendedores | — | — | R12 — Cargos e permissões por filial |
+| — | — | — | R21 — Kanban na central e no roadmap |
 
 ### Pendências e dependências
 
-- [ ] **R10 — Concluir históricos das novas filiais:** Em 13/09 às 21h30 (Brasília), os checkpoints das 13 novas lojas estavam entre 18 e 25/08/2026. ITUPEVA cobre 13/09. Carga segue em lotes; esta informação é uma fotografia da consulta.
 - [ ] **R11 — Conferir totais das novas filiais:** Depende de R10. Comparar cada filial com o ERP e registrar aceite de Maylon.
-- [ ] **R12 — Cargos e permissões por filial:** Admin, Diretoria, Supervisão, Gerentes e Vendas; regras por recurso e filial.
-- [ ] **R13 — Gestão de usuários e acessos:** Depende de R12. Criar, desativar e associar usuários aos acessos autorizados.
+- [ ] **R13 — Gestão de usuários e acessos:** Próxima entrega: cadastro/desativação de usuários e associação a cargo, filiais e código de vendedor. Usar a referência de gerenciador enviada por Maylon; evolução para grupos personalizados e hierarquia ainda pendente.
 - [ ] **R14 — Retenção e cópia externa dos backups:** Definir destino e retenção; implementar cópia recorrente e testar recuperação.
 - [ ] **R15 — Cadastro unificado e aniversariantes:** Evoluir snapshots dos clientes para cadastro e validar fonte de aniversário.
 - [ ] **R16 — Fila de atendimento:** Próximo módulo operacional previsto; detalhar regras com Maylon.
@@ -37,6 +35,21 @@
 - [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
 
 <!-- KANBAN:FIM -->
+
+## Permissões publicadas e históricos atualizados — 14/09/2026
+
+- [x] Gerenciador **Permissões** no painel: cargos à esquerda; abas Recursos e Acesso aos dados. Somente Admin pode editar, com configurações separadas por empresa.
+- [x] Vendas limitado às próprias vendas por código de vendedor e filial; bloqueios verificados também em indicadores, ranking, detalhes, clientes e fotos.
+- [x] Backup concluído, migration aplicada e API publicada saudável, mantendo a sincronização ativa.
+- [x] 36 testes unitários e 30 de integração aprovados. Gravação/recarga, navegação de vendedor e celular validados em dados sintéticos; gerenciador e 14 filiais conferidos no domínio.
+- [x] Os 28 checkpoints de vendas/cancelamentos alcançaram 14/09/2026. As 14 filiais estão com histórico atualizado até o dia corrente; a sincronização continua.
+- [ ] Configurar os recursos de Diretoria, Supervisão e Gerentes na tela; esses cargos iniciam sem permissões para o Admin definir.
+- [ ] Próximo passo R13: cadastro/desativação de usuários, cargo e vínculos de filial/vendedor. Grupos personalizados e hierarquia do exemplo permanecem evolução futura.
+- [ ] R11: conferir com o ERP os totais das novas lojas. Carga concluída não representa homologação.
+
+Evidências: `docs/validacao-permissoes-ui.json`, `docs/validacao-permissoes-producao.json` e `docs/validacao-producao.json`. O Kanban passou a 12 de 23 tarefas concluídas. Nenhum usuário real foi criado nesta entrega.
+
+
 
 ## Mapa de progresso — 13/09/2026
 

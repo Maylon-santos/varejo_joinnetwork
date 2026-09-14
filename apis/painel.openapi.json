@@ -111,7 +111,7 @@
     },
     "/api/v1/auth/login": {
       "post": {
-        "summary": "Iniciar sessão Admin (8 horas)",
+        "summary": "Iniciar sessão (8 horas)",
         "security": [],
         "requestBody": {
           "required": true,
@@ -1103,6 +1103,92 @@
             }
           }
         ]
+      }
+    },
+    "/api/v1/acessos/perfis": {
+      "get": {
+        "summary": "Listar cargos e recursos da empresa (somente Admin)",
+        "responses": {
+          "200": {
+            "description": "Recursos e perfis"
+          },
+          "403": {
+            "description": "Acesso negado"
+          }
+        }
+      }
+    },
+    "/api/v1/acessos/perfis/{role}": {
+      "put": {
+        "summary": "Atualizar permissões de um cargo (somente Admin)",
+        "parameters": [
+          {
+            "name": "role",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "nome",
+                  "permissoes",
+                  "todas_filiais",
+                  "somente_proprias_vendas"
+                ],
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "permissoes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "indicadores:ler",
+                        "vendas:ler",
+                        "ranking:ler",
+                        "conferencia:ler",
+                        "clientes:ler",
+                        "imagens:ler"
+                      ]
+                    }
+                  },
+                  "todas_filiais": {
+                    "type": "boolean"
+                  },
+                  "somente_proprias_vendas": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Perfil atualizado"
+          },
+          "400": {
+            "description": "Dados inválidos, dependência ausente ou escopo incompatível"
+          },
+          "403": {
+            "description": "Acesso negado ou Admin protegido"
+          },
+          "404": {
+            "description": "Cargo não encontrado nesta empresa"
+          }
+        }
       }
     }
   }

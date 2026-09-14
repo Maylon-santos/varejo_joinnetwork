@@ -18,7 +18,7 @@ Não há cookies nem autenticação por parâmetros de URL. O frontend mantém o
 
 ## Rotas de consulta
 
-Todas exigem sessão Admin, exceto `/health`. Tenant é resolvido no servidor, nunca recebido do cliente.
+Todas exigem sessão autenticada e permissão do recurso, exceto `/health` e login. Tenant é resolvido no servidor, nunca recebido do cliente.
 
 | Método | Caminho | Resultado |
 |---|---|---|
@@ -71,7 +71,7 @@ O ranking também retorna `pecas_por_venda` (PA), string decimal com quatro casa
 
 ## Detalhes complementares — 13/09/2026
 
-- `GET /api/v1/operacoes/:filial/:tipo/:codigo/cliente`: exige Admin e filial autorizada; lê somente o banco do tenant. Retorna `{clientes:[{nome,contatos:[{tipo,ddd,telefone}]}],importados_em}`. `clientes: null` indica histórico ainda não importado; lista vazia indica cliente não informado pelo ERP. O detalhe da operação já inclui `operacao.clientes` e `operacao.clientes_importados_em`, usados pela interface sem uma segunda chamada. Dados de clientes são persistidos e incluídos nos backups privados; não aparecem nos logs.
+- `GET /api/v1/operacoes/:filial/:tipo/:codigo/cliente`: exige `vendas:ler`, `clientes:ler` e filial/vendedor autorizados; lê somente o banco do tenant. Retorna `{clientes:[{nome,contatos:[{tipo,ddd,telefone}]}],importados_em}`. `clientes: null` indica histórico ainda não importado; lista vazia indica cliente não informado pelo ERP. O detalhe da operação já inclui `operacao.clientes` e `operacao.clientes_importados_em`, usados pela interface sem uma segunda chamada. Dados de clientes são persistidos e incluídos nos backups privados; não aparecem nos logs.
 - `GET /api/v1/operacoes/:filial/:tipo/:codigo/itens/:ordem/imagem`: exige a mesma autenticação; obtém somente a URL persistida do item e aceita a origem fixa de fotos do ERP. Responde imagem raster de até 5 MB, sem redirecionamentos, timeout de 12 segundos e `Cache-Control: no-store`. A interface usa um blob temporário e o libera ao fechar os detalhes. Origem HTTP é consultada pelo servidor; o navegador recebe HTTPS.
 
 Alguns arquivos de fotos não existem na origem (404). A tela mantém o marcador de indisponibilidade nesses casos. O proxy não inventa fotos nem permite URLs arbitrárias.
@@ -81,3 +81,21 @@ Alguns arquivos de fotos não existem na origem (404). A tela mantém o marcador
 `GET /api/v1/filiais` retorna `{filiais:[{filial,cod_filial,trans_id}],tenant}`. O seletor exibe `cod_filial` e mantém `filial` como valor interno dos filtros. O cadastro vem da tabela `cadastro_filiais`, sincronizada pelo worker; o login não consulta o ERP. Um cadastro ausente retorna código e trans_id nulos, com aviso no seletor.
 
 A lista de autorização continua em `branchIds`. O cursor cadastral não concede acesso a novas filiais. `branchCodes` é apenas a referência estática da conferência anterior; a API não utiliza esse mapa.
+
+
+## Gerenciador de permissões por empresa — 14/09/2026
+
+A tela **Permissões** permite selecionar um cargo à esquerda e marcar seus recursos e acesso aos dados à direita, conforme a referência fornecida por Maylon. Somente Admin edita. Os cinco cargos iniciais são Admin, Diretoria, Supervisão, Gerentes e Vendas; o nome exibido dos quatro últimos pode ser alterado.
+
+- `GET /api/v1/acessos/perfis`: retorna `recursos` e `perfis` da empresa autenticada.
+- `PUT /api/v1/acessos/perfis/:role`: recebe `nome`, `permissoes` (lista de códigos), `todas_filiais` e `somente_proprias_vendas` (booleanos). Campos adicionais são rejeitados.
+- Recursos: `indicadores:ler`, `vendas:ler`, `ranking:ler`, `conferencia:ler`, `clientes:ler`, `imagens:ler`. Conferência, clientes e imagens dependem de movimentações. Conferência autoriza a tela e seus filtros; o estado de conciliação de uma operação continua disponível junto à venda autorizada.
+- Admin mantém acesso completo e não pode ser reduzido pelo gerenciador. Diretoria, Supervisão e Gerentes começam sem recursos liberados, aguardando configuração do Admin.
+- Vendas começa com indicadores, movimentações, ranking, clientes e fotos; fica obrigatoriamente limitado às próprias vendas e às filiais atribuídas. O vínculo usa o código do vendedor em cada filial. Ausência do vínculo não libera dados.
+- Para outros cargos, todas as filiais significa somente as lojas autorizadas para aquela empresa. Desmarcado, aplica os vínculos individuais. Limitar às próprias vendas exige filiais atribuídas.
+
+O servidor relê cargo, permissões e vínculos em cada requisição: alterações valem na próxima consulta. `/auth/me` inclui nome do cargo, permissões, filiais e restrição de vendas. Recursos bloqueados retornam 403; detalhe de outro vendedor na mesma filial retorna 404. Clientes e URLs de imagens são removidos dos detalhes quando não autorizados. A interface atualiza sua navegação após novo login.
+
+A migration `control/003_permissoes.sql` preserva usuários e credenciais existentes, cria perfis por tenant e os vínculos `user_branches`. Novas empresas recebem perfis próprios automaticamente. A tela de cadastro/desativação de usuários, atribuição de cargo/filial/vendedor e criação de grupos personalizados permanece em R13; nenhum novo usuário real foi criado nesta entrega.
+
+Verificação reproduzível: `node --env-file=.env scripts/verificar-permissoes.mjs` (Chrome instalado e PostgreSQL local). O script cria e remove schemas temporários com dados sintéticos, sem usar os cadastros reais. Capturas ficam em `artifacts/deploy/`.

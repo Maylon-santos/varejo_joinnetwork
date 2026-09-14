@@ -11,9 +11,13 @@ export function filtros(params,filiais){
 }
 const efetiva="(o.cancelada OR EXISTS(SELECT 1 FROM cancelamentos c WHERE c.cod_operacao=o.cod_operacao AND c.tipo_operacao=o.tipo_operacao AND c.filial=o.filial))";
 const statusConciliacao="(CASE WHEN o.erro_erp_confirmado_por IS NOT NULL AND o.conciliacao IN ('quantidade_divergente','divergente') THEN 'erro_erp_confirmado' ELSE o.conciliacao END)";
-const scope='o.filial=$1 AND o.data_operacao BETWEEN $2::date AND $3::date';
+const scopeBase='o.filial=$1 AND o.data_operacao BETWEEN $2::date AND $3::date';
 const elegivel=`o.tipo_operacao='S' AND NOT ${efetiva}`;
-export function criarPainel(pool,tenant,filiais){
+export function criarPainel(pool,tenant,filiais,vendedores=null){
+ const scope=scopeBase+' AND ($4::text IS NULL OR o.vendedor_codigo=$4)';
+ const vendedor=filial=>vendedores===null?null:(vendedores[filial]??'');
+ function argumentos(f){if(!filiais.includes(f.filial))throw new ErroApi(403,'FILIAL_NAO_AUTORIZADA');return [f.filial,f.inicio,f.fim,vendedor(f.filial)];}
+
  async function snapshot(executar){
   const client=await pool.connect();
   try{
@@ -33,13 +37,14 @@ export function criarPainel(pool,tenant,filiais){
    observacao:'Checkpoints não substituem homologação com o ERP; períodos anteriores ao início importado podem não ter cobertura.'};
  }
  return {
+  restringir:(permitidas,porVendedor=null)=>criarPainel(pool,tenant,filiais.filter(f=>permitidas.includes(f)),porVendedor),
   filiais:()=>snapshot(async db=>{
    const cadastros=(await db.query('SELECT filial::text,cod_filial,trans_id::text FROM cadastro_filiais WHERE filial=ANY($1::bigint[])',[filiais])).rows;
    const porId=new Map(cadastros.map(c=>[c.filial,c]));
    return {filiais:filiais.map(id=>porId.get(id)??{filial:id,cod_filial:null,trans_id:null}),tenant};
   }),
   indicadores:f=>snapshot(async db=>{
-   const args=[f.filial,f.inicio,f.fim];
+   const args=argumentos(f);
    const total=(await db.query(`SELECT count(*)::integer AS vendas,
     COALESCE(sum(o.valor_final_centavos),0)::text AS valor_vendas_centavos,
     COALESCE(sum(o.quantidade),0)::text AS pecas_cabecalho,
@@ -60,7 +65,7 @@ export function criarPainel(pool,tenant,filiais){
   }),
   vendas:(f,{tipo='S',estado='ativas',conciliacao}={})=>snapshot(async db=>{
    if(!['S','E','todas'].includes(tipo)||!['ativas','canceladas','todas'].includes(estado))throw new ErroApi(400,'FILTRO_INVALIDO');
-   const args=[f.filial,f.inicio,f.fim];let where=scope;
+   const args=argumentos(f);let where=scope;
    if(tipo!=='todas'){args.push(tipo);where+=` AND o.tipo_operacao=$${args.length}`;}
    if(estado!=='todas')where+=` AND ${estado==='ativas'?'NOT ':''}${efetiva}`;
    if(conciliacao){if(conciliacao.length>50)throw new ErroApi(400,'FILTRO_INVALIDO');args.push(conciliacao);where+=` AND ${statusConciliacao}=$${args.length}`;}
@@ -75,17 +80,17 @@ export function criarPainel(pool,tenant,filiais){
   detalhe:(filial,tipo,codigo)=>snapshot(async db=>{
    if(!filiais.includes(filial))throw new ErroApi(403,'FILIAL_NAO_AUTORIZADA');
    if(!/^[A-Z]+$/.test(tipo)||!/^\d{1,18}$/.test(codigo))throw new ErroApi(400,'CHAVE_INVALIDA');
-   const args=[codigo,tipo,filial];
+   const args=[codigo,tipo,filial,vendedor(filial)];
    const r=await db.query(`SELECT o.*,o.conciliacao AS conciliacao_original,${statusConciliacao} AS conciliacao,o.data_operacao::text,${efetiva} AS cancelada FROM operacoes o
-    WHERE o.cod_operacao=$1 AND o.tipo_operacao=$2 AND o.filial=$3`,args);
+    WHERE o.cod_operacao=$1 AND o.tipo_operacao=$2 AND o.filial=$3 AND ($4::text IS NULL OR o.vendedor_codigo=$4)`,args);
    if(!r.rowCount)throw new ErroApi(404,'OPERACAO_NAO_ENCONTRADA');
-   const itens=(await db.query('SELECT ordem,sku,cod_produto,descricao,quantidade,imagem_url,preco_centavos::text FROM operacao_itens WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 ORDER BY ordem',args)).rows;
-   const cancelamento=(await db.query('SELECT data_cancelou FROM cancelamentos WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',args)).rows[0]??null;
+   const itens=(await db.query('SELECT ordem,sku,cod_produto,descricao,quantidade,imagem_url,preco_centavos::text FROM operacao_itens WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 ORDER BY ordem',args.slice(0,3))).rows;
+   const cancelamento=(await db.query('SELECT data_cancelou FROM cancelamentos WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',args.slice(0,3))).rows[0]??null;
    return {operacao:r.rows[0],itens,cancelamento};
   }),
   ranking:(f,ordenar='valor')=>snapshot(async db=>{
    const ordem={valor:'valor_vendas',pecas:'pecas',ticket:'ticket'}[ordenar];if(!ordem)throw new ErroApi(400,'ORDENACAO_INVALIDA');
-   const args=[f.filial,f.inicio,f.fim];
+   const args=argumentos(f);
    const total=(await db.query(`SELECT count(*)::integer AS total FROM (SELECT vendedor_codigo FROM operacoes o WHERE ${scope} AND ${elegivel} GROUP BY vendedor_codigo) r`,args)).rows[0].total;
    const rows=(await db.query(`WITH ranking AS (SELECT o.vendedor_codigo,
      (array_agg(o.vendedor_nome ORDER BY o.data_operacao DESC,o.cod_operacao DESC))[1] AS vendedor_nome,
@@ -95,7 +100,7 @@ export function criarPainel(pool,tenant,filiais){
      FROM operacoes o WHERE ${scope} AND ${elegivel} GROUP BY o.vendedor_codigo)
     SELECT vendedor_codigo,COALESCE(vendedor_nome,'Sem identificação') AS vendedor_nome,vendas,
      valor_vendas::text AS valor_vendas_centavos,pecas::text AS pecas_cabecalho,ticket::text AS ticket_medio_centavos,round(pecas::numeric/NULLIF(vendas,0),4)::text AS pecas_por_venda,vendas_com_pendencia
-    FROM ranking ORDER BY ${ordem} DESC,vendedor_codigo NULLS LAST LIMIT $4 OFFSET $5`,[...args,f.limite,(f.pagina-1)*f.limite])).rows;
+    FROM ranking ORDER BY ${ordem} DESC,vendedor_codigo NULLS LAST LIMIT $5 OFFSET $6`,[...args,f.limite,(f.pagina-1)*f.limite])).rows;
    return {total,pagina:f.pagina,limite:f.limite,ordenar,ranking:rows,indicadores_provisorios:true,...await cobertura(db,f)};
   }),
  };

@@ -40,8 +40,9 @@ export async function criarAuth(pool,tenant){
   },
   autenticar:async(token)=>{
    if(!/^[a-f0-9]{64}$/.test(token??''))return null;
-   const r=await pool.query(`SELECT u.id,u.email,u.role,u.tenant_key FROM admin_sessions s
-     JOIN admin_users u ON u.id=s.user_id WHERE s.token_hash=$1 AND s.expires_at>now() AND u.active AND u.tenant_key=$2`,[hashToken(token),tenant]);
+   const r=await pool.query(`SELECT u.id,u.email,u.role,u.tenant_key,r.nome AS role_nome,r.permissoes,r.todas_filiais,r.somente_proprias_vendas,
+     COALESCE((SELECT jsonb_agg(jsonb_build_object('filial',b.filial::text,'vendedor_codigo',b.vendedor_codigo)) FROM user_branches b WHERE b.user_id=u.id AND b.tenant_key=u.tenant_key),'[]'::jsonb) AS vinculos FROM admin_sessions s
+     JOIN admin_users u ON u.id=s.user_id JOIN access_roles r ON r.tenant_key=u.tenant_key AND r.role=u.role WHERE s.token_hash=$1 AND s.expires_at>now() AND u.active AND u.tenant_key=$2`,[hashToken(token),tenant]);
    return r.rows[0]??null;
   },
   logout:async token=>{await pool.query('DELETE FROM admin_sessions WHERE token_hash=$1',[hashToken(token)]);},
