@@ -66,7 +66,7 @@
       "id": "R11",
       "titulo": "Conferir totais das novas filiais",
       "status": "pendente",
-      "detalhe": "Depende de R10. Comparar cada filial com o ERP e registrar aceite de Maylon."
+      "detalhe": "Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado."
     },
     {
       "id": "R12",
@@ -77,8 +77,8 @@
     {
       "id": "R13",
       "titulo": "Gestão de usuários e acessos",
-      "status": "pendente",
-      "detalhe": "Próxima entrega: cadastro/desativação de usuários e associação a cargo, filiais e código de vendedor. Usar a referência de gerenciador enviada por Maylon; evolução para grupos personalizados e hierarquia ainda pendente."
+      "status": "concluido",
+      "detalhe": "Publicado: criar/editar/desativar usuários, atribuir cargo e filiais, selecionar vendedor local e redefinir senha. Sessões revogadas ao alterar usuário; próprio Admin protegido. 36 testes unitários, 31 de integração e navegador local/público aprovados. Grupos personalizados e hierarquia são evolução futura."
     },
     {
       "id": "R14",

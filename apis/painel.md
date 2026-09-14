@@ -99,3 +99,20 @@ O servidor relê cargo, permissões e vínculos em cada requisição: alteraçõ
 A migration `control/003_permissoes.sql` preserva usuários e credenciais existentes, cria perfis por tenant e os vínculos `user_branches`. Novas empresas recebem perfis próprios automaticamente. A tela de cadastro/desativação de usuários, atribuição de cargo/filial/vendedor e criação de grupos personalizados permanece em R13; nenhum novo usuário real foi criado nesta entrega.
 
 Verificação reproduzível: `node --env-file=.env scripts/verificar-permissoes.mjs` (Chrome instalado e PostgreSQL local). O script cria e remove schemas temporários com dados sintéticos, sem usar os cadastros reais. Capturas ficam em `artifacts/deploy/`.
+
+
+## Cadastro de usuários — 14/09/2026
+
+Somente Admin acessa a tela **Usuários**. É possível criar contas, alterar e-mail/cargo/vínculos, definir nova senha e ativar/desativar. A senha inicial deve ter pelo menos 16 caracteres (limite de 256 bytes); na edição, deixar vazia mantém a atual. Não há envio automático de convite, senha ou mensagens. Senhas e hashes não são retornados pela API.
+
+- `GET /api/v1/acessos/usuarios`: lista os usuários da empresa com `id`, `email`, `role`, `active` e `vinculos`.
+- `POST /api/v1/acessos/usuarios`: cria um usuário; retorna 201 com `id`.
+- `PUT /api/v1/acessos/usuarios/:id`: atualiza o usuário; retorna 200 com `id`.
+- Corpo: `email`, `role`, `active` (booleano), `senha` e `vinculos: [{filial: "ID", vendedor_codigo: "CODIGO" ou null}]`. Tenant não é aceito no corpo. E-mail duplicado na mesma empresa retorna 409.
+- `GET /api/v1/acessos/vendedores`: lista código/nome dos vendedores presentes nas operações locais, separado por filial autorizada. Não consulta o ERP. Um vendedor sem histórico importado ainda não aparece; aguardar sua importação para vinculá-lo.
+
+Usuários ativos precisam de filial quando o cargo não abrange todas. Cargos limitados às próprias vendas exigem vendedor em cada vínculo. O servidor rejeita filiais fora da empresa, vínculos duplicados e vendedor ausente do histórico daquela loja. Salvar um usuário encerra suas sessões anteriores. A desativação impede novos logins; reativação exige novo login. Os vínculos e mudanças do cadastro são gravados numa única transação.
+
+O Admin não pode alterar seu próprio cadastro pela tela/API. As alterações administrativas são serializadas por empresa e revalidam o Admin executor, evitando que administradores se desativem simultaneamente e deixem a empresa sem acesso. Grupos personalizados e hierarquia permanecem evolução futura; os cinco cargos são os configurados em Permissões.
+
+Validação: `node --env-file=.env scripts/verificar-usuarios.mjs`, com Chrome instalado e PostgreSQL local; usa schemas e usuários sintéticos temporários. Relatório em `docs/validacao-usuarios-ui.json`, capturas privadas em `artifacts/deploy/`.

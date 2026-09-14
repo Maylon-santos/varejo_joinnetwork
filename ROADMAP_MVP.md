@@ -3,27 +3,27 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-12 de 23 tarefas deste quadro concluídas. Atualização: 2026-09-14. A contagem não representa prazo ou esforço.
+13 de 23 tarefas deste quadro concluídas. Atualização: 2026-09-14. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
 | R11 — Conferir totais das novas filiais | — | — | R01 — Importação e banco do piloto |
-| R13 — Gestão de usuários e acessos | — | — | R02 — Painel e acesso Admin |
-| R14 — Retenção e cópia externa dos backups | — | — | R03 — Publicação com HTTPS e backup diário |
-| R15 — Cadastro unificado e aniversariantes | — | — | R04 — Correções de celular e fotos |
-| R16 — Fila de atendimento | — | — | R05 — Clientes importados junto com a venda |
-| R17 — Notificações internas e alertas | — | — | R06 — Homologação de ITUPEVA |
-| R18 — Campanhas e mensagens | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
-| R19 — Produtos, estoque e indicadores adicionais | — | — | R08 — Exibir COD_FILIAL no seletor |
-| R20 — SaaS: provisionamento, planos e cobrança | — | — | R09 — Sincronizar cadastro por trans_id |
-| R22 — Definir bruto, líquido e devoluções | — | — | R10 — Concluir históricos das novas filiais |
-| R23 — Fotos dos vendedores | — | — | R12 — Cargos e permissões por filial |
+| R14 — Retenção e cópia externa dos backups | — | — | R02 — Painel e acesso Admin |
+| R15 — Cadastro unificado e aniversariantes | — | — | R03 — Publicação com HTTPS e backup diário |
+| R16 — Fila de atendimento | — | — | R04 — Correções de celular e fotos |
+| R17 — Notificações internas e alertas | — | — | R05 — Clientes importados junto com a venda |
+| R18 — Campanhas e mensagens | — | — | R06 — Homologação de ITUPEVA |
+| R19 — Produtos, estoque e indicadores adicionais | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
+| R20 — SaaS: provisionamento, planos e cobrança | — | — | R08 — Exibir COD_FILIAL no seletor |
+| R22 — Definir bruto, líquido e devoluções | — | — | R09 — Sincronizar cadastro por trans_id |
+| R23 — Fotos dos vendedores | — | — | R10 — Concluir históricos das novas filiais |
+| — | — | — | R12 — Cargos e permissões por filial |
+| — | — | — | R13 — Gestão de usuários e acessos |
 | — | — | — | R21 — Kanban na central e no roadmap |
 
 ### Pendências e dependências
 
-- [ ] **R11 — Conferir totais das novas filiais:** Depende de R10. Comparar cada filial com o ERP e registrar aceite de Maylon.
-- [ ] **R13 — Gestão de usuários e acessos:** Próxima entrega: cadastro/desativação de usuários e associação a cargo, filiais e código de vendedor. Usar a referência de gerenciador enviada por Maylon; evolução para grupos personalizados e hierarquia ainda pendente.
+- [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
 - [ ] **R14 — Retenção e cópia externa dos backups:** Definir destino e retenção; implementar cópia recorrente e testar recuperação.
 - [ ] **R15 — Cadastro unificado e aniversariantes:** Evoluir snapshots dos clientes para cadastro e validar fonte de aniversário.
 - [ ] **R16 — Fila de atendimento:** Próximo módulo operacional previsto; detalhar regras com Maylon.
@@ -35,6 +35,19 @@
 - [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
 
 <!-- KANBAN:FIM -->
+
+## Gestão de usuários publicada — 14/09/2026
+
+- [x] Tela **Usuários**, exclusiva para Admin: criar, editar e desativar contas, alterar senha e atribuir cargo/filiais/vendedor.
+- [x] Vendedores selecionados do histórico local de cada filial, sem consulta ao ERP. Vendas continua limitado às próprias operações.
+- [x] Alterar usuário revoga suas sessões. Próprio Admin protegido contra alteração; isolamento entre empresas e validação dos vínculos no servidor.
+- [x] 36 testes unitários e 31 de integração aprovados. Cadastro, login de vendedor, desativação e celular verificados com dados sintéticos; tela pública validada nas 14 filiais.
+- [x] Backup concluído e API publicada saudável; worker permaneceu ativo. Nenhum usuário real foi criado automaticamente.
+- [ ] R11 permanece aguardando os outros indicadores: Maylon informou que os dias consultados batem, mas ainda precisa conferir os totais do mês e do ano.
+
+Kanban: **13 de 23 tarefas concluídas**. Evidências: `docs/validacao-usuarios-ui.json` e `docs/validacao-usuarios-producao.json`. Não há envio automático de convites ou senhas. Grupos personalizados e hierarquia continuam como evolução futura.
+
+
 
 ## Permissões publicadas e históricos atualizados — 14/09/2026
 

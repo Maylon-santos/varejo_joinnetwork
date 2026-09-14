@@ -40,6 +40,7 @@
       <button class="nav-button" data-page="sales"><span data-icon="receipt"></span>Movimentações</button>
       <button class="nav-button" data-page="quality"><span data-icon="check"></span>Conferência<span id="nav-pending" class="count-badge" hidden></span></button>
       <button class="nav-button" data-page="permissions" hidden><span data-icon="check"></span>Permissões</button>
+          <button class="nav-button" data-page="users" hidden><span data-icon="store"></span>Usuários</button>
     </nav>
     <div class="sidebar-bottom"><div class="connection"><span class="dot"></span><div><strong id="sync-side">Dados da loja</strong><small id="sync-side-detail">Consultando atualização</small></div></div><div class="powered">join<span>network</span><small>INTELIGÊNCIA PARA O SEU NEGÓCIO</small></div></div>
   </aside>
@@ -75,6 +76,7 @@
         <label id="quality-filter" hidden>Situação da conferência <select id="quality-state"><option value="quantidade_divergente">Aguardando conferência</option><option value="erro_erp_confirmado">Erro confirmado no ERP</option></select></label><div id="quality-explanation" class="quality-explanation" hidden>Estas operações têm diferença entre a quantidade do cabeçalho e a soma dos itens. Erros confirmados usam valor e quantidade do cabeçalho; os itens originais são preservados.</div>
         <div class="table-scroll"><table><thead><tr><th>Operação / Data</th><th>Vendedor</th><th>Peças</th><th>Valor</th><th>Conferência</th><th><span class="sr-only">Detalhes</span></th></tr></thead><tbody id="sales-body"></tbody></table></div><div class="table-footer"><span id="sales-summary"></span><div><button id="sales-prev" class="icon-button" aria-label="Página anterior das operações">←</button><button id="sales-next" class="icon-button" aria-label="Próxima página das operações">→</button></div></div>
       </section>
+      <section id="users-panel" hidden aria-label="Gerenciar usuários"><p class="muted">Cadastre usuários e atribua cargo, filiais e vendedor. As permissões são definidas na tela Permissões.</p><div id="users-message" role="status"></div><div id="users-content" class="permissions-grid"></div></section>
       <section id="permissions-panel" hidden aria-label="Permissões por cargo"><p class="muted">Marque o que cada cargo pode consultar. As alterações valem para os usuários desta empresa. Somente Admin pode editar as permissões.</p><div id="permissions-message" role="status"></div><div id="permissions-list" class="permissions-grid"></div></section>
       <footer class="app-footer"><span>Aéropostale Brasil <span aria-hidden="true">·</span> Visão de varejo</span><span>Feito com Join Network</span></footer>
     </main>

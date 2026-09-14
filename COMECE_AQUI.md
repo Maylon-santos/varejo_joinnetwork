@@ -1,5 +1,20 @@
 # Comece aqui — estado atual em 14/09/2026
 
+## Gestão de usuários publicada — 14/09/2026
+
+- [x] Tela **Usuários**, exclusiva para Admin: criar, editar e desativar contas, alterar senha e atribuir cargo/filiais/vendedor.
+- [x] Vendedores selecionados do histórico local de cada filial, sem consulta ao ERP. Vendas continua limitado às próprias operações.
+- [x] Alterar usuário revoga suas sessões. Próprio Admin protegido contra alteração; isolamento entre empresas e validação dos vínculos no servidor.
+- [x] 36 testes unitários e 31 de integração aprovados. Cadastro, login de vendedor, desativação e celular verificados com dados sintéticos; tela pública validada nas 14 filiais.
+- [x] Backup concluído e API publicada saudável; worker permaneceu ativo. Nenhum usuário real foi criado automaticamente.
+- [ ] R11 permanece aguardando os outros indicadores: Maylon informou que os dias consultados batem, mas ainda precisa conferir os totais do mês e do ano.
+
+Kanban: **13 de 23 tarefas concluídas**. Evidências: `docs/validacao-usuarios-ui.json` e `docs/validacao-usuarios-producao.json`. Não há envio automático de convites ou senhas. Grupos personalizados e hierarquia continuam como evolução futura.
+
+## Conferência parcial e sequência — 14/09/2026
+
+Maylon informou que os dias consultados estão batendo; falta conferir os totais do mês e do ano. A conferência geral das filiais aguardará os outros indicadores, conforme solicitado. R11 permanece pendente, sem homologação mensal/anual. Seguimos com R13, cadastro de usuários e vínculos de acesso.
+
 ## Permissões publicadas e históricos atualizados — 14/09/2026
 
 - [x] Gerenciador **Permissões** no painel: cargos à esquerda; abas Recursos e Acesso aos dados. Somente Admin pode editar, com configurações separadas por empresa.

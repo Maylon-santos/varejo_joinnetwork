@@ -1,0 +1,14 @@
+{
+  "verificadoEm": "2026-09-14T11:54:42.339Z",
+  "ambiente": "schemas temporários com dados sintéticos",
+  "criacao": true,
+  "vinculoVendedorPersistido": true,
+  "senhaNaoRetornada": true,
+  "loginVendedor": true,
+  "navegacaoRestrita": true,
+  "desativacao": true,
+  "proprioAdminProtegido": true,
+  "desktopMobile": true,
+  "mobileSemOverflow": true,
+  "errors": []
+}

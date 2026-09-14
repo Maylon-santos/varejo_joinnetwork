@@ -70,3 +70,7 @@ Editar tarefas e estados em `config/roadmap.json`, então executar `python3 scri
 ## Permissões por cargo — 14/09/2026
 
 Fazer backup e aplicar `control/003_permissoes.sql` antes de subir a API nova. Não requer atualizar o worker. O Admin existente mantém suas credenciais e acesso completo. Testar `/auth/me`, `/acessos/perfis` e filiais após a atualização. O gerenciamento de permissões exige Admin; os demais usuários dependem dos recursos do cargo e vínculos cadastrados. Perfis e vínculos entram no backup central. A tela de cadastro de usuários continua em R13.
+
+## Gestão de usuários — 14/09/2026
+
+A API inclui a tela Usuários e as rotas `/acessos/usuarios` e `/acessos/vendedores`. Usa a migration de permissões já instalada; não há nova migration nesta entrega. Publicação com backup prévio e atualização somente da API. Cadastro, cargo, ativação, senha e vínculos ficam no banco central e no backup existente. Alterações de usuário revogam sessões anteriores. O próprio Admin não pode se alterar pela tela; outro Admin deve fazê-lo. Nenhum convite ou senha é enviado automaticamente.

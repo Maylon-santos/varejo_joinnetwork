@@ -1,3 +1,4 @@
+import {criarGestaoUsuarios} from '../../src/gestao-usuarios.mjs';
 import test,{before,after} from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
@@ -31,7 +32,7 @@ before(async()=>{
  await pool.query("INSERT INTO sync_checkpoints(filial,recurso,ate) VALUES(1,'vendas','2026-09-02'),(1,'cancelamentos','2026-09-02')");
  await pool.query(`UPDATE operacoes SET clientes=$1::jsonb,clientes_importados_em=now() WHERE cod_operacao=1 AND filial=1`,[JSON.stringify([{nome:'Cliente da operação 1',contatos:[{tipo:'Telefone',ddd:'11',telefone:'33330000'}]}])]);
  auth=await criarAuth(control,'teste');
- server=criarServidor({auth,gestaoPermissoes:criarGestaoPermissoes(control,'teste'),imagemProduto:async()=>({type:'image/jpeg',body:Buffer.from([1,2,3])}),painel:criarPainel(pool,'teste',['1']),filiais:['1'],limitar:()=>true,limitarLogin:()=>true});
+ server=criarServidor({auth,gestaoUsuarios:criarGestaoUsuarios(control,pool,'teste',['1']),gestaoPermissoes:criarGestaoPermissoes(control,'teste'),imagemProduto:async()=>({type:'image/jpeg',body:Buffer.from([1,2,3])}),painel:criarPainel(pool,'teste',['1']),filiais:['1'],limitar:()=>true,limitarLogin:()=>true});
  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));base=`http://127.0.0.1:${server.address().port}`;
  const session=await auth.login('admin@teste.local',senha);token=session.token;
 });
@@ -181,4 +182,23 @@ test('Gerenciador permite editar cargos só ao Admin, sem alterar outra empresa 
  assert.equal((await put('Gerentes',{...payload,tenant:'outro'})).status,400);
  assert.equal((await put('Gerentes',{...payload,permissoes:['clientes:ler']})).status,400);
  const vendedor=await auth.login('vendas@teste.local',senha);assert.equal((await get(url,vendedor.token)).status,403);assert.equal((await put('Gerentes',payload,vendedor.token)).status,403);
+});
+
+test('Gestão de usuários cria vendedor, altera vínculos, revoga sessões e protege Admin/tenant',async()=>{
+ const basePath='/api/v1/acessos/usuarios';const send=(path,method,body,session=token)=>fetch(base+path,{method,headers:{Authorization:`Bearer ${session}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const body={email:'novo@teste.local',senha,role:'Vendas',active:true,vinculos:[{filial:'1',vendedor_codigo:'10'}]};
+ assert.equal((await get(basePath,'')).status,401);
+ for(const change of [{vinculos:[]},{vinculos:[{filial:'999',vendedor_codigo:'10'}]},{vinculos:[{filial:'1',vendedor_codigo:null}]},{vinculos:[{filial:'1',vendedor_codigo:'desconhecido'}]},{senha:'curta'},{tenant:'outro'}])assert.equal((await send(basePath,'POST',{...body,...change})).status,400);
+ const created=await send(basePath,'POST',body);assert.equal(created.status,201);const {id}=await created.json();assert.ok(id);
+ assert.equal((await send(basePath,'POST',body)).status,409);
+ const session=await auth.login(body.email,senha);assert.ok(session);assert.equal((await get(basePath,session.token)).status,403);assert.equal((await send(basePath,'POST',{...body,email:'indevido@teste.local'},session.token)).status,403);
+ const list=await (await get(basePath)).json();const saved=list.usuarios.find(u=>u.id===id);assert.equal(saved.role,'Vendas');assert.equal(saved.password_hash,undefined);assert.equal(saved.senha,undefined);assert.deepEqual(saved.vinculos,body.vinculos);assert.ok(!list.usuarios.some(u=>u.email==='outro@teste.local'));
+ const vendedor=await (await get('/api/v1/acessos/vendedores')).json();assert.ok(vendedor.vendedores.every(v=>v.filial==='1'));
+ const before=await (await get('/api/v1/indicadores?'+filtro,session.token)).json();assert.equal(before.valor_vendas_centavos,'30000');
+ assert.equal((await send(basePath+'/'+id,'PUT',{...body,senha:'',vinculos:[{filial:'1',vendedor_codigo:'20'}]})).status,200);assert.equal((await get('/api/v1/auth/me',session.token)).status,401);
+ const changed=await auth.login(body.email,senha);assert.equal((await (await get('/api/v1/indicadores?'+filtro,changed.token)).json()).valor_vendas_centavos,'7000');
+ assert.equal((await send(basePath+'/'+id,'PUT',{...body,active:false,senha:''})).status,200);assert.equal(await auth.login(body.email,senha),null);assert.equal((await get('/api/v1/auth/me',changed.token)).status,401);
+ const me=await (await get('/api/v1/auth/me')).json();assert.equal((await send(basePath+'/'+me.usuario.id,'PUT',{...body,email:me.usuario.email,role:'Admin',active:false,vinculos:[]})).status,403);
+ const other=(await control.query("SELECT id FROM admin_users WHERE tenant_key='outro'")).rows[0].id;assert.equal((await send(basePath+'/'+other,'PUT',body)).status,404);
+ assert.equal((await send(basePath+'/'+id,'PUT',{...body,senha:'Nova senha longa de integração!'})).status,200);assert.equal(await auth.login(body.email,senha),null);assert.ok(await auth.login(body.email,'Nova senha longa de integração!'));
 });

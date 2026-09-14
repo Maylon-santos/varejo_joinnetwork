@@ -21,7 +21,7 @@ async function lerJson(req){
  try{const v=JSON.parse(Buffer.concat(chunks).toString('utf8'));if(!v||typeof v!=='object'||Array.isArray(v))throw new Error();return v;}
  catch{throw new ErroApi(400,'JSON_INVALIDO');}
 }
-export function criarServidor({auth,painel,filiais,gestaoPermissoes,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
+export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuarios,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
  const server=createServer(async(req,res)=>{
   const requestId=randomUUID();
   res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
@@ -47,6 +47,16 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,frontend,ima
    const painelUsuario=painel.restringir(acesso.filiais,acesso.vendedores);
    if(path==='/api/v1/auth/me'&&req.method==='GET')return enviar(200,{usuario:{id:user.id,email:user.email,role:user.role,role_nome:user.role_nome,tenant_key:user.tenant_key,permissoes:acesso.permissoes,filiais:acesso.filiais,somente_proprias_vendas:user.somente_proprias_vendas}});
    if(path==='/api/v1/auth/logout'&&req.method==='POST'){await auth.logout(token);return enviar(200,{ok:true});}
+   const usuarios=/^\/api\/v1\/acessos\/usuarios(?:\/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}))?$/.exec(path);
+   if(usuarios||path==='/api/v1/acessos/vendedores'){
+    if(user.role!=='Admin')throw new ErroApi(403,'RECURSO_NAO_AUTORIZADO');
+    if(!gestaoUsuarios)throw new ErroApi(503,'GESTAO_INDISPONIVEL');
+    if(url.search)throw new ErroApi(400,'PARAMETRO_INVALIDO');
+    if(path.endsWith('/vendedores')&&req.method==='GET')return enviar(200,await gestaoUsuarios.vendedores());
+    if(usuarios){if(req.method==='GET'&&!usuarios[1])return enviar(200,await gestaoUsuarios.listar());
+     if((req.method==='POST'&&!usuarios[1])||(req.method==='PUT'&&usuarios[1]))return enviar(req.method==='POST'?201:200,await gestaoUsuarios.salvar(usuarios[1]||null,await lerJson(req),user.id));}
+    throw new ErroApi(405,'METODO_NAO_PERMITIDO');
+   }
    const perfil=/^\/api\/v1\/acessos\/perfis(?:\/([A-Za-z0-9_-]+))?$/.exec(path);
    if(perfil){
     if(user.role!=='Admin')throw new ErroApi(403,'RECURSO_NAO_AUTORIZADO');

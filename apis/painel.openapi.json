@@ -1190,6 +1190,193 @@
           }
         }
       }
+    },
+    "/api/v1/acessos/usuarios": {
+      "get": {
+        "summary": "Listar usuários da empresa (Admin)",
+        "responses": {
+          "200": {
+            "description": "Usuários sem senha ou hash"
+          },
+          "403": {
+            "description": "Acesso negado"
+          }
+        }
+      },
+      "post": {
+        "summary": "Criar usuário da empresa (Admin)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "email",
+                  "role",
+                  "active",
+                  "vinculos"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "senha": {
+                    "type": "string",
+                    "description": "Obrigatória na criação, mínimo 16 caracteres; vazia na edição preserva a senha."
+                  },
+                  "vinculos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "filial",
+                        "vendedor_codigo"
+                      ],
+                      "properties": {
+                        "filial": {
+                          "type": "string"
+                        },
+                        "vendedor_codigo": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário salvo"
+          },
+          "400": {
+            "description": "Cadastro, senha ou vínculos inválidos"
+          },
+          "403": {
+            "description": "Acesso negado ou próprio Admin protegido"
+          },
+          "404": {
+            "description": "Usuário não encontrado nesta empresa"
+          },
+          "409": {
+            "description": "E-mail já cadastrado"
+          }
+        }
+      }
+    },
+    "/api/v1/acessos/usuarios/{id}": {
+      "put": {
+        "summary": "Editar ou desativar usuário (Admin)",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "email",
+                  "role",
+                  "active",
+                  "vinculos"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "senha": {
+                    "type": "string",
+                    "description": "Obrigatória na criação, mínimo 16 caracteres; vazia na edição preserva a senha."
+                  },
+                  "vinculos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "filial",
+                        "vendedor_codigo"
+                      ],
+                      "properties": {
+                        "filial": {
+                          "type": "string"
+                        },
+                        "vendedor_codigo": {
+                          "type": "string",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário salvo"
+          },
+          "400": {
+            "description": "Cadastro, senha ou vínculos inválidos"
+          },
+          "403": {
+            "description": "Acesso negado ou próprio Admin protegido"
+          },
+          "404": {
+            "description": "Usuário não encontrado nesta empresa"
+          },
+          "409": {
+            "description": "E-mail já cadastrado"
+          }
+        }
+      }
+    },
+    "/api/v1/acessos/vendedores": {
+      "get": {
+        "summary": "Listar vendedores do histórico local por filial (Admin)",
+        "responses": {
+          "200": {
+            "description": "Vendedores das filiais da empresa"
+          },
+          "403": {
+            "description": "Acesso negado"
+          }
+        }
+      }
     }
   }
 }

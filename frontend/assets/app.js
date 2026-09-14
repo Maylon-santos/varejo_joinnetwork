@@ -10,11 +10,11 @@ const decimal=v=>v==null?'—':new Intl.NumberFormat('pt-BR',{minimumFractionDig
 const dateBR=d=>d?d.slice(0,10).split('-').reverse().join('/'):'—';
 const when=d=>d?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(d)):'Ainda sem atualização';
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const errorText={PERFIL_INVALIDO:'Confira o nome e as opções do cargo.',PERMISSAO_DEPENDENTE_DE_VENDAS:'Clientes, fotos e conferência precisam de acesso às movimentações.',VENDAS_REQUER_ESCOPO_PROPRIO:'O cargo Vendas deve acessar apenas as próprias vendas.',ESCOPO_INCOMPATIVEL:'Escolha filiais atribuídas para limitar às próprias vendas.',PERFIL_ADMIN_PROTEGIDO:'O perfil Admin mantém o acesso completo.',RECURSO_NAO_AUTORIZADO:'Seu acesso não permite consultar este recurso.',LOGIN_INVALIDO:'E-mail ou senha incorretos. Confira os dados e tente novamente.',LIMITE_DE_LOGIN:'Muitas tentativas de acesso. Aguarde 15 minutos antes de tentar novamente.',NAO_AUTENTICADO:'Sua sessão expirou. Entre novamente para continuar.',FILIAL_NAO_AUTORIZADA:'Esta loja ainda não está disponível para o seu acesso.',PERIODO_INVALIDO:'Escolha um período válido de até 366 dias.',LIMITE_DE_REQUISICOES:'Muitas consultas em sequência. Aguarde um minuto e tente novamente.',ERRO_INTERNO:'Não foi possível consultar os dados agora. Tente novamente.'};
+const errorText={USUARIO_INVALIDO:'Confira os dados do usuário.',VINCULOS_INVALIDOS:'Confira as filiais e os vínculos.',SENHA_INVALIDA:'Use uma senha com pelo menos 16 caracteres e no máximo 256 bytes.',PROPRIO_ACESSO_PROTEGIDO:'Seu próprio acesso é protegido. Outro Admin deve alterá-lo.',FILIAL_OBRIGATORIA:'Selecione pelo menos uma filial.',VENDEDOR_OBRIGATORIO:'Selecione o vendedor em cada filial.',VENDEDOR_NAO_ENCONTRADO:'Vendedor não encontrado no histórico desta filial.',EMAIL_JA_CADASTRADO:'Este e-mail já está cadastrado nesta empresa.',PERFIL_INVALIDO:'Confira o nome e as opções do cargo.',PERMISSAO_DEPENDENTE_DE_VENDAS:'Clientes, fotos e conferência precisam de acesso às movimentações.',VENDAS_REQUER_ESCOPO_PROPRIO:'O cargo Vendas deve acessar apenas as próprias vendas.',ESCOPO_INCOMPATIVEL:'Escolha filiais atribuídas para limitar às próprias vendas.',PERFIL_ADMIN_PROTEGIDO:'O perfil Admin mantém o acesso completo.',RECURSO_NAO_AUTORIZADO:'Seu acesso não permite consultar este recurso.',LOGIN_INVALIDO:'E-mail ou senha incorretos. Confira os dados e tente novamente.',LIMITE_DE_LOGIN:'Muitas tentativas de acesso. Aguarde 15 minutos antes de tentar novamente.',NAO_AUTENTICADO:'Sua sessão expirou. Entre novamente para continuar.',FILIAL_NAO_AUTORIZADA:'Esta loja ainda não está disponível para o seu acesso.',PERIODO_INVALIDO:'Escolha um período válido de até 366 dias.',LIMITE_DE_REQUISICOES:'Muitas consultas em sequência. Aguarde um minuto e tente novamente.',ERRO_INTERNO:'Não foi possível consultar os dados agora. Tente novamente.'};
 let token=null,page='overview',filters=null,rankPage=1,salesPage=1,abort=null,generation=0,refreshTimer=null,detailGeneration=0;
 let lastIndicators=null,permissoes=new Set(),isAdmin=false;
 const pode=recurso=>permissoes.has(recurso);
-const podePagina=next=>next==='permissions'?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='sales'&&pode('vendas:ler');
+const podePagina=next=>['permissions','users'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='sales'&&pode('vendas:ler');
 let detailAbort=null;const detailImageUrls=new Set();
 function clearDetailMedia(){detailAbort?.abort();$('photo-dialog').close();for(const url of detailImageUrls)URL.revokeObjectURL(url);detailImageUrls.clear();}
 async function api(path,options={}){
@@ -50,7 +50,7 @@ $('login-form').addEventListener('submit',async e=>{
   for(const item of branches.filiais){const opt=el('option',item.cod_filial||'Filial sem código cadastrado');opt.value=item.filial;$('branch').append(opt);}
   if(!branches.filiais.length)throw new Error('Nenhuma loja está liberada para este acesso.');
   $('login-view').hidden=true;$('app-view').hidden=false;page=inicial;rankPage=1;salesPage=1;$('period').value='month';setPeriod();setPage(inicial,false);applyFilters();
-  clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&page!=='permissions'&&!document.hidden&&!$('detail-dialog').open)loadData();},360000);
+  clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&!['permissions','users'].includes(page)&&!document.hidden&&!$('detail-dialog').open)loadData();},360000);
  }catch(e){if(token){await api('/auth/logout',{method:'POST'}).catch(()=>{});token=null;}$('login-error').textContent=e.message;$('login-error').hidden=false;}
  finally{$('login-submit').disabled=false;$('login-submit').replaceChildren(document.createTextNode('Entrar no painel '),el('span','→'));}
 });
@@ -72,9 +72,9 @@ function query(extra={}){return new URLSearchParams({...filters,...extra}).toStr
 function setPage(next,load=true){
  if(!podePagina(next))return;
  page=next;salesPage=1;rankPage=1;
- $('permissions-panel').hidden=page!=='permissions';$('filters').hidden=page==='permissions';document.querySelector('.data-caption').hidden=page==='permissions';
- if(page==='permissions'){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
- const info={overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
+ $('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users'].includes(page);
+ if(['permissions','users'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
+ const info={users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
  $('page-title').textContent=info[0];$('breadcrumb-page').textContent=info[0];$('page-subtitle').textContent=info[1];
  for(const button of document.querySelectorAll('[data-page]')){const active=button.dataset.page===page;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');}
  $('sales-title').textContent=page==='quality'?'Conferência das operações':'Todas as movimentações';
@@ -86,6 +86,7 @@ for(const b of document.querySelectorAll('[data-page]'))b.addEventListener('clic
 $('review-notice').addEventListener('click',()=>setPage('quality'));
 async function loadData(){
  if(!token)return;
+ if(page==='users'){await loadUsers();return;}
  if(page==='permissions'){await loadPermissions();return;}
  if(!filters)return;
  const version=++generation;abort?.abort();abort=new AbortController();resetError();busy(true);$('data-notice').hidden=true;
@@ -245,6 +246,31 @@ async function loadPermissions(){
    });}
    form.append(message);editor.append(form);
   }
-  $('permissions-message').textContent='Configurações da empresa Aeropostale. Filiais e vendedor de cada usuário serão definidos no cadastro de usuários.';
+  $('permissions-message').textContent='Configurações da empresa Aeropostale. Defina filiais e vendedor de cada pessoa na tela Usuários.';
  }catch(e){if(e.name!=='AbortError'&&version===generation)$('permissions-message').textContent=e.message;}
+}
+
+async function loadUsers(){
+ const version=++generation;abort?.abort();abort=new AbortController();resetError();$('loading').hidden=true;$('users-message').textContent='Carregando usuários…';
+ try{
+  const [data,roles,branches,sellers,me]=await Promise.all(['/acessos/usuarios','/acessos/perfis','/filiais','/acessos/vendedores','/auth/me'].map(path=>api(path,{signal:abort.signal})));
+  if(version!==generation||page!=='users')return;
+  const root=$('users-content');root.replaceChildren();const list=el('nav',null,'permission-roles');list.setAttribute('aria-label','Usuários');const editor=el('div',null,'permission-editor');root.append(list,editor);
+  function edit(user={email:'',role:'Vendas',active:true,vinculos:[]}){
+   editor.replaceChildren();const form=el('form',null,'permission-card');editor.append(form);form.append(el('h2',user.id?'Editar usuário':'Novo usuário'));const self=user.id===me.usuario.id;
+   function field(label,type,value){const wrap=el('label',label),input=el('input');input.type=type;input.value=value;wrap.append(input);form.append(wrap);input.disabled=self;return input;}
+   const email=field('E-mail','email',user.email);email.required=true;email.maxLength=254;
+   const pass=field(user.id?'Nova senha (deixe em branco para manter)':'Senha inicial (mínimo 16 caracteres)','password','');pass.required=!user.id;pass.minLength=16;pass.autocomplete='new-password';
+   const label=el('label','Cargo'),role=el('select');role.disabled=self;for(const r of roles.perfis){const opt=el('option',r.nome);opt.value=r.role;role.append(opt);}role.value=user.role;label.append(role);form.append(label);
+   const activeLabel=el('label',null,'permission-check'),active=el('input');active.type='checkbox';active.checked=user.active;active.disabled=self;activeLabel.append(active,el('span','Usuário ativo'));form.append(activeLabel);
+   const help=el('p',null,'muted permission-help');form.append(help);const group=el('fieldset');group.append(el('legend','Filiais e vendedor'));form.append(group);const links=[];
+   for(const b of branches.filiais){const box=el('div',null,'user-branch'),lab=el('label',null,'permission-check'),check=el('input');check.type='checkbox';check.disabled=self;const existing=user.vinculos.find(v=>v.filial===b.filial);check.checked=!!existing;lab.append(check,el('span',b.cod_filial||b.filial));const vendor=el('select');vendor.setAttribute('aria-label','Vendedor em '+(b.cod_filial||b.filial));vendor.append(el('option','Sem vínculo de vendedor'));vendor.firstChild.value='';for(const v of sellers.vendedores.filter(v=>v.filial===b.filial)){const opt=el('option',v.vendedor_codigo+' · '+(v.vendedor_nome||'Sem nome'));opt.value=v.vendedor_codigo;vendor.append(opt);}if(existing?.vendedor_codigo&&!Array.from(vendor.options).some(o=>o.value===existing.vendedor_codigo)){const opt=el('option',existing.vendedor_codigo+' · Não encontrado no histórico');opt.value=existing.vendedor_codigo;vendor.append(opt);}vendor.value=existing?.vendedor_codigo||'';box.append(lab,vendor);group.append(box);links.push({filial:b.filial,check,vendor});check.addEventListener('change',update);}
+   function update(){const r=roles.perfis.find(r=>r.role===role.value);help.textContent=self?'Seu próprio acesso é protegido. Peça a outro Admin para alterá-lo.':r.todas_filiais?'Este cargo acessa todas as filiais autorizadas da empresa.':r.somente_proprias_vendas?'Selecione as filiais e o vendedor de cada loja. A pessoa verá somente as próprias vendas.':'Selecione as filiais que esta pessoa pode consultar.';group.hidden=r.todas_filiais;for(const l of links){l.vendor.disabled=self||!l.check.checked;l.vendor.required=r.somente_proprias_vendas&&l.check.checked;}}
+   role.addEventListener('change',update);update();const result=el('p',null,'permission-result');result.setAttribute('role','status');form.append(result);
+   if(!self){const save=el('button','Salvar usuário','button primary');save.type='submit';form.append(save);form.addEventListener('submit',async e=>{e.preventDefault();save.disabled=true;result.textContent='Salvando…';try{const r=roles.perfis.find(r=>r.role===role.value);await api('/acessos/usuarios'+(user.id?'/'+user.id:''),{method:user.id?'PUT':'POST',body:JSON.stringify({email:email.value,senha:pass.value,role:role.value,active:active.checked,vinculos:r.todas_filiais?[]:links.filter(l=>l.check.checked).map(l=>({filial:l.filial,vendedor_codigo:l.vendor.value||null}))})});pass.value='';await loadUsers();$('users-message').textContent='Usuário salvo. Alterações encerram as sessões anteriores; a pessoa deve entrar novamente.';}catch(e){result.textContent=e.message;}finally{save.disabled=false;}});}
+  }
+  const novo=el('button','Novo usuário','button primary');novo.type='button';novo.addEventListener('click',()=>edit());list.append(novo);
+  for(const user of data.usuarios){const b=el('button',user.email+(user.active?'':' · Inativo'),'permission-role');b.type='button';b.addEventListener('click',()=>edit(user));list.append(b);}
+  edit();$('users-message').textContent=data.usuarios.length+' usuário(s) nesta empresa. Desmarque “Usuário ativo” para desativar o acesso.';
+ }catch(e){if(e.name!=='AbortError'&&version===generation)$('users-message').textContent=e.message;}
 }
