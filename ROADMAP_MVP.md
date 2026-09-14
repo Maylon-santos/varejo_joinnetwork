@@ -1,5 +1,43 @@
 # Roadmap — Aeropostale Varejo
 
+<!-- KANBAN:INICIO -->
+## Kanban — progresso das tarefas
+
+10 de 23 tarefas deste quadro concluídas. Atualização: 2026-09-13. A contagem não representa prazo ou esforço.
+
+| A fazer | Em andamento | Em validação | Concluído |
+| --- | --- | --- | --- |
+| R11 — Conferir totais das novas filiais | R10 — Concluir históricos das novas filiais | — | R01 — Importação e banco do piloto |
+| R12 — Cargos e permissões por filial | — | — | R02 — Painel e acesso Admin |
+| R13 — Gestão de usuários e acessos | — | — | R03 — Publicação com HTTPS e backup diário |
+| R14 — Retenção e cópia externa dos backups | — | — | R04 — Correções de celular e fotos |
+| R15 — Cadastro unificado e aniversariantes | — | — | R05 — Clientes importados junto com a venda |
+| R16 — Fila de atendimento | — | — | R06 — Homologação de ITUPEVA |
+| R17 — Notificações internas e alertas | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
+| R18 — Campanhas e mensagens | — | — | R08 — Exibir COD_FILIAL no seletor |
+| R19 — Produtos, estoque e indicadores adicionais | — | — | R09 — Sincronizar cadastro por trans_id |
+| R20 — SaaS: provisionamento, planos e cobrança | — | — | R21 — Kanban na central e no roadmap |
+| R22 — Definir bruto, líquido e devoluções | — | — | — |
+| R23 — Fotos dos vendedores | — | — | — |
+
+### Pendências e dependências
+
+- [ ] **R10 — Concluir históricos das novas filiais:** Em 13/09 às 21h30 (Brasília), os checkpoints das 13 novas lojas estavam entre 18 e 25/08/2026. ITUPEVA cobre 13/09. Carga segue em lotes; esta informação é uma fotografia da consulta.
+- [ ] **R11 — Conferir totais das novas filiais:** Depende de R10. Comparar cada filial com o ERP e registrar aceite de Maylon.
+- [ ] **R12 — Cargos e permissões por filial:** Admin, Diretoria, Supervisão, Gerentes e Vendas; regras por recurso e filial.
+- [ ] **R13 — Gestão de usuários e acessos:** Depende de R12. Criar, desativar e associar usuários aos acessos autorizados.
+- [ ] **R14 — Retenção e cópia externa dos backups:** Definir destino e retenção; implementar cópia recorrente e testar recuperação.
+- [ ] **R15 — Cadastro unificado e aniversariantes:** Evoluir snapshots dos clientes para cadastro e validar fonte de aniversário.
+- [ ] **R16 — Fila de atendimento:** Próximo módulo operacional previsto; detalhar regras com Maylon.
+- [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
+- [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
+- [ ] **R19 — Produtos, estoque e indicadores adicionais:** Validar contratos e regras de saldo/custo antes de novos indicadores.
+- [ ] **R20 — SaaS: provisionamento, planos e cobrança:** Etapa 7. Manter isolamento por tenant e automatizar subdomínios após fechar o produto.
+- [ ] **R22 — Definir bruto, líquido e devoluções:** Fechar com Maylon as regras de descontos nos itens, frete, cortesia e trocas antes de novos indicadores.
+- [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
+
+<!-- KANBAN:FIM -->
+
 ## Mapa de progresso — 13/09/2026
 
 **Estamos na etapa 6: expansão de filiais e permissões. Maylon confirmou a conferência dos indicadores do piloto.**
@@ -26,17 +64,18 @@ Expansão publicada em 13/09: 14 cadastros ERP verificados; seletor Admin e troc
 
 Correção de apresentação em 13/09: seletor das 14 filiais passa a exibir `COD_FILIAL` conferido no ERP; IDs internos continuam nos filtros. Publicado e validado em celular, com 24 testes de integração aprovados. Evidência: `docs/validacao-codigos-filiais.json`.
 
-## Próxima prioridade: cadastro incremental de filiais — 13/09/2026
+## Cadastro incremental de filiais — publicado em 13/09/2026
 
-Maylon determinou que a sincronização dos dados cadastrais das filiais siga o `trans_id` retornado por `listafiliais`. Implementação pendente; o seletor ainda lê `branchCodes` da configuração.
+- [x] Validar `trans_id` no ERP: a amostra retornou registros maiores que o cursor enviado.
+- [x] Persistir cadastro e cursor no tenant, na mesma transação; rollback preserva ambos.
+- [x] Atualizar cadastro pelo worker e ler os códigos do banco no seletor, sem consulta ERP no login.
+- [x] Preservar autorização separada: novas filiais descobertas não recebem acesso automático.
+- [x] Publicar carga inicial dos 14 cadastros, API e worker; primeira rodada incremental automática confirmada sem duplicação. Validação: 35 testes unitários e 27 de integração.
+- [ ] Concluir e conferir os históricos das 13 novas filiais; implementar cargos e permissões.
 
-1. Validar o filtro incremental, sua borda inclusiva/exclusiva e a indicação de resposta completa, usando consultas de leitura.
-2. Persistir cadastro (`filial`, `cod_filial`, `trans_id`) no banco do tenant e guardar o cursor da consulta. Gravar cadastro e avanço do cursor na mesma transação; falhas preservam o cursor.
-3. Atualizar o cadastro pelo worker e fazer o seletor ler o banco, sem consultar ERP no login e sem precisar republicar a API para alterar códigos.
-4. Preservar a lista de filiais autorizadas. Descobrir uma nova filial no ERP não deve conceder acesso nem iniciar importação automaticamente.
-5. Concluir e conferir os históricos das 13 novas filiais; implementar os cargos e permissões por recurso/filial.
+O `trans_id` cadastral não substitui os checkpoints independentes de vendas/cancelamentos. Os incrementais releem a última transação de forma idempotente; falhas não interrompem os outros recursos. Ao alterar a lista autorizada, uma carga total garante a descoberta dos cadastros antigos recém-autorizados.
 
-O `trans_id` deste endpoint controla o cadastro de filiais. Vendas e cancelamentos conservam seus checkpoints independentes por filial e data; usar o cursor cadastral como condição para buscar vendas poderia omitir operações. Alterar esse mecanismo exige contrato incremental próprio para cada endpoint.
+O Kanban no início deste documento e na central é gerado a partir de `config/roadmap.json`; estados históricos abaixo não alteram o quadro vigente.
 
 Retomada: confira esta tabela, as evidências de validação e a última seção de tarefas. Não usar checklists históricos como status vigente.
 

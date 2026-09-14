@@ -1,0 +1,19 @@
+{
+  "publicadoEm": "2026-09-14T00:28:46Z",
+  "cadastrosPersistidos": 14,
+  "cursorInicial": "58537686",
+  "apiLeCadastroDoBanco": true,
+  "testesUnitarios": 35,
+  "testesIntegracao": 27,
+  "contratoReal": "docs/validacao-trans-filiais.json",
+  "validacaoPublica": "docs/validacao-producao.json",
+  "incrementalAutomaticoVerificado": true,
+  "incremental": {
+    "ultimoSucesso": "2026-09-14T00:35:04.302254Z",
+    "inicial": false,
+    "recebidas": 1,
+    "gravadas": 0,
+    "cursor": "58537686",
+    "falhasConsecutivas": 0
+  }
+}

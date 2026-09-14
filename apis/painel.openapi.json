@@ -376,7 +376,7 @@
             }
           }
         },
-        "description": "Retorna filiais autorizadas com filial (ID interno usado nos filtros) e cod_filial (código ERP exibido no seletor). Os códigos são lidos da configuração local, sem consulta ao ERP no login."
+        "description": "Retorna filiais autorizadas com filial (ID interno), cod_filial (código exibido) e trans_id. Cadastro lido do banco do tenant, atualizado pelo worker; sem consulta ao ERP no login. Cadastro ainda ausente retorna cod_filial/trans_id nulos."
       }
     },
     "/api/v1/indicadores": {

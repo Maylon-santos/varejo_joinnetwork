@@ -2,11 +2,11 @@
 
 ## Prioridade definida por Maylon — 13/09/2026
 
-- [ ] Validar e implementar sincronização do cadastro de filiais por `trans_id`, conforme `listafiliais`.
-- [ ] Persistir cadastro e cursor transacionalmente; seletor lê os códigos do banco.
-- [ ] Manter autorização das filiais separada da descoberta cadastral e preservar os checkpoints próprios de vendas/cancelamentos.
+- [x] Validar e implementar sincronização do cadastro de filiais por `trans_id`, conforme `listafiliais`.
+- [x] Persistir cadastro e cursor transacionalmente; seletor lê os códigos do banco.
+- [x] Manter autorização das filiais separada da descoberta cadastral e preservar os checkpoints próprios de vendas/cancelamentos.
 
-O cadastro incremental ainda não está implementado. Esta prioridade antecede os cargos e permissões.
+Cadastro incremental publicado e testado. Acompanhar os históricos e avançar para cargos/permissões. O quadro vigente está no início do roadmap e na central pessoal.
 
 ## Próxima etapa — 13/09/2026
 

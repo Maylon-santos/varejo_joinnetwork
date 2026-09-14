@@ -1,8 +1,15 @@
 # Comece aqui — estado atual em 13/09/2026
 
-## Próximo ajuste definido — 13/09/2026
+## Cadastro incremental e Kanban — 13/09/2026
 
-Maylon solicitou sincronizar os dados cadastrais das filiais usando `trans_id`. Próxima entrega: persistência do cadastro/cursor e atualização incremental pelo worker, com seletor lendo o banco. Hoje os códigos ainda vêm da configuração local. Vendas e cancelamentos mantêm checkpoints próprios por filial; detalhes no roadmap.
+- [x] Cadastro de filiais persistido no banco e sincronizado pelo worker usando `trans_id`; códigos do seletor lidos do banco.
+- [x] Publicar migration e carregar os 14 cadastros; cursor inicial `58537686`. API pública e primeira rodada incremental automática validadas.
+- [x] 35 testes unitários e 27 de integração aprovados: cursor atômico, falhas, retentativas e isolamento.
+- [x] Adicionar quadro Kanban à central pessoal e ao roadmap, com progresso e lista de pendências. Notas preservadas e visual validado em desktop/celular.
+- [ ] Concluir históricos das novas lojas. Na consulta de 13/09 às 21h30, checkpoints entre 18 e 25/08; ITUPEVA cobre 13/09.
+- [ ] Conferir novos totais e implementar cargos/permissões por recurso e filial.
+
+O quadro usa `config/roadmap.json`; `python3 scripts/gerar-central.py` atualiza o Markdown e o HTML pessoal. O Kanban mostra o estado registrado, sem consultar o servidor automaticamente. Evidências: `docs/validacao-trans-filiais.json`, `docs/validacao-producao.json` e `docs/validacao-kanban.json`.
 
 ## Seletor de filiais corrigido — 13/09/2026
 

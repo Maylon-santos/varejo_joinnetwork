@@ -1,3 +1,4 @@
+import {consultarFiliais,sincronizarFiliais} from '../backend/src/filiais.mjs';
 import {readFile} from 'node:fs/promises';
 import {setTimeout as pausa} from 'node:timers/promises';
 import {criarPool,erroSeguro} from '../backend/src/postgres.mjs';
@@ -33,6 +34,7 @@ try{
  const consultas={vendas:p=>consultarVendas({...base,...p,onDuplicado:info=>console.log(JSON.stringify({evento:'duplicado_identico_ignorado',...info}))}),cancelamentos:p=>consultarCancelamentos({...base,...p})};
  console.log(JSON.stringify({evento:'worker_iniciado',modo:once?'carga_inicial':'periodico',filiais,intervaloSegundos:intervalo}));
  do{
+  if(!encerrar)try{const cadastro=await sincronizarFiliais({pool,tenant,filiais,intervalo,consultar:p=>consultarFiliais({...base,...p})});if(!cadastro.aguardando)console.log(JSON.stringify({evento:'cadastro_filiais_sincronizado',...cadastro}));}catch(e){console.error(JSON.stringify({evento:'cadastro_filiais_falhou',codigo:erroSeguro(e)}));if(once)process.exitCode=1;}
   const fim=once?fimInicial:new Date().toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'});
   for(const filial of filiais)for(const recurso of ['vendas','cancelamentos']){
    if(encerrar)break;

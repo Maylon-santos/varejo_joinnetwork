@@ -126,6 +126,9 @@ test('Admin com duas filiais autorizadas mantém indicadores e detalhes separado
 });
 
 test('Lista de filiais exibe COD_FILIAL e preserva ID usado nos filtros sem expor filiais não autorizadas',async()=>{
- const painel=criarPainel(pool,'teste',['1'],{'1':'AERO-009','999':'OUTRA'});
- assert.deepEqual((await painel.filiais()).filiais,[{filial:'1',cod_filial:'AERO-009'}]);
+ await pool.query("INSERT INTO cadastro_filiais(filial,cod_filial,trans_id) VALUES(1,'AERO-009',10),(999,'OUTRA',11)");
+ const painel=criarPainel(pool,'teste',['1']);
+ assert.deepEqual((await painel.filiais()).filiais,[{filial:'1',cod_filial:'AERO-009',trans_id:'10'}]);
+ await pool.query("UPDATE cadastro_filiais SET cod_filial='AERO-NOVO',trans_id=12 WHERE filial=1");
+ assert.equal((await painel.filiais()).filiais[0].cod_filial,'AERO-NOVO');
 });

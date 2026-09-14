@@ -1,0 +1,33 @@
+{
+  "verificadoEm": "2026-09-13T20:13:47.636Z",
+  "total": 14,
+  "contagem": 14,
+  "filial": "30098297",
+  "trans_id": "57360829",
+  "testes": [
+    {
+      "cursor": "57360828",
+      "quantidade": 1,
+      "retornados": [
+        {
+          "filial": "30098297",
+          "trans_id": "57360829"
+        }
+      ]
+    },
+    {
+      "cursor": "57360829",
+      "quantidade": 0,
+      "retornados": []
+    },
+    {
+      "cursor": "57360830",
+      "quantidade": 0,
+      "retornados": []
+    }
+  ],
+  "globalNoMaior": {
+    "quantidade": 0,
+    "contagem": 0
+  }
+}

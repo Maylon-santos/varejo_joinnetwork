@@ -78,4 +78,6 @@ Alguns arquivos de fotos não existem na origem (404). A tela mantém o marcador
 
 ## Código exibido das filiais
 
-`GET /api/v1/filiais` retorna `{filiais:[{filial,cod_filial}],tenant}`. O seletor exibe o `cod_filial` do ERP (ex.: `AERO-009`), mantendo `filial` (ex.: `30098400`) como valor interno dos filtros e relacionamentos. Os 14 códigos foram conferidos no ERP em 13/09/2026 e registrados em `config/piloto.json`, campo `branchCodes`. Mudanças futuras dos códigos na origem exigem atualizar esse mapeamento e publicar a API; o login não consulta o ERP. Código ausente é apresentado como “Filial sem código cadastrado”.
+`GET /api/v1/filiais` retorna `{filiais:[{filial,cod_filial,trans_id}],tenant}`. O seletor exibe `cod_filial` e mantém `filial` como valor interno dos filtros. O cadastro vem da tabela `cadastro_filiais`, sincronizada pelo worker; o login não consulta o ERP. Um cadastro ausente retorna código e trans_id nulos, com aviso no seletor.
+
+A lista de autorização continua em `branchIds`. O cursor cadastral não concede acesso a novas filiais. `branchCodes` é apenas a referência estática da conferência anterior; a API não utiliza esse mapa.

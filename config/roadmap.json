@@ -1,0 +1,144 @@
+{
+  "atualizadoEm": "2026-09-13",
+  "etapa": "6 de 7 — Filiais e permissões",
+  "tarefas": [
+    {
+      "id": "R01",
+      "titulo": "Importação e banco do piloto",
+      "status": "concluido",
+      "detalhe": "Operações, itens, cancelamentos e checkpoints de ITUPEVA persistidos."
+    },
+    {
+      "id": "R02",
+      "titulo": "Painel e acesso Admin",
+      "status": "concluido",
+      "detalhe": "Indicadores, ranking, filtros e detalhes publicados."
+    },
+    {
+      "id": "R03",
+      "titulo": "Publicação com HTTPS e backup diário",
+      "status": "concluido",
+      "detalhe": "Piloto na Locaweb. Retenção e cópia externa recorrente têm tarefa própria."
+    },
+    {
+      "id": "R04",
+      "titulo": "Correções de celular e fotos",
+      "status": "concluido",
+      "detalhe": "Layout e imagens autenticadas verificados em navegador."
+    },
+    {
+      "id": "R05",
+      "titulo": "Clientes importados junto com a venda",
+      "status": "concluido",
+      "detalhe": "Nome e telefones persistidos; detalhes não consultam ERP."
+    },
+    {
+      "id": "R06",
+      "titulo": "Homologação de ITUPEVA",
+      "status": "concluido",
+      "detalhe": "Confirmada por Maylon no contexto do período 01/01 a 09/09/2026."
+    },
+    {
+      "id": "R07",
+      "titulo": "Autorizar 14 filiais no mesmo ambiente",
+      "status": "concluido",
+      "detalhe": "Agrupamento confirmado e acesso Admin publicado."
+    },
+    {
+      "id": "R08",
+      "titulo": "Exibir COD_FILIAL no seletor",
+      "status": "concluido",
+      "detalhe": "14 códigos conferidos no ERP; IDs internos preservados."
+    },
+    {
+      "id": "R09",
+      "titulo": "Sincronizar cadastro por trans_id",
+      "status": "concluido",
+      "detalhe": "Publicado: 14 cadastros persistidos, seletor lê o banco e primeira rodada incremental automática confirmada sem duplicar dados. Evidência: docs/validacao-cadastro-filiais.json."
+    },
+    {
+      "id": "R10",
+      "titulo": "Concluir históricos das novas filiais",
+      "status": "em_andamento",
+      "detalhe": "Em 13/09 às 21h30 (Brasília), os checkpoints das 13 novas lojas estavam entre 18 e 25/08/2026. ITUPEVA cobre 13/09. Carga segue em lotes; esta informação é uma fotografia da consulta."
+    },
+    {
+      "id": "R11",
+      "titulo": "Conferir totais das novas filiais",
+      "status": "pendente",
+      "detalhe": "Depende de R10. Comparar cada filial com o ERP e registrar aceite de Maylon."
+    },
+    {
+      "id": "R12",
+      "titulo": "Cargos e permissões por filial",
+      "status": "pendente",
+      "detalhe": "Admin, Diretoria, Supervisão, Gerentes e Vendas; regras por recurso e filial."
+    },
+    {
+      "id": "R13",
+      "titulo": "Gestão de usuários e acessos",
+      "status": "pendente",
+      "detalhe": "Depende de R12. Criar, desativar e associar usuários aos acessos autorizados."
+    },
+    {
+      "id": "R14",
+      "titulo": "Retenção e cópia externa dos backups",
+      "status": "pendente",
+      "detalhe": "Definir destino e retenção; implementar cópia recorrente e testar recuperação."
+    },
+    {
+      "id": "R15",
+      "titulo": "Cadastro unificado e aniversariantes",
+      "status": "pendente",
+      "detalhe": "Evoluir snapshots dos clientes para cadastro e validar fonte de aniversário."
+    },
+    {
+      "id": "R16",
+      "titulo": "Fila de atendimento",
+      "status": "pendente",
+      "detalhe": "Próximo módulo operacional previsto; detalhar regras com Maylon."
+    },
+    {
+      "id": "R17",
+      "titulo": "Notificações internas e alertas",
+      "status": "pendente",
+      "detalhe": "Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização."
+    },
+    {
+      "id": "R18",
+      "titulo": "Campanhas e mensagens",
+      "status": "pendente",
+      "detalhe": "Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado."
+    },
+    {
+      "id": "R19",
+      "titulo": "Produtos, estoque e indicadores adicionais",
+      "status": "pendente",
+      "detalhe": "Validar contratos e regras de saldo/custo antes de novos indicadores."
+    },
+    {
+      "id": "R20",
+      "titulo": "SaaS: provisionamento, planos e cobrança",
+      "status": "pendente",
+      "detalhe": "Etapa 7. Manter isolamento por tenant e automatizar subdomínios após fechar o produto."
+    },
+    {
+      "id": "R21",
+      "titulo": "Kanban na central e no roadmap",
+      "status": "concluido",
+      "detalhe": "Quadro no HTML e no Markdown, com cartões expansíveis, progresso e pendências. Desktop, celular e preservação de notas verificados. Evidência: docs/validacao-kanban.json."
+    },
+    {
+      "id": "R22",
+      "titulo": "Definir bruto, líquido e devoluções",
+      "status": "pendente",
+      "detalhe": "Fechar com Maylon as regras de descontos nos itens, frete, cortesia e trocas antes de novos indicadores."
+    },
+    {
+      "id": "R23",
+      "titulo": "Fotos dos vendedores",
+      "status": "pendente",
+      "detalhe": "Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais."
+    }
+  ]
+}

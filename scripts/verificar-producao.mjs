@@ -16,6 +16,7 @@ try{
  const config=JSON.parse(await readFile(new URL('../config/piloto.json',import.meta.url)));
  const esperadas=config.tenantGroupingConfirmed?config.branchIds:['30098297'];
  const filiais=await request('/api/v1/filiais');assert.equal(filiais.status,200);assert.deepEqual(filiais.data.filiais.map(f=>f.filial).sort(),[...esperadas].sort());
+ assert.ok(filiais.data.filiais.every(f=>typeof f.cod_filial==='string'&&f.cod_filial.length>0&&/^\d+$/.test(f.trans_id)));
  const coberturaFiliais=[];
  for(const filial of esperadas){const r=await request('/api/v1/indicadores?'+new URLSearchParams({filial,inicio:'2026-01-01',fim:'2026-09-09'}));assert.equal(r.status,200);coberturaFiliais.push({filial,coberturaCompleta:r.data.checkpoints_cobrem_fim});}
  const q='filial=30098297&inicio=2026-01-01&fim=2026-09-09';
@@ -28,7 +29,7 @@ try{
  assert.equal((await request('/api/v1/indicadores?filial=999999999&inicio=2026-01-01&fim=2026-09-09')).status,403);
  assert.equal((await request('/api/v1/auth/logout',{method:'POST'})).status,200);
  assert.equal((await request('/api/v1/auth/me')).status,401);token=null;
- const report={verificadoEm:new Date().toISOString(),dominio:hostname,tlsValidado:true,login:200,indicadores:200,ranking:200,vendas:200,detalhe:200,anonimo:401,filialNaoAutorizada:403,logout:200,sessaoRevogada:401,contagemConsistente:true,filiaisAutorizadas:esperadas.length,coberturaFiliais};
+ const report={verificadoEm:new Date().toISOString(),dominio:hostname,tlsValidado:true,login:200,indicadores:200,ranking:200,vendas:200,detalhe:200,anonimo:401,filialNaoAutorizada:403,logout:200,sessaoRevogada:401,contagemConsistente:true,filiaisAutorizadas:esperadas.length,cadastroFiliaisPersistido:true,coberturaFiliais};
  await writeFile('docs/validacao-producao.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));
 }catch(e){console.error('VERIFICACAO_PRODUCAO_FALHOU',e.code||e.name);process.exitCode=1;}
 finally{if(token)await request('/api/v1/auth/logout',{method:'POST'}).catch(()=>{});}

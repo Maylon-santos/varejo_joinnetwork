@@ -1,5 +1,5 @@
 {
-  "verificadoEm": "2026-09-13T19:31:47.633Z",
+  "verificadoEm": "2026-09-14T00:30:21.153Z",
   "dominio": "aeropostale.joinnetwork.com.br",
   "tlsValidado": true,
   "login": 200,
@@ -13,6 +13,7 @@
   "sessaoRevogada": 401,
   "contagemConsistente": true,
   "filiaisAutorizadas": 14,
+  "cadastroFiliaisPersistido": true,
   "coberturaFiliais": [
     {
       "filial": "30098297",

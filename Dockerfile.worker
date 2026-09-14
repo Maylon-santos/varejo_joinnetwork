@@ -4,6 +4,6 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 COPY --chown=node:node backend/src ./backend/src
 COPY --chown=node:node config ./config
-COPY --chown=node:node scripts/sync-worker.mjs scripts/preencher-clientes.mjs ./scripts/
+COPY --chown=node:node scripts/sync-worker.mjs scripts/preencher-clientes.mjs scripts/sincronizar-filiais.mjs ./scripts/
 USER node
 CMD ["node", "scripts/sync-worker.mjs"]

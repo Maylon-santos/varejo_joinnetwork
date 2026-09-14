@@ -56,3 +56,13 @@ Em 13/09/2026, Maylon confirmou o agrupamento das 14 filiais no mesmo tenant Aer
 `node --env-file=.env scripts/verificar-producao.mjs` confere a lista autorizada, indicadores por filial, TLS, login e rejeição de filial não autorizada. A evidência inclui cobertura por filial; novas lojas continuam parciais até seus checkpoints cobrirem o período consultado.
 
 Para preparar uma referência de homologação de ITUPEVA: `node --env-file=.env scripts/preparar-homologacao.mjs`. O relatório lê somente o painel, verifica somas e gera arquivos privados na central. `HOMOLOGACAO_INICIO` e `HOMOLOGACAO_FIM` mudam o período. Cada execução cria uma extração nova e preserva a ficha de aceite existente; não comprova, por si só, equivalência com o ERP. Atualize o HTML com `python3 scripts/gerar-central.py`.
+
+## Implantação do cadastro incremental
+
+Aplicar migrations antes de publicar a API que lê `cadastro_filiais`. Com o worker pausado, executar `docker compose run --rm --no-deps sync-worker node scripts/sincronizar-filiais.mjs` e confirmar os 14 cadastros antes de atualizar a API. Retomar o worker após a publicação. Backup do tenant inclui cadastro e cursor.
+
+Acompanhar eventos `cadastro_filiais_sincronizado` e `cadastro_filiais_falhou`, além da tabela `sync_cadastro_filiais`. O cursor não substitui a autorização nem os checkpoints dos outros recursos.
+
+## Kanban pessoal
+
+Editar tarefas e estados em `config/roadmap.json`, então executar `python3 scripts/gerar-central.py`. O gerador atualiza somente o bloco delimitado `KANBAN` do roadmap e gera o quadro na central pessoal. Notas e edições pessoais anteriores são preservadas; o HTML continua ignorado pelo Git. O quadro é uma fotografia do planejamento, sem consulta automática ao servidor.

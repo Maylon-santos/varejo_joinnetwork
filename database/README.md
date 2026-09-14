@@ -77,3 +77,13 @@ Maylon confirmou as 14 filiais no mesmo tenant Aeropostale. O modo contínuo lim
 O checkpoint avança somente até o último dia gravado; o log `lote_historico_concluido` informa `pendente: true` e o alvo quando falta histórico. A rodada seguinte preserva a sobreposição de um dia anterior ao checkpoint. Limites menores que três dias são recusados para evitar que a sobreposição impeça avanço. `--once` mantém a carga integral até o fim inicial configurado.
 
 O Admin acessa as filiais configuradas. Usuários restritos continuam dependentes da implementação de permissões por cargo e filial. A interface sinaliza períodos sem cobertura; totais das novas filiais não são homologados automaticamente pela aprovação de ITUPEVA.
+
+## Cadastro de filiais por trans_id
+
+A migration `006_cadastro_filiais.sql` cria `cadastro_filiais` e `sync_cadastro_filiais`. Cadastro e cursor global do endpoint são confirmados na mesma transação, após validar tenant, contagem da resposta e ausência de paginação parcial. Respostas conflitantes ou inválidas revertem a carga.
+
+O worker consulta o cadastro antes das rodadas de vendas/cancelamentos, com intervalo base de seis minutos e backoff após três falhas. Uma falha cadastral não interrompe os outros recursos. A carga inicial não envia cursor; incrementais enviam o último cursor menos um para reler a última transação de forma idempotente. A validação de 13/09 observou filtro exclusivo (`trans_id` maior que o enviado). Datas e checkpoints de vendas/cancelamentos são independentes.
+
+Só os cadastros das filiais autorizadas são persistidos. O cursor considera toda a resposta do endpoint; alteração da lista autorizada força uma consulta total, evitando perder cadastros antigos de filiais recém-autorizadas. Uma carga total exige encontrar todas as filiais autorizadas antes do commit. Cadastros ausentes não são interpretados como exclusão: não há contrato de exclusão validado.
+
+Com o worker pausado, `docker compose run --rm --no-deps sync-worker node scripts/sincronizar-filiais.mjs` executa uma passagem forçada. A execução normal fica no worker e respeita os tempos de retentativa. O seletor lê o banco, sem republicação para mudanças de código no ERP.
