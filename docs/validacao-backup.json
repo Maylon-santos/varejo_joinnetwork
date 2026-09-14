@@ -1,0 +1,27 @@
+{
+  "verificadoEm": "2026-09-14T12:08:05.509055+00:00",
+  "backup": "backup-20260914T115644Z-MXjfBi",
+  "checksumsValidos": true,
+  "restauracaoPostgresql17": true,
+  "containerSemRede": true,
+  "producaoAlterada": false,
+  "control": {
+    "usuarios": 1,
+    "admins_ativos": 1,
+    "perfis": 5,
+    "vinculos": 0,
+    "sessoes": 0,
+    "registro_ok": true
+  },
+  "tenant": {
+    "operacoes": 26062,
+    "itens": 60731,
+    "cancelamentos": 895,
+    "cadastros_filiais": 14,
+    "checkpoints": 28,
+    "clientes_importados": 26062,
+    "identidade_ok": true
+  },
+  "limite": "Valida recuperação do backup indicado; não compara com a produção em alteração nem comprova cópia externa recorrente.",
+  "containerDescartado": true
+}

@@ -7,16 +7,16 @@
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
-| R11 — Conferir totais das novas filiais | — | — | R01 — Importação e banco do piloto |
-| R14 — Retenção e cópia externa dos backups | — | — | R02 — Painel e acesso Admin |
-| R15 — Cadastro unificado e aniversariantes | — | — | R03 — Publicação com HTTPS e backup diário |
-| R16 — Fila de atendimento | — | — | R04 — Correções de celular e fotos |
-| R17 — Notificações internas e alertas | — | — | R05 — Clientes importados junto com a venda |
-| R18 — Campanhas e mensagens | — | — | R06 — Homologação de ITUPEVA |
-| R19 — Produtos, estoque e indicadores adicionais | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
-| R20 — SaaS: provisionamento, planos e cobrança | — | — | R08 — Exibir COD_FILIAL no seletor |
-| R22 — Definir bruto, líquido e devoluções | — | — | R09 — Sincronizar cadastro por trans_id |
-| R23 — Fotos dos vendedores | — | — | R10 — Concluir históricos das novas filiais |
+| R11 — Conferir totais das novas filiais | R14 — Retenção e cópia externa dos backups | — | R01 — Importação e banco do piloto |
+| R15 — Cadastro unificado e aniversariantes | — | — | R02 — Painel e acesso Admin |
+| R16 — Fila de atendimento | — | — | R03 — Publicação com HTTPS e backup diário |
+| R17 — Notificações internas e alertas | — | — | R04 — Correções de celular e fotos |
+| R18 — Campanhas e mensagens | — | — | R05 — Clientes importados junto com a venda |
+| R19 — Produtos, estoque e indicadores adicionais | — | — | R06 — Homologação de ITUPEVA |
+| R20 — SaaS: provisionamento, planos e cobrança | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
+| R22 — Definir bruto, líquido e devoluções | — | — | R08 — Exibir COD_FILIAL no seletor |
+| R23 — Fotos dos vendedores | — | — | R09 — Sincronizar cadastro por trans_id |
+| — | — | — | R10 — Concluir históricos das novas filiais |
 | — | — | — | R12 — Cargos e permissões por filial |
 | — | — | — | R13 — Gestão de usuários e acessos |
 | — | — | — | R21 — Kanban na central e no roadmap |
@@ -24,7 +24,7 @@
 ### Pendências e dependências
 
 - [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
-- [ ] **R14 — Retenção e cópia externa dos backups:** Definir destino e retenção; implementar cópia recorrente e testar recuperação.
+- [ ] **R14 — Retenção e cópia externa dos backups:** Backup recente copiado para pasta privada local e restaurado em PostgreSQL 17 isolado, sem rede: checksums, 26.062 operações, 14 filiais e perfis conferidos. Falta definir destino externo e retenção para configurar cópia recorrente e limpeza. Nenhum backup excluído. Evidência: docs/validacao-backup.json.
 - [ ] **R15 — Cadastro unificado e aniversariantes:** Evoluir snapshots dos clientes para cadastro e validar fonte de aniversário.
 - [ ] **R16 — Fila de atendimento:** Próximo módulo operacional previsto; detalhar regras com Maylon.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
@@ -35,6 +35,18 @@
 - [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
 
 <!-- KANBAN:FIM -->
+
+## Backups: recuperação testada — 14/09/2026
+
+- [x] Timer remoto ativo; última execução bem-sucedida. Na inspeção, backups ocupavam 11 MB e o servidor tinha 3,8 GB livres.
+- [x] Backup `backup-20260914T115644Z-MXjfBi` copiado para `artifacts/deploy/backups/`, pasta privada fora do Git.
+- [x] Checksums conferidos e ambos os dumps restaurados em PostgreSQL 17 descartável, sem rede. 26.062 operações, 60.731 itens, 895 cancelamentos, 14 filiais, 28 checkpoints, 1 Admin e 5 perfis recuperados. Sessões restauradas: zero, conforme política existente.
+- [x] Container isolado removido após o teste; produção preservada. Cinco testes de validação de arquivos passaram.
+- [ ] R14 em andamento: aguarda destino externo e definição da retenção. A cópia local realizada é manual, não uma rotina externa automática. Nenhum backup foi excluído.
+
+Evidência: `docs/validacao-backup.json`. Teste reproduzível: `python3 scripts/verificar-backup.py CAMINHO_DO_BACKUP`. Requer Docker e imagem PostgreSQL 17. O teste não compara com os dados de produção que continuam mudando.
+
+
 
 ## Gestão de usuários publicada — 14/09/2026
 

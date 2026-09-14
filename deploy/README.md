@@ -74,3 +74,11 @@ Fazer backup e aplicar `control/003_permissoes.sql` antes de subir a API nova. N
 ## Gestão de usuários — 14/09/2026
 
 A API inclui a tela Usuários e as rotas `/acessos/usuarios` e `/acessos/vendedores`. Usa a migration de permissões já instalada; não há nova migration nesta entrega. Publicação com backup prévio e atualização somente da API. Cadastro, cargo, ativação, senha e vínculos ficam no banco central e no backup existente. Alterações de usuário revogam sessões anteriores. O próprio Admin não pode se alterar pela tela; outro Admin deve fazê-lo. Nenhum convite ou senha é enviado automaticamente.
+
+## Teste isolado de recuperação — 14/09/2026
+
+Executar `python3 scripts/verificar-backup.py CAMINHO_DO_BACKUP` no computador com Docker e imagem `postgres:17`. O script exige COMPLETE e os dois checksums corretos, rejeita links/manifestos inesperados e cria um container temporário sem rede, sem portas e com dados em tmpfs. Restaura os bancos com `--no-owner --no-acl --exit-on-error --single-transaction`, verifica identidades, registro, Admin ativo e ausência de sessões; remove o container ao terminar. Não utiliza URLs dos bancos nem acessa a produção. Limites do container: 1 CPU, 1 GB de memória e tmpfs de 1 GB; revisar esses limites quando o histórico crescer.
+
+Relatório agregado: `docs/validacao-backup.json` (pode escolher outro caminho com `--relatorio`). Logs privados: `artifacts/deploy/varejo-restore-test-*/restore.log`. O teste verifica recuperação do backup indicado, sem comparação com a produção em alteração. Dumps e logs continuam fora do Git. Cinco testes de validação: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-verificar-backup.py`.
+
+A restauração do backup de 14/09 às 11h56 UTC foi validada. Retenção e cópia externa recorrente aguardam definição do destino. Proposta para decisão: manter 30 dias no servidor e pelo menos 7 cópias válidas; só habilitar limpeza após cópia externa verificada. Essa proposta ainda não está aplicada e nenhum arquivo foi excluído. A retenção externa dependerá do destino escolhido.

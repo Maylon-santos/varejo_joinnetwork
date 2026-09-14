@@ -83,8 +83,8 @@
     {
       "id": "R14",
       "titulo": "Retenção e cópia externa dos backups",
-      "status": "pendente",
-      "detalhe": "Definir destino e retenção; implementar cópia recorrente e testar recuperação."
+      "status": "em_andamento",
+      "detalhe": "Backup recente copiado para pasta privada local e restaurado em PostgreSQL 17 isolado, sem rede: checksums, 26.062 operações, 14 filiais e perfis conferidos. Falta definir destino externo e retenção para configurar cópia recorrente e limpeza. Nenhum backup excluído. Evidência: docs/validacao-backup.json."
     },
     {
       "id": "R15",
