@@ -1,5 +1,20 @@
 # Comece aqui — estado atual em 14/09/2026
 
+## Ajustes de preços e pagamento publicados — 14/09/2026
+
+Os novos pedidos do `correcao.md` foram encaixados antes de R15, pois complementam a importação atual e fornecem dados para R19. R24 cobre importação/interface; R25 acompanha o preenchimento do histórico. A inclusão dessas duas tarefas levou o quadro a 25 tarefas, com **15 concluídas**.
+
+- [x] Exibir código do produto e SKU, preço de tabela, desconto informado, preço e preço aplicado.
+- [x] Mostrar ⚠️ quando o desconto recebido é zero e o aplicado fica abaixo da tabela. Ausência não equivale a zero; aviso não altera indicadores.
+- [x] Importar condição e lançamentos junto com a venda; mostrar condição e detalhes amigáveis das parcelas a partir do banco.
+- [x] Respeitar filial/vendedor e remover histórico/gerador das parcelas quando o usuário não tem acesso a clientes.
+- [x] Backup, migration e publicação concluídos. Amostra de 53 operações de ITUPEVA em 13/09 preenchida com hashes dos dados comerciais, itens e checkpoints preservados.
+- [x] 39 testes unitários, 33 de integração e navegador desktop/celular aprovados. API saudável e worker remoto ativo.
+- [ ] R25: concluir histórico. Na consulta às 21h08 UTC: 731 preenchidas, 25.359 pendentes. Quatro filiais tinham divergências registradas aguardando retentativa/revisão; não foram sobrescritas para forçar preenchimento.
+- [ ] Confirmar unidade do desconto em R22; por enquanto exibir o valor original com rótulo neutro, sem presumir percentual ou reais.
+
+Sequência: **R24 publicado → R25 cobertura histórica → R15 cadastro unificado/fonte de aniversário → R22/R19 indicadores → R11 conferência mensal/anual**. R15 pode avançar enquanto R25 executa. Evidências: `docs/validacao-complementos.json`, `docs/validacao-complementos-ui.json` e `docs/validacao-complementos-producao.json`.
+
 ## Backups externos e retenção ativados — 14/09/2026
 
 - [x] Destino confirmado: **mabookhome**, pasta `/Users/maylonsantos/Backups/JoinNetwork/Aeropostale`. Dez backups completos recebidos e verificados por checksum.

@@ -116,3 +116,18 @@ Usuários ativos precisam de filial quando o cargo não abrange todas. Cargos li
 O Admin não pode alterar seu próprio cadastro pela tela/API. As alterações administrativas são serializadas por empresa e revalidam o Admin executor, evitando que administradores se desativem simultaneamente e deixem a empresa sem acesso. Grupos personalizados e hierarquia permanecem evolução futura; os cinco cargos são os configurados em Permissões.
 
 Validação: `node --env-file=.env scripts/verificar-usuarios.mjs`, com Chrome instalado e PostgreSQL local; usa schemas e usuários sintéticos temporários. Relatório em `docs/validacao-usuarios-ui.json`, capturas privadas em `artifacts/deploy/`.
+
+
+## Preços complementares e pagamento — 14/09/2026
+
+`GET /api/v1/operacoes/:filial/:tipo/:codigo` inclui nos itens `cod_produto`, `preco_tabela_centavos`, `desconto_informado`, `preco_centavos` e `preco_aplicado_centavos`. Valores monetários são strings em centavos; `desconto_informado` é a representação decimal do campo original, sem presumir percentual ou valor monetário enquanto a unidade não for confirmada. A tela mostra código e SKU, preços e ⚠️ quando o desconto é explicitamente zero e o aplicado é menor que a tabela. Campo ausente não equivale a zero. O aviso não muda a conciliação nem os indicadores.
+
+`operacao.complementos` contém `condicoes_pgto`, `codigo_condicaopgto`, `desc_condicoes_pgto` e `lancamentos`. Cada lançamento preserva `origem`, `n_documento`, `data_emissao`, `data_vencimento`, `desc_gerador`, `historico`, `desc_tipopgto`, `nsu` e `valor_inicial_centavos`. Datas Millennium são convertidas para o dia de São Paulo. A condição aparece no detalhe; um bloco expansível mostra parcelas, forma, valor, vencimento, documento e histórico. Sem `clientes:ler`, a API remove `desc_gerador` e `historico`, que podem conter nomes; acesso à operação continua limitado a filial/vendedor e `vendas:ler`.
+
+Tudo vem do banco. Abrir detalhes ou expandir parcelas não consulta o ERP. `complementos = null` indica importação pendente; `lancamentos = null` indica que a origem não forneceu o campo; uma lista vazia indica ausência de lançamentos. `complementos_importados_em` registra o preenchimento. Não somar parcelas aos valores das vendas nem trocar o preço usado no subtotal: regras dos novos indicadores permanecem em R22/R19.
+
+A migration `tenant/007_complementos_venda.sql` é obrigatória antes de publicar API/worker. Novas importações gravam os complementos com a venda. O histórico usa lotes de até três dias por filial e rodada, do dia mais recente ao mais antigo, depois das sincronizações normais. Compartilha o único worker remoto, sem paralelismo de consultas; usa `sync_status` com recurso `complementos` e espera/backoff próprios.
+
+O preenchimento histórico altera somente os novos campos. Associa itens por produto/SKU, quantidade e preço originais e preserva sua ordem gravada. Rejeita diferenças reais (`COMPLEMENTOS_ITENS_DIVERGENTES`), duplicidades sem correspondência inequívoca (`COMPLEMENTOS_ITENS_AMBIGUOS`) e operações que não retornam (`COMPLEMENTOS_OPERACOES_AUSENTES`). Um erro reverte a transação do dia e agenda nova tentativa para a filial; demais filiais continuam. Esses casos devem ser revisados, sem sobrescrever o histórico comercial para forçar o preenchimento.
+
+Validações: 39 testes unitários, 33 de integração e navegador local/público. `scripts/verificar-complementos-ui.mjs` usa dados sintéticos. A amostra real de 53 operações de ITUPEVA em 13/09 preservou hashes dos registros comerciais anteriores, itens e checkpoints. O restante do histórico permanece em R25; isso não significa homologação dos totais mensais/anuais.

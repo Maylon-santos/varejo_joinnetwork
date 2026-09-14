@@ -858,7 +858,8 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "description": "Detalhe local da operação autorizada. Itens incluem código, SKU, preço de tabela/aplicado em centavos e desconto informado. operacao.complementos inclui condição de pagamento e lançamentos com valor_inicial_centavos e datas ISO; null indica pendência de importação. Histórico e gerador dos lançamentos são removidos sem clientes:ler. Não consulta o ERP."
       }
     },
     "/api/v1/operacoes/{filial}/{tipo}/{codigo}/cliente": {

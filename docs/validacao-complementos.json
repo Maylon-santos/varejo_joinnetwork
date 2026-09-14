@@ -1,0 +1,23 @@
+{
+  "verificadoEm": "2026-09-14T21:08:27.901Z",
+  "amostra": {
+    "filial": "30098297",
+    "dia": "2026-09-13",
+    "operacoesAtualizadas": 53,
+    "baseComercialItensECheckpointsPreservados": true
+  },
+  "cobertura": {
+    "operacoes": 26090,
+    "preenchidas": 731,
+    "pendentes": 25359
+  },
+  "historicoConcluido": false,
+  "filiaisComErroRegistrado": [
+    "30098297",
+    "30098708",
+    "30098795",
+    "30098699"
+  ],
+  "erroRegistrado": "COMPLEMENTOS_ITENS_DIVERGENTES",
+  "observacao": "Associação por produto/SKU/quantidade/preço publicada; registros de falha aguardam retentativa. Divergências reais e ambiguidades não sobrescrevem dados anteriores. Fonte ERP confirmou os novos campos em 53 operações/176 itens da amostra; 52 operações com lançamentos."
+}

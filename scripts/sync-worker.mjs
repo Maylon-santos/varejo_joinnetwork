@@ -1,3 +1,4 @@
+import {preencherComplementos} from '../backend/src/preencher-complementos.mjs';
 import {consultarFiliais,sincronizarFiliais} from '../backend/src/filiais.mjs';
 import {readFile} from 'node:fs/promises';
 import {setTimeout as pausa} from 'node:timers/promises';
@@ -57,6 +58,11 @@ try{
     console.error(JSON.stringify({evento:'sync_falhou',filial,recurso,codigo,falhas,repetirEmSegundos:atraso}));
     if(once)process.exitCode=1;
    }
+  }
+  if(!once)for(const filial of filiais){
+   if(encerrar)break;
+   try{const result=await preencherComplementos({pool,repositorio:repo,tenant,filial,consultar:consultas.vendas,intervalo,parar:()=>encerrar});if(!result.aguardando&&result.dias)console.log(JSON.stringify({evento:'complementos_preenchidos',...result}));}
+   catch(e){console.error(JSON.stringify({evento:'complementos_falharam',filial,codigo:erroSeguro(e)}));}
   }
   if(once||encerrar)break;
   // Espera curta permite desligamento sem interromper uma transação no meio.

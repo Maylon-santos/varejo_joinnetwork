@@ -84,7 +84,7 @@ export function criarPainel(pool,tenant,filiais,vendedores=null){
    const r=await db.query(`SELECT o.*,o.conciliacao AS conciliacao_original,${statusConciliacao} AS conciliacao,o.data_operacao::text,${efetiva} AS cancelada FROM operacoes o
     WHERE o.cod_operacao=$1 AND o.tipo_operacao=$2 AND o.filial=$3 AND ($4::text IS NULL OR o.vendedor_codigo=$4)`,args);
    if(!r.rowCount)throw new ErroApi(404,'OPERACAO_NAO_ENCONTRADA');
-   const itens=(await db.query('SELECT ordem,sku,cod_produto,descricao,quantidade,imagem_url,preco_centavos::text FROM operacao_itens WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 ORDER BY ordem',args.slice(0,3))).rows;
+   const itens=(await db.query('SELECT ordem,sku,cod_produto,descricao,quantidade,imagem_url,preco_centavos::text,preco_tabela_centavos::text,desconto_informado::text,preco_aplicado_centavos::text FROM operacao_itens WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 ORDER BY ordem',args.slice(0,3))).rows;
    const cancelamento=(await db.query('SELECT data_cancelou FROM cancelamentos WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',args.slice(0,3))).rows[0]??null;
    return {operacao:r.rows[0],itens,cancelamento};
   }),

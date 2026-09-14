@@ -90,7 +90,7 @@
       "id": "R15",
       "titulo": "Cadastro unificado e aniversariantes",
       "status": "pendente",
-      "detalhe": "Evoluir snapshots dos clientes para cadastro e validar fonte de aniversário."
+      "detalhe": "Após os ajustes de importação/detalhes R24, evoluir snapshots para cadastro unificado e validar identificador ERP/fonte de aniversário; não unir clientes apenas por nome ou telefone."
     },
     {
       "id": "R16",
@@ -114,7 +114,7 @@
       "id": "R19",
       "titulo": "Produtos, estoque e indicadores adicionais",
       "status": "pendente",
-      "detalhe": "Validar contratos e regras de saldo/custo antes de novos indicadores."
+      "detalhe": "Usar dados complementares de R24/R25 para os indicadores, após definir regras em R22. Produtos/estoque exigem seus contratos específicos. Conferência mensal/anual R11 aguarda esses indicadores."
     },
     {
       "id": "R20",
@@ -132,13 +132,25 @@
       "id": "R22",
       "titulo": "Definir bruto, líquido e devoluções",
       "status": "pendente",
-      "detalhe": "Fechar com Maylon as regras de descontos nos itens, frete, cortesia e trocas antes de novos indicadores."
+      "detalhe": "Confirmar a unidade do campo desconto (percentual ou reais), além das regras de bruto/líquido, frete, cortesia, trocas e parcelas, antes de calcular novos indicadores. Os valores recebidos são preservados sem aplicar fórmula adicional."
     },
     {
       "id": "R23",
       "titulo": "Fotos dos vendedores",
       "status": "pendente",
       "detalhe": "Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais."
+    },
+    {
+      "id": "R24",
+      "titulo": "Detalhes: preços e parcelas do pagamento",
+      "status": "concluido",
+      "detalhe": "Publicado: código/SKU, tabela/desconto/preço/aplicado, aviso quando desconto=0 e aplicado<tabela, condição de pagamento e parcelas. Dados locais, sem consulta ERP ao abrir detalhes. 39 testes unitários, 33 de integração e navegador local/público aprovados. Unidade do desconto permanece a confirmar em R22."
+    },
+    {
+      "id": "R25",
+      "titulo": "Completar preços e pagamentos do histórico",
+      "status": "em_andamento",
+      "detalhe": "Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json."
     }
   ]
 }

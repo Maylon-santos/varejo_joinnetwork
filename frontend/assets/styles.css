@@ -33,3 +33,5 @@
 @media(max-width:760px){.sidebar nav{flex-wrap:wrap}.sidebar .nav-button{width:auto;flex:1 1 40%}}
 
 .permission-card input[type=email],.permission-card input[type=password],.permission-card select{width:100%;margin:8px 0 16px;font-size:16px}.user-branch{border-bottom:1px solid var(--line);padding:8px 0}.user-branch select{max-width:100%}
+
+.detail-payment{margin:0 24px 22px;padding:18px;border:1px solid var(--line);border-radius:10px}.detail-payment h3,.detail-payment p{margin-bottom:10px}.detail-payment small{display:block;color:var(--muted);margin:6px 0;overflow-wrap:anywhere}.detail-payment summary{cursor:pointer;padding:14px 0;color:var(--navy)}.payment-installments{list-style:none;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.payment-installments li{padding:14px;background:var(--bg);border-radius:8px;overflow-wrap:anywhere}.price-warning{cursor:help}.detail-table table{min-width:960px}@media(max-width:760px){.payment-installments{grid-template-columns:1fr}}

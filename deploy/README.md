@@ -101,3 +101,12 @@ Após conferir os hashes no destino, o Mac envia confirmação por SSH. O servid
 Status local: `automacao/ultima-copia.json`; execuções e falhas: `automacao/coleta.log`. Status remoto: `/opt/aeropostale-varejo/backups/.confirmacao-mabookhome.json`. O JSON local representa a última execução bem-sucedida; conferir também sua data e o log para identificar falhas posteriores. Revogar o acesso removendo somente a chave pública identificada como `aeropostale-backup-mabookhome` do authorized_keys do servidor; desativar a coleta removendo somente o bloco JOINNETWORK AEROPOSTALE BACKUP do crontab do Mac. Preservar as outras chaves e tarefas.
 
 Testes: `PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-receber-backups.py` e `PYTHONDONTWRITEBYTECODE=1 python3 scripts/test-retencao-backups.py`, além do teste de integridade citado acima. A retenção foi testada com datas antigas sintéticas; a primeira execução real não precisou excluir arquivos.
+
+
+## Complementos de vendas — 14/09/2026
+
+Pausar o worker, fazer backup, construir API e worker e aplicar `tenant/007_complementos_venda.sql`. `scripts/preencher-complementos.mjs` preenche uma amostra (padrão ITUPEVA, 13/09/2026), adquire o lock exclusivo do worker e compara hashes dos dados comerciais antes/depois. `COMPLEMENTOS_FILIAL` e `COMPLEMENTOS_DIA` permitem outra amostra autorizada. Executar pela imagem do worker com o worker contínuo pausado; nunca habilitar o worker local.
+
+Publicar API e retomar o worker remoto. A cada rodada, o worker prioriza vendas/cancelamentos e depois preenche até três dias históricos por filial, com cooldown/backoff. Verificar `complementos_preenchidos`, `complementos_falharam` e `sync_status`/recurso `complementos`. Conferir cobertura com `SELECT count(*) FILTER(WHERE complementos IS NULL) FROM operacoes`. A conclusão depende de pendências zero e revisão das divergências; abrir o detalhe não inicia consulta ERP.
+
+O aviso de preço aplicado abaixo da tabela depende de desconto informado igual a zero; não aplica novas regras aos indicadores. Histórico e gerador das parcelas respeitam a permissão de clientes. Os novos campos entram no backup do tenant e na cópia automática já configurada para mabookhome.

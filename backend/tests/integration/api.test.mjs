@@ -202,3 +202,22 @@ test('Gestão de usuários cria vendedor, altera vínculos, revoga sessões e pr
  const other=(await control.query("SELECT id FROM admin_users WHERE tenant_key='outro'")).rows[0].id;assert.equal((await send(basePath+'/'+other,'PUT',body)).status,404);
  assert.equal((await send(basePath+'/'+id,'PUT',{...body,senha:'Nova senha longa de integração!'})).status,200);assert.equal(await auth.login(body.email,senha),null);assert.ok(await auth.login(body.email,'Nova senha longa de integração!'));
 });
+
+test('Complementos são persistidos sem alterar valores e ficam restritos à operação autorizada',async()=>{
+ const {RepositorioPostgres}=await import('../../src/repositorio-postgres.mjs');const {normalizarVenda}=await import('../../src/vendas.mjs');const repo=new RepositorioPostgres(pool,'teste');
+ const op=normalizarVenda({cod_operacao:1,tipo_operacao:'S',filial:1,data:'/Date(1788231600000-180)/',qtde:2,valor_final:100,cancelada:false,v_acerto:0,produtos:[{quantidade:2,preco:50,preco_tabela:80,desconto:0,preco_aplicado:50}],desc_condicoes_pgto:'CRÉDITO 2X',lancamentos:[{valor_inicial:50,desc_gerador:'Nome restrito',historico:'Texto restrito'},{valor_inicial:50}]},'1','2026-09-01','2026-09-01');
+ const before=(await pool.query('SELECT valor_final_centavos,quantidade,cancelada FROM operacoes WHERE cod_operacao=1')).rows[0];const checkpoint=(await pool.query('SELECT * FROM sync_checkpoints')).rows;
+ assert.equal(await repo.transacao({tenant:'teste',filial:'1'},tx=>tx.preencherComplementos([op])),1);
+ assert.equal(await repo.transacao({tenant:'teste',filial:'1'},tx=>tx.preencherComplementos([op])),0);
+ assert.deepEqual((await pool.query('SELECT valor_final_centavos,quantidade,cancelada FROM operacoes WHERE cod_operacao=1')).rows[0],before);assert.deepEqual((await pool.query('SELECT * FROM sync_checkpoints')).rows,checkpoint);
+ const full=await (await get('/api/v1/operacoes/1/S/1')).json();assert.equal(full.operacao.complementos.desc_condicoes_pgto,'CRÉDITO 2X');assert.equal(full.itens[0].preco_tabela_centavos,'8000');
+ const email='semcliente@teste.local';await criarAdmin(control,{tenant:'teste',email,senha});await control.query("UPDATE admin_users SET role='Restrito' WHERE email=$1",[email]);await control.query("UPDATE access_roles SET permissoes='[\"vendas:ler\"]'::jsonb WHERE role='Restrito' AND tenant_key='teste'");await control.query("INSERT INTO user_branches(user_id,tenant_key,filial) SELECT id,tenant_key,1 FROM admin_users WHERE email=$1",[email]);const limited=await auth.login(email,senha);const detail=await (await get('/api/v1/operacoes/1/S/1',limited.token)).json();assert.equal(detail.operacao.complementos.lancamentos[0].historico,undefined);assert.equal(detail.operacao.complementos.lancamentos[0].desc_gerador,undefined);assert.equal(detail.operacao.complementos.lancamentos[0].valor_inicial_centavos,'5000');
+ await pool.query('UPDATE operacoes SET complementos=NULL WHERE cod_operacao=1');await assert.rejects(repo.transacao({tenant:'teste',filial:'1'},tx=>tx.preencherComplementos([{...op,produtos:[{...op.produtos[0],sku:'OUTRA-VARIANTE'}]}])),/COMPLEMENTOS_ITENS_DIVERGENTES/);await assert.rejects(repo.transacao({tenant:'teste',filial:'1'},tx=>tx.preencherComplementos([{...op,produtos:[{...op.produtos[0],quantidade:9}]}])),/COMPLEMENTOS_ITENS_DIVERGENTES/);assert.equal((await pool.query('SELECT complementos FROM operacoes WHERE cod_operacao=1')).rows[0].complementos,null);
+});
+
+test('Preenchimento em lotes respeita limite, espera e registra falha sem avançar checkpoints',async()=>{
+ const {preencherComplementos}=await import('../../src/preencher-complementos.mjs');const {RepositorioPostgres}=await import('../../src/repositorio-postgres.mjs');const repo=new RepositorioPostgres(pool,'teste');const calls=[];const before=(await pool.query('SELECT * FROM sync_checkpoints')).rows;
+ await assert.rejects(preencherComplementos({pool,repositorio:repo,tenant:'teste',filial:'1',limite:1,consultar:async p=>{calls.push(p);throw new Error('ERP_HTTP_503');}}));assert.equal(calls.length,1);
+ const cooldown=await preencherComplementos({pool,repositorio:repo,tenant:'teste',filial:'1',consultar:async()=>{throw new Error('NÃO DEVE CONSULTAR');}});assert.equal(cooldown.aguardando,true);assert.deepEqual((await pool.query('SELECT * FROM sync_checkpoints')).rows,before);
+ assert.equal((await pool.query("SELECT ultimo_erro_codigo FROM sync_status WHERE filial=1 AND recurso='complementos'")).rows[0].ultimo_erro_codigo,'ERP_HTTP_503');
+});

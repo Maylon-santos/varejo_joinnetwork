@@ -87,7 +87,7 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
    if(detalhe){
     exigirPermissao(acesso.permissoes,'vendas:ler');
     const d=await painelUsuario.detalhe(detalhe[1],detalhe[2],detalhe[3]);
-    if(!acesso.permissoes.includes('clientes:ler')){delete d.operacao.clientes;delete d.operacao.clientes_importados_em;}
+    if(!acesso.permissoes.includes('clientes:ler')){delete d.operacao.clientes;delete d.operacao.clientes_importados_em;if(d.operacao.complementos?.lancamentos)for(const l of d.operacao.complementos.lancamentos){delete l.desc_gerador;delete l.historico;}}
     if(!acesso.permissoes.includes('imagens:ler'))for(const item of d.itens)delete item.imagem_url;
     return enviar(200,d);
    }

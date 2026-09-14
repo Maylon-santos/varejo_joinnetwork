@@ -3,11 +3,11 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-14 de 23 tarefas deste quadro concluídas. Atualização: 2026-09-14. A contagem não representa prazo ou esforço.
+15 de 25 tarefas deste quadro concluídas. Atualização: 2026-09-14. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
-| R11 — Conferir totais das novas filiais | — | — | R01 — Importação e banco do piloto |
+| R11 — Conferir totais das novas filiais | R25 — Completar preços e pagamentos do histórico | — | R01 — Importação e banco do piloto |
 | R15 — Cadastro unificado e aniversariantes | — | — | R02 — Painel e acesso Admin |
 | R16 — Fila de atendimento | — | — | R03 — Publicação com HTTPS e backup diário |
 | R17 — Notificações internas e alertas | — | — | R04 — Correções de celular e fotos |
@@ -21,20 +21,39 @@
 | — | — | — | R13 — Gestão de usuários e acessos |
 | — | — | — | R14 — Retenção e cópia externa dos backups |
 | — | — | — | R21 — Kanban na central e no roadmap |
+| — | — | — | R24 — Detalhes: preços e parcelas do pagamento |
 
 ### Pendências e dependências
 
 - [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
-- [ ] **R15 — Cadastro unificado e aniversariantes:** Evoluir snapshots dos clientes para cadastro e validar fonte de aniversário.
+- [ ] **R15 — Cadastro unificado e aniversariantes:** Após os ajustes de importação/detalhes R24, evoluir snapshots para cadastro unificado e validar identificador ERP/fonte de aniversário; não unir clientes apenas por nome ou telefone.
 - [ ] **R16 — Fila de atendimento:** Próximo módulo operacional previsto; detalhar regras com Maylon.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
-- [ ] **R19 — Produtos, estoque e indicadores adicionais:** Validar contratos e regras de saldo/custo antes de novos indicadores.
+- [ ] **R19 — Produtos, estoque e indicadores adicionais:** Usar dados complementares de R24/R25 para os indicadores, após definir regras em R22. Produtos/estoque exigem seus contratos específicos. Conferência mensal/anual R11 aguarda esses indicadores.
 - [ ] **R20 — SaaS: provisionamento, planos e cobrança:** Etapa 7. Manter isolamento por tenant e automatizar subdomínios após fechar o produto.
-- [ ] **R22 — Definir bruto, líquido e devoluções:** Fechar com Maylon as regras de descontos nos itens, frete, cortesia e trocas antes de novos indicadores.
+- [ ] **R22 — Definir bruto, líquido e devoluções:** Confirmar a unidade do campo desconto (percentual ou reais), além das regras de bruto/líquido, frete, cortesia, trocas e parcelas, antes de calcular novos indicadores. Os valores recebidos são preservados sem aplicar fórmula adicional.
 - [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
+- [ ] **R25 — Completar preços e pagamentos do histórico:** Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json.
 
 <!-- KANBAN:FIM -->
+
+## Ajustes de preços e pagamento publicados — 14/09/2026
+
+Os novos pedidos do `correcao.md` foram encaixados antes de R15, pois complementam a importação atual e fornecem dados para R19. R24 cobre importação/interface; R25 acompanha o preenchimento do histórico. A inclusão dessas duas tarefas levou o quadro a 25 tarefas, com **15 concluídas**.
+
+- [x] Exibir código do produto e SKU, preço de tabela, desconto informado, preço e preço aplicado.
+- [x] Mostrar ⚠️ quando o desconto recebido é zero e o aplicado fica abaixo da tabela. Ausência não equivale a zero; aviso não altera indicadores.
+- [x] Importar condição e lançamentos junto com a venda; mostrar condição e detalhes amigáveis das parcelas a partir do banco.
+- [x] Respeitar filial/vendedor e remover histórico/gerador das parcelas quando o usuário não tem acesso a clientes.
+- [x] Backup, migration e publicação concluídos. Amostra de 53 operações de ITUPEVA em 13/09 preenchida com hashes dos dados comerciais, itens e checkpoints preservados.
+- [x] 39 testes unitários, 33 de integração e navegador desktop/celular aprovados. API saudável e worker remoto ativo.
+- [ ] R25: concluir histórico. Na consulta às 21h08 UTC: 731 preenchidas, 25.359 pendentes. Quatro filiais tinham divergências registradas aguardando retentativa/revisão; não foram sobrescritas para forçar preenchimento.
+- [ ] Confirmar unidade do desconto em R22; por enquanto exibir o valor original com rótulo neutro, sem presumir percentual ou reais.
+
+Sequência: **R24 publicado → R25 cobertura histórica → R15 cadastro unificado/fonte de aniversário → R22/R19 indicadores → R11 conferência mensal/anual**. R15 pode avançar enquanto R25 executa. Evidências: `docs/validacao-complementos.json`, `docs/validacao-complementos-ui.json` e `docs/validacao-complementos-producao.json`.
+
+
 
 ## Backups externos e retenção ativados — 14/09/2026
 

@@ -1,3 +1,4 @@
+import {associarItensComplementares} from './complementos-venda.mjs';
 import { aplicarCancelamentos, chaveOperacao } from './cancelamentos.mjs';
 import { validarDia } from './sincronizar-cancelamentos.mjs';
 
@@ -51,6 +52,21 @@ export class RepositorioPostgres {
           }
           return atualizadas;
         },
+        preencherComplementos: async operacoes => {
+          let atualizadas=0;
+          for(const op of operacoes){
+            chaveOperacao(op.cod_operacao,op.tipo_operacao,op.filial);
+            if(String(op.filial)!==String(filial)||!op.complementos||!Array.isArray(op.produtos))throw new Error('COMPLEMENTOS_INVALIDOS');
+            const key=[op.cod_operacao,op.tipo_operacao,filial];
+            const target=await client.query('SELECT 1 FROM operacoes WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 AND complementos IS NULL',key);
+            if(!target.rowCount)continue;
+            const existing=(await client.query('SELECT ordem,sku,cod_produto,quantidade,preco_centavos FROM operacao_itens WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 ORDER BY ordem',key)).rows;
+            const associados=associarItensComplementares(existing,op.produtos);
+            for(const item of associados)await client.query('UPDATE operacao_itens SET preco_tabela_centavos=$5,desconto_informado=$6,preco_aplicado_centavos=$7 WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 AND ordem=$4',[...key,item.ordem,item.preco_tabela_centavos,item.desconto_informado,item.preco_aplicado_centavos]);
+            await client.query('UPDATE operacoes SET complementos=$4::jsonb,complementos_importados_em=now() WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',[...key,JSON.stringify(op.complementos)]);atualizadas++;
+          }
+          return atualizadas;
+        },
         salvarOperacoes: async operacoes => {
           for (const op of operacoes) {
             chaveOperacao(op.cod_operacao, op.tipo_operacao, op.filial);
@@ -70,14 +86,15 @@ export class RepositorioPostgres {
                 WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3`,
               [op.cod_operacao,op.tipo_operacao,filial,JSON.stringify(op.clientes)]);
             }
+            if (op.complementos) await client.query('UPDATE operacoes SET complementos=$4::jsonb,complementos_importados_em=now() WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',[op.cod_operacao,op.tipo_operacao,filial,JSON.stringify(op.complementos)]);
             if (op.produtos) {
               await client.query(`UPDATE operacoes SET ajuste_centavos=$4,subtotal_itens_centavos=$5,conciliacao=$6,
                 vendedor_codigo=$7,vendedor_nome=$8,evento_codigo=$9 WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3`,
               [op.cod_operacao,op.tipo_operacao,filial,op.ajuste_centavos,op.subtotal_itens_centavos,op.conciliacao,op.vendedor_codigo,op.vendedor_nome,op.evento_codigo]);
               await client.query('DELETE FROM operacao_itens WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',[op.cod_operacao,op.tipo_operacao,filial]);
               for (const item of op.produtos) {
-                await client.query(`INSERT INTO operacao_itens(cod_operacao,tipo_operacao,filial,ordem,sku,cod_produto,descricao,quantidade,preco_centavos,imagem_url)
-                  VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,[op.cod_operacao,op.tipo_operacao,filial,item.ordem,item.sku,item.cod_produto,item.descricao,item.quantidade,item.preco_centavos,item.imagem_url??null]);
+                await client.query(`INSERT INTO operacao_itens(cod_operacao,tipo_operacao,filial,ordem,sku,cod_produto,descricao,quantidade,preco_centavos,imagem_url,preco_tabela_centavos,desconto_informado,preco_aplicado_centavos)
+                  VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)`,[op.cod_operacao,op.tipo_operacao,filial,item.ordem,item.sku,item.cod_produto,item.descricao,item.quantidade,item.preco_centavos,item.imagem_url??null,item.preco_tabela_centavos??null,item.desconto_informado??null,item.preco_aplicado_centavos??null]);
               }
             }
           }
