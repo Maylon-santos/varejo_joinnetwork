@@ -2,6 +2,8 @@
 
 Atualização: 15/09/2026. Situação: R16.1 publicada e validada; R16.2 (relatórios/exceções) e R16.3 (integração ERP) pendentes.
 
+Treinamento da equipe: consulte o [Manual de boas práticas da Lista da Vez](MANUAL_FILA_ATENDIMENTO.md). Versões para distribuição: [HTML navegável](../output/html/manual-fila-atendimento.html) e [PDF](../output/pdf/manual-fila-atendimento.pdf). O manual descreve a operação disponível; as seções de proposta abaixo também incluem recursos futuros.
+
 Fonte: descrição adicionada por Maylon em `docs/central/correcoes/correcao.md`, seção “fila de atendimento”. O original foi preservado. Exemplos de outras lojas e opções mencionadas no texto não equivalem a políticas já escolhidas para Aeropostale.
 
 ## Objetivo

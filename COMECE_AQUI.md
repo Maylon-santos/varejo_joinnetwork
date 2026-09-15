@@ -1,5 +1,17 @@
 # Comece aqui — estado atual em 15/09/2026
 
+## Manual de treinamento da fila — 15/09/2026
+
+Manual de boas práticas para gerentes e vendedores, com abertura, atendimento, pausas, reservado, fechamento, dúvidas frequentes, exercícios de 35 minutos e ficha de treinamento.
+
+- Fonte editável: [Manual da Lista da Vez](docs/MANUAL_FILA_ATENDIMENTO.md), também incorporado à central pessoal.
+- [HTML navegável para consulta](output/html/manual-fila-atendimento.html) e [PDF para compartilhar ou imprimir](output/pdf/manual-fila-atendimento.pdf), com nove seções/páginas no PDF.
+- Conteúdo conferido com a interface e as regras publicadas. PDF revisado visualmente; HTML verificado no computador e no celular, sem transbordamento horizontal ou erros JavaScript.
+
+Para atualizar as versões, edite o Markdown e execute `python3 scripts/gerar-manual-fila.py` em um ambiente com `reportlab` instalado. O gerador usa Arial do macOS; em outros sistemas, informe fontes TTF com `--font` e `--font-bold`. Depois execute `python3 scripts/gerar-central.py`. Ao compartilhar o HTML junto com o PDF, preserve as pastas `html/` e `pdf/` para o link entre eles funcionar.
+
+Esta entrega é documental. R16.2 (relatórios/movimento intenso) e R16.3 (vínculo com ERP) permanecem pendentes.
+
 ## Fechamento da fila: status esclarecidos — 15/09/2026
 
 A captura enviada por Maylon mostrava cinco abordagens abertas, ainda sem início. “Não iniciado” era um botão de encerramento, mas podia ser confundido com um status já concluído. Abordagens abertas também impedem fechar a jornada.
