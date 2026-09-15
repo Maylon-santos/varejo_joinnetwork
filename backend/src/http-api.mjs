@@ -91,14 +91,15 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
     if(!acesso.permissoes.includes('imagens:ler'))for(const item of d.itens)delete item.imagem_url;
     return enviar(200,d);
    }
-   if(!['/api/v1/indicadores','/api/v1/vendas','/api/v1/ranking'].includes(path))throw new ErroApi(404,'ROTA_NAO_ENCONTRADA');
+   if(!['/api/v1/indicadores','/api/v1/vendas','/api/v1/ranking','/api/v1/clientes'].includes(path))throw new ErroApi(404,'ROTA_NAO_ENCONTRADA');
    exigirPermissao(acesso.permissoes,path.split('/').at(-1)+':ler');
    if(url.searchParams.has('conciliacao'))exigirPermissao(acesso.permissoes,'conferencia:ler');
-   const permitidos=new Set(['filial','inicio','fim','pagina','limite',...(path.endsWith('/vendas')?['tipo','estado','conciliacao']:[]),...(path.endsWith('/ranking')?['ordenar']:[])]);
+   const permitidos=new Set(['filial','inicio','fim','pagina','limite',...(path.endsWith('/vendas')?['tipo','estado','conciliacao']:[]),...(path.endsWith('/ranking')?['ordenar']:[]),...(path.endsWith('/clientes')?['busca','mes']:[])]);
    for(const k of url.searchParams.keys())if(!permitidos.has(k)||url.searchParams.getAll(k).length!==1)throw new ErroApi(400,'PARAMETRO_INVALIDO');
    const f=filtros(url.searchParams,acesso.filiais);
    if(path.endsWith('/indicadores'))return enviar(200,await painelUsuario.indicadores(f));
    if(path.endsWith('/vendas'))return enviar(200,await painelUsuario.vendas(f,{tipo:url.searchParams.get('tipo')??'S',estado:url.searchParams.get('estado')??'ativas',conciliacao:url.searchParams.get('conciliacao')}));
+   if(path.endsWith('/clientes')){exigirPermissao(acesso.permissoes,'clientes:ler');exigirPermissao(acesso.permissoes,'vendas:ler');return enviar(200,await painelUsuario.clientes(f,url.searchParams.get('busca')??'',url.searchParams.get('mes')??''));}
    return enviar(200,await painelUsuario.ranking(f,url.searchParams.get('ordenar')??'valor'));
   }catch(error){
    const status=error instanceof ErroApi?error.status:500;

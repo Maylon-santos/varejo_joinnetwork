@@ -77,6 +77,31 @@ export function criarPainel(pool,tenant,filiais,vendedores=null){
     LIMIT $${args.length-1} OFFSET $${args.length}`,args)).rows;
    return {total,pagina:f.pagina,limite:f.limite,operacoes:rows,...await cobertura(db,f)};
   }),
+  clientes:(f,busca='',mes='')=>snapshot(async db=>{
+   if(typeof busca!=='string'||busca.length>100)throw new ErroApi(400,'BUSCA_INVALIDA');
+   if(!/^(?:0[1-9]|1[0-2])?$/.test(mes))throw new ErroApi(400,'MES_INVALIDO');
+   const args=[...argumentos(f),busca.trim(),mes];
+   const cte=`WITH base AS (
+    SELECT DISTINCT ON(o.cod_operacao,o.tipo_operacao,c.dado->>'cliente_codigo')
+      o.cod_operacao,o.tipo_operacao,o.data_operacao,c.dado,c.dado->>'cliente_codigo' AS codigo
+    FROM operacoes o CROSS JOIN LATERAL jsonb_array_elements(COALESCE(o.clientes,'[]'::jsonb)) WITH ORDINALITY c(dado,ordem)
+    WHERE ${scope} AND c.dado->>'cliente_codigo' ~ '^[1-9][0-9]{0,29}$'
+    ORDER BY o.cod_operacao,o.tipo_operacao,c.dado->>'cliente_codigo',c.ordem
+   ), unificados AS (
+    SELECT codigo,count(*)::integer AS movimentacoes,min(data_operacao)::text AS primeira_movimentacao,
+     max(data_operacao)::text AS ultima_movimentacao,
+     (array_agg(dado ORDER BY data_operacao DESC,cod_operacao DESC,tipo_operacao))[1] AS cadastro
+    FROM base GROUP BY codigo
+   ), encontrados AS (SELECT * FROM unificados WHERE ($5::text='' OR strpos(lower(COALESCE(cadastro->>'nome','')),lower($5))>0 OR strpos(codigo,$5)>0) AND ($6::text='' OR left(cadastro->>'aniversario_mm_dd',2)=$6))`;
+   const total=(await db.query(cte+' SELECT count(*)::integer AS total FROM encontrados',args)).rows[0].total;
+   const clientes=(await db.query(cte+` SELECT codigo,cadastro->>'nome' AS nome,COALESCE(cadastro->'contatos','[]'::jsonb) AS contatos,
+     cadastro->>'aniversario_mm_dd' AS aniversario_mm_dd,
+     movimentacoes,primeira_movimentacao,ultima_movimentacao FROM encontrados ORDER BY lower(cadastro->>'nome'),codigo LIMIT $7 OFFSET $8`,[...args,f.limite,(f.pagina-1)*f.limite])).rows;
+   const coberturaClientes=(await db.query(`SELECT count(*) FILTER(WHERE NOT o.clientes_identidade_importada)::integer AS operacoes_pendentes,
+     count(*) FILTER(WHERE o.clientes_identidade_importada AND EXISTS(SELECT 1 FROM jsonb_array_elements(COALESCE(o.clientes,'[]'::jsonb)) c WHERE c->>'cliente_codigo' IS NULL))::integer AS operacoes_sem_identificador
+     FROM operacoes o WHERE ${scope}`,argumentos(f))).rows[0];
+   return {total,clientes,pagina:f.pagina,limite:f.limite,...coberturaClientes,...await cobertura(db,f)};
+  }),
   detalhe:(filial,tipo,codigo)=>snapshot(async db=>{
    if(!filiais.includes(filial))throw new ErroApi(403,'FILIAL_NAO_AUTORIZADA');
    if(!/^[A-Z]+$/.test(tipo)||!/^\d{1,18}$/.test(codigo))throw new ErroApi(400,'CHAVE_INVALIDA');

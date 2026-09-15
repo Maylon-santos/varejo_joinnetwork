@@ -1,5 +1,22 @@
 # Comece aqui — estado atual em 14/09/2026
 
+## Clientes e aniversariantes publicados — 14/09/2026
+
+R15 entregue; Kanban com **16 de 26 tarefas concluídas**. R26 separa a carga histórica da funcionalidade publicada.
+
+- [x] Menu **Clientes**: busca por nome/código, contatos e filtro de aniversariantes por mês.
+- [x] Agrupar pelo `customers.cliente` do ERP, preservado como `cliente_codigo`. Nomes e telefones iguais não unem pessoas distintas.
+- [x] Usar somente movimentações da filial/período selecionados e do vendedor autorizado. Os contatos vêm da movimentação mais recente dentro desse acesso; nenhuma consulta ao ERP ao abrir a tela.
+- [x] Fonte de aniversário validada: 59 ocorrências preenchidas em 152 registros de clientes de ITUPEVA, de 01 a 07/09. Formato Millennium, convertido em São Paulo; persistir apenas mês/dia, sem ano de nascimento. Ausência permanece explícita.
+- [x] Migration 008, backup `backup-20260915T021925Z-tVk6x2` e publicação concluídos. Amostra de 154 operações preenchida com hashes dos demais campos, itens e checkpoints preservados. API saudável e worker ativo.
+- [x] 42 testes unitários e 35 de integração aprovados. Busca, aniversário bissexto, isolamento, paginação, backoff, desktop e celular verificados. Na amostra pública: **111 clientes identificados, 48 com aniversário**, filtros dos 12 meses aprovados.
+- [ ] R26: em 14/09 às 23h20 de Brasília, 217 operações identificadas e 25.880 pendentes; primeira rodada das 14 filiais sem erros. Um dia por filial/rodada, cooldown de 360 segundos. As novas vendas já importam identidade/aniversário junto com os demais dados.
+
+A consulta é um cadastro de leitura derivado dos snapshots locais, agrupado por código dentro dos filtros autorizados. Ainda não é um cadastro editável independente nem uma lista irrestrita de todos os clientes do ERP. Essas evoluções pertencem aos próximos fluxos de atendimento. R16 é a próxima tarefa funcional; R22/R19 seguem com os novos indicadores, e R11 aguarda sua inclusão para conferência mensal/anual.
+
+Evidências: `docs/validacao-fonte-clientes.json`, `docs/validacao-clientes-ui.json`, `docs/validacao-clientes-producao.json` e `docs/validacao-identidade-clientes.json`.
+
+
 ## Ajustes de preços e pagamento publicados — 14/09/2026
 
 Os novos pedidos do `correcao.md` foram encaixados antes de R15, pois complementam a importação atual e fornecem dados para R19. R24 cobre importação/interface; R25 acompanha o preenchimento do histórico. A inclusão dessas duas tarefas levou o quadro a 25 tarefas, com **15 concluídas**.

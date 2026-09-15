@@ -110,3 +110,13 @@ Pausar o worker, fazer backup, construir API e worker e aplicar `tenant/007_comp
 Publicar API e retomar o worker remoto. A cada rodada, o worker prioriza vendas/cancelamentos e depois preenche até três dias históricos por filial, com cooldown/backoff. Verificar `complementos_preenchidos`, `complementos_falharam` e `sync_status`/recurso `complementos`. Conferir cobertura com `SELECT count(*) FILTER(WHERE complementos IS NULL) FROM operacoes`. A conclusão depende de pendências zero e revisão das divergências; abrir o detalhe não inicia consulta ERP.
 
 O aviso de preço aplicado abaixo da tabela depende de desconto informado igual a zero; não aplica novas regras aos indicadores. Histórico e gerador das parcelas respeitam a permissão de clientes. Os novos campos entram no backup do tenant e na cópia automática já configurada para mabookhome.
+
+## Clientes e aniversariantes — 14/09/2026
+
+Aplicar `tenant/008_identidade_clientes.sql` antes de publicar API/worker. Backup e worker pausado durante a atualização. `scripts/preencher-identidade-clientes.mjs` é a amostra operacional protegida pelo lock global do worker: por padrão, ITUPEVA de 01 a 07/09. `CLIENTES_FILIAL`, `CLIENTES_INICIO` e `CLIENTES_FIM` permitem escolher até sete dias; compara hashes dos dados comerciais, itens e checkpoints antes/depois.
+
+O worker contínuo faz a carga de identidade após vendas, cancelamentos e complementos: um dia por filial/rodada, cooldown de 360 segundos e backoff em falhas. `sync_status.recurso='clientes'` acompanha o estado e `operacoes.clientes_identidade_importada` registra cobertura, inclusive respostas sem cliente. Não executar o worker local. A carga não reseta checkpoints.
+
+A rota `GET /api/v1/clientes` aceita os filtros comuns de filial/período/paginação, `busca` de até 100 caracteres e `mes` vazio ou `01` a `12`. Exige `clientes:ler` e `vendas:ler`. O agrupamento ocorre por código ERP depois da restrição de filial/período/vendedor. Contatos refletem o snapshot da movimentação mais recente nesse escopo. Não existe mesclagem por nome/telefone nem edição de cadastro nesta entrega. Aniversário persiste somente mês/dia; o ano não é necessário para esse filtro.
+
+Validação da fonte (somente leitura, saída agregada): `node --env-file=.env scripts/verificar-fonte-clientes.mjs`, opcional `CLIENTES_DIA`. Validações de interface: `scripts/verificar-clientes-ui.mjs` com dados sintéticos isolados e `scripts/verificar-clientes-producao.mjs` no domínio público. Capturas ficam em `artifacts/deploy`, fora do Git. Cobertura histórica pendente no roadmap R26.

@@ -89,8 +89,8 @@
     {
       "id": "R15",
       "titulo": "Cadastro unificado e aniversariantes",
-      "status": "pendente",
-      "detalhe": "Após os ajustes de importação/detalhes R24, evoluir snapshots para cadastro unificado e validar identificador ERP/fonte de aniversário; não unir clientes apenas por nome ou telefone."
+      "status": "concluido",
+      "detalhe": "Publicado: consulta local de clientes agrupados pelo código ERP, busca por nome/código e aniversariantes por mês. Escopo de filial/período/vendedor aplicado antes de agrupar. 42 testes unitários, 35 de integração e navegador local/público aprovados. Amostra de ITUPEVA: 111 clientes, 48 com aniversário. Carga histórica acompanha R26."
     },
     {
       "id": "R16",
@@ -151,6 +151,12 @@
       "titulo": "Completar preços e pagamentos do histórico",
       "status": "em_andamento",
       "detalhe": "Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json."
+    },
+    {
+      "id": "R26",
+      "titulo": "Completar identificação e aniversários do histórico",
+      "status": "em_andamento",
+      "detalhe": "Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone."
     }
   ]
 }

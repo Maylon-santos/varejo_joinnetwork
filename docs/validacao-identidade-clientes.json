@@ -1,0 +1,21 @@
+{
+  "consultadoEm": "2026-09-15T02:20:59.637Z",
+  "total": 26097,
+  "preenchidas": 217,
+  "pendentes": 25880,
+  "filiaisPrimeiraRodadaSemErro": 14,
+  "amostra": {
+    "filial": "30098297",
+    "inicio": "2026-09-01",
+    "fim": "2026-09-07",
+    "operacoesPreenchidas": 154,
+    "baseComercialItensCheckpointsPreservados": true
+  },
+  "backup": "backup-20260915T021925Z-tVk6x2",
+  "apiSaudavel": true,
+  "workerAtivo": true,
+  "unidadeLote": "um dia por filial/rodada",
+  "cooldownSegundos": 360,
+  "unitarios": 42,
+  "integracao": 35
+}

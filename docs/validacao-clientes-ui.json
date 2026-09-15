@@ -1,0 +1,12 @@
+{
+  "verificadoEm": "2026-09-15T02:17:46.484Z",
+  "ambiente": "dados sintéticos isolados",
+  "deduplicacaoPorCodigo": true,
+  "aniversarioBissexto": true,
+  "filtroMes": true,
+  "buscaVazia": true,
+  "semConsultaERP": true,
+  "desktopMobile": true,
+  "mobileSemOverflow": true,
+  "errors": []
+}

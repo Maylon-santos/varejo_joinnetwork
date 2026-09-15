@@ -1,3 +1,4 @@
+import {preencherIdentidadeClientes} from '../backend/src/preencher-identidade-clientes.mjs';
 import {preencherComplementos} from '../backend/src/preencher-complementos.mjs';
 import {consultarFiliais,sincronizarFiliais} from '../backend/src/filiais.mjs';
 import {readFile} from 'node:fs/promises';
@@ -63,6 +64,11 @@ try{
    if(encerrar)break;
    try{const result=await preencherComplementos({pool,repositorio:repo,tenant,filial,consultar:consultas.vendas,intervalo,parar:()=>encerrar});if(!result.aguardando&&result.dias)console.log(JSON.stringify({evento:'complementos_preenchidos',...result}));}
    catch(e){console.error(JSON.stringify({evento:'complementos_falharam',filial,codigo:erroSeguro(e)}));}
+  }
+  if(!once)for(const filial of filiais){
+   if(encerrar)break;
+   try{const result=await preencherIdentidadeClientes({pool,repositorio:repo,tenant,filial,consultar:consultas.vendas,intervalo,limite:1,parar:()=>encerrar});if(!result.aguardando&&result.dias)console.log(JSON.stringify({evento:'identidade_clientes_preenchida',...result}));}
+   catch(e){console.error(JSON.stringify({evento:'identidade_clientes_falhou',filial,codigo:erroSeguro(e)}));}
   }
   if(once||encerrar)break;
   // Espera curta permite desligamento sem interromper uma transação no meio.

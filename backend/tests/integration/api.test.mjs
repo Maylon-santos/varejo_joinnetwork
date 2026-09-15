@@ -221,3 +221,36 @@ test('Preenchimento em lotes respeita limite, espera e registra falha sem avanç
  const cooldown=await preencherComplementos({pool,repositorio:repo,tenant:'teste',filial:'1',consultar:async()=>{throw new Error('NÃO DEVE CONSULTAR');}});assert.equal(cooldown.aguardando,true);assert.deepEqual((await pool.query('SELECT * FROM sync_checkpoints')).rows,before);
  assert.equal((await pool.query("SELECT ultimo_erro_codigo FROM sync_status WHERE filial=1 AND recurso='complementos'")).rows[0].ultimo_erro_codigo,'ERP_HTTP_503');
 });
+
+test('Cadastro unifica por código, filtra aniversário e não mistura contatos de outro vendedor/filial',async()=>{
+ const one=[{cliente_codigo:'123',nome:'Mesmo nome',contatos:[{tipo:'Telefone',telefone:'1111'}],aniversario_mm_dd:'02-29'}];
+ await pool.query("UPDATE operacoes SET clientes=$1,clientes_identidade_importada=true WHERE cod_operacao IN(1,2)",[JSON.stringify(one)]);
+ await pool.query("UPDATE operacoes SET clientes=$1,clientes_identidade_importada=true WHERE cod_operacao=5",[JSON.stringify([{cliente_codigo:'124',nome:'Mesmo nome',contatos:[]}])]);
+ await pool.query("UPDATE operacoes SET clientes=$1,clientes_identidade_importada=true WHERE cod_operacao IN(6,7)",[JSON.stringify([{...one[0],nome:'Contato restrito',contatos:[{telefone:'9999'}]}])]);
+ const restricted=criarPainel(pool,'teste',['1'],{'1':'10'});const f={filial:'1',inicio:'2026-09-01',fim:'2026-09-02',pagina:1,limite:10};
+ const d=await restricted.clientes(f);assert.equal(d.total,2);const c=d.clientes.find(c=>c.codigo==='123');assert.equal(c.movimentacoes,2);assert.equal(c.nome,'Mesmo nome');assert.equal(c.contatos[0].telefone,'1111');assert.equal(c.aniversario_mm_dd,'02-29');
+ assert.equal((await restricted.clientes(f,'','02')).total,1);assert.equal((await restricted.clientes(f,'','03')).total,0);
+ assert.equal((await restricted.clientes(f,'124')).total,1);assert.equal((await restricted.clientes(f,"' OR 1=1 --")).total,0);
+ assert.equal((await restricted.clientes({...f,pagina:2,limite:1})).clientes.length,1);
+ await assert.rejects(restricted.clientes({...f,filial:'999'}));await assert.rejects(criarPainel(pool,'outro',['1']).clientes(f));
+ assert.equal((await get('/api/v1/clientes?'+filtro)).status,200);assert.equal((await get('/api/v1/clientes?'+filtro+'&mes=13')).status,400);
+ assert.equal((await get('/api/v1/clientes?'+filtro,'')).status,401);
+ const limited=await auth.login('semcliente@teste.local',senha);assert.equal((await get('/api/v1/clientes?'+filtro,limited.token)).status,403);
+ // Confirmar também a rota autenticada de Vendas, com vínculo real.
+ await control.query("INSERT INTO user_branches(user_id,tenant_key,filial,vendedor_codigo) SELECT id,tenant_key,1,'10' FROM admin_users WHERE email='vendas@teste.local'");
+ const seller=await auth.login('vendas@teste.local',senha);const own=await (await get('/api/v1/clientes?'+filtro,seller.token)).json();assert.equal(own.clientes.find(c=>c.codigo==='123').contatos[0].telefone,'1111');
+});
+
+test('Preenchimento de identidade preserva dados comerciais e checkpoints, é idempotente e respeita backoff',async()=>{
+ const {RepositorioPostgres}=await import('../../src/repositorio-postgres.mjs');const {preencherIdentidadeClientes}=await import('../../src/preencher-identidade-clientes.mjs');const repo=new RepositorioPostgres(pool,'teste');
+ await pool.query('UPDATE operacoes SET clientes_identidade_importada=false WHERE cod_operacao=1');
+ const before=(await pool.query("SELECT to_jsonb(o)-'clientes'-'clientes_importados_em'-'clientes_identidade_importada' AS dados FROM operacoes o WHERE cod_operacao=1")).rows;
+ const checks=(await pool.query('SELECT * FROM sync_checkpoints')).rows;
+ const op={cod_operacao:'1',tipo_operacao:'S',filial:'1',data_operacao:'2026-09-01',clientes:[{cliente_codigo:'999',nome:'Exemplo',contatos:[]}]};
+ assert.equal(await repo.transacao({tenant:'teste',filial:'1'},tx=>tx.preencherIdentidadeClientes([op])),1);
+ assert.equal(await repo.transacao({tenant:'teste',filial:'1'},tx=>tx.preencherIdentidadeClientes([op])),0);
+ assert.deepEqual((await pool.query("SELECT to_jsonb(o)-'clientes'-'clientes_importados_em'-'clientes_identidade_importada' AS dados FROM operacoes o WHERE cod_operacao=1")).rows,before);
+ let calls=0;await assert.rejects(preencherIdentidadeClientes({pool,repositorio:repo,tenant:'teste',filial:'1',limite:1,consultar:async()=>{calls++;throw Error('ERP_HTTP_503');}}));
+ assert.equal(calls,1);assert.equal((await preencherIdentidadeClientes({pool,repositorio:repo,tenant:'teste',filial:'1',consultar:async()=>assert.fail('cooldown')})).aguardando,true);
+ assert.deepEqual((await pool.query('SELECT * FROM sync_checkpoints')).rows,checks);
+});

@@ -3,30 +3,30 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-15 de 25 tarefas deste quadro concluídas. Atualização: 2026-09-14. A contagem não representa prazo ou esforço.
+16 de 26 tarefas deste quadro concluídas. Atualização: 2026-09-14. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
 | R11 — Conferir totais das novas filiais | R25 — Completar preços e pagamentos do histórico | — | R01 — Importação e banco do piloto |
-| R15 — Cadastro unificado e aniversariantes | — | — | R02 — Painel e acesso Admin |
-| R16 — Fila de atendimento | — | — | R03 — Publicação com HTTPS e backup diário |
-| R17 — Notificações internas e alertas | — | — | R04 — Correções de celular e fotos |
-| R18 — Campanhas e mensagens | — | — | R05 — Clientes importados junto com a venda |
-| R19 — Produtos, estoque e indicadores adicionais | — | — | R06 — Homologação de ITUPEVA |
-| R20 — SaaS: provisionamento, planos e cobrança | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
-| R22 — Definir bruto, líquido e devoluções | — | — | R08 — Exibir COD_FILIAL no seletor |
-| R23 — Fotos dos vendedores | — | — | R09 — Sincronizar cadastro por trans_id |
+| R16 — Fila de atendimento | R26 — Completar identificação e aniversários do histórico | — | R02 — Painel e acesso Admin |
+| R17 — Notificações internas e alertas | — | — | R03 — Publicação com HTTPS e backup diário |
+| R18 — Campanhas e mensagens | — | — | R04 — Correções de celular e fotos |
+| R19 — Produtos, estoque e indicadores adicionais | — | — | R05 — Clientes importados junto com a venda |
+| R20 — SaaS: provisionamento, planos e cobrança | — | — | R06 — Homologação de ITUPEVA |
+| R22 — Definir bruto, líquido e devoluções | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
+| R23 — Fotos dos vendedores | — | — | R08 — Exibir COD_FILIAL no seletor |
+| — | — | — | R09 — Sincronizar cadastro por trans_id |
 | — | — | — | R10 — Concluir históricos das novas filiais |
 | — | — | — | R12 — Cargos e permissões por filial |
 | — | — | — | R13 — Gestão de usuários e acessos |
 | — | — | — | R14 — Retenção e cópia externa dos backups |
+| — | — | — | R15 — Cadastro unificado e aniversariantes |
 | — | — | — | R21 — Kanban na central e no roadmap |
 | — | — | — | R24 — Detalhes: preços e parcelas do pagamento |
 
 ### Pendências e dependências
 
 - [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
-- [ ] **R15 — Cadastro unificado e aniversariantes:** Após os ajustes de importação/detalhes R24, evoluir snapshots para cadastro unificado e validar identificador ERP/fonte de aniversário; não unir clientes apenas por nome ou telefone.
 - [ ] **R16 — Fila de atendimento:** Próximo módulo operacional previsto; detalhar regras com Maylon.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
@@ -35,8 +35,27 @@
 - [ ] **R22 — Definir bruto, líquido e devoluções:** Confirmar a unidade do campo desconto (percentual ou reais), além das regras de bruto/líquido, frete, cortesia, trocas e parcelas, antes de calcular novos indicadores. Os valores recebidos são preservados sem aplicar fórmula adicional.
 - [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
 - [ ] **R25 — Completar preços e pagamentos do histórico:** Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json.
+- [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 
 <!-- KANBAN:FIM -->
+
+## Clientes e aniversariantes publicados — 14/09/2026
+
+R15 entregue; Kanban com **16 de 26 tarefas concluídas**. R26 separa a carga histórica da funcionalidade publicada.
+
+- [x] Menu **Clientes**: busca por nome/código, contatos e filtro de aniversariantes por mês.
+- [x] Agrupar pelo `customers.cliente` do ERP, preservado como `cliente_codigo`. Nomes e telefones iguais não unem pessoas distintas.
+- [x] Usar somente movimentações da filial/período selecionados e do vendedor autorizado. Os contatos vêm da movimentação mais recente dentro desse acesso; nenhuma consulta ao ERP ao abrir a tela.
+- [x] Fonte de aniversário validada: 59 ocorrências preenchidas em 152 registros de clientes de ITUPEVA, de 01 a 07/09. Formato Millennium, convertido em São Paulo; persistir apenas mês/dia, sem ano de nascimento. Ausência permanece explícita.
+- [x] Migration 008, backup `backup-20260915T021925Z-tVk6x2` e publicação concluídos. Amostra de 154 operações preenchida com hashes dos demais campos, itens e checkpoints preservados. API saudável e worker ativo.
+- [x] 42 testes unitários e 35 de integração aprovados. Busca, aniversário bissexto, isolamento, paginação, backoff, desktop e celular verificados. Na amostra pública: **111 clientes identificados, 48 com aniversário**, filtros dos 12 meses aprovados.
+- [ ] R26: em 14/09 às 23h20 de Brasília, 217 operações identificadas e 25.880 pendentes; primeira rodada das 14 filiais sem erros. Um dia por filial/rodada, cooldown de 360 segundos. As novas vendas já importam identidade/aniversário junto com os demais dados.
+
+A consulta é um cadastro de leitura derivado dos snapshots locais, agrupado por código dentro dos filtros autorizados. Ainda não é um cadastro editável independente nem uma lista irrestrita de todos os clientes do ERP. Essas evoluções pertencem aos próximos fluxos de atendimento. R16 é a próxima tarefa funcional; R22/R19 seguem com os novos indicadores, e R11 aguarda sua inclusão para conferência mensal/anual.
+
+Evidências: `docs/validacao-fonte-clientes.json`, `docs/validacao-clientes-ui.json`, `docs/validacao-clientes-producao.json` e `docs/validacao-identidade-clientes.json`.
+
+
 
 ## Ajustes de preços e pagamento publicados — 14/09/2026
 

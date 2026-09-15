@@ -11,10 +11,10 @@ const dateBR=d=>d?d.slice(0,10).split('-').reverse().join('/'):'—';
 const when=d=>d?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(d)):'Ainda sem atualização';
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const errorText={USUARIO_INVALIDO:'Confira os dados do usuário.',VINCULOS_INVALIDOS:'Confira as filiais e os vínculos.',SENHA_INVALIDA:'Use uma senha com pelo menos 16 caracteres e no máximo 256 bytes.',PROPRIO_ACESSO_PROTEGIDO:'Seu próprio acesso é protegido. Outro Admin deve alterá-lo.',FILIAL_OBRIGATORIA:'Selecione pelo menos uma filial.',VENDEDOR_OBRIGATORIO:'Selecione o vendedor em cada filial.',VENDEDOR_NAO_ENCONTRADO:'Vendedor não encontrado no histórico desta filial.',EMAIL_JA_CADASTRADO:'Este e-mail já está cadastrado nesta empresa.',PERFIL_INVALIDO:'Confira o nome e as opções do cargo.',PERMISSAO_DEPENDENTE_DE_VENDAS:'Clientes, fotos e conferência precisam de acesso às movimentações.',VENDAS_REQUER_ESCOPO_PROPRIO:'O cargo Vendas deve acessar apenas as próprias vendas.',ESCOPO_INCOMPATIVEL:'Escolha filiais atribuídas para limitar às próprias vendas.',PERFIL_ADMIN_PROTEGIDO:'O perfil Admin mantém o acesso completo.',RECURSO_NAO_AUTORIZADO:'Seu acesso não permite consultar este recurso.',LOGIN_INVALIDO:'E-mail ou senha incorretos. Confira os dados e tente novamente.',LIMITE_DE_LOGIN:'Muitas tentativas de acesso. Aguarde 15 minutos antes de tentar novamente.',NAO_AUTENTICADO:'Sua sessão expirou. Entre novamente para continuar.',FILIAL_NAO_AUTORIZADA:'Esta loja ainda não está disponível para o seu acesso.',PERIODO_INVALIDO:'Escolha um período válido de até 366 dias.',LIMITE_DE_REQUISICOES:'Muitas consultas em sequência. Aguarde um minuto e tente novamente.',ERRO_INTERNO:'Não foi possível consultar os dados agora. Tente novamente.'};
-let token=null,page='overview',filters=null,rankPage=1,salesPage=1,abort=null,generation=0,refreshTimer=null,detailGeneration=0;
+let token=null,page='overview',filters=null,rankPage=1,salesPage=1,customerPage=1,abort=null,generation=0,refreshTimer=null,detailGeneration=0;
 let lastIndicators=null,permissoes=new Set(),isAdmin=false;
 const pode=recurso=>permissoes.has(recurso);
-const podePagina=next=>['permissions','users'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='sales'&&pode('vendas:ler');
+const podePagina=next=>['permissions','users'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='customers'?(pode('clientes:ler')&&pode('vendas:ler')):next==='sales'&&pode('vendas:ler');
 let detailAbort=null;const detailImageUrls=new Set();
 function clearDetailMedia(){detailAbort?.abort();$('photo-dialog').close();for(const url of detailImageUrls)URL.revokeObjectURL(url);detailImageUrls.clear();}
 async function api(path,options={}){
@@ -30,7 +30,7 @@ function displayError(e){$('page-error-text').textContent=e.message;$('page-erro
 function exitSession(message=''){
  token=null;generation++;detailGeneration++;abort?.abort();clearInterval(refreshTimer);lastIndicators=null;
  $('app-view').hidden=true;$('login-view').hidden=false;$('password').value='';$('login-error').textContent=message;$('login-error').hidden=!message;
- $('detail-dialog').close();$('detail-content').replaceChildren();$('ranking-body').replaceChildren();$('sales-body').replaceChildren();$('chart').replaceChildren();
+ $('customers-list').replaceChildren();$('customers-query').value='';$('customers-month').value='';$('detail-dialog').close();$('detail-content').replaceChildren();$('ranking-body').replaceChildren();$('sales-body').replaceChildren();$('chart').replaceChildren();
  for(const id of ['metric-value','metric-ticket','metric-pa','metric-pieces','metric-sales'])$(id).textContent='—';
  $('email').focus();
 }
@@ -65,16 +65,16 @@ $('today').textContent=new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Pa
 function applyFilters(){
  const start=$('start-date').value,end=$('end-date').value;
  if(!start||!end||start>end||(Date.parse(end)-Date.parse(start))/86400000>365){displayError(new Error('Escolha um período válido de até 366 dias.'));return;}
- filters={filial:$('branch').value,inicio:start,fim:end};rankPage=1;salesPage=1;loadData();
+ filters={filial:$('branch').value,inicio:start,fim:end};rankPage=1;salesPage=1;customerPage=1;loadData();
 }
 $('filters').addEventListener('submit',e=>{e.preventDefault();applyFilters();});$('refresh').addEventListener('click',()=>loadData());$('retry').addEventListener('click',()=>loadData());
 function query(extra={}){return new URLSearchParams({...filters,...extra}).toString();}
 function setPage(next,load=true){
  if(!podePagina(next))return;
- page=next;salesPage=1;rankPage=1;
- $('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users'].includes(page);
+ page=next;salesPage=1;rankPage=1;customerPage=1;
+ $('customers-panel').hidden=page!=='customers';$('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users'].includes(page);
  if(['permissions','users'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
- const info={users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
+ const info={customers:['Clientes','Consulte o cadastro e os contatos dos seus clientes.'],users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
  $('page-title').textContent=info[0];$('breadcrumb-page').textContent=info[0];$('page-subtitle').textContent=info[1];
  for(const button of document.querySelectorAll('[data-page]')){const active=button.dataset.page===page;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');}
  $('sales-title').textContent=page==='quality'?'Conferência das operações':'Todas as movimentações';
@@ -86,6 +86,7 @@ for(const b of document.querySelectorAll('[data-page]'))b.addEventListener('clic
 $('review-notice').addEventListener('click',()=>setPage('quality'));
 async function loadData(){
  if(!token)return;
+ if(page==='customers'){await loadCustomers();return;}
  if(page==='users'){await loadUsers();return;}
  if(page==='permissions'){await loadPermissions();return;}
  if(!filters)return;
@@ -286,3 +287,23 @@ function renderPayment(operation,content){
  p.lancamentos.forEach((l,i)=>{const item=el('li');item.append(el('strong',`Parcela ${i+1} · ${money(l.valor_inicial_centavos)}`),el('p',l.desc_tipopgto||'Forma de pagamento não informada'),el('p','Vencimento: '+dateBR(l.data_vencimento)));
  if(l.n_documento)item.append(el('small','Documento: '+l.n_documento));if(l.data_emissao)item.append(el('small','Emissão: '+dateBR(l.data_emissao)));if(l.nsu)item.append(el('small','NSU: '+l.nsu));if(l.historico)item.append(el('p',l.historico));list.append(item);});details.append(list);section.append(details);content.append(section);
 }
+
+async function loadCustomers(){
+ if(!filters)return;
+ const version=++generation;abort?.abort();abort=new AbortController();resetError();busy(true);$('data-notice').hidden=true;$('customers-panel').hidden=false;$('customers-list').replaceChildren();$('customers-status').textContent='Carregando clientes…';
+ try{
+  const d=await api('/clientes?'+query({busca:$('customers-query').value,mes:$('customers-month').value,pagina:customerPage,limite:12}),{signal:abort.signal});if(version!==generation)return;
+  renderContext(d);$('customers-status').textContent=`${number(d.total)} clientes identificados. ${number(d.operacoes_pendentes)} movimentações aguardam identificação; ${number(d.operacoes_sem_identificador)} foram recebidas sem código de cliente.`;
+  for(const c of d.clientes){
+   const card=el('article',null,'customer-card');card.append(el('h2',c.nome),el('small','Código '+c.codigo),el('p',`${number(c.movimentacoes)} movimentações • Última: ${dateBR(c.ultima_movimentacao)}`));
+   const contacts=el('ul');for(const contact of c.contatos){const li=el('li');li.textContent=contact.tipo+': '+[contact.ddd,contact.telefone].filter(Boolean).join(' ');contacts.append(li);}card.append(c.contatos.length?contacts:el('p','Telefone não informado.'));
+   card.append(el('p',c.aniversario_mm_dd?'Aniversário: '+c.aniversario_mm_dd.split('-').reverse().join('/'):'Aniversário não informado.'));$('customers-list').append(card);
+  }
+  if(!d.clientes.length)$('customers-list').append(el('p','Nenhum cliente identificado para estes filtros.'));
+  const pages=Math.max(1,Math.ceil(d.total/d.limite));$('customers-pagination').textContent=`Página ${d.pagina} de ${pages}`;$('customers-prev').disabled=d.pagina<=1;$('customers-next').disabled=d.pagina>=pages;
+ }catch(e){if(e.name!=='AbortError'&&version===generation){$('customers-status').textContent='Consulta não concluída.';displayError(e);}}
+ finally{if(version===generation)busy(false);}
+}
+$('customers-search').addEventListener('submit',e=>{e.preventDefault();customerPage=1;loadData();});
+$('customers-prev').addEventListener('click',()=>{customerPage--;loadData();});
+$('customers-next').addEventListener('click',()=>{customerPage++;loadData();});

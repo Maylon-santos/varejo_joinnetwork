@@ -1,0 +1,15 @@
+{
+  "verificadoEm": "2026-09-15T02:20:33.417Z",
+  "dominio": "aeropostale.joinnetwork.com.br",
+  "filial": "30098297",
+  "inicio": "2026-09-01",
+  "fim": "2026-09-07",
+  "clientesIdentificados": 111,
+  "clientesComAniversario": 48,
+  "operacoesPendentes": 0,
+  "filtros12Meses": true,
+  "desktopMobile": true,
+  "mobileSemOverflow": true,
+  "consultasSomenteLocais": true,
+  "errors": []
+}
