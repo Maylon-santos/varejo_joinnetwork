@@ -1,5 +1,18 @@
 # Comece aqui — estado atual em 15/09/2026
 
+## Fechamento da fila: status esclarecidos — 15/09/2026
+
+A captura enviada por Maylon mostrava cinco abordagens abertas, ainda sem início. “Não iniciado” era um botão de encerramento, mas podia ser confundido com um status já concluído. Abordagens abertas também impedem fechar a jornada.
+
+- [x] Status distintos: **Em abordagem — aguardando início** e **Em atendimento**. Quem não pode consultar detalhes de outro vendedor continua vendo apenas “Ocupado”.
+- [x] Ação renomeada para **Encerrar sem iniciar**, com motivo e preservação da prioridade.
+- [x] Resumo conta abordagens e atendimentos pendentes. Fechar jornada orienta como resolver antes de oferecer confirmação; a proteção no servidor permanece.
+- [x] Cenário de cinco abordagens reproduzido com dados sintéticos: encerramento individual com motivo e fechamento bem-sucedido, sem inventar início nem apagar registros. Pendências mistas e fluxo de vendedor também verificados.
+- [x] Publicação somente da interface, com backup `backup-20260915T115312Z-mI1DDW` e API saudável. Worker permaneceu ativo; nenhuma jornada real foi encerrada pelo teste.
+
+Orientação: em registros de teste sem atendimento, usar **Encerrar sem iniciar** em cada cartão, informar o motivo e então **Fechar jornada**. Evidência: `docs/validacao-fechamento-fila-ui.json`; verificação pública em `docs/validacao-fila-producao.json`. R16.2/R16.3 seguem pendentes.
+
+
 ## Lista da Vez publicada — R16.1 — 15/09/2026
 
 - [x] Jornada por empresa/filial/dia, seleção de presentes e ordem inicial manual.

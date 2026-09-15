@@ -27,7 +27,7 @@
 ### Pendências e dependências
 
 - [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
-- [ ] **R16 — Fila de atendimento:** R16.1 publicada em 15/09: jornada diária, ordem manual, abordagem/início/conclusão, pausa ao final, reservado com prioridade, presença e fechamento. 48 testes unitários + 40 de integração, desktop/celular e consulta pública das 14 filiais aprovados. R16 permanece em andamento: faltam R16.2 relatórios/movimento intenso e R16.3 vínculo com ERP. Gestão configurável por cargo; nenhum atendimento real criado pelos testes.
+- [ ] **R16 — Fila de atendimento:** R16.1 publicada em 15/09: jornada diária, ordem manual, abordagem/início/conclusão, pausa ao final, reservado com prioridade, presença e fechamento. 48 testes unitários + 40 de integração, desktop/celular e consulta pública das 14 filiais aprovados. R16 permanece em andamento: faltam R16.2 relatórios/movimento intenso e R16.3 vínculo com ERP. Gestão configurável por cargo; nenhum atendimento real criado pelos testes. Correção de 15/09: distinguir abordagem de atendimento, ação Encerrar sem iniciar e orientação das pendências antes do fechamento; cenário com cinco abordagens validado.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
 - [ ] **R19 — Produtos, estoque e indicadores adicionais:** Usar dados complementares de R24/R25 para os indicadores, após definir regras em R22. Produtos/estoque exigem seus contratos específicos. Conferência mensal/anual R11 aguarda esses indicadores.
@@ -38,6 +38,20 @@
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 
 <!-- KANBAN:FIM -->
+
+## Fechamento da fila: status esclarecidos — 15/09/2026
+
+A captura enviada por Maylon mostrava cinco abordagens abertas, ainda sem início. “Não iniciado” era um botão de encerramento, mas podia ser confundido com um status já concluído. Abordagens abertas também impedem fechar a jornada.
+
+- [x] Status distintos: **Em abordagem — aguardando início** e **Em atendimento**. Quem não pode consultar detalhes de outro vendedor continua vendo apenas “Ocupado”.
+- [x] Ação renomeada para **Encerrar sem iniciar**, com motivo e preservação da prioridade.
+- [x] Resumo conta abordagens e atendimentos pendentes. Fechar jornada orienta como resolver antes de oferecer confirmação; a proteção no servidor permanece.
+- [x] Cenário de cinco abordagens reproduzido com dados sintéticos: encerramento individual com motivo e fechamento bem-sucedido, sem inventar início nem apagar registros. Pendências mistas e fluxo de vendedor também verificados.
+- [x] Publicação somente da interface, com backup `backup-20260915T115312Z-mI1DDW` e API saudável. Worker permaneceu ativo; nenhuma jornada real foi encerrada pelo teste.
+
+Orientação: em registros de teste sem atendimento, usar **Encerrar sem iniciar** em cada cartão, informar o motivo e então **Fechar jornada**. Evidência: `docs/validacao-fechamento-fila-ui.json`; verificação pública em `docs/validacao-fila-producao.json`. R16.2/R16.3 seguem pendentes.
+
+
 
 ## Lista da Vez publicada — R16.1 — 15/09/2026
 

@@ -96,7 +96,7 @@
       "id": "R16",
       "titulo": "Fila de atendimento",
       "status": "em_andamento",
-      "detalhe": "R16.1 publicada em 15/09: jornada diária, ordem manual, abordagem/início/conclusão, pausa ao final, reservado com prioridade, presença e fechamento. 48 testes unitários + 40 de integração, desktop/celular e consulta pública das 14 filiais aprovados. R16 permanece em andamento: faltam R16.2 relatórios/movimento intenso e R16.3 vínculo com ERP. Gestão configurável por cargo; nenhum atendimento real criado pelos testes."
+      "detalhe": "R16.1 publicada em 15/09: jornada diária, ordem manual, abordagem/início/conclusão, pausa ao final, reservado com prioridade, presença e fechamento. 48 testes unitários + 40 de integração, desktop/celular e consulta pública das 14 filiais aprovados. R16 permanece em andamento: faltam R16.2 relatórios/movimento intenso e R16.3 vínculo com ERP. Gestão configurável por cargo; nenhum atendimento real criado pelos testes. Correção de 15/09: distinguir abordagem de atendimento, ação Encerrar sem iniciar e orientação das pendências antes do fechamento; cenário com cinco abordagens validado."
     },
     {
       "id": "R17",

@@ -164,7 +164,7 @@ As marcações de R16.1 correspondem à implementação e aos testes de 15/09. O
 
 1. Entre como Admin e abra **Lista da Vez**. Escolha a loja e o dia atual.
 2. Adicione apenas os vendedores presentes, ajuste a ordem pelas setas e clique em **Abrir jornada**. A preparação fica na tela até a confirmação de abertura.
-3. O vendedor da vez usa **Abordar próximo cliente**. Se não houver atendimento, escolha **Não iniciado** e registre o motivo; se houver, use **Iniciar atendimento**.
+3. O vendedor da vez usa **Abordar próximo cliente**. Se não houver atendimento, escolha **Encerrar sem iniciar** e registre o motivo; se houver, use **Iniciar atendimento**.
 4. Conclua com venda informada ou sem venda; a segunda opção exige motivo. Atendimento da vez retorna ao final; reservado preserva prioridade.
 5. O gestor registra pausas, retornos, ausências e chegadas. Não é possível pausar um vendedor ocupado.
 6. Para fechar, finalize os atendimentos abertos e use **Fechar jornada**. A jornada anterior precisa ser encerrada antes da abertura da nova.
@@ -181,3 +181,16 @@ A lista de candidatos vem dos vendedores encontrados no histórico local. Na val
 - Backup `backup-20260915T045251Z-YmDxjA`, migrations central 004 / tenant 009, API saudável e worker retomado.
 
 Relatórios: `docs/validacao-fila.json`, `docs/validacao-fila-ui.json`, `docs/validacao-fila-producao.json`. Resultado de venda continua informado pelo operador; confirmação no ERP fica em R16.3. Movimento intenso continua em R16.2.
+
+
+## Fechamento da fila: status esclarecidos — 15/09/2026
+
+A captura enviada por Maylon mostrava cinco abordagens abertas, ainda sem início. “Não iniciado” era um botão de encerramento, mas podia ser confundido com um status já concluído. Abordagens abertas também impedem fechar a jornada.
+
+- [x] Status distintos: **Em abordagem — aguardando início** e **Em atendimento**. Quem não pode consultar detalhes de outro vendedor continua vendo apenas “Ocupado”.
+- [x] Ação renomeada para **Encerrar sem iniciar**, com motivo e preservação da prioridade.
+- [x] Resumo conta abordagens e atendimentos pendentes. Fechar jornada orienta como resolver antes de oferecer confirmação; a proteção no servidor permanece.
+- [x] Cenário de cinco abordagens reproduzido com dados sintéticos: encerramento individual com motivo e fechamento bem-sucedido, sem inventar início nem apagar registros. Pendências mistas e fluxo de vendedor também verificados.
+- [x] Publicação somente da interface, com backup `backup-20260915T115312Z-mI1DDW` e API saudável. Worker permaneceu ativo; nenhuma jornada real foi encerrada pelo teste.
+
+Orientação: em registros de teste sem atendimento, usar **Encerrar sem iniciar** em cada cartão, informar o motivo e então **Fechar jornada**. Evidência: `docs/validacao-fechamento-fila-ui.json`; verificação pública em `docs/validacao-fila-producao.json`. R16.2/R16.3 seguem pendentes.

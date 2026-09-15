@@ -1,76 +1,104 @@
 {
-  "verificadoEm": "2026-09-15T04:53:55.760Z",
+  "verificadoEm": "2026-09-15T11:53:55.566Z",
   "dominio": "aeropostale.joinnetwork.com.br",
   "filiais": [
     {
       "filial": "30098297",
       "vendedoresDisponiveisNoCadastro": 17,
-      "jornada": "nao_aberta"
+      "jornada": "aberta",
+      "abordagensAbertas": 5,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098400",
       "vendedoresDisponiveisNoCadastro": 20,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098401",
       "vendedoresDisponiveisNoCadastro": 10,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098409",
       "vendedoresDisponiveisNoCadastro": 17,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098495",
       "vendedoresDisponiveisNoCadastro": 9,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098696",
       "vendedoresDisponiveisNoCadastro": 23,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098697",
       "vendedoresDisponiveisNoCadastro": 5,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098704",
       "vendedoresDisponiveisNoCadastro": 1,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098702",
       "vendedoresDisponiveisNoCadastro": 16,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098708",
       "vendedoresDisponiveisNoCadastro": 23,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098795",
       "vendedoresDisponiveisNoCadastro": 20,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098802",
       "vendedoresDisponiveisNoCadastro": 0,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098797",
       "vendedoresDisponiveisNoCadastro": 0,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     },
     {
       "filial": "30098699",
       "vendedoresDisponiveisNoCadastro": 4,
-      "jornada": "nao_aberta"
+      "jornada": "nao_aberta",
+      "abordagensAbertas": 0,
+      "atendimentosIniciados": 0
     }
   ],
   "novasPermissoes": true,
@@ -78,5 +106,6 @@
   "desktopMobile": true,
   "mobileSemOverflow": true,
   "nenhumaJornadaCriadaPeloTeste": true,
+  "orientacaoFechamentoVerificada": true,
   "errors": []
 }

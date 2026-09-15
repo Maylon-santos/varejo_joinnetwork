@@ -1,0 +1,15 @@
+{
+  "verificadoEm": "2026-09-15T11:51:44.707Z",
+  "ambiente": "dados sintéticos isolados",
+  "cincoAbordagensAbertas": true,
+  "statusDistintos": true,
+  "orientacaoAntesDoFechamento": true,
+  "semPostDeFechamentoComPendencias": true,
+  "encerramentoIndividualComMotivo": true,
+  "jornadaFechadaAposResolverCinco": true,
+  "registrosPreservadosSemInicioFicticio": true,
+  "pendenciasMistas": true,
+  "desktopMobile": true,
+  "mobileSemOverflow": true,
+  "errors": []
+}
