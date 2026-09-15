@@ -1,5 +1,8 @@
 import {ErroApi} from './painel.mjs';
 export const recursos=[
+ {codigo:'fila:ler',nome:'Consultar Lista da Vez'},
+ {codigo:'fila:operar',nome:'Operar atendimentos próprios'},
+ {codigo:'fila:gerenciar',nome:'Gerenciar jornada e equipe da fila'},
  {codigo:'indicadores:ler',nome:'Indicadores'},
  {codigo:'vendas:ler',nome:'Movimentações e detalhes'},
  {codigo:'ranking:ler',nome:'Ranking'},
@@ -12,6 +15,8 @@ export function validarPerfil(role,body){
  const campos=['nome','permissoes','todas_filiais','somente_proprias_vendas'];
  if(Object.keys(body).some(k=>!campos.includes(k))||typeof body.nome!=='string'||!body.nome.trim()||body.nome.trim().length>80||typeof body.todas_filiais!=='boolean'||typeof body.somente_proprias_vendas!=='boolean'||!Array.isArray(body.permissoes)||body.permissoes.some(p=>!recursos.some(r=>r.codigo===p)))throw new ErroApi(400,'PERFIL_INVALIDO');
  const permissoes=[...new Set(body.permissoes)];
+ if(permissoes.some(p=>['fila:operar','fila:gerenciar'].includes(p))&&!permissoes.includes('fila:ler'))throw new ErroApi(400,'FILA_PERMISSAO_DEPENDENTE');
+ if(permissoes.includes('fila:gerenciar')&&(!permissoes.includes('fila:operar')||body.somente_proprias_vendas))throw new ErroApi(400,'FILA_GESTAO_INCOMPATIVEL');
  if(['conferencia:ler','clientes:ler','imagens:ler'].some(p=>permissoes.includes(p))&&!permissoes.includes('vendas:ler'))throw new ErroApi(400,'PERMISSAO_DEPENDENTE_DE_VENDAS');
  if(role==='Vendas'&&(!body.somente_proprias_vendas||body.todas_filiais))throw new ErroApi(400,'VENDAS_REQUER_ESCOPO_PROPRIO');
  if(body.somente_proprias_vendas&&body.todas_filiais)throw new ErroApi(400,'ESCOPO_INCOMPATIVEL');

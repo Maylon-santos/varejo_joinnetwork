@@ -27,7 +27,7 @@
 ### Pendências e dependências
 
 - [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
-- [ ] **R16 — Fila de atendimento:** Requisitos organizados em docs/PLANEJAMENTO_FILA_ATENDIMENTO.md. Confirmado em 15/09: volta da pausa ao final; movimento intenso flexibiliza ordem sem atendimentos simultâneos por vendedor. Implementação pendente: R16.1 jornada e vez, R16.2 relatórios, R16.3 vínculo com venda ERP. Não há módulo publicado ainda.
+- [ ] **R16 — Fila de atendimento:** R16.1 publicada em 15/09: jornada diária, ordem manual, abordagem/início/conclusão, pausa ao final, reservado com prioridade, presença e fechamento. 48 testes unitários + 40 de integração, desktop/celular e consulta pública das 14 filiais aprovados. R16 permanece em andamento: faltam R16.2 relatórios/movimento intenso e R16.3 vínculo com ERP. Gestão configurável por cargo; nenhum atendimento real criado pelos testes.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
 - [ ] **R19 — Produtos, estoque e indicadores adicionais:** Usar dados complementares de R24/R25 para os indicadores, após definir regras em R22. Produtos/estoque exigem seus contratos específicos. Conferência mensal/anual R11 aguarda esses indicadores.
@@ -38,6 +38,24 @@
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 
 <!-- KANBAN:FIM -->
+
+## Lista da Vez publicada — R16.1 — 15/09/2026
+
+- [x] Jornada por empresa/filial/dia, seleção de presentes e ordem inicial manual.
+- [x] Abordagem, não iniciado com motivo e preservação da vez, início e conclusão com/sem venda informada.
+- [x] Pausa retorna ao final; reservado preserva prioridade; um atendimento aberto por vendedor. Presença, ausência e chegada tardia registradas.
+- [x] Fechamento bloqueado com atendimentos abertos; continuidade após meia-noite sem apagar registros. A nova jornada exige encerramento da anterior.
+- [x] Transações, versão da fila, requisições idempotentes e eventos de auditoria. Permissões de consulta/operação/gestão no gerenciador por empresa; apenas Admin recebe acesso automaticamente.
+- [x] 48 testes unitários e 40 de integração aprovados. Fluxo real de interface com dados sintéticos em desktop/celular; recarga e restrições de vendedor verificadas.
+- [x] Backup `backup-20260915T045251Z-YmDxjA`, migrations aplicadas, API saudável e worker ativo. Menu/consulta pública verificados nas 14 filiais; nenhuma jornada real aberta pelos testes.
+- [ ] R16.2: relatórios consolidados, movimento intenso e exceções gerenciais.
+- [ ] R16.3: vincular atendimento à operação ERP. Venda informada ainda não equivale a venda confirmada.
+
+Como usar: **Lista da Vez → loja/dia → adicionar presentes → ajustar ordem → Abrir jornada**. Demais cargos precisam ser habilitados em Permissões e ter seus vínculos de filial/vendedor configurados. AERO-023 e AERO-MKTP ainda não têm vendedores no histórico local para montar a fila.
+
+R16 permanece em andamento, com R16.1 concluída; Kanban mantém **16 de 26 tarefas completas**. Planejamento e manual: `docs/PLANEJAMENTO_FILA_ATENDIMENTO.md`. Evidências: `docs/validacao-fila.json`, `docs/validacao-fila-ui.json`, `docs/validacao-fila-producao.json`.
+
+
 
 ## Clientes e aniversariantes publicados — 14/09/2026
 

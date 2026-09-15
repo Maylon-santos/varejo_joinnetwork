@@ -1,0 +1,27 @@
+{
+  "verificadoEm": "2026-09-15T04:53:55.760Z",
+  "entrega": "R16.1",
+  "unitarios": 48,
+  "integracao": 40,
+  "interface": "desktop/celular com dados sintéticos isolados",
+  "concorrencia": true,
+  "idempotencia": true,
+  "isolamentoFilialVendedorTenant": true,
+  "pausaRetornaFinal": true,
+  "reservadoPreservaPrioridade": true,
+  "umAtendimentoAbertoPorVendedor": true,
+  "continuidadeAposMeiaNoite": true,
+  "historicoPersistido": true,
+  "apiSaudavel": true,
+  "workerRetomado": true,
+  "backup": "backup-20260915T045251Z-YmDxjA",
+  "migrations": [
+    "control/004_fila_permissoes.sql",
+    "tenant/009_fila_atendimento.sql"
+  ],
+  "pendente": [
+    "R16.2 relatórios e movimento intenso",
+    "R16.3 vínculo explícito com operação ERP"
+  ],
+  "nenhumaJornadaRealCriadaNosTestes": true
+}

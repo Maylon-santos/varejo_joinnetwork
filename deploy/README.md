@@ -120,3 +120,19 @@ O worker contínuo faz a carga de identidade após vendas, cancelamentos e compl
 A rota `GET /api/v1/clientes` aceita os filtros comuns de filial/período/paginação, `busca` de até 100 caracteres e `mes` vazio ou `01` a `12`. Exige `clientes:ler` e `vendas:ler`. O agrupamento ocorre por código ERP depois da restrição de filial/período/vendedor. Contatos refletem o snapshot da movimentação mais recente nesse escopo. Não existe mesclagem por nome/telefone nem edição de cadastro nesta entrega. Aniversário persiste somente mês/dia; o ano não é necessário para esse filtro.
 
 Validação da fonte (somente leitura, saída agregada): `node --env-file=.env scripts/verificar-fonte-clientes.mjs`, opcional `CLIENTES_DIA`. Validações de interface: `scripts/verificar-clientes-ui.mjs` com dados sintéticos isolados e `scripts/verificar-clientes-producao.mjs` no domínio público. Capturas ficam em `artifacts/deploy`, fora do Git. Cobertura histórica pendente no roadmap R26.
+
+## Lista da Vez — R16.1
+
+A API usa `tenant/009_fila_atendimento.sql` e `control/004_fila_permissoes.sql`. Pausar o worker e fazer backup antes da atualização coordenada. Construir a API, aplicar migrations, subir a API com verificação de saúde e retomar o worker existente; esta entrega não requer reconstruir o worker.
+
+Somente Admin recebe automaticamente `fila:ler`, `fila:operar` e `fila:gerenciar`. Configurar os demais cargos na tela Permissões. Operar exige consultar; gerenciar exige operar e não pode ser concedido a perfil limitado às próprias vendas. Vendas continua vinculado ao código do vendedor em cada filial. A ordem da equipe pode ser consultada na filial autorizada, mas detalhes de atendimentos são retornados somente ao próprio operador ou gestor autorizado.
+
+`GET /api/v1/fila?filial=ID&dia=AAAA-MM-DD` retorna jornada, ordem, disponibilidade, atendimentos abertos autorizados e eventual jornada anterior pendente. Candidatos para abertura/chegada são lidos do histórico local e retornados somente ao gestor. Não consulta ERP.
+
+`POST /api/v1/fila` recebe `filial`, `dia`, `versao`, `requisicao` UUID e `acao`. Ações: `abrir` (lista ordenada `vendedores`), `chegada`, `pausar`, `retornar`, `ausente` (campo `vendedor`), `abordar` (`vendedor`, `modalidade` = `vez` ou `reservado`), `iniciar` (`atendimento` UUID), `concluir` (`atendimento`, `resultado` = `com_venda`, `sem_venda` ou `nao_iniciado`) e `fechar`. Pausa, ausência, reservado, conclusão sem venda e não iniciado exigem `motivo` com até 300 caracteres. Limite inicial: 60 participantes por jornada.
+
+Cada mutação usa transação, lock por filial, versão otimista e histórico de eventos. Repetir exatamente a mesma requisição com o mesmo UUID/autor é idempotente; reutilizar o UUID com outros dados retorna conflito. A autorização é relida depois da espera pelo lock. Índices únicos impedem duas jornadas abertas na filial ou dois atendimentos abertos por vendedor. Fechar exige zero atendimentos abertos. Uma abordagem já existente pode prosseguir após a meia-noite; novos atendimentos começam somente no dia atual. A jornada anterior precisa encerrar antes da abertura da nova.
+
+A fila registra resultado informado, sem confirmar venda automaticamente ou alterar ERP/comissões. Relatórios consolidados, movimento intenso e vínculo explícito com a operação ERP continuam em R16.2/R16.3. Backup PostgreSQL inclui automaticamente as novas tabelas e o histórico de eventos.
+
+Verificação local completa: `node --env-file=.env scripts/verificar-fila-ui.mjs`, com Chrome e schemas temporários. Verificação pública somente de leitura: `node --env-file=.env scripts/verificar-fila-producao.mjs`; não cria jornadas reais. Capturas ficam em `artifacts/deploy`, fora do Git. Acompanhar códigos `FILA_DESATUALIZADA` (recarregar estado) e `FILA_JORNADA_PENDENTE` (resolver dia anterior), sem expor dados de atendimentos em logs.

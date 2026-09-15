@@ -1,5 +1,22 @@
 # Comece aqui — estado atual em 15/09/2026
 
+## Lista da Vez publicada — R16.1 — 15/09/2026
+
+- [x] Jornada por empresa/filial/dia, seleção de presentes e ordem inicial manual.
+- [x] Abordagem, não iniciado com motivo e preservação da vez, início e conclusão com/sem venda informada.
+- [x] Pausa retorna ao final; reservado preserva prioridade; um atendimento aberto por vendedor. Presença, ausência e chegada tardia registradas.
+- [x] Fechamento bloqueado com atendimentos abertos; continuidade após meia-noite sem apagar registros. A nova jornada exige encerramento da anterior.
+- [x] Transações, versão da fila, requisições idempotentes e eventos de auditoria. Permissões de consulta/operação/gestão no gerenciador por empresa; apenas Admin recebe acesso automaticamente.
+- [x] 48 testes unitários e 40 de integração aprovados. Fluxo real de interface com dados sintéticos em desktop/celular; recarga e restrições de vendedor verificadas.
+- [x] Backup `backup-20260915T045251Z-YmDxjA`, migrations aplicadas, API saudável e worker ativo. Menu/consulta pública verificados nas 14 filiais; nenhuma jornada real aberta pelos testes.
+- [ ] R16.2: relatórios consolidados, movimento intenso e exceções gerenciais.
+- [ ] R16.3: vincular atendimento à operação ERP. Venda informada ainda não equivale a venda confirmada.
+
+Como usar: **Lista da Vez → loja/dia → adicionar presentes → ajustar ordem → Abrir jornada**. Demais cargos precisam ser habilitados em Permissões e ter seus vínculos de filial/vendedor configurados. AERO-023 e AERO-MKTP ainda não têm vendedores no histórico local para montar a fila.
+
+R16 permanece em andamento, com R16.1 concluída; Kanban mantém **16 de 26 tarefas completas**. Planejamento e manual: `docs/PLANEJAMENTO_FILA_ATENDIMENTO.md`. Evidências: `docs/validacao-fila.json`, `docs/validacao-fila-ui.json`, `docs/validacao-fila-producao.json`.
+
+
 ## Fila de atendimento: requisitos organizados — 15/09/2026
 
 Maylon adicionou o fluxo da Lista da Vez ao arquivo pessoal de correções. Planejamento consolidado em `docs/PLANEJAMENTO_FILA_ATENDIMENTO.md`: abertura diária por filial, ordem dos vendedores, abordagem, resultados, pausas, reservado, movimento intenso e relatório.

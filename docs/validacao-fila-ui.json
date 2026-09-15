@@ -1,0 +1,16 @@
+{
+  "verificadoEm": "2026-09-15T04:45:14.236Z",
+  "ambiente": "schemas temporários com dados sintéticos",
+  "abertura": true,
+  "naoIniciadoPreservaVez": true,
+  "pausaRetornaFinal": true,
+  "semVendaVaiFinal": true,
+  "reservadoPreservaVez": true,
+  "resultadoInformado": true,
+  "vendedorSomentePropriosControles": true,
+  "persistenciaAposRecarga": true,
+  "desktopMobile": true,
+  "mobileSemOverflow": true,
+  "semERP": true,
+  "errors": []
+}

@@ -39,6 +39,7 @@
       <button class="nav-button active" data-page="overview"><span data-icon="grid"></span>Visão geral</button>
       <button class="nav-button" data-page="sales"><span data-icon="receipt"></span>Movimentações</button>
       <button class="nav-button" data-page="quality"><span data-icon="check"></span>Conferência<span id="nav-pending" class="count-badge" hidden></span></button>
+      <button class="nav-button" data-page="queue"><span data-icon="receipt"></span>Lista da Vez</button>
       <button class="nav-button" data-page="customers"><span data-icon="store"></span>Clientes</button>
       <button class="nav-button" data-page="permissions" hidden><span data-icon="check"></span>Permissões</button>
           <button class="nav-button" data-page="users" hidden><span data-icon="store"></span>Usuários</button>
@@ -77,6 +78,10 @@
         <label id="quality-filter" hidden>Situação da conferência <select id="quality-state"><option value="quantidade_divergente">Aguardando conferência</option><option value="erro_erp_confirmado">Erro confirmado no ERP</option></select></label><div id="quality-explanation" class="quality-explanation" hidden>Estas operações têm diferença entre a quantidade do cabeçalho e a soma dos itens. Erros confirmados usam valor e quantidade do cabeçalho; os itens originais são preservados.</div>
         <div class="table-scroll"><table><thead><tr><th>Operação / Data</th><th>Vendedor</th><th>Peças</th><th>Valor</th><th>Conferência</th><th><span class="sr-only">Detalhes</span></th></tr></thead><tbody id="sales-body"></tbody></table></div><div class="table-footer"><span id="sales-summary"></span><div><button id="sales-prev" class="icon-button" aria-label="Página anterior das operações">←</button><button id="sales-next" class="icon-button" aria-label="Próxima página das operações">→</button></div></div>
       </section>
+      <section id="queue-panel" hidden aria-label="Lista da Vez">
+        <form id="queue-filters" class="panel queue-toolbar"><label>Loja<select id="queue-branch" required></select></label><label>Dia da jornada<input id="queue-day" type="date" required></label><button class="button primary" type="submit">Consultar fila</button></form>
+        <p id="queue-message" role="status" aria-live="polite"></p><div id="queue-content"></div>
+      </section>
       <section id="customers-panel" hidden aria-label="Cadastro de clientes" class="panel">
         <p>Clientes identificados nas movimentações da filial e do período selecionados. Cada código aparece uma vez. Os contatos refletem a movimentação mais recente dentro desse acesso.</p>
         <form id="customers-search" class="customer-search"><label>Buscar nome ou código <input id="customers-query" maxlength="100" type="search" placeholder="Nome ou código do cliente"></label><label>Aniversariantes <select id="customers-month"><option value="">Todos os meses</option><option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option><option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option><option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option><option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option></select></label><button class="button primary" type="submit">Buscar</button></form>
@@ -92,4 +97,5 @@
 <dialog id="detail-dialog" aria-labelledby="detail-title"><div class="dialog-heading"><div><p class="eyebrow">DETALHES DA MOVIMENTAÇÃO</p><h2 id="detail-title">Operação</h2></div><button id="detail-close" class="icon-button" aria-label="Fechar detalhes">×</button></div><div id="detail-content"></div></dialog>
 <div id="toast" role="status" class="toast" hidden></div>
 <dialog id="photo-dialog" aria-label="Imagem do produto"><button id="photo-close" class="icon-button" aria-label="Fechar imagem">×</button><img id="photo-large" alt=""><p id="photo-error" hidden>Imagem indisponível.</p></dialog>
+<dialog id="queue-action-dialog"><form id="queue-action-form" class="queue-action-form"><h2 id="queue-action-title"></h2><p id="queue-action-description"></p><label id="queue-reason-label">Motivo<textarea id="queue-reason" maxlength="300" rows="3"></textarea></label><p id="queue-action-error" role="alert"></p><div class="queue-actions"><button id="queue-action-cancel" type="button" class="button">Cancelar</button><button type="submit" class="button primary">Confirmar</button></div></form></dialog>
 </body></html>

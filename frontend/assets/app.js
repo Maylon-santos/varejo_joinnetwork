@@ -14,7 +14,7 @@ const errorText={USUARIO_INVALIDO:'Confira os dados do usuário.',VINCULOS_INVAL
 let token=null,page='overview',filters=null,rankPage=1,salesPage=1,customerPage=1,abort=null,generation=0,refreshTimer=null,detailGeneration=0;
 let lastIndicators=null,permissoes=new Set(),isAdmin=false;
 const pode=recurso=>permissoes.has(recurso);
-const podePagina=next=>['permissions','users'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='customers'?(pode('clientes:ler')&&pode('vendas:ler')):next==='sales'&&pode('vendas:ler');
+const podePagina=next=>next==='queue'?pode('fila:ler'):['permissions','users'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='customers'?(pode('clientes:ler')&&pode('vendas:ler')):next==='sales'&&pode('vendas:ler');
 let detailAbort=null;const detailImageUrls=new Set();
 function clearDetailMedia(){detailAbort?.abort();$('photo-dialog').close();for(const url of detailImageUrls)URL.revokeObjectURL(url);detailImageUrls.clear();}
 async function api(path,options={}){
@@ -28,7 +28,7 @@ function busy(active){$('loading').hidden=!active;$('overview-panel').hidden=act
 function resetError(){$('page-error').hidden=true;}
 function displayError(e){$('page-error-text').textContent=e.message;$('page-error').hidden=false;}
 function exitSession(message=''){
- token=null;generation++;detailGeneration++;abort?.abort();clearInterval(refreshTimer);lastIndicators=null;
+ clearInterval(queueTimer);$('queue-action-dialog').close();$('queue-content').replaceChildren();queueData=null;token=null;generation++;detailGeneration++;abort?.abort();clearInterval(refreshTimer);lastIndicators=null;
  $('app-view').hidden=true;$('login-view').hidden=false;$('password').value='';$('login-error').textContent=message;$('login-error').hidden=!message;
  $('customers-list').replaceChildren();$('customers-query').value='';$('customers-month').value='';$('detail-dialog').close();$('detail-content').replaceChildren();$('ranking-body').replaceChildren();$('sales-body').replaceChildren();$('chart').replaceChildren();
  for(const id of ['metric-value','metric-ticket','metric-pa','metric-pieces','metric-sales'])$(id).textContent='—';
@@ -44,10 +44,10 @@ $('login-form').addEventListener('submit',async e=>{
   $('user-role').textContent=me.usuario.role_nome||me.usuario.role;
   $('workspace-scope').textContent=me.usuario.somente_proprias_vendas?'Minhas vendas':'Filiais autorizadas';
   for(const button of document.querySelectorAll('[data-page]'))button.hidden=!podePagina(button.dataset.page);
-  const inicial=['overview','sales','quality'].find(podePagina);
+  const inicial=['overview','sales','quality','queue'].find(podePagina);
   if(!inicial)throw new Error('Seu perfil ainda não possui recursos liberados. Entre em contato com o administrador.');
-  $('user-email').textContent=me.usuario.email;$('branch').replaceChildren();
-  for(const item of branches.filiais){const opt=el('option',item.cod_filial||'Filial sem código cadastrado');opt.value=item.filial;$('branch').append(opt);}
+  $('user-email').textContent=me.usuario.email;$('branch').replaceChildren();$('queue-branch').replaceChildren();$('queue-day').value=today();queueData=null;
+  for(const item of branches.filiais){const opt=el('option',item.cod_filial||'Filial sem código cadastrado');opt.value=item.filial;$('branch').append(opt);$('queue-branch').append(opt.cloneNode(true));}
   if(!branches.filiais.length)throw new Error('Nenhuma loja está liberada para este acesso.');
   $('login-view').hidden=true;$('app-view').hidden=false;page=inicial;rankPage=1;salesPage=1;$('period').value='month';setPeriod();setPage(inicial,false);applyFilters();
   clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&!['permissions','users'].includes(page)&&!document.hidden&&!$('detail-dialog').open)loadData();},360000);
@@ -71,10 +71,11 @@ $('filters').addEventListener('submit',e=>{e.preventDefault();applyFilters();});
 function query(extra={}){return new URLSearchParams({...filters,...extra}).toString();}
 function setPage(next,load=true){
  if(!podePagina(next))return;
+ clearInterval(queueTimer);if(next==='queue')queueTimer=setInterval(()=>{if(token&&!document.hidden&&!queueBusy&&!$('queue-action-dialog').open)loadQueue(true);},30000);
  page=next;salesPage=1;rankPage=1;customerPage=1;
- $('customers-panel').hidden=page!=='customers';$('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users'].includes(page);
- if(['permissions','users'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
- const info={customers:['Clientes','Consulte o cadastro e os contatos dos seus clientes.'],users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
+ $('queue-panel').hidden=page!=='queue';$('customers-panel').hidden=page!=='customers';$('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users','queue'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users','queue'].includes(page);
+ if(['permissions','users','queue'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
+ const info={queue:['Lista da Vez','Organize a equipe e acompanhe os atendimentos da loja.'],customers:['Clientes','Consulte o cadastro e os contatos dos seus clientes.'],users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
  $('page-title').textContent=info[0];$('breadcrumb-page').textContent=info[0];$('page-subtitle').textContent=info[1];
  for(const button of document.querySelectorAll('[data-page]')){const active=button.dataset.page===page;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');}
  $('sales-title').textContent=page==='quality'?'Conferência das operações':'Todas as movimentações';
@@ -86,6 +87,7 @@ for(const b of document.querySelectorAll('[data-page]'))b.addEventListener('clic
 $('review-notice').addEventListener('click',()=>setPage('quality'));
 async function loadData(){
  if(!token)return;
+ if(page==='queue'){await loadQueue();return;}
  if(page==='customers'){await loadCustomers();return;}
  if(page==='users'){await loadUsers();return;}
  if(page==='permissions'){await loadPermissions();return;}
@@ -238,6 +240,9 @@ async function loadPermissions(){
    const ownLabel=el('label',null,'permission-check');const own=el('input');own.type='checkbox';own.checked=perfil.somente_proprias_vendas;own.disabled=protectedRole||vendas;ownLabel.append(own,el('span','Somente as próprias vendas'));scope.append(ownLabel);
    form.append(el('p',protectedRole?'Admin mantém acesso completo e administra as permissões.':vendas?'Vendas acessa somente as filiais atribuídas e as operações do vendedor vinculado.':'Com “Todas as filiais” desmarcado, o usuário acessa apenas as lojas atribuídas a ele.','muted permission-help'));
    own.addEventListener('change',()=>{if(own.checked)all.checked=false;});all.addEventListener('change',()=>{if(all.checked)own.checked=false;});
+   for(const key of ['fila:operar','fila:gerenciar'])checks.get(key).addEventListener('change',()=>{if(checks.get(key).checked){checks.get('fila:ler').checked=true;if(key==='fila:gerenciar')checks.get('fila:operar').checked=true;}});
+   checks.get('fila:ler').addEventListener('change',()=>{if(!checks.get('fila:ler').checked){checks.get('fila:operar').checked=false;checks.get('fila:gerenciar').checked=false;}});
+   checks.get('fila:operar').addEventListener('change',()=>{if(!checks.get('fila:operar').checked)checks.get('fila:gerenciar').checked=false;});
    for(const key of ['conferencia:ler','clientes:ler','imagens:ler'])checks.get(key).addEventListener('change',()=>{if(checks.get(key).checked)checks.get('vendas:ler').checked=true;});
    checks.get('vendas:ler').addEventListener('change',()=>{if(!checks.get('vendas:ler').checked)for(const key of ['conferencia:ler','clientes:ler','imagens:ler'])checks.get(key).checked=false;});
    const message=el('p',null,'permission-result');message.setAttribute('role','status');
@@ -307,3 +312,56 @@ async function loadCustomers(){
 $('customers-search').addEventListener('submit',e=>{e.preventDefault();customerPage=1;loadData();});
 $('customers-prev').addEventListener('click',()=>{customerPage--;loadData();});
 $('customers-next').addEventListener('click',()=>{customerPage++;loadData();});
+
+// A fila usa a filial e o dia da jornada, separados do período dos indicadores.
+let queueData=null,queueBusy=false,queueTimer=null,queuePending=null,queueVersion=0;
+const queueErrors={FILA_DESATUALIZADA:'A fila mudou em outra tela. A lista foi atualizada; confira antes de repetir a ação.',FILA_NAO_E_SUA_VEZ:'Outro vendedor está na vez. Atualize a fila.',FILA_VENDEDOR_OCUPADO:'Este vendedor não está disponível.',FILA_MOTIVO_OBRIGATORIO:'Informe um motivo de até 300 caracteres.',FILA_ATENDIMENTOS_ABERTOS:'Finalize os atendimentos abertos antes de fechar a jornada.',FILA_JORNADA_PENDENTE:'Existe uma jornada anterior aberta. Consulte a data indicada para encerrá-la.',FILA_DIA_ENCERRADO:'Novas operações só podem começar na jornada de hoje.',FILA_JORNADA_EXISTENTE:'Esta jornada já foi aberta. Consulte a fila atual.',FILA_NAO_ABERTA:'A jornada não está aberta.',FILA_JA_INICIADO:'Este atendimento já começou.',FILA_INICIO_OBRIGATORIO:'Inicie o atendimento antes de registrar o resultado.',FILA_ESTADO_INVALIDO:'O estado do vendedor mudou. Confira a fila.',FILA_REQUISICAO_REUTILIZADA:'Esta ação já foi usada com outros dados. Atualize a fila.',FILA_CONFLITO:'A fila mudou durante a operação. Atualize e confira.',FILA_GESTAO_INCOMPATIVEL:'Gerenciar a fila exige operar atendimentos e um perfil sem restrição às próprias vendas.',FILA_PERMISSAO_DEPENDENTE:'Operar ou gerenciar exige permissão para consultar a fila.'};
+Object.assign(errorText,queueErrors);
+function queueButton(text,fn,secondary=false){const b=el('button',text,secondary?'button':'button primary');b.type='button';b.addEventListener('click',fn);return b;}
+async function loadQueue(quiet=false){
+ if(!token||page!=='queue'||queueBusy)return;$('loading').hidden=true;
+ const filial=$('queue-branch').value,dia=$('queue-day').value;if(!filial||!dia)return;
+ const ver=++generation;abort?.abort();abort=new AbortController();if(!quiet){resetError();$('queue-message').textContent='Carregando fila…';$('queue-content').replaceChildren();}
+ try{const d=await api('/fila?'+new URLSearchParams({filial,dia}),{signal:abort.signal});if(ver!==generation||page!=='queue')return;
+  const unchanged=quiet&&queueData?.filial===filial&&queueData?.dia===dia&&(queueData?.jornada?.versao??0)===(d.jornada?.versao??0)&&queueData?.pendente_dia===d.pendente_dia&&queueData?.gerenciar===d.gerenciar&&queueData?.operar===d.operar&&queueData?.codigo_proprio===d.codigo_proprio;
+  queueData=d;queueVersion=d.jornada?.versao??0;if(!unchanged)renderQueue(d);$('queue-message').textContent='Atualizado às '+new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
+ }catch(e){if(e.name!=='AbortError'&&ver===generation){$('queue-message').textContent='Não foi possível atualizar a fila.';displayError(e);}}
+}
+function renderQueue(d){
+ const root=$('queue-content');root.replaceChildren();const atual=d.dia===today(),aberta=d.jornada?.estado==='aberta';
+ if(d.pendente_dia){const n=el('div',null,'panel queue-notice');n.append(el('p','Há uma jornada aberta em '+dateBR(d.pendente_dia)+'. Finalize os atendimentos e encerre essa jornada antes de abrir outra.'),queueButton('Consultar jornada pendente',()=>{$('queue-day').value=d.pendente_dia;loadQueue();},true));root.append(n);}
+ if(!d.jornada){
+  const box=el('section',null,'panel queue-setup');box.append(el('h2','Preparar jornada'),el('p','Selecione os vendedores presentes e ajuste a ordem antes de abrir a fila.'));root.append(box);
+  if(!d.gerenciar||!atual||d.pendente_dia){box.append(el('p','Nenhuma jornada nesta data. A abertura é feita por quem tem permissão de gestão, no dia atual.'));return;}
+  const selected=[];const picker=el('select');picker.setAttribute('aria-label','Vendedor presente');for(const c of d.candidatos){const o=el('option',c.nome+' · '+c.vendedor_codigo);o.value=c.vendedor_codigo;picker.append(o);}const list=el('ol',null,'queue-selection');
+  const draw=()=>{list.replaceChildren();selected.forEach((code,i)=>{const row=el('li');row.append(el('span',(i+1)+'º · '+d.candidatos.find(c=>c.vendedor_codigo===code).nome+' · '+code));const up=queueButton('↑',()=>{[selected[i-1],selected[i]]=[selected[i],selected[i-1]];draw();},true);up.disabled=i===0;up.setAttribute('aria-label','Subir '+(i+1)+'º vendedor');const down=queueButton('↓',()=>{[selected[i+1],selected[i]]=[selected[i],selected[i+1]];draw();},true);down.disabled=i===selected.length-1;down.setAttribute('aria-label','Descer '+(i+1)+'º vendedor');row.append(up,down,queueButton('Remover',()=>{selected.splice(i,1);draw();},true));list.append(row);});};
+  const add=queueButton('Adicionar presente',()=>{if(picker.value&&!selected.includes(picker.value)&&selected.length<60){selected.push(picker.value);draw();}},true);add.disabled=!d.candidatos.length;
+  box.append(picker,add,list,queueButton('Abrir jornada',()=>{if(!selected.length){showToast('Selecione pelo menos um vendedor.');return;}queueAction({acao:'abrir',vendedores:[...selected]});}));if(!d.candidatos.length)box.append(el('p','Nenhum vendedor encontrado no histórico importado desta filial.'));return;
+ }
+ const disponiveis=d.participantes.filter(p=>p.estado==='disponivel').sort((a,b)=>a.posicao-b.posicao),proximo=disponiveis[0];
+ const head=el('section',null,'panel queue-summary');head.append(el('span',aberta?'Jornada aberta':'Jornada fechada','eyebrow'),el('h2',aberta?(proximo?'Na vez: '+proximo.nome:'Nenhum vendedor disponível'):'Histórico da equipe'),el('p','Pausa retorna ao final · Atendimento reservado preserva a vez · Um atendimento aberto por vendedor'));root.append(head);
+ if(d.gerenciar&&aberta){const actions=el('div',null,'queue-actions');if(atual){const select=el('select');select.setAttribute('aria-label','Vendedor que chegou');for(const c of d.candidatos.filter(c=>!d.participantes.some(p=>p.vendedor_codigo===c.vendedor_codigo&&p.estado!=='ausente'))){const o=el('option',c.nome);o.value=c.vendedor_codigo;select.append(o);}const add=queueButton('Registrar chegada',()=>queueAction({acao:'chegada',vendedor:select.value}),true);add.disabled=!select.options.length;if(select.options.length)actions.append(select,add);}actions.append(queueButton('Fechar jornada',()=>queueDialog({acao:'fechar'},'Fechar jornada','Os registros serão preservados. Atendimentos abertos precisam ser finalizados.',false),true));head.append(actions);}
+ const cards=el('div',null,'queue-cards');root.append(cards);const estados={disponivel:'Disponível',ocupado:'Em abordagem ou atendimento',pausa:'Em pausa',ausente:'Ausente'};
+ for(const p of [...d.participantes].sort((a,b)=>(a.estado==='disponivel'?0:1)-(b.estado==='disponivel'?0:1)||a.posicao-b.posicao)){
+  const card=el('article',null,'panel queue-person');card.dataset.vendedor=p.vendedor_codigo;const vez=disponiveis.findIndex(v=>v.vendedor_codigo===p.vendedor_codigo);
+  card.append(el('small',p.estado==='disponivel'&&aberta?(vez+1)+'º na fila':estados[p.estado]),el('h3',p.nome),el('p','Código '+p.vendedor_codigo));const actions=el('div',null,'queue-actions');card.append(actions);cards.append(card);
+  const a=d.atendimentos.find(a=>a.vendedor_codigo===p.vendedor_codigo),podeAtuar=d.operar&&(d.gerenciar||d.codigo_proprio===p.vendedor_codigo);
+  if(a){card.append(el('p',a.modalidade==='reservado'?'Atendimento reservado':'Atendimento da vez'),el('p',(a.iniciado_em?'Iniciado: ':'Abordagem: ')+when(a.iniciado_em||a.abordado_em)));}
+  if(!aberta)continue;
+  if(podeAtuar&&a){if(!a.iniciado_em){actions.append(queueButton('Iniciar atendimento',()=>queueAction({acao:'iniciar',atendimento:a.id})));actions.append(queueButton('Não iniciado',()=>queueDialog({acao:'concluir',atendimento:a.id,resultado:'nao_iniciado'},'Atendimento não iniciado','Informe por que o cliente não iniciou o atendimento. A prioridade será preservada.',true),true));}
+   else actions.append(queueButton('Concluir com venda',()=>queueDialog({acao:'concluir',atendimento:a.id,resultado:'com_venda'},'Concluir com venda informada','O resultado será informado por você. A confirmação da venda no ERP será uma etapa posterior.',false)),queueButton('Concluir sem venda',()=>queueDialog({acao:'concluir',atendimento:a.id,resultado:'sem_venda'},'Concluir sem venda','Registre o motivo da não conversão. Na lista da vez, o vendedor retorna ao final.',true),true));}
+  if(atual&&p.estado==='disponivel'){if(podeAtuar){if(proximo?.vendedor_codigo===p.vendedor_codigo)actions.append(queueButton('Abordar próximo cliente',()=>queueAction({acao:'abordar',vendedor:p.vendedor_codigo,modalidade:'vez'})));actions.append(queueButton('Cliente reservado',()=>queueDialog({acao:'abordar',vendedor:p.vendedor_codigo,modalidade:'reservado'},'Atendimento reservado','Registre o motivo da reserva, sem dados pessoais do cliente. A prioridade na fila será preservada.',true),true));}if(d.gerenciar)actions.append(queueButton('Pausar',()=>queueDialog({acao:'pausar',vendedor:p.vendedor_codigo},'Registrar pausa','Na volta, o vendedor entrará no final da fila.',true),true),queueButton('Marcar ausente',()=>queueDialog({acao:'ausente',vendedor:p.vendedor_codigo},'Registrar ausência','O vendedor sairá da distribuição. Se retornar, entrará no final.',true),true));}
+  if(atual&&d.gerenciar&&p.estado==='pausa')actions.append(queueButton('Retornar da pausa',()=>queueAction({acao:'retornar',vendedor:p.vendedor_codigo}),true));
+ }
+}
+function queueDialog(action,title,description,reason){queuePending={...action};$('queue-action-title').textContent=title;$('queue-action-description').textContent=description;$('queue-action-error').textContent='';$('queue-reason').value='';$('queue-reason').required=reason;$('queue-reason-label').hidden=!reason;$('queue-action-dialog').showModal();}
+$('queue-action-cancel').addEventListener('click',()=>$('queue-action-dialog').close());
+$('queue-action-form').addEventListener('submit',async e=>{e.preventDefault();if(queueBusy)return;const action={...queuePending};if($('queue-reason').required)action.motivo=$('queue-reason').value;await queueAction(action);});
+async function queueAction(action){
+ if(queueBusy||!queueData)return;queueBusy=true;const body={...action,filial:queueData.filial,dia:queueData.dia,versao:queueVersion,requisicao:crypto.randomUUID()};
+ for(const b of $('queue-panel').querySelectorAll('button'))b.disabled=true;for(const b of $('queue-action-form').querySelectorAll('button'))b.disabled=true;
+ try{await api('/fila',{method:'POST',body:JSON.stringify(body)});$('queue-action-dialog').close();showToast('Fila atualizada.');}
+ catch(e){$('queue-action-dialog').close();displayError(e);}
+ finally{queueBusy=false;for(const b of $('queue-filters').querySelectorAll('button'))b.disabled=false;for(const b of $('queue-action-form').querySelectorAll('button'))b.disabled=false;await loadQueue(true);if(queueData)renderQueue(queueData);}
+}
+$('queue-filters').addEventListener('submit',e=>{e.preventDefault();if(!queueBusy){queueData=null;loadQueue();}});

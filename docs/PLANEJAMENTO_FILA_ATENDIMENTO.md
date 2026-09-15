@@ -1,6 +1,6 @@
 # Fila de atendimento — R16
 
-Atualização: 15/09/2026. Situação: requisitos organizados; implementação e publicação pendentes.
+Atualização: 15/09/2026. Situação: R16.1 publicada e validada; R16.2 (relatórios/exceções) e R16.3 (integração ERP) pendentes.
 
 Fonte: descrição adicionada por Maylon em `docs/central/correcoes/correcao.md`, seção “fila de atendimento”. O original foi preservado. Exemplos de outras lojas e opções mencionadas no texto não equivalem a políticas já escolhidas para Aeropostale.
 
@@ -123,13 +123,13 @@ No movimento intenso, continua permitido apenas um atendimento aberto por vended
 
 ### R16.1 — Jornada e Lista da Vez
 
-- [ ] Banco, permissões e histórico de ações por empresa/filial/dia.
-- [ ] Abertura manual, presença, ordem inicial e chegada tardia.
-- [ ] Abordagem, não iniciado com preservação de prioridade, início e conclusão com/sem venda.
-- [ ] Motivo obrigatório quando aplicável e retorno ao final após atendimento.
-- [ ] Pausa/retorno conforme política escolhida e atendimento reservado.
-- [ ] Tela de operação no desktop/celular e indicação do próximo disponível.
-- [ ] Fechamento com tratamento de atendimentos abertos.
+- [x] Banco, permissões e histórico de ações por empresa/filial/dia.
+- [x] Abertura manual, presença, ordem inicial e chegada tardia.
+- [x] Abordagem, não iniciado com preservação de prioridade, início e conclusão com/sem venda.
+- [x] Motivo obrigatório quando aplicável e retorno ao final após atendimento.
+- [x] Pausa/retorno conforme política escolhida e atendimento reservado.
+- [x] Tela de operação no desktop/celular e indicação do próximo disponível.
+- [x] Fechamento com tratamento de atendimentos abertos.
 
 ### R16.2 — Relatórios e exceções
 
@@ -148,13 +148,36 @@ No movimento intenso, continua permitido apenas um atendimento aberto por vended
 
 ## Critérios de aceite
 
-- [ ] Duas pessoas acionando a vez ao mesmo tempo não criam distribuição duplicada.
-- [ ] Repetir uma requisição não conclui atendimento nem move vendedor duas vezes.
-- [ ] “Só olhando” preserva a prioridade; atendimento concluído sem venda consome a vez.
-- [ ] Pausa, ausência e reservado respeitam a política escolhida e a disponibilidade.
-- [ ] Restrições de filial/vendedor e permissões são verificadas também pela API.
-- [ ] Histórico sobrevive a recarga, encerramento de sessão e mudança de dia.
+- [x] Duas pessoas acionando a vez ao mesmo tempo não criam distribuição duplicada.
+- [x] Repetir uma requisição não conclui atendimento nem move vendedor duas vezes.
+- [x] “Só olhando” preserva a prioridade; atendimento concluído sem venda consome a vez.
+- [x] Pausa, ausência e reservado respeitam a política escolhida e a disponibilidade.
+- [x] Restrições de filial/vendedor e permissões são verificadas também pela API.
+- [x] Histórico sobrevive a recarga, encerramento de sessão e mudança de dia.
 - [ ] Relatório distingue abertos, não iniciados, concluídos e vendas confirmadas.
-- [ ] Publicação com backup e validação em desktop/celular.
+- [x] Publicação com backup e validação em desktop/celular.
 
-Nenhum item de implementação foi marcado como concluído apenas por estar descrito neste planejamento.
+As marcações de R16.1 correspondem à implementação e aos testes de 15/09. O critério de relatório permanece pendente em R16.2.
+
+
+## Como usar a primeira entrega
+
+1. Entre como Admin e abra **Lista da Vez**. Escolha a loja e o dia atual.
+2. Adicione apenas os vendedores presentes, ajuste a ordem pelas setas e clique em **Abrir jornada**. A preparação fica na tela até a confirmação de abertura.
+3. O vendedor da vez usa **Abordar próximo cliente**. Se não houver atendimento, escolha **Não iniciado** e registre o motivo; se houver, use **Iniciar atendimento**.
+4. Conclua com venda informada ou sem venda; a segunda opção exige motivo. Atendimento da vez retorna ao final; reservado preserva prioridade.
+5. O gestor registra pausas, retornos, ausências e chegadas. Não é possível pausar um vendedor ocupado.
+6. Para fechar, finalize os atendimentos abertos e use **Fechar jornada**. A jornada anterior precisa ser encerrada antes da abertura da nova.
+
+Em **Permissões**, Admin pode habilitar consultar a fila e operar atendimentos para Vendas, mantendo os vínculos de filial/vendedor. Para gerenciar jornada/equipe, habilitar também a permissão de gestão em um cargo sem restrição às próprias vendas. Somente Admin recebeu permissões novas automaticamente.
+
+A lista de candidatos vem dos vendedores encontrados no histórico local. Na validação pública, AERO-023 (`30098802`) e AERO-MKTP (`30098797`) não tinham vendedores nesse histórico: a abertura depende da disponibilidade desse cadastro. Não foram criados vendedores ou jornadas reais pelos testes.
+
+## Evidência da publicação — 15/09/2026
+
+- 48 testes unitários e 40 de integração aprovados; concorrência, idempotência, isolamento, regras de pausa/reservado e transição de dia cobertos.
+- Operação completa no Chrome desktop/celular com dados sintéticos; retorno após recarga, controles de vendedor e formulário de atualização validados.
+- Menu e consulta pública nas 14 filiais, com restrições e recursos de permissão verificados. Sem abrir jornadas reais.
+- Backup `backup-20260915T045251Z-YmDxjA`, migrations central 004 / tenant 009, API saudável e worker retomado.
+
+Relatórios: `docs/validacao-fila.json`, `docs/validacao-fila-ui.json`, `docs/validacao-fila-producao.json`. Resultado de venda continua informado pelo operador; confirmação no ERP fica em R16.3. Movimento intenso continua em R16.2.
