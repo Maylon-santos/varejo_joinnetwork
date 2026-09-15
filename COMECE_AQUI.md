@@ -1,4 +1,13 @@
-# Comece aqui — estado atual em 14/09/2026
+# Comece aqui — estado atual em 15/09/2026
+
+## Fila de atendimento: requisitos organizados — 15/09/2026
+
+Maylon adicionou o fluxo da Lista da Vez ao arquivo pessoal de correções. Planejamento consolidado em `docs/PLANEJAMENTO_FILA_ATENDIMENTO.md`: abertura diária por filial, ordem dos vendedores, abordagem, resultados, pausas, reservado, movimento intenso e relatório.
+
+R16 está **em andamento na especificação**, sem funcionalidade publicada. Maylon confirmou: retorno de pausa ao final da fila e movimento intenso apenas flexibiliza a ordem, sem atendimentos simultâneos por vendedor. A primeira etapa proposta é jornada/vez/atendimento; relatórios e integração com venda ERP vêm em etapas explícitas. Resultado informado pelo vendedor não equivale a venda confirmada no ERP.
+
+Kanban permanece com **16 de 26 tarefas concluídas**. Nenhuma tarefa de implementação foi marcada como concluída. R25/R26 continuam com a última fotografia registrada, sem nova consulta ao servidor nesta atualização.
+
 
 ## Clientes e aniversariantes publicados — 14/09/2026
 

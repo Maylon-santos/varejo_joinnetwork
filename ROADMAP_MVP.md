@@ -3,18 +3,18 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-16 de 26 tarefas deste quadro concluídas. Atualização: 2026-09-14. A contagem não representa prazo ou esforço.
+16 de 26 tarefas deste quadro concluídas. Atualização: 2026-09-15. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
-| R11 — Conferir totais das novas filiais | R25 — Completar preços e pagamentos do histórico | — | R01 — Importação e banco do piloto |
-| R16 — Fila de atendimento | R26 — Completar identificação e aniversários do histórico | — | R02 — Painel e acesso Admin |
-| R17 — Notificações internas e alertas | — | — | R03 — Publicação com HTTPS e backup diário |
-| R18 — Campanhas e mensagens | — | — | R04 — Correções de celular e fotos |
-| R19 — Produtos, estoque e indicadores adicionais | — | — | R05 — Clientes importados junto com a venda |
-| R20 — SaaS: provisionamento, planos e cobrança | — | — | R06 — Homologação de ITUPEVA |
-| R22 — Definir bruto, líquido e devoluções | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
-| R23 — Fotos dos vendedores | — | — | R08 — Exibir COD_FILIAL no seletor |
+| R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | — | R01 — Importação e banco do piloto |
+| R17 — Notificações internas e alertas | R25 — Completar preços e pagamentos do histórico | — | R02 — Painel e acesso Admin |
+| R18 — Campanhas e mensagens | R26 — Completar identificação e aniversários do histórico | — | R03 — Publicação com HTTPS e backup diário |
+| R19 — Produtos, estoque e indicadores adicionais | — | — | R04 — Correções de celular e fotos |
+| R20 — SaaS: provisionamento, planos e cobrança | — | — | R05 — Clientes importados junto com a venda |
+| R22 — Definir bruto, líquido e devoluções | — | — | R06 — Homologação de ITUPEVA |
+| R23 — Fotos dos vendedores | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
+| — | — | — | R08 — Exibir COD_FILIAL no seletor |
 | — | — | — | R09 — Sincronizar cadastro por trans_id |
 | — | — | — | R10 — Concluir históricos das novas filiais |
 | — | — | — | R12 — Cargos e permissões por filial |
@@ -27,7 +27,7 @@
 ### Pendências e dependências
 
 - [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
-- [ ] **R16 — Fila de atendimento:** Próximo módulo operacional previsto; detalhar regras com Maylon.
+- [ ] **R16 — Fila de atendimento:** Requisitos organizados em docs/PLANEJAMENTO_FILA_ATENDIMENTO.md. Confirmado em 15/09: volta da pausa ao final; movimento intenso flexibiliza ordem sem atendimentos simultâneos por vendedor. Implementação pendente: R16.1 jornada e vez, R16.2 relatórios, R16.3 vínculo com venda ERP. Não há módulo publicado ainda.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
 - [ ] **R19 — Produtos, estoque e indicadores adicionais:** Usar dados complementares de R24/R25 para os indicadores, após definir regras em R22. Produtos/estoque exigem seus contratos específicos. Conferência mensal/anual R11 aguarda esses indicadores.

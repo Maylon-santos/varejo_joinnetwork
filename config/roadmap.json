@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-09-14",
+  "atualizadoEm": "2026-09-15",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -95,8 +95,8 @@
     {
       "id": "R16",
       "titulo": "Fila de atendimento",
-      "status": "pendente",
-      "detalhe": "Próximo módulo operacional previsto; detalhar regras com Maylon."
+      "status": "em_andamento",
+      "detalhe": "Requisitos organizados em docs/PLANEJAMENTO_FILA_ATENDIMENTO.md. Confirmado em 15/09: volta da pausa ao final; movimento intenso flexibiliza ordem sem atendimentos simultâneos por vendedor. Implementação pendente: R16.1 jornada e vez, R16.2 relatórios, R16.3 vínculo com venda ERP. Não há módulo publicado ainda."
     },
     {
       "id": "R17",
