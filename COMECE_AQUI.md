@@ -1,5 +1,22 @@
 # Comece aqui — estado atual em 15/09/2026
 
+## R16.2: relatórios e movimento intenso publicados — 15/09/2026
+
+- [x] Relatórios por filial e período de até 31 dias, com resultados por vendedor/dia, conversão informada, motivos e histórico paginado.
+- [x] Tempo médio ponderado pelos concluídos e disponibilidade reconstruída pelos eventos, excluindo abordagem, atendimento, pausa e ausência. Não mede espera do cliente.
+- [x] Permissão **Consultar relatórios da fila** por cargo; somente Admin habilitado automaticamente. Vendas restrito ao próprio código antes de agregar/paginar.
+- [x] Gestão ativa/desativa movimento intenso com motivo e histórico. Apenas a ordem é flexibilizada; continua um registro aberto por vendedor. Sair do modo preserva atendimentos em andamento.
+- [x] 52 testes unitários, 45 de integração e interface desktop/celular aprovados. Fechamento com cinco abordagens revalidado; consultas públicas das 14 filiais aprovadas sem modificar jornadas reais.
+- [x] Backup `backup-20260915T191333Z-nOtjtD`, migrations central 005/tenant 010 aplicadas; API e PostgreSQL saudáveis e worker remoto retomado.
+- [x] Manual v1.1 atualizado em Markdown, HTML e PDF, com dez páginas.
+- [ ] Correções gerenciais do histórico: proposta de corrigir com venda/sem venda com motivo, preservando horários; aguarda definição, em entrega separada.
+- [ ] R16.3: associar atendimento à operação do ERP e confirmar venda.
+
+Acesse **Lista da Vez → Relatórios da fila → Consultar relatório**. Para um dia, use a mesma data em De/Até. Na jornada aberta, use **Ativar movimento intenso** / **Encerrar movimento intenso**, com permissão de gestão. A loja do relatório é independente da loja da jornada.
+
+R16 permanece em andamento; Kanban mantém **16 de 26 tarefas concluídas**. Evidências: `docs/validacao-fila-r162.json`, `docs/validacao-fila-relatorio-ui.json` e `docs/validacao-fila-relatorio-producao.json`.
+
+
 ## Manual de treinamento da fila — 15/09/2026
 
 Manual de boas práticas para gerentes e vendedores, com abertura, atendimento, pausas, reservado, fechamento, dúvidas frequentes, exercícios de 35 minutos e ficha de treinamento.

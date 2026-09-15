@@ -136,3 +136,15 @@ Cada mutação usa transação, lock por filial, versão otimista e histórico d
 A fila registra resultado informado, sem confirmar venda automaticamente ou alterar ERP/comissões. Relatórios consolidados, movimento intenso e vínculo explícito com a operação ERP continuam em R16.2/R16.3. Backup PostgreSQL inclui automaticamente as novas tabelas e o histórico de eventos.
 
 Verificação local completa: `node --env-file=.env scripts/verificar-fila-ui.mjs`, com Chrome e schemas temporários. Verificação pública somente de leitura: `node --env-file=.env scripts/verificar-fila-producao.mjs`; não cria jornadas reais. Capturas ficam em `artifacts/deploy`, fora do Git. Acompanhar códigos `FILA_DESATUALIZADA` (recarregar estado) e `FILA_JORNADA_PENDENTE` (resolver dia anterior), sem expor dados de atendimentos em logs.
+
+## Relatórios e movimento intenso — R16.2
+
+Atualizar somente a API. As migrations aditivas são `tenant/010_fila_relatorios_intenso.sql` e `control/005_fila_relatorios.sql`. Construir a nova imagem, pausar API/worker para a cópia coordenada, executar backup, aplicar migrations, subir API com verificação de saúde e retomar o worker existente. Não reconstruir nem ativar worker local.
+
+`fila:relatorios` exige `fila:ler`, com concessão automática somente a Admin. Configurar outros cargos no gerenciador. Vendas continua limitado ao próprio código; gerente sem o recurso de relatórios continua podendo operar a jornada, mas não consultar relatórios.
+
+`GET /api/v1/fila/relatorio?filial=ID&inicio=AAAA-MM-DD&fim=AAAA-MM-DD` aceita até 31 dias, `vendedor` opcional e `pagina` (30 registros por página). Totais por vendedor/dia, motivos e paginação usam o escopo antes da agregação. Retorna conversão informada e média ponderada dos concluídos; denominador zero retorna null. Disponibilidade é reconstruída pelos eventos desde a abertura/chegada, excluindo ocupação, pausa e ausência, até o fechamento ou o timestamp consistente da consulta. Datas representam a jornada, inclusive após meia-noite. Leitura em transação consistente e sem ERP.
+
+`POST /api/v1/fila` aceita `acao=movimento_intenso`, `ativo` booleano e `motivo`. Exige gestão, mantém lock, versão e idempotência. Ativar exige jornada de hoje; desligar pode resolver jornada anterior. O modo flexibiliza apenas a vez, preserva a ocupação única e fica gravado em cada abordagem. Fechar a jornada desliga o modo; nova jornada começa normal. Eventos guardam responsável e motivo; a consulta das últimas 100 alterações do modo é exclusiva da gestão com permissão de relatório.
+
+Validação sintética: `scripts/verificar-fila-relatorio-ui.mjs`. Validação pública somente de leitura: `scripts/verificar-fila-relatorio-producao.mjs`; não liga/desliga modo nem altera jornadas reais. Correções excepcionais do histórico dependem de definição; vínculo com ERP continua na R16.3.

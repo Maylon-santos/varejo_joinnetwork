@@ -4,7 +4,7 @@ Manual de boas práticas e treinamento para gerentes e vendedores.
 
 **JoinNetwork | Aeropostale**
 
-Versão 1.0 - 15/09/2026. Orientações para a funcionalidade disponível nesta data.
+Versão 1.1 - 15/09/2026. Inclui relatórios e movimento intenso da R16.2.
 
 ## 1. Entenda a fila em dois minutos
 
@@ -29,7 +29,7 @@ A Lista da Vez organiza a distribuição de clientes entre os vendedores present
 
 ### Como usar este material
 
-Gerentes: leiam todo o manual e conduzam os exercícios da seção 7. Vendedores: concentrem-se nas seções 3, 4, 6 e 8. A seção 5 orienta o fechamento; a seção 9 traz a conferência do aprendizado e o registro do treinamento.
+Gerentes: leiam todo o manual e conduzam os exercícios da seção 7. Vendedores: concentrem-se nas seções 3, 4, 6 e 8. A seção 5 orienta o fechamento; a seção 9 registra o treinamento. A seção 10 explica relatórios e movimento intenso.
 
 <!-- pagina -->
 
@@ -129,7 +129,7 @@ Use **Cliente reservado** somente quando houver um motivo real para o atendiment
 
 > **Uso correto:** reservado não é uma forma de pular a vez para um cliente comum. Mesmo com a loja cheia, não abra um segundo atendimento para quem já está ocupado.
 
-O modo de movimento intenso ainda não está disponível. A regra atual da vez continua valendo.
+Somente o gerente autorizado pode ativar o movimento intenso. Enquanto estiver desligado, a ordem da vez continua valendo. Veja o procedimento na seção 10.
 
 <!-- pagina -->
 
@@ -190,7 +190,7 @@ Avise o gerente antes de corrigir. Registre somente o que realmente ocorreu; um 
 
 Ao acionar o suporte, informe loja, data, ação tentada e texto da mensagem. Se enviar uma captura, retire dados pessoais e não envie senha.
 
-**Limites desta versão:** relatórios consolidados da fila, modo de movimento intenso, ajustes gerenciais excepcionais e vínculo automático com venda do ERP ainda não estão disponíveis. Não use a venda informada como comprovação financeira.
+**Limites desta versão:** ajustes gerenciais excepcionais do histórico e vínculo automático com venda do ERP ainda não estão disponíveis. Não use a venda informada como comprovação financeira.
 
 <!-- pagina -->
 
@@ -245,6 +245,7 @@ Ao finalizar, use as perguntas da seção 9 para conferir o aprendizado. Peça a
 - [ ] Conferi presentes e ordem antes de abrir.
 - [ ] Registrei chegadas, pausas, retornos e ausências reais.
 - [ ] Revisei todas as pendências com a equipe antes de fechar.
+- [ ] Restaurei a ordem da vez quando o movimento normalizou.
 - [ ] Confirmei o fechamento e comuniquei eventuais erros ao responsável.
 
 <!-- pagina -->
@@ -281,3 +282,34 @@ ______________________________________________________________
 ______________________________________________________________
 
 Material baseado na Lista da Vez publicada em 15/09/2026. Revise este manual quando novas regras ou recursos forem disponibilizados.
+
+<!-- pagina -->
+
+## 10. Relatórios e movimento intenso
+
+### Consultar os resultados da fila
+
+1. Em **Lista da Vez**, expanda **Relatórios da fila**.
+2. Escolha a **Loja do relatório** e as datas **De** e **Até**, com até 31 dias por consulta. Para o relatório diário, use a mesma data nos dois campos.
+3. Clique em **Consultar relatório**. Depois da consulta geral, pode escolher um vendedor na lista e consultar novamente.
+4. Revise os resultados por vendedor e por dia, os motivos e o histórico. Deslize as tabelas para ver todas as colunas; use **Próximos registros** para continuar o histórico.
+
+O Admin habilita **Consultar relatórios da fila** em Permissões, junto de **Consultar Lista da Vez**. O vendedor com esse acesso continua vendo somente os próprios dados. A loja do relatório é um filtro independente da loja da jornada em operação; confira ambas.
+
+| Medida | Como interpretar |
+| --- | --- |
+| Conversão informada | Com venda informada dividido pelos concluídos com/sem venda. Exclui abertos e encerrados sem iniciar. Sem concluídos, aparece “Sem dados”. |
+| Tempo médio | Tempo entre início e fim dos atendimentos concluídos, dividido pela quantidade de concluídos. |
+| Tempo disponível | Intervalos em que o vendedor podia receber clientes. Exclui abordagem, atendimento, pausa e ausência. Não mede espera do cliente. |
+
+Os resultados seguem o dia da jornada, mesmo quando o atendimento termina após meia-noite. A consulta é uma fotografia: consulte novamente para atualizar os números. Use motivos e resultados para conversar com a equipe; o registro de venda ainda não confirma a operação no ERP.
+
+### Gerente: lidar com um pico de clientes
+
+1. Na jornada aberta, clique em **Ativar movimento intenso** e informe o motivo.
+2. Confirme e avise a equipe. A faixa **Movimento intenso ativo** indica que qualquer vendedor disponível pode usar **Abordar próximo cliente**.
+3. Ao normalizar, use **Encerrar movimento intenso**, informe o motivo e confirme. A ordem volta a valer para novas abordagens; os registros abertos continuam normalmente.
+
+> **A regra de ocupação permanece:** cada vendedor pode manter somente uma abordagem ou atendimento aberto, inclusive reservado. Pausa continua retornando ao final; reservado continua preservando prioridade.
+
+Ativações e encerramentos ficam no histórico de movimento intenso, disponível à gestão no relatório. A abordagem guarda a indicação do modo em que ocorreu. Fechar a jornada desativa o modo; uma nova jornada começa com a ordem normal.

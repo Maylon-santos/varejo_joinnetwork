@@ -27,7 +27,7 @@
 ### Pendências e dependências
 
 - [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
-- [ ] **R16 — Fila de atendimento:** R16.1 publicada em 15/09: jornada diária, ordem manual, abordagem/início/conclusão, pausa ao final, reservado com prioridade, presença e fechamento. 48 testes unitários + 40 de integração, desktop/celular e consulta pública das 14 filiais aprovados. R16 permanece em andamento: faltam R16.2 relatórios/movimento intenso e R16.3 vínculo com ERP. Gestão configurável por cargo; nenhum atendimento real criado pelos testes. Correção de 15/09: distinguir abordagem de atendimento, ação Encerrar sem iniciar e orientação das pendências antes do fechamento; cenário com cinco abordagens validado. Manual de treinamento entregue em Markdown, HTML e PDF: rotina de gerente/vendedor, fechamento, exercícios e checklists. Treinamento da equipe ainda deve ser realizado.
+- [ ] **R16 — Fila de atendimento:** R16.1 e relatórios/movimento intenso da R16.2 publicados em 15/09. Relatórios por filial/período (até 31 dias), vendedor/dia, tempos, motivos e histórico. Gestão liga/desliga ordem flexível com motivo, mantendo um atendimento aberto por vendedor. Permissão específica de relatórios; Vendas somente próprios dados. 52 testes unitários, 45 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Manual v1.1 entregue; treinamento da equipe ainda deve ser realizado. Pendentes: definição de correções gerenciais do histórico e R16.3 associação/confirmação de venda no ERP. Nenhum atendimento real alterado pelos testes.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
 - [ ] **R19 — Produtos, estoque e indicadores adicionais:** Usar dados complementares de R24/R25 para os indicadores, após definir regras em R22. Produtos/estoque exigem seus contratos específicos. Conferência mensal/anual R11 aguarda esses indicadores.
@@ -38,6 +38,24 @@
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 
 <!-- KANBAN:FIM -->
+
+## R16.2: relatórios e movimento intenso publicados — 15/09/2026
+
+- [x] Relatórios por filial e período de até 31 dias, com resultados por vendedor/dia, conversão informada, motivos e histórico paginado.
+- [x] Tempo médio ponderado pelos concluídos e disponibilidade reconstruída pelos eventos, excluindo abordagem, atendimento, pausa e ausência. Não mede espera do cliente.
+- [x] Permissão **Consultar relatórios da fila** por cargo; somente Admin habilitado automaticamente. Vendas restrito ao próprio código antes de agregar/paginar.
+- [x] Gestão ativa/desativa movimento intenso com motivo e histórico. Apenas a ordem é flexibilizada; continua um registro aberto por vendedor. Sair do modo preserva atendimentos em andamento.
+- [x] 52 testes unitários, 45 de integração e interface desktop/celular aprovados. Fechamento com cinco abordagens revalidado; consultas públicas das 14 filiais aprovadas sem modificar jornadas reais.
+- [x] Backup `backup-20260915T191333Z-nOtjtD`, migrations central 005/tenant 010 aplicadas; API e PostgreSQL saudáveis e worker remoto retomado.
+- [x] Manual v1.1 atualizado em Markdown, HTML e PDF, com dez páginas.
+- [ ] Correções gerenciais do histórico: proposta de corrigir com venda/sem venda com motivo, preservando horários; aguarda definição, em entrega separada.
+- [ ] R16.3: associar atendimento à operação do ERP e confirmar venda.
+
+Acesse **Lista da Vez → Relatórios da fila → Consultar relatório**. Para um dia, use a mesma data em De/Até. Na jornada aberta, use **Ativar movimento intenso** / **Encerrar movimento intenso**, com permissão de gestão. A loja do relatório é independente da loja da jornada.
+
+R16 permanece em andamento; Kanban mantém **16 de 26 tarefas concluídas**. Evidências: `docs/validacao-fila-r162.json`, `docs/validacao-fila-relatorio-ui.json` e `docs/validacao-fila-relatorio-producao.json`.
+
+
 
 ## Fechamento da fila: status esclarecidos — 15/09/2026
 

@@ -66,6 +66,12 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
     if(req.method==='PUT'&&perfil[1])return enviar(200,await gestaoPermissoes.salvar(perfil[1],await lerJson(req)));
     throw new ErroApi(405,'METODO_NAO_PERMITIDO');
    }
+   if(path==='/api/v1/fila/relatorio'){
+    if(!fila)throw new ErroApi(503,'FILA_INDISPONIVEL');
+    if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');
+    for(const k of url.searchParams.keys())if(!['filial','inicio','fim','vendedor','pagina'].includes(k)||url.searchParams.getAll(k).length!==1)throw new ErroApi(400,'PARAMETRO_INVALIDO');
+    return enviar(200,await fila.relatorio(user,Object.fromEntries(url.searchParams)));
+   }
    if(path==='/api/v1/fila'){
     if(!fila)throw new ErroApi(503,'FILA_INDISPONIVEL');
     if(req.method==='GET'){

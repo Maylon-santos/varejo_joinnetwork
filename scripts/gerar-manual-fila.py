@@ -99,7 +99,7 @@ def build_html(pages):
                 parts.append('</tbody></table></div>')
         sections.append(''.join(parts) + '</section>')
     HTML.parent.mkdir(parents=True, exist_ok=True)
-    HTML.write_text('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lista da Vez | Manual de treinamento</title><style>' + CSS + '</style></head><body><div class="layout"><aside><div class="brand">JoinNetwork</div><p class="edition">Aeropostale<br>Lista da Vez · Manual v1.0<br>15 de setembro de 2026</p><nav aria-label="Seções do manual">' + ''.join(nav) + '</nav><div class="actions"><a href="../pdf/manual-fila-atendimento.pdf">Abrir PDF</a><button type="button" onclick="window.print()">Imprimir</button></div></aside><main>' + ''.join(sections) + '<p class="footer">Material de treinamento · Exemplos fictícios · Uso offline</p></main></div></body></html>', encoding='utf-8')
+    HTML.write_text('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Lista da Vez | Manual de treinamento</title><style>' + CSS + '</style></head><body><div class="layout"><aside><div class="brand">JoinNetwork</div><p class="edition">Aeropostale<br>Lista da Vez · Manual v1.1<br>15 de setembro de 2026</p><nav aria-label="Seções do manual">' + ''.join(nav) + '</nav><div class="actions"><a href="../pdf/manual-fila-atendimento.pdf">Abrir PDF</a><button type="button" onclick="window.print()">Imprimir</button></div></aside><main>' + ''.join(sections) + '<p class="footer">Material de treinamento · Exemplos fictícios · Uso offline</p></main></div></body></html>', encoding='utf-8')
 
 
 def build_pdf(pages, font, font_bold):
@@ -159,7 +159,7 @@ def build_pdf(pages, font, font_bold):
         canvas.drawRightString(A4[0] - 44, A4[1] - 32, 'TREINAMENTO DA EQUIPE')
         canvas.setStrokeColor(line)
         canvas.line(44, 40, A4[0] - 44, 40)
-        canvas.drawString(44, 26, 'Lista da Vez  |  v1.0  |  15/09/2026')
+        canvas.drawString(44, 26, 'Lista da Vez  |  v1.1  |  15/09/2026')
         canvas.drawRightString(A4[0] - 44, 26, f'{doc.page:02d}')
         canvas.restoreState()
 

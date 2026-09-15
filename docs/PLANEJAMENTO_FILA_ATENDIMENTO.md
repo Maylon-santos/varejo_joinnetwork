@@ -1,6 +1,21 @@
 # Fila de atendimento — R16
 
-Atualização: 15/09/2026. Situação: R16.1 publicada e validada; R16.2 (relatórios/exceções) e R16.3 (integração ERP) pendentes.
+Atualização: 15/09/2026. R16.1 publicada; relatórios e movimento intenso da R16.2 publicados. Correções gerenciais excepcionais dependem de definição. R16.3 (integração ERP) pendente.
+
+## Entrega R16.2: relatórios e movimento intenso
+
+- [x] Relatório por filial e período de até 31 dias, com totais por vendedor/dia, motivos e histórico paginado.
+- [x] Conversão informada e tempo médio calculados sobre concluídos com/sem venda; abertos e não iniciados fora do denominador. Ausência de concluídos retorna “Sem dados”.
+- [x] Tempo disponível reconstruído pelos eventos desde abertura/chegada; exclui abordagem, atendimento, pausa e ausência. Não representa espera do cliente.
+- [x] Permissão específica de relatórios por cargo; somente Admin recebe automaticamente. Vendas continua limitado ao próprio código, antes dos cálculos e paginação.
+- [x] Movimento intenso ativado/desativado pela gestão com motivo e histórico; libera somente a ordem. Uma abordagem/atendimento aberto por vendedor permanece obrigatório.
+- [x] Abordagens preservam o modo em que ocorreram. Desligar não interrompe registros abertos; fechar desativa o modo e a nova jornada começa normal.
+- [x] 52 testes unitários, 45 de integração e interface com dados sintéticos no computador/celular aprovados; fechamento com cinco abordagens também revalidado.
+- [x] Manual atualizado para v1.1, com dez páginas e instruções dos recursos publicados.
+- [ ] Definir correções gerenciais do histórico: foi proposta a alteração com venda/sem venda com motivo e preservação de horários, ainda sem decisão do usuário.
+- [ ] R16.3: associação explícita à operação importada do ERP e confirmação de venda.
+
+Uso: **Lista da Vez → Relatórios da fila → loja/período → Consultar relatório**. Para um dia, informe a mesma data em De/Até. A loja do relatório é independente da jornada em operação. Em uma jornada aberta, a gestão encontra **Ativar movimento intenso** e **Encerrar movimento intenso**.
 
 Treinamento da equipe: consulte o [Manual de boas práticas da Lista da Vez](MANUAL_FILA_ATENDIMENTO.md). Versões para distribuição: [HTML navegável](../output/html/manual-fila-atendimento.html) e [PDF](../output/pdf/manual-fila-atendimento.pdf). O manual descreve a operação disponível; as seções de proposta abaixo também incluem recursos futuros.
 
@@ -135,8 +150,8 @@ No movimento intenso, continua permitido apenas um atendimento aberto por vended
 
 ### R16.2 — Relatórios e exceções
 
-- [ ] Relatório diário, tempos, resultados informados e motivos de perda.
-- [ ] Movimento intenso sem simultaneidade; registro da ativação e retorno à regra normal.
+- [x] Relatório diário/período, tempos, resultados informados e motivos de perda.
+- [x] Movimento intenso sem simultaneidade; registro da ativação e retorno à regra normal.
 - [ ] Ajustes gerenciais auditados e tratamento das exceções de encerramento.
 
 ### R16.3 — Integração e automações

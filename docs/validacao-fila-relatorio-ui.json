@@ -1,0 +1,13 @@
+{
+  "verificadoEm": "2026-09-15T17:47:29.505Z",
+  "ambiente": "schemas isolados com dados sintéticos",
+  "movimentoIntenso": true,
+  "umAtendimentoPorVendedor": true,
+  "retornoOrdemComAbordagemAberta": true,
+  "persistenciaAposRecarga": true,
+  "relatorioComMediaPonderada": true,
+  "relatorioVendedorIsolado": true,
+  "desktopMobile": true,
+  "semOverflow": true,
+  "errors": []
+}

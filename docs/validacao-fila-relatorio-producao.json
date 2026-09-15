@@ -1,0 +1,96 @@
+{
+  "verificadoEm": "2026-09-15T20:13:43.005Z",
+  "dominio": "aeropostale.joinnetwork.com.br",
+  "filiais": [
+    {
+      "filial": "30098297",
+      "jornada": "aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098400",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098401",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098409",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098495",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098696",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098697",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098704",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098702",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098708",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098795",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098802",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098797",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    },
+    {
+      "filial": "30098699",
+      "jornada": "nao_aberta",
+      "relatorio": true,
+      "totaisConsistentes": true
+    }
+  ],
+  "permissaoRelatoriosAdmin": true,
+  "filialNaoAutorizada": 403,
+  "desktopMobile": true,
+  "mobileSemOverflow": true,
+  "nenhumaMutacaoDeFilaPeloTeste": true,
+  "errors": []
+}

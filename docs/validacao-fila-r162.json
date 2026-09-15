@@ -1,0 +1,40 @@
+{
+  "verificadoEm": "2026-09-15T20:13:43.005Z",
+  "entrega": "R16.2 - relatórios e movimento intenso",
+  "unitarios": 52,
+  "integracao": 45,
+  "ui": {
+    "verificadoEm": "2026-09-15T17:47:29.505Z",
+    "ambiente": "schemas isolados com dados sintéticos",
+    "movimentoIntenso": true,
+    "umAtendimentoPorVendedor": true,
+    "retornoOrdemComAbordagemAberta": true,
+    "persistenciaAposRecarga": true,
+    "relatorioComMediaPonderada": true,
+    "relatorioVendedorIsolado": true,
+    "desktopMobile": true,
+    "semOverflow": true,
+    "errors": []
+  },
+  "producao": {
+    "filiaisVerificadas": 14,
+    "semMutacoesReais": true,
+    "backup": "backup-20260915T191333Z-nOtjtD",
+    "imagemApi": "sha256:f64ae45aaf78e40ab5be76873315f50ee1123b62caf2978909d26e71f054a33a",
+    "migrations": [
+      "control/005_fila_relatorios.sql",
+      "tenant/010_fila_relatorios_intenso.sql"
+    ],
+    "apiSaudavel": true,
+    "workerRetomado": true
+  },
+  "manual": {
+    "versao": "1.1",
+    "pdfPaginas": 10,
+    "revisaoVisual": true
+  },
+  "pendencias": [
+    "Definir correções gerenciais do histórico",
+    "R16.3 - vincular e confirmar venda no ERP"
+  ]
+}

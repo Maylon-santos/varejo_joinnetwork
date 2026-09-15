@@ -80,6 +80,20 @@
       </section>
       <section id="queue-panel" hidden aria-label="Lista da Vez">
         <form id="queue-filters" class="panel queue-toolbar"><label>Loja<select id="queue-branch" required></select></label><label>Dia da jornada<input id="queue-day" type="date" required></label><button class="button primary" type="submit">Consultar fila</button></form>
+        <details id="queue-report-section" class="panel queue-report" hidden>
+          <summary>Relatórios da fila</summary>
+          <p>Resultados informados, tempos e motivos por loja, dia e vendedor. A confirmação das vendas no ERP será uma etapa posterior.</p>
+          <form id="queue-report-filters" class="queue-toolbar">
+            <label>Loja do relatório<select id="queue-report-branch" required></select></label>
+            <label>De<input id="queue-report-start" type="date" required></label>
+            <label>Até<input id="queue-report-end" type="date" required></label>
+            <label>Vendedor<select id="queue-report-seller"><option value="">Todos os autorizados</option></select></label>
+            <button class="button primary" type="submit">Consultar relatório</button>
+          </form>
+          <p id="queue-report-message" role="status" aria-live="polite">Escolha até 31 dias por consulta.</p>
+          <div id="queue-report-content"></div>
+          <div id="queue-report-pagination" class="queue-actions" hidden><button id="queue-report-prev" class="button" type="button">Registros anteriores</button><span id="queue-report-page"></span><button id="queue-report-next" class="button" type="button">Próximos registros</button></div>
+        </details>
         <p id="queue-message" role="status" aria-live="polite"></p><div id="queue-content"></div>
       </section>
       <section id="customers-panel" hidden aria-label="Cadastro de clientes" class="panel">

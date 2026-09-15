@@ -10,11 +10,17 @@ export function aplicarAcaoFila(original,body,{agora,hoje,id,gerente,codigoPropr
   gerenciar();hojeObrigatorio();if(s.jornada)falha('FILA_JORNADA_EXISTENTE');
   const codes=body.vendedores;
   if(!Array.isArray(codes)||!codes.length||codes.length>60||codes.some(c=>typeof c!=='string'||!Object.hasOwn(nomes,c))||new Set(codes).size!==codes.length)falha('FILA_EQUIPE_INVALIDA',400);
-  s.jornada={estado:'aberta',aberta_em:agora,fechada_em:null};
+  s.jornada={estado:'aberta',aberta_em:agora,fechada_em:null,movimento_intenso:false};
   s.participantes=codes.map((c,i)=>({vendedor_codigo:c,nome:nomes[c],posicao:i+1,estado:'disponivel'}));return s;
  }
  if(!s.jornada||s.jornada.estado!=='aberta')falha('FILA_NAO_ABERTA');
- if(acao==='fechar'){gerenciar();if(s.atendimentos.some(a=>!a.finalizado_em))falha('FILA_ATENDIMENTOS_ABERTOS');s.jornada.estado='fechada';s.jornada.fechada_em=agora;return s;}
+ if(acao==='fechar'){gerenciar();if(s.atendimentos.some(a=>!a.finalizado_em))falha('FILA_ATENDIMENTOS_ABERTOS');s.jornada.estado='fechada';s.jornada.fechada_em=agora;s.jornada.movimento_intenso=false;return s;}
+ if(acao==='movimento_intenso'){
+  gerenciar();if(typeof body.ativo!=='boolean')falha('FILA_MODO_INVALIDO',400);
+  if(body.ativo)hojeObrigatorio();
+  if(body.ativo===Boolean(s.jornada.movimento_intenso))falha('FILA_ESTADO_INVALIDO');
+  motivo();s.jornada.movimento_intenso=body.ativo;return s;
+ }
  if(['iniciar','concluir'].includes(acao)){
   const a=s.atendimentos.find(a=>a.id===body.atendimento&&!a.finalizado_em);if(!a)falha('FILA_ATENDIMENTO_NAO_ENCONTRADO',404);
   if(!gerente&&a.vendedor_codigo!==codigoProprio)falha('RECURSO_NAO_AUTORIZADO',403);
@@ -43,9 +49,9 @@ export function aplicarAcaoFila(original,body,{agora,hoje,id,gerente,codigoPropr
   if(p.estado!=='disponivel')falha('FILA_VENDEDOR_OCUPADO');
   if(!['vez','reservado'].includes(body.modalidade))falha('FILA_MODALIDADE_INVALIDA',400);
   const proximo=[...s.participantes].filter(p=>p.estado==='disponivel').sort((a,b)=>a.posicao-b.posicao)[0];
-  if(body.modalidade==='vez'&&proximo?.vendedor_codigo!==p.vendedor_codigo)falha('FILA_NAO_E_SUA_VEZ');
+  if(body.modalidade==='vez'&&!s.jornada.movimento_intenso&&proximo?.vendedor_codigo!==p.vendedor_codigo)falha('FILA_NAO_E_SUA_VEZ');
   if(body.modalidade==='reservado')motivo();
-  p.estado='ocupado';s.atendimentos.push({id,vendedor_codigo:p.vendedor_codigo,modalidade:body.modalidade,abordado_em:agora,iniciado_em:null,finalizado_em:null,resultado:null,motivo:null});return s;
+  p.estado='ocupado';s.atendimentos.push({id,vendedor_codigo:p.vendedor_codigo,modalidade:body.modalidade,movimento_intenso:Boolean(s.jornada.movimento_intenso),abordado_em:agora,iniciado_em:null,finalizado_em:null,resultado:null,motivo:null});return s;
  }
  falha('FILA_ACAO_INVALIDA',400);
 }

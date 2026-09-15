@@ -96,7 +96,7 @@
       "id": "R16",
       "titulo": "Fila de atendimento",
       "status": "em_andamento",
-      "detalhe": "R16.1 publicada em 15/09: jornada diária, ordem manual, abordagem/início/conclusão, pausa ao final, reservado com prioridade, presença e fechamento. 48 testes unitários + 40 de integração, desktop/celular e consulta pública das 14 filiais aprovados. R16 permanece em andamento: faltam R16.2 relatórios/movimento intenso e R16.3 vínculo com ERP. Gestão configurável por cargo; nenhum atendimento real criado pelos testes. Correção de 15/09: distinguir abordagem de atendimento, ação Encerrar sem iniciar e orientação das pendências antes do fechamento; cenário com cinco abordagens validado. Manual de treinamento entregue em Markdown, HTML e PDF: rotina de gerente/vendedor, fechamento, exercícios e checklists. Treinamento da equipe ainda deve ser realizado."
+      "detalhe": "R16.1 e relatórios/movimento intenso da R16.2 publicados em 15/09. Relatórios por filial/período (até 31 dias), vendedor/dia, tempos, motivos e histórico. Gestão liga/desliga ordem flexível com motivo, mantendo um atendimento aberto por vendedor. Permissão específica de relatórios; Vendas somente próprios dados. 52 testes unitários, 45 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Manual v1.1 entregue; treinamento da equipe ainda deve ser realizado. Pendentes: definição de correções gerenciais do histórico e R16.3 associação/confirmação de venda no ERP. Nenhum atendimento real alterado pelos testes."
     },
     {
       "id": "R17",
