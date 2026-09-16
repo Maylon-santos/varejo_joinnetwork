@@ -21,7 +21,7 @@ async function lerJson(req){
  try{const v=JSON.parse(Buffer.concat(chunks).toString('utf8'));if(!v||typeof v!=='object'||Array.isArray(v))throw new Error();return v;}
  catch{throw new ErroApi(400,'JSON_INVALIDO');}
 }
-export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuarios,fila,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
+export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuarios,fila,produtos,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
  const server=createServer(async(req,res)=>{
   const requestId=randomUUID();
   res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
@@ -80,6 +80,14 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
     }
     if(req.method==='POST'){if(url.search)throw new ErroApi(400,'PARAMETRO_INVALIDO');return enviar(200,await fila.executar(user,await lerJson(req),()=>auth.autenticar(token)));}
     throw new ErroApi(405,'METODO_NAO_PERMITIDO');
+   }
+   if(['/api/v1/produtos','/api/v1/produtos/indicadores'].includes(path)){
+    if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');
+    if(!produtos)throw new ErroApi(503,'PRODUTOS_INDISPONIVEIS');
+    const indicadores=path.endsWith('/indicadores');
+    const campos=indicadores?['filial','inicio','fim','busca','pagina']:['filial','busca','pagina','saldo'];
+    for(const k of url.searchParams.keys())if(!campos.includes(k)||url.searchParams.getAll(k).length!==1)throw new ErroApi(400,'PARAMETRO_INVALIDO');
+    return enviar(200,await produtos[indicadores?'indicadores':'listar'](user,url.searchParams));
    }
    if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');
    if(path==='/api/v1/filiais')return enviar(200,await painelUsuario.filiais());

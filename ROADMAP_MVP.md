@@ -3,17 +3,17 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-16 de 26 tarefas deste quadro concluídas. Atualização: 2026-09-15. A contagem não representa prazo ou esforço.
+16 de 26 tarefas deste quadro concluídas. Atualização: 2026-09-16. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
 | R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | — | R01 — Importação e banco do piloto |
-| R17 — Notificações internas e alertas | R25 — Completar preços e pagamentos do histórico | — | R02 — Painel e acesso Admin |
-| R18 — Campanhas e mensagens | R26 — Completar identificação e aniversários do histórico | — | R03 — Publicação com HTTPS e backup diário |
-| R19 — Produtos, estoque e indicadores adicionais | — | — | R04 — Correções de celular e fotos |
-| R20 — SaaS: provisionamento, planos e cobrança | — | — | R05 — Clientes importados junto com a venda |
-| R22 — Definir bruto, líquido e devoluções | — | — | R06 — Homologação de ITUPEVA |
-| R23 — Fotos dos vendedores | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
+| R17 — Notificações internas e alertas | R19 — Produtos, estoque e indicadores adicionais | — | R02 — Painel e acesso Admin |
+| R18 — Campanhas e mensagens | R22 — Definir bruto, líquido e devoluções | — | R03 — Publicação com HTTPS e backup diário |
+| R20 — SaaS: provisionamento, planos e cobrança | R25 — Completar preços e pagamentos do histórico | — | R04 — Correções de celular e fotos |
+| R23 — Fotos dos vendedores | R26 — Completar identificação e aniversários do histórico | — | R05 — Clientes importados junto com a venda |
+| — | — | — | R06 — Homologação de ITUPEVA |
+| — | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
 | — | — | — | R08 — Exibir COD_FILIAL no seletor |
 | — | — | — | R09 — Sincronizar cadastro por trans_id |
 | — | — | — | R10 — Concluir históricos das novas filiais |
@@ -30,14 +30,33 @@
 - [ ] **R16 — Fila de atendimento:** R16.1 e relatórios/movimento intenso da R16.2 publicados em 15/09. Relatórios por filial/período (até 31 dias), vendedor/dia, tempos, motivos e histórico. Gestão liga/desliga ordem flexível com motivo, mantendo um atendimento aberto por vendedor. Permissão específica de relatórios; Vendas somente próprios dados. 52 testes unitários, 45 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Manual v1.1 entregue; treinamento da equipe ainda deve ser realizado. Pendentes: definição de correções gerenciais do histórico e R16.3 associação/confirmação de venda no ERP. Nenhum atendimento real alterado pelos testes.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
-- [ ] **R19 — Produtos, estoque e indicadores adicionais:** Usar dados complementares de R24/R25 para os indicadores, após definir regras em R22. Produtos/estoque exigem seus contratos específicos. Conferência mensal/anual R11 aguarda esses indicadores.
+- [ ] **R19 — Produtos, estoque e indicadores adicionais:** R19.1 publicada: catálogo e estoque local nas 14 filiais (34.704 registros filial/SKU), cursor por filial, snapshots, produtos vendidos e desconto médio percentual com cobertura. Permissões específicas e escopo do vendedor. 57 testes unitários, 48 de integração e navegador local/público aprovados; dados comerciais/checkpoints preservados. Em 16/09 às 00h42: 1.292/7.034 produtos classificados; enriquecimento continua, com 18 cadastros ausentes no ERP. Pendentes: completar classificação e indicadores dependentes da R22; R11 ainda aguarda conferência mensal/anual.
 - [ ] **R20 — SaaS: provisionamento, planos e cobrança:** Etapa 7. Manter isolamento por tenant e automatizar subdomínios após fechar o produto.
-- [ ] **R22 — Definir bruto, líquido e devoluções:** Confirmar a unidade do campo desconto (percentual ou reais), além das regras de bruto/líquido, frete, cortesia, trocas e parcelas, antes de calcular novos indicadores. Os valores recebidos são preservados sem aplicar fórmula adicional.
+- [ ] **R22 — Definir bruto, líquido e devoluções:** Maylon confirmou em 15/09: desconto do item é percentual (20 = 20%). Preços permanecem como recebidos, sem reaplicar desconto. Ainda definir bruto/líquido, frete, cortesia, trocas/devoluções e parcelas. A confirmação do item não define desconto no cabeçalho.
 - [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
 - [ ] **R25 — Completar preços e pagamentos do histórico:** Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json.
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 
 <!-- KANBAN:FIM -->
+
+## R19.1 publicada — produtos, estoque e desconto percentual — 16/09/2026
+
+- [x] **Produtos e estoque**: catálogo por filial/SKU, busca, saldo atual, negativos sinalizados, posição desconhecida distinta de zero e data da sincronização. Consulta somente o banco local.
+- [x] Estoque das **14 filiais** carregado: **34.704 registros filial/SKU**, com 7.034 produtos básicos. Cursor independente por filial; incremental automático observado sem erros, reconciliação diária e snapshots desde a implantação.
+- [x] Produtos vendidos por período: peças, quantidade de vendas por SKU, subtotal dos itens e desconto médio informado, com cobertura. Vendas restrito ao próprio vendedor antes dos cálculos.
+- [x] Maylon confirmou: desconto no item é percentual (`20` = `20%`); saldo já desconta reservas. Não reaplicar desconto nem subtrair reservas novamente. Detalhes exibem `%`.
+- [x] Permissões de produtos e estoque separadas no gerenciador; somente Admin recebe ambas automaticamente. Indicadores exigem também acesso às movimentações.
+- [x] 57 testes unitários, 48 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Backup `backup-20260916T010501Z-TIZjib`; hashes de operações, itens e checkpoints preservados na carga.
+- [x] API/PostgreSQL saudáveis e worker remoto ativo; worker local permanece desativado. Servidor com 3,6 GB livres (80% ocupado) e cerca de 2,4 GiB de memória disponível na conferência final.
+- [ ] Classificação completa do catálogo: na fotografia de **16/09 às 00h42 de Brasília**, 1.292 de 7.034 produtos enriquecidos. Carga gradual continua; 18 cadastros retornaram ausência. Uma retentativa confirmou resposta vazia do ERP. Dados básicos/estoque preservados, sem inventar marca/coleção.
+- [ ] R22: regras de bruto/líquido, frete, cortesia e devoluções; confirmação de percentual do item não define os ajustes do cabeçalho.
+- [ ] R11: conferência mensal/anual por Maylon continua pendente. Publicação e importação não representam homologação.
+
+Acesse **Produtos e estoque → Catálogo e estoque atual** ou **Produtos vendidos no período**. Outros cargos precisam de liberação em **Permissões**. [Regras, uso e limites](docs/PRODUTOS_ESTOQUE.md). Evidências: `docs/validacao-produtos.json`, `docs/validacao-produtos-ui.json` e `docs/validacao-produtos-producao.json`.
+
+R19 permanece em andamento para cobertura da classificação e indicadores dependentes da R22; a primeira entrega operacional está publicada. O Kanban mantém **16 de 26 tarefas concluídas**.
+
+
 
 ## R16.2: relatórios e movimento intenso publicados — 15/09/2026
 

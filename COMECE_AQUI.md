@@ -1,4 +1,21 @@
-# Comece aqui — estado atual em 15/09/2026
+# Comece aqui — estado atual em 16/09/2026
+
+## R19.1 publicada — produtos, estoque e desconto percentual — 16/09/2026
+
+- [x] **Produtos e estoque**: catálogo por filial/SKU, busca, saldo atual, negativos sinalizados, posição desconhecida distinta de zero e data da sincronização. Consulta somente o banco local.
+- [x] Estoque das **14 filiais** carregado: **34.704 registros filial/SKU**, com 7.034 produtos básicos. Cursor independente por filial; incremental automático observado sem erros, reconciliação diária e snapshots desde a implantação.
+- [x] Produtos vendidos por período: peças, quantidade de vendas por SKU, subtotal dos itens e desconto médio informado, com cobertura. Vendas restrito ao próprio vendedor antes dos cálculos.
+- [x] Maylon confirmou: desconto no item é percentual (`20` = `20%`); saldo já desconta reservas. Não reaplicar desconto nem subtrair reservas novamente. Detalhes exibem `%`.
+- [x] Permissões de produtos e estoque separadas no gerenciador; somente Admin recebe ambas automaticamente. Indicadores exigem também acesso às movimentações.
+- [x] 57 testes unitários, 48 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Backup `backup-20260916T010501Z-TIZjib`; hashes de operações, itens e checkpoints preservados na carga.
+- [x] API/PostgreSQL saudáveis e worker remoto ativo; worker local permanece desativado. Servidor com 3,6 GB livres (80% ocupado) e cerca de 2,4 GiB de memória disponível na conferência final.
+- [ ] Classificação completa do catálogo: na fotografia de **16/09 às 00h42 de Brasília**, 1.292 de 7.034 produtos enriquecidos. Carga gradual continua; 18 cadastros retornaram ausência. Uma retentativa confirmou resposta vazia do ERP. Dados básicos/estoque preservados, sem inventar marca/coleção.
+- [ ] R22: regras de bruto/líquido, frete, cortesia e devoluções; confirmação de percentual do item não define os ajustes do cabeçalho.
+- [ ] R11: conferência mensal/anual por Maylon continua pendente. Publicação e importação não representam homologação.
+
+Acesse **Produtos e estoque → Catálogo e estoque atual** ou **Produtos vendidos no período**. Outros cargos precisam de liberação em **Permissões**. [Regras, uso e limites](docs/PRODUTOS_ESTOQUE.md). Evidências: `docs/validacao-produtos.json`, `docs/validacao-produtos-ui.json` e `docs/validacao-produtos-producao.json`.
+
+R19 permanece em andamento para cobertura da classificação e indicadores dependentes da R22; a primeira entrega operacional está publicada. O Kanban mantém **16 de 26 tarefas concluídas**.
 
 ## R16.2: relatórios e movimento intenso publicados — 15/09/2026
 

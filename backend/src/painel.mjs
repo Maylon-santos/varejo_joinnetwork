@@ -12,7 +12,7 @@ export function filtros(params,filiais){
 const efetiva="(o.cancelada OR EXISTS(SELECT 1 FROM cancelamentos c WHERE c.cod_operacao=o.cod_operacao AND c.tipo_operacao=o.tipo_operacao AND c.filial=o.filial))";
 const statusConciliacao="(CASE WHEN o.erro_erp_confirmado_por IS NOT NULL AND o.conciliacao IN ('quantidade_divergente','divergente') THEN 'erro_erp_confirmado' ELSE o.conciliacao END)";
 const scopeBase='o.filial=$1 AND o.data_operacao BETWEEN $2::date AND $3::date';
-const elegivel=`o.tipo_operacao='S' AND NOT ${efetiva}`;
+export const elegivel=`o.tipo_operacao='S' AND NOT ${efetiva}`;
 export function criarPainel(pool,tenant,filiais,vendedores=null){
  const scope=scopeBase+' AND ($4::text IS NULL OR o.vendedor_codigo=$4)';
  const vendedor=filial=>vendedores===null?null:(vendedores[filial]??'');

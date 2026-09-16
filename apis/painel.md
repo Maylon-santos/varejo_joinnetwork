@@ -131,3 +131,12 @@ A migration `tenant/007_complementos_venda.sql` é obrigatória antes de publica
 O preenchimento histórico altera somente os novos campos. Associa itens por produto/SKU, quantidade e preço originais e preserva sua ordem gravada. Rejeita diferenças reais (`COMPLEMENTOS_ITENS_DIVERGENTES`), duplicidades sem correspondência inequívoca (`COMPLEMENTOS_ITENS_AMBIGUOS`) e operações que não retornam (`COMPLEMENTOS_OPERACOES_AUSENTES`). Um erro reverte a transação do dia e agenda nova tentativa para a filial; demais filiais continuam. Esses casos devem ser revisados, sem sobrescrever o histórico comercial para forçar o preenchimento.
 
 Validações: 39 testes unitários, 33 de integração e navegador local/público. `scripts/verificar-complementos-ui.mjs` usa dados sintéticos. A amostra real de 53 operações de ITUPEVA em 13/09 preservou hashes dos registros comerciais anteriores, itens e checkpoints. O restante do histórico permanece em R25; isso não significa homologação dos totais mensais/anuais.
+
+
+## Produtos e estoque — R19
+
+`GET /api/v1/produtos` consulta o cadastro e o estoque persistidos, com `filial` obrigatória, `busca`, `saldo` e `pagina`. Exige `produtos:ler`; `estoque:ler` é necessário para saldos e seus filtros. São 30 SKUs por página; não recebe intervalo de datas porque representa a última posição conhecida.
+
+`GET /api/v1/produtos/indicadores` exige também `vendas:ler`, recebe `filial`, `inicio`, `fim`, `busca` e `pagina` e aplica a restrição do vendedor antes de calcular indicadores. Até 366 dias; 30 produtos/SKUs por página, ordenados por peças. Quantidades monetárias em centavos são strings. Desconto médio em percentual, com cobertura; não reaplica desconto nos preços.
+
+Nenhuma das rotas chama o ERP. Contratos, fontes e limites: [Produtos e estoque](../docs/PRODUTOS_ESTOQUE.md).

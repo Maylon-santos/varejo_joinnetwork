@@ -1,3 +1,5 @@
+import {sincronizarEstoque,enriquecerProdutos} from '../backend/src/sincronizar-estoque.mjs';
+import {consultarEstoque,consultarProduto} from '../backend/src/produtos-estoque-erp.mjs';
 import {preencherIdentidadeClientes} from '../backend/src/preencher-identidade-clientes.mjs';
 import {preencherComplementos} from '../backend/src/preencher-complementos.mjs';
 import {consultarFiliais,sincronizarFiliais} from '../backend/src/filiais.mjs';
@@ -59,6 +61,11 @@ try{
     console.error(JSON.stringify({evento:'sync_falhou',filial,recurso,codigo,falhas,repetirEmSegundos:atraso}));
     if(once)process.exitCode=1;
    }
+  }
+  if(!once&&!encerrar){
+   const pendentes=(await pool.query('SELECT f::text AS filial FROM unnest($1::bigint[]) f LEFT JOIN sync_estoques s ON s.filial=f WHERE s.proxima_tentativa IS NULL OR s.proxima_tentativa<=now() ORDER BY s.ultimo_sucesso NULLS FIRST,f LIMIT 2',[filiais])).rows;
+   for(const {filial} of pendentes){if(encerrar)break;try{const r=await sincronizarEstoque({pool,tenant,filial,intervalo,consultar:p=>consultarEstoque({...base,...p})});console.log(JSON.stringify({evento:'estoque_sincronizado',...r}));}catch(e){console.error(JSON.stringify({evento:'estoque_falhou',filial,codigo:erroSeguro(e)}));}}
+   if(!encerrar){const r=await enriquecerProdutos({pool,tenant,consultar:p=>consultarProduto({...base,...p}),limite:5,parar:()=>encerrar});if(r.enriquecidos||r.falhas)console.log(JSON.stringify({evento:'cadastro_produtos_atualizado',...r}));}
   }
   if(!once)for(const filial of filiais){
    if(encerrar)break;

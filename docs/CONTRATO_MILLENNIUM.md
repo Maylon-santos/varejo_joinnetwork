@@ -1,5 +1,12 @@
 # Contrato de integração — levantamento técnico
 
+## Atualização confirmada — 15/09/2026: desconto do item e estoque
+
+Maylon confirmou: `desconto: 20` no nível do produto é **20%**. Exibir percentual, manter preços importados e não aplicar o desconto novamente. Ausência continua distinta de zero. Não extrapolar essa confirmação para ajustes do cabeçalho nem para regras ainda pendentes de bruto/líquido/devoluções (R22).
+
+O `saldo` do estoque já desconta reservas; não subtrair reservas novamente. Contratos de produto, estoque por filial/SKU e cursor `trans_id` verificados pela Locaweb. Regras de cache, indicadores e limites em [Produtos e estoque](PRODUTOS_ESTOQUE.md); evidência em `validacao-contrato-produtos-estoque.json`. Esta atualização prevalece sobre descrições históricas de unidade desconhecida abaixo.
+
+
 Atualizado em 09/09/2026. Fonte aprovada disponível: [rotas documentadas](../apis/rotas.md). Este documento registra o contrato observado e as lacunas; não declara integração testada.
 
 ## Recursos

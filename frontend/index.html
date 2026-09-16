@@ -40,6 +40,7 @@
       <button class="nav-button" data-page="sales"><span data-icon="receipt"></span>Movimentações</button>
       <button class="nav-button" data-page="quality"><span data-icon="check"></span>Conferência<span id="nav-pending" class="count-badge" hidden></span></button>
       <button class="nav-button" data-page="queue"><span data-icon="receipt"></span>Lista da Vez</button>
+      <button class="nav-button" data-page="products"><span data-icon="bag"></span>Produtos e estoque</button>
       <button class="nav-button" data-page="customers"><span data-icon="store"></span>Clientes</button>
       <button class="nav-button" data-page="permissions" hidden><span data-icon="check"></span>Permissões</button>
           <button class="nav-button" data-page="users" hidden><span data-icon="store"></span>Usuários</button>
@@ -95,6 +96,18 @@
           <div id="queue-report-pagination" class="queue-actions" hidden><button id="queue-report-prev" class="button" type="button">Registros anteriores</button><span id="queue-report-page"></span><button id="queue-report-next" class="button" type="button">Próximos registros</button></div>
         </details>
         <p id="queue-message" role="status" aria-live="polite"></p><div id="queue-content"></div>
+      </section>
+      <section id="products-panel" hidden aria-label="Produtos e estoque" class="panel">
+        <div class="panel-heading"><h2>Produtos e estoque</h2></div>
+        <form id="products-search" class="customer-search">
+          <label>Consulta<select id="products-mode"><option value="catalogo">Catálogo e estoque atual</option><option value="vendas">Produtos vendidos no período</option></select></label>
+          <label>Buscar produto<input id="products-query" type="search" maxlength="100" placeholder="Código, nome ou SKU"></label>
+          <label id="products-balance-label">Saldo<select id="products-balance"><option value="todos">Todos</option><option value="positivo">Positivo</option><option value="zero">Zero</option><option value="negativo">Negativo</option><option value="desconhecido">Não informado</option></select></label>
+          <button class="button primary" type="submit">Consultar</button>
+        </form>
+        <p id="products-rule" class="muted"></p><p id="products-status" role="status"></p>
+        <div id="products-list" class="customer-cards"></div>
+        <div class="pagination"><button id="products-prev" class="button" type="button">Anterior</button><span id="products-pagination"></span><button id="products-next" class="button" type="button">Próxima</button></div>
       </section>
       <section id="customers-panel" hidden aria-label="Cadastro de clientes" class="panel">
         <p>Clientes identificados nas movimentações da filial e do período selecionados. Cada código aparece uma vez. Os contatos refletem a movimentação mais recente dentro desse acesso.</p>

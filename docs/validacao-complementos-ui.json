@@ -1,5 +1,5 @@
 {
-  "verificadoEm": "2026-09-14T19:50:28.526Z",
+  "verificadoEm": "2026-09-16T01:02:16.270Z",
   "ambiente": "dados sintéticos isolados",
   "codigoESku": true,
   "precosComplementares": true,
@@ -9,5 +9,6 @@
   "semConsultaERPNoDetalhe": true,
   "desktopMobile": true,
   "mobileSemOverflow": true,
-  "errors": []
+  "errors": [],
+  "descontoPercentual": true
 }

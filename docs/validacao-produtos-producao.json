@@ -1,0 +1,136 @@
+{
+  "verificadoEm": "2026-09-16T03:44:10.604Z",
+  "dominio": "aeropostale.joinnetwork.com.br",
+  "filiais": [
+    {
+      "filial": "30098297",
+      "catalogoDisponivel": true,
+      "skus": 3966,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098400",
+      "catalogoDisponivel": true,
+      "skus": 2845,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098401",
+      "catalogoDisponivel": true,
+      "skus": 3178,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098409",
+      "catalogoDisponivel": true,
+      "skus": 3076,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098495",
+      "catalogoDisponivel": true,
+      "skus": 2542,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098696",
+      "catalogoDisponivel": true,
+      "skus": 2752,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098697",
+      "catalogoDisponivel": true,
+      "skus": 2469,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098704",
+      "catalogoDisponivel": true,
+      "skus": 907,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098702",
+      "catalogoDisponivel": true,
+      "skus": 2532,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098708",
+      "catalogoDisponivel": true,
+      "skus": 2768,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098795",
+      "catalogoDisponivel": true,
+      "skus": 4295,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098802",
+      "catalogoDisponivel": true,
+      "skus": 1696,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098797",
+      "catalogoDisponivel": true,
+      "skus": 181,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    },
+    {
+      "filial": "30098699",
+      "catalogoDisponivel": true,
+      "skus": 1497,
+      "estoqueSincronizado": true,
+      "erroEstoque": null,
+      "indicadoresDisponiveis": true,
+      "coberturaVendas": true
+    }
+  ],
+  "filialNaoAutorizada": 403,
+  "desktopMobileSemOverflow": true,
+  "nenhumaMutacaoComercial": true,
+  "errors": []
+}

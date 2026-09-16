@@ -1,5 +1,17 @@
 # Lista de tarefas — Aeropostale Varejo
 
+## Atualização de 16/09/2026 — R19.1 publicada
+
+- [x] Maylon confirmou o desconto do item em percentual (`20` = `20%`) e saldo já descontado de reservas. Interface e regras registradas, sem reaplicar descontos nem reservas.
+- [x] Produtos/estoque e indicadores por SKU publicados nas 14 filiais, com permissões e dados locais. Estoque inicial: 34.704 registros filial/SKU; hashes comerciais e checkpoints preservados.
+- [x] Testes: 57 unitários, 48 de integração, computador/celular e consultas públicas das 14 filiais.
+- [ ] Acompanhar classificação gradual dos 7.034 produtos. Fotografia de 16/09 às 00h42: 1.292 enriquecidos; 18 ausentes no endpoint do ERP, com dados básicos e saldo preservados.
+- [ ] Maylon: definir bruto/líquido, frete, cortesia e trocas/devoluções na R22. Percentual do item já está confirmado e não precisa ser perguntado novamente.
+- [ ] Maylon: conferir mês/ano na R11 após as regras e indicadores previstos; carga concluída não homologa totais.
+
+Detalhes: [Produtos e estoque](docs/PRODUTOS_ESTOQUE.md). R19 continua no Kanban até concluir a cobertura e os indicadores dependentes da R22.
+
+
 ## Prioridade definida por Maylon — 13/09/2026
 
 - [x] Validar e implementar sincronização do cadastro de filiais por `trans_id`, conforme `listafiliais`.

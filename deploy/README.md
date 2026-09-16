@@ -148,3 +148,14 @@ Atualizar somente a API. As migrations aditivas são `tenant/010_fila_relatorios
 `POST /api/v1/fila` aceita `acao=movimento_intenso`, `ativo` booleano e `motivo`. Exige gestão, mantém lock, versão e idempotência. Ativar exige jornada de hoje; desligar pode resolver jornada anterior. O modo flexibiliza apenas a vez, preserva a ocupação única e fica gravado em cada abordagem. Fechar a jornada desliga o modo; nova jornada começa normal. Eventos guardam responsável e motivo; a consulta das últimas 100 alterações do modo é exclusiva da gestão com permissão de relatório.
 
 Validação sintética: `scripts/verificar-fila-relatorio-ui.mjs`. Validação pública somente de leitura: `scripts/verificar-fila-relatorio-producao.mjs`; não liga/desliga modo nem altera jornadas reais. Correções excepcionais do histórico dependem de definição; vínculo com ERP continua na R16.3.
+
+
+## Produtos, estoque e indicadores — R19
+
+Construir API e worker; pausar ambos para backup coordenado e aplicar migrations aditivas `control/006_produtos_estoque.sql` e `tenant/011_produtos_estoque.sql`. Subir a API saudável, executar `docker compose run --rm --no-deps sync-worker node scripts/sincronizar-estoques.mjs` com worker contínuo pausado e, depois, retomar **somente o worker remoto** atualizado. O script usa o lock global e compara hashes comerciais/checkpoints; consultas ERP são sequenciais. Falha parcial de filial preserva as outras e fica explícita para retentativa.
+
+O worker prioriza vendas/cancelamentos, até duas filiais de estoque por rodada e cinco cadastros de produto, antes dos históricos de complementos/clientes. Cursor próprio por filial com sobreposição; atualização completa após um dia, sem transformar SKU ausente em saldo zero. Classificação do catálogo é gradual, com TTL diário após sucesso. A frequência efetiva depende da duração da rodada. A interface não chama o ERP.
+
+Acompanhar `estoque_sincronizado`, `estoque_falhou`, `cadastro_produtos_atualizado`, `sync_estoques` e a cobertura de `cadastro_produtos.enriquecido_em`. Apenas Admin recebe `produtos:ler`/`estoque:ler`; liberar outros cargos no gerenciador. Backups e retenção existentes cobrem as novas tabelas.
+
+Validar com `scripts/verificar-produtos-producao.mjs` (14 filiais, leitura) e conferir worker ativo. Preservar imagens anteriores para retorno compatível; schemas são aditivos. [Regras completas](../docs/PRODUTOS_ESTOQUE.md).

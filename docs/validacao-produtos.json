@@ -1,0 +1,322 @@
+{
+  "verificadoEm": "2026-09-16T03:48:01.071675+00:00",
+  "ambiente": "Locaweb publicada; testes locais isolados e consultas públicas nas 14 filiais aprovados",
+  "testesUnitarios": 57,
+  "testesIntegracao": 48,
+  "regressoesFrontend": [
+    "produtos desktop/celular",
+    "detalhe da venda com percentual",
+    "permissão de estoque independente",
+    "vendedor limitado às próprias vendas"
+  ],
+  "transacao": {
+    "cursorPorFilial": true,
+    "sobreposicao": true,
+    "reprocessamentoIdempotente": true,
+    "rollbackApos500Escritas": true,
+    "backoff": true,
+    "checkpointsComerciaisPreservadosNoTeste": true
+  },
+  "regras": {
+    "descontoItem": "percentual confirmado por Maylon; 20 = 20%",
+    "saldo": "já desconta reservas; não subtrair novamente",
+    "ausenciaDiferenteDeZero": true,
+    "precosSemReaplicarDesconto": true,
+    "cancelamentosExcluidos": true
+  },
+  "interface": "docs/validacao-produtos-ui.json",
+  "contratoERP": "docs/validacao-contrato-produtos-estoque.json",
+  "backup": "backup-20260916T010501Z-TIZjib",
+  "imagens": {
+    "api": "sha256:16a2288dbc8a8944d8b5aaf4a9fe1e6c2650fec278a9598a52a0857ff71c7e23",
+    "worker": "sha256:b96d1cbb36ae29ad1af0f2162ae634ae63f01741017d9061d39e7a477826e6f0"
+  },
+  "cargaInicial": {
+    "evento": "carga_estoques_concluida",
+    "resultados": [
+      {
+        "filial": "30098297",
+        "completa": true,
+        "recebidas": 3966,
+        "cursor": "768439346"
+      },
+      {
+        "filial": "30098400",
+        "completa": true,
+        "recebidas": 2845,
+        "cursor": "768448610"
+      },
+      {
+        "filial": "30098401",
+        "completa": true,
+        "recebidas": 3178,
+        "cursor": "768439640"
+      },
+      {
+        "filial": "30098409",
+        "completa": true,
+        "recebidas": 3076,
+        "cursor": "768509037"
+      },
+      {
+        "filial": "30098495",
+        "completa": true,
+        "recebidas": 2542,
+        "cursor": "768458712"
+      },
+      {
+        "filial": "30098696",
+        "completa": true,
+        "recebidas": 2752,
+        "cursor": "768438206"
+      },
+      {
+        "filial": "30098697",
+        "completa": true,
+        "recebidas": 2469,
+        "cursor": "768375940"
+      },
+      {
+        "filial": "30098704",
+        "completa": true,
+        "recebidas": 907,
+        "cursor": "768058450"
+      },
+      {
+        "filial": "30098702",
+        "completa": true,
+        "recebidas": 2532,
+        "cursor": "768494200"
+      },
+      {
+        "filial": "30098708",
+        "completa": true,
+        "recebidas": 2768,
+        "cursor": "768460119"
+      },
+      {
+        "filial": "30098795",
+        "completa": true,
+        "recebidas": 4295,
+        "cursor": "761596958"
+      },
+      {
+        "filial": "30098802",
+        "completa": true,
+        "recebidas": 1696,
+        "cursor": "754147085"
+      },
+      {
+        "filial": "30098797",
+        "completa": true,
+        "recebidas": 181,
+        "cursor": "767962922"
+      },
+      {
+        "filial": "30098699",
+        "completa": true,
+        "recebidas": 1497,
+        "cursor": "768391146"
+      }
+    ],
+    "enriquecimento": {
+      "enriquecidos": 0,
+      "falhas": 5
+    },
+    "cobertura": {
+      "produtos": 7034,
+      "classificados": 0
+    },
+    "baseComercialECheckpointsPreservados": true
+  },
+  "estadoRemoto": {
+    "verificadoEm": "2026-09-16T03:42:26.875Z",
+    "filiais": [
+      {
+        "filial": "30098297",
+        "cursor": "768439346",
+        "ultimo_sucesso": "2026-09-16T03:37:31.536Z",
+        "ultima_carga_completa": "2026-09-16T01:05:29.880Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 3966,
+        "negativos": 9,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098400",
+        "cursor": "768448610",
+        "ultimo_sucesso": "2026-09-16T03:38:04.963Z",
+        "ultima_carga_completa": "2026-09-16T01:06:05.848Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 2845,
+        "negativos": 0,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098401",
+        "cursor": "768439640",
+        "ultimo_sucesso": "2026-09-16T03:38:38.948Z",
+        "ultima_carga_completa": "2026-09-16T01:06:32.156Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 3178,
+        "negativos": 126,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098409",
+        "cursor": "768509037",
+        "ultimo_sucesso": "2026-09-16T03:38:41.014Z",
+        "ultima_carga_completa": "2026-09-16T01:06:56.221Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 3076,
+        "negativos": 2,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098495",
+        "cursor": "768458712",
+        "ultimo_sucesso": "2026-09-16T03:39:12.793Z",
+        "ultima_carga_completa": "2026-09-16T01:07:20.244Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 2542,
+        "negativos": 38,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098696",
+        "cursor": "768438206",
+        "ultimo_sucesso": "2026-09-16T03:39:45.194Z",
+        "ultima_carga_completa": "2026-09-16T01:07:44.121Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 2752,
+        "negativos": 4,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098697",
+        "cursor": "768375940",
+        "ultimo_sucesso": "2026-09-16T03:39:47.187Z",
+        "ultima_carga_completa": "2026-09-16T01:08:09.187Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 2469,
+        "negativos": 20,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098699",
+        "cursor": "768391146",
+        "ultimo_sucesso": "2026-09-16T03:36:52.590Z",
+        "ultima_carga_completa": "2026-09-16T01:11:12.283Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 1497,
+        "negativos": 8,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098702",
+        "cursor": "768494200",
+        "ultimo_sucesso": "2026-09-16T03:40:25.228Z",
+        "ultima_carga_completa": "2026-09-16T01:09:04.252Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 2532,
+        "negativos": 6,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098704",
+        "cursor": "768058450",
+        "ultimo_sucesso": "2026-09-16T03:40:20.125Z",
+        "ultima_carga_completa": "2026-09-16T01:08:36.400Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 907,
+        "negativos": 5,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098708",
+        "cursor": "768460119",
+        "ultimo_sucesso": "2026-09-16T03:41:27.412Z",
+        "ultima_carga_completa": "2026-09-16T01:09:29.811Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 2768,
+        "negativos": 4,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098795",
+        "cursor": "761596958",
+        "ultimo_sucesso": "2026-09-16T03:41:31.477Z",
+        "ultima_carga_completa": "2026-09-16T01:09:55.240Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 4295,
+        "negativos": 2168,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098797",
+        "cursor": "767962922",
+        "ultimo_sucesso": "2026-09-16T03:36:50.243Z",
+        "ultima_carga_completa": "2026-09-16T01:10:49.026Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 181,
+        "negativos": 0,
+        "sem_saldo": 0
+      },
+      {
+        "filial": "30098802",
+        "cursor": "754147085",
+        "ultimo_sucesso": "2026-09-16T03:36:12.998Z",
+        "ultima_carga_completa": "2026-09-16T01:10:22.851Z",
+        "ultimo_erro_codigo": null,
+        "falhas_consecutivas": 0,
+        "skus": 1696,
+        "negativos": 0,
+        "sem_saldo": 0
+      }
+    ],
+    "produtos": {
+      "cadastrados": 7034,
+      "classificados": 1292,
+      "com_erro": 18
+    },
+    "historico": {
+      "observacoes": 34704
+    },
+    "tamanho": {
+      "banco": "77 MB"
+    }
+  },
+  "diagnosticoCadastrosAusentes": {
+    "total": 18,
+    "erro": "CADASTRO_PRODUTO_AUSENTE",
+    "amostraReconsultada": 1,
+    "respostaERP": {
+      "odata.count": 0,
+      "value": []
+    },
+    "semDadosFabricados": true
+  },
+  "saude": {
+    "api": "healthy",
+    "postgres": "healthy",
+    "worker": "ativo",
+    "discoLivre": "3.6G",
+    "discoOcupadoPercentual": 80,
+    "memoriaDisponivelMiB": 2478,
+    "workerLocal": "permaneceu desativado"
+  },
+  "producao": "docs/validacao-produtos-producao.json"
+}

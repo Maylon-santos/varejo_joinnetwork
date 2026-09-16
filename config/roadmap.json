@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-09-15",
+  "atualizadoEm": "2026-09-16",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -113,8 +113,8 @@
     {
       "id": "R19",
       "titulo": "Produtos, estoque e indicadores adicionais",
-      "status": "pendente",
-      "detalhe": "Usar dados complementares de R24/R25 para os indicadores, após definir regras em R22. Produtos/estoque exigem seus contratos específicos. Conferência mensal/anual R11 aguarda esses indicadores."
+      "status": "em_andamento",
+      "detalhe": "R19.1 publicada: catálogo e estoque local nas 14 filiais (34.704 registros filial/SKU), cursor por filial, snapshots, produtos vendidos e desconto médio percentual com cobertura. Permissões específicas e escopo do vendedor. 57 testes unitários, 48 de integração e navegador local/público aprovados; dados comerciais/checkpoints preservados. Em 16/09 às 00h42: 1.292/7.034 produtos classificados; enriquecimento continua, com 18 cadastros ausentes no ERP. Pendentes: completar classificação e indicadores dependentes da R22; R11 ainda aguarda conferência mensal/anual."
     },
     {
       "id": "R20",
@@ -131,8 +131,8 @@
     {
       "id": "R22",
       "titulo": "Definir bruto, líquido e devoluções",
-      "status": "pendente",
-      "detalhe": "Confirmar a unidade do campo desconto (percentual ou reais), além das regras de bruto/líquido, frete, cortesia, trocas e parcelas, antes de calcular novos indicadores. Os valores recebidos são preservados sem aplicar fórmula adicional."
+      "status": "em_andamento",
+      "detalhe": "Maylon confirmou em 15/09: desconto do item é percentual (20 = 20%). Preços permanecem como recebidos, sem reaplicar desconto. Ainda definir bruto/líquido, frete, cortesia, trocas/devoluções e parcelas. A confirmação do item não define desconto no cabeçalho."
     },
     {
       "id": "R23",
@@ -144,7 +144,7 @@
       "id": "R24",
       "titulo": "Detalhes: preços e parcelas do pagamento",
       "status": "concluido",
-      "detalhe": "Publicado: código/SKU, tabela/desconto/preço/aplicado, aviso quando desconto=0 e aplicado<tabela, condição de pagamento e parcelas. Dados locais, sem consulta ERP ao abrir detalhes. 39 testes unitários, 33 de integração e navegador local/público aprovados. Unidade do desconto permanece a confirmar em R22."
+      "detalhe": "Publicado: código/SKU, tabela/desconto/preço/aplicado, aviso quando desconto=0 e aplicado<tabela, condição de pagamento e parcelas. Dados locais, sem consulta ERP ao abrir detalhes. 39 testes unitários, 33 de integração e navegador local/público aprovados. Em 15/09, Maylon confirmou desconto do item em percentual; apresentação com % incluída na R19."
     },
     {
       "id": "R25",
