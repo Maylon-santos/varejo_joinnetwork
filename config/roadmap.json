@@ -114,7 +114,7 @@
       "id": "R19",
       "titulo": "Produtos, estoque e indicadores adicionais",
       "status": "em_andamento",
-      "detalhe": "R19.1/R19.2 publicadas: catálogo/estoque nas 14 filiais; Top 20 por produto com fotos, somando tamanhos/cores; resumo mensal, condições de pagamento, participação por vendedor e saldo atual por marca/categoria. 57 testes unitários, 52 de integração, desktop/celular e consultas públicas nas 14 filiais aprovados. No Top 20 anual de ITUPEVA, 7 fotos carregam e 13 URLs retornam 404 na hospedagem; códigos na central pessoal. Pendências por indicador em docs/INDICADORES_VISAO_GERAL.md: evento/devoluções, tipo de pagamento conciliado, estoque inicial/entradas/saídas/final por marca/categoria, bruto/líquido e cobertura de cadastro/condições/fotos. Dependências R22/R25; conferência mensal/anual R11 ainda pendente."
+      "detalhe": "R19.1/R19.2 publicadas. Ajuste de 16/09: Top 20 em lista com miniaturas e detalhes por variação; ordenação por valor (padrão) ou quantidade, sempre agrupado por produto somando cores/tamanhos. Filtros mostram COD_FILIAL - Fantasia, importada nas 14 filiais. 58 testes unitários, 55 de integração, interface desktop/celular e leitura pública das 14 filiais aprovados. Permanecem resumo mensal, condições de pagamento, participação por vendedor e saldo atual por marca/categoria. Pendências em docs/INDICADORES_VISAO_GERAL.md: fotos indisponíveis na origem, evento/devoluções, tipo de pagamento conciliado, estoque histórico completo, bruto/líquido e cobertura cadastral. Dependências R22/R25; conferência mensal/anual R11 pendente."
     },
     {
       "id": "R20",

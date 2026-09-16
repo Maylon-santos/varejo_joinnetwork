@@ -1,5 +1,17 @@
 # Comece aqui — estado atual em 16/09/2026
 
+## Ajustes publicados — filiais e ranking de produtos — 16/09/2026
+
+- [x] Filtros exibem **COD_FILIAL - Fantasia**, com nomes recebidos do ERP nas 14 filiais. A identificação interna e o acesso por filial permanecem preservados.
+- [x] Top 20 em **lista compacta**, com foto pequena ampliável, quantidade, vendas, valor e participação.
+- [x] **Valor vendido é a ordenação padrão**; opção de quantidade recalcula os 20 primeiros entre todos os produtos do filtro. Cores e tamanhos continuam somados por produto. Participação acompanha a medida escolhida.
+- [x] Botão **Ver detalhes** mostra variações vendidas, SKU, peças, vendas, subtotal, último preço/data e cadastro disponível; saldo atual somente com permissão de estoque. Paginação e escopo do vendedor aplicados no servidor, sem consulta ERP ao abrir.
+- [x] 58 testes unitários e 55 de integração aprovados; interface desktop/celular, ordenações, detalhes e restrições verificadas com dados sintéticos. Consulta pública das 14 filiais aprovada, incluindo nomes, duas ordenações e totais dos detalhes.
+- [x] Backup `backup-20260916T101111Z-CHKp1M`, migration tenant 012 e preenchimento cadastral concluídos. API e PostgreSQL saudáveis; worker remoto retomado. Worker local desativado.
+
+Evidências: `docs/validacao-visao-geral-ui.json` e `docs/validacao-ranking-produtos-producao.json`. [Uso e regras](docs/INDICADORES_VISAO_GERAL.md). R19 mantém as pendências de dados anteriores; estes ajustes não homologam os totais mensais/anuais da R11.
+
+
 ## R19.2 publicada — indicadores na Visão geral — 16/09/2026
 
 - [x] **Top 20 por produto**, somando tamanhos e cores e ordenando por peças, conforme Maylon. Fotos com ampliação, vendas distintas, subtotal e participação nas peças de todo o escopo autorizado.

@@ -3,7 +3,7 @@ import {normalizarFiliais,consultarFiliais} from '../src/filiais.mjs';
 const row={filial:1,cod_filial:' AERO-009 ',trans_id:10};
 const body=value=>({'odata.count':value.length,value});
 test('Normaliza cadastro mínimo com precisão e escolhe maior transação por filial',()=>{
- assert.deepEqual(normalizarFiliais(body([row,{...row,cod_filial:'NOVO',trans_id:11}])),[{filial:'1',cod_filial:'NOVO',trans_id:'11'}]);
+ assert.deepEqual(normalizarFiliais(body([row,{...row,cod_filial:'NOVO',trans_id:11}])),[{filial:'1',cod_filial:'NOVO',fantasia:null,trans_id:'11'}]);
  assert.equal(normalizarFiliais(body([{...row,trans_id:'999999999999999999'}]))[0].trans_id,'999999999999999999');
  for(const v of [{...row,trans_id:1e18},{...row,cod_filial:''},{...row,filial:-1}])assert.throws(()=>normalizarFiliais(body([v])));
 });
@@ -17,4 +17,12 @@ test('Incremental envia trans_id sem filtrar filial e consulta inicial não envi
    assert.equal(url.searchParams.get('trans_id'),cursor);assert.equal(url.searchParams.has('filial'),false);assert.equal(opts.redirect,'error');return new Response(JSON.stringify(body([row])));
   }});assert.equal(rows.length,1);
  }
+});
+
+test('Fantasia é normalizada sem inventar nome e conflitos da mesma transação são rejeitados',()=>{
+ assert.equal(normalizarFiliais(body([{...row,fantasia:' AERO BRASILIA '}]))[0].fantasia,'AERO BRASILIA');
+ assert.equal(normalizarFiliais(body([{...row,FANTASIA:'AERO BRASILIA'}]))[0].fantasia,'AERO BRASILIA');
+ assert.equal(normalizarFiliais(body([{...row,fantasia:' '}]))[0].fantasia,null);
+ assert.throws(()=>normalizarFiliais(body([{...row,fantasia:42}])));
+ assert.throws(()=>normalizarFiliais(body([{...row,fantasia:'Nome 1'},{...row,fantasia:'Nome 2'}])));
 });

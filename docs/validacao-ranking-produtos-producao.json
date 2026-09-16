@@ -1,0 +1,156 @@
+{
+  "verificadoEm": "2026-09-16T10:19:23.144Z",
+  "dominio": "aeropostale.joinnetwork.com.br",
+  "filiais": [
+    {
+      "filial": "30098297",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098400",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098401",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098409",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098495",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098696",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098697",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098704",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098702",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098708",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098795",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098802",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098797",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    },
+    {
+      "filial": "30098699",
+      "condicoesConservamTotal": true,
+      "mensalConservaTotal": true,
+      "top20OrdenadoSemDuplicidade": true,
+      "ordenacaoValorQuantidade": true,
+      "detalhesConferidos": true,
+      "codFilialFantasia": true,
+      "estoqueAgrupado": true
+    }
+  ],
+  "top20": {
+    "criterioInicial": "valor",
+    "cartoes": 20,
+    "fotosCarregadas": 8,
+    "semFotoOuIndisponiveis": 12,
+    "ampliacao": true
+  },
+  "desktopMobileSemOverflow": true,
+  "nenhumaMutacaoComercial": true,
+  "errors": []
+}

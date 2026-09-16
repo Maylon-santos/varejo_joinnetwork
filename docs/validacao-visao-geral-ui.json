@@ -1,7 +1,12 @@
 {
-  "verificadoEm": "2026-09-16T04:23:21.547Z",
+  "verificadoEm": "2026-09-16T09:56:45.050Z",
   "ambiente": "schemas isolados e dados sintéticos",
   "top20PorProduto": true,
+  "listaComMiniaturas": true,
+  "ordenacaoValorPadrao": true,
+  "ordenacaoQuantidade": true,
+  "detalhesPorVariacao": true,
+  "codFilialFantasia": true,
   "fotosEAmpliacao": true,
   "fotoAusenteExplicita": true,
   "falhaNaOrigemExplicita": true,

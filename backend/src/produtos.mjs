@@ -1,5 +1,6 @@
 import {ErroApi,filtros,elegivel} from './painel.mjs';
 import {escopoUsuario,exigirPermissao} from './permissoes.mjs';
+const chaveProduto="CASE WHEN NULLIF(i.cod_produto,'') IS NOT NULL THEN 'produto:'||i.cod_produto WHEN NULLIF(i.sku,'') IS NOT NULL THEN 'sku:'||i.sku ELSE 'item:'||i.cod_operacao||':'||i.ordem END";
 export function criarProdutos(pool,tenant,filiais){
  async function snapshot(user,params,executar){
   if(user.tenant_key!==tenant)throw new ErroApi(403,'TENANT_INCORRETO');
@@ -16,10 +17,12 @@ export function criarProdutos(pool,tenant,filiais){
  }
  return {
   top:(user,params)=>snapshot(user,params,async(db,acesso)=>{
+   const ordenar=params.get('ordenar')??'valor';if(!['valor','quantidade'].includes(ordenar))throw new ErroApi(400,'FILTRO_INVALIDO');
+   const ordem=ordenar==='valor'?'grupos.subtotal_centavos DESC,grupos.pecas DESC':'grupos.pecas DESC,grupos.subtotal_centavos DESC';
    exigirPermissao(acesso.permissoes,'vendas:ler');const f=filtros(params,acesso.filiais);
    const args=[f.filial,f.inicio,f.fim,acesso.vendedores===null?null:(acesso.vendedores[f.filial]??'')];
    const cte=`WITH itens AS (SELECT i.*,o.data_operacao,
-    CASE WHEN NULLIF(i.cod_produto,'') IS NOT NULL THEN 'produto:'||i.cod_produto WHEN NULLIF(i.sku,'') IS NOT NULL THEN 'sku:'||i.sku ELSE 'item:'||i.cod_operacao||':'||i.ordem END AS chave
+    ${chaveProduto} AS chave
     FROM operacoes o JOIN operacao_itens i USING(cod_operacao,tipo_operacao,filial)
     WHERE o.filial=$1 AND o.data_operacao BETWEEN $2::date AND $3::date AND ($4::text IS NULL OR o.vendedor_codigo=$4) AND ${elegivel}),
     grupos AS (SELECT chave,max(cod_produto) AS cod_produto,
@@ -29,11 +32,34 @@ export function criarProdutos(pool,tenant,filiais){
      (array_agg(jsonb_build_object('filial',filial::text,'tipo_operacao',tipo_operacao,'cod_operacao',cod_operacao::text,'ordem',ordem)
        ORDER BY data_operacao DESC,cod_operacao DESC,ordem) FILTER(WHERE NULLIF(imagem_url,'') IS NOT NULL))[1] AS imagem
      FROM itens GROUP BY chave)`;
-   const total=(await db.query(`${cte} SELECT count(*)::int AS produtos,COALESCE(sum(pecas),0)::text AS pecas FROM grupos`,args)).rows[0];
+   const total=(await db.query(`${cte} SELECT count(*)::int AS produtos,COALESCE(sum(pecas),0)::text AS pecas,COALESCE(sum(subtotal_centavos),0)::text AS subtotal_centavos FROM grupos`,args)).rows[0];
    const rows=(await db.query(`${cte} SELECT chave,cod_produto,descricao,variacoes,pecas::text,vendas,subtotal_centavos::text,
-    round(100*pecas::numeric/NULLIF(sum(pecas) OVER(),0),4)::text AS participacao_percentual,
-    ${acesso.permissoes.includes('imagens:ler')?'imagem':'NULL::jsonb AS imagem'} FROM grupos ORDER BY grupos.pecas DESC,grupos.subtotal_centavos DESC,grupos.chave LIMIT 20`,args)).rows;
-   return {top:rows,total,agrupamento:'produto',criterio:'pecas',filtros:f};
+    round(100*${ordenar==='valor'?'subtotal_centavos':'pecas'}::numeric/NULLIF(sum(${ordenar==='valor'?'subtotal_centavos':'pecas'}) OVER(),0),4)::text AS participacao_percentual,
+    ${acesso.permissoes.includes('imagens:ler')?'imagem':'NULL::jsonb AS imagem'} FROM grupos ORDER BY ${ordem},grupos.chave LIMIT 20`,args)).rows;
+   return {top:rows,total,agrupamento:'produto',criterio:ordenar,filtros:f};
+  }),
+  detalhe:(user,params)=>snapshot(user,params,async(db,acesso,base)=>{
+   exigirPermissao(acesso.permissoes,'vendas:ler');const f=filtros(params,acesso.filiais),chave=params.get('chave');
+   if(!chave||chave.length>500)throw new ErroApi(400,'FILTRO_INVALIDO');
+   const args=[f.filial,f.inicio,f.fim,acesso.vendedores===null?null:(acesso.vendedores[f.filial]??''),chave];
+   const itens=`WITH itens AS (SELECT i.*,o.data_operacao FROM operacoes o JOIN operacao_itens i USING(cod_operacao,tipo_operacao,filial)
+    WHERE o.filial=$1 AND o.data_operacao BETWEEN $2::date AND $3::date AND ($4::text IS NULL OR o.vendedor_codigo=$4) AND ${elegivel} AND (${chaveProduto})=$5)`;
+   const produto=(await db.query(`${itens} SELECT max(cod_produto) AS cod_produto,
+    (array_agg(descricao ORDER BY data_operacao DESC,cod_operacao DESC,ordem))[1] AS descricao,
+    sum(quantidade)::text AS pecas,count(DISTINCT cod_operacao)::int AS vendas,sum(quantidade::numeric*preco_centavos)::text AS subtotal_centavos FROM itens HAVING count(*)>0`,args)).rows[0];
+   if(!produto)throw new ErroApi(404,'PRODUTO_NAO_ENCONTRADO');
+   const grupos=itens+`, grupos AS (SELECT COALESCE(NULLIF(sku,''),'item:'||cod_operacao||':'||ordem) AS chave_sku,max(sku) AS sku,max(cod_produto) AS cod_produto,
+    sum(quantidade) AS pecas,count(DISTINCT cod_operacao)::int AS vendas,sum(quantidade::numeric*preco_centavos) AS subtotal_centavos,
+    (array_agg(preco_centavos ORDER BY data_operacao DESC,cod_operacao DESC,ordem))[1] AS ultimo_preco_centavos,
+    max(data_operacao)::text AS ultima_venda FROM itens GROUP BY chave_sku)`;
+   const total=(await db.query(`${grupos} SELECT count(*)::int AS total FROM grupos`,args)).rows[0].total;
+   const estoque=acesso.permissoes.includes('estoque:ler');
+   const variacoes=(await db.query(`${grupos} SELECT g.sku,g.pecas::text,g.vendas,g.subtotal_centavos::text,g.ultimo_preco_centavos::text,g.ultima_venda,
+    e.cor,e.tamanho,p.classificacao ${estoque?',CASE WHEN e.presente_ultima_carga THEN e.saldo::text END AS saldo_disponivel':''}
+    FROM grupos g LEFT JOIN estoque_atual e ON e.filial=$1 AND e.sku=g.sku AND EXISTS(SELECT 1 FROM cadastro_produtos c WHERE c.produto=e.produto AND c.cod_produto=g.cod_produto)
+    LEFT JOIN cadastro_produtos p ON p.produto=e.produto
+    ORDER BY g.subtotal_centavos DESC,g.chave_sku LIMIT $6 OFFSET $7`,[...args,base.limite,(base.pagina-1)*base.limite])).rows;
+   return {produto,variacoes,total,pagina:base.pagina,limite:base.limite,estoque_permitido:estoque,filtros:f};
   }),
   resumoEstoque:(user,params)=>snapshot(user,params,async(db,acesso,f)=>{
    exigirPermissao(acesso.permissoes,'estoque:ler');

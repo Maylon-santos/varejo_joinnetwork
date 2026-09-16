@@ -166,3 +166,11 @@ Validar com `scripts/verificar-produtos-producao.mjs` (14 filiais, leitura) e co
 Entrega somente de API/interface, sem migrations ou reimportação. Construir a API, fazer backup e substituir a API com verificação de saúde; manter worker remoto ativo e local desabilitado. Novas rotas Top 20/resumo de estoque usam permissões existentes; indicadores/condições e participação de vendedores são aditivos.
 
 Testes: `scripts/verificar-visao-geral-ui.mjs` com dados sintéticos, incluindo falha de foto na origem e vendedor restrito. Validação pública de leitura: `scripts/verificar-visao-geral-producao.mjs`, com totais de condições/mês conservados nas 14 filiais, fotos/ampliação e celular. As fotos usam a hospedagem de imagens já autorizada, com no máximo quatro downloads simultâneos no navegador. Alterar ordenação/página de vendedores não recarrega fotos do Top 20.
+
+## Ajustes do ranking e Fantasia das filiais — 16/09/2026
+
+Aplicar a migration tenant `012_fantasia_filiais.sql` com o worker pausado após backup. Ela acrescenta Fantasia e solicita uma releitura completa do cadastro de filiais pelo escopo, preservando o cursor cadastral e os checkpoints comerciais. Construir API e worker; executar `scripts/sincronizar-filiais.mjs` na nova imagem do worker, conferir preenchimento e então publicar ambos. O incremental passa a atualizar código e Fantasia juntos. A coluna é aditiva e compatível com retorno às imagens anteriores.
+
+Top 20 aceita `ordenar=valor` (padrão) ou `ordenar=quantidade`; a seleção acontece antes do limite de 20. `/api/v1/produtos/detalhe` recebe filial, início, fim, chave exata do agrupamento e página; limita variações a 30 por página. Não consulta ERP ao abrir detalhes. Fotos mantêm ampliação; dados de estoque exigem permissão específica.
+
+Validação: `npm test`, `npm run test:integration`, `node --env-file=.env scripts/verificar-visao-geral-ui.mjs` e, após publicação, `node --env-file=.env scripts/verificar-visao-geral-producao.mjs`. Este último registra `docs/validacao-ranking-produtos-producao.json`.

@@ -10,8 +10,10 @@ export function normalizarFiliais(body,cursor=null){
   const filial=inteiro(v.filial),trans_id=inteiro(v.trans_id),cod_filial=v.cod_filial??v.COD_FILIAL;
   if(typeof cod_filial!=='string'||!cod_filial.trim()||cod_filial.trim().length>200)throw Error('COD_FILIAL_INVALIDO');
   if(cursor!==null&&BigInt(trans_id)<BigInt(cursor))throw Error('TRANS_ID_FORA_DA_JANELA');
-  const atual={filial,cod_filial:cod_filial.trim(),trans_id};const anterior=unicas.get(filial);
-  if(anterior&&anterior.trans_id===trans_id&&anterior.cod_filial!==atual.cod_filial)throw Error('FILIAL_DUPLICADA_CONFLITANTE');
+  const nome=v.fantasia??v.FANTASIA;
+  if(nome!=null&&(typeof nome!=='string'||nome.trim().length>300))throw Error('FANTASIA_INVALIDA');
+  const atual={filial,cod_filial:cod_filial.trim(),fantasia:nome?.trim()||null,trans_id};const anterior=unicas.get(filial);
+  if(anterior&&anterior.trans_id===trans_id&&(anterior.cod_filial!==atual.cod_filial||anterior.fantasia!==atual.fantasia))throw Error('FILIAL_DUPLICADA_CONFLITANTE');
   if(!anterior||BigInt(trans_id)>BigInt(anterior.trans_id))unicas.set(filial,atual);
  }
  return [...unicas.values()];
@@ -46,9 +48,9 @@ export async function sincronizarFiliais({pool,tenant,filiais,consultar,interval
    if(BigInt(row.trans_id)>maior)maior=BigInt(row.trans_id);
    // Cadastro recebido não concede autorização a uma filial nova.
    if(!escopo.includes(row.filial))continue;
-   const r=await db.query(`INSERT INTO cadastro_filiais(filial,cod_filial,trans_id) VALUES($1,$2,$3)
-    ON CONFLICT(filial) DO UPDATE SET cod_filial=EXCLUDED.cod_filial,trans_id=EXCLUDED.trans_id,atualizado_em=now()
-    WHERE EXCLUDED.trans_id>=cadastro_filiais.trans_id AND (EXCLUDED.trans_id,EXCLUDED.cod_filial) IS DISTINCT FROM (cadastro_filiais.trans_id,cadastro_filiais.cod_filial)`,[row.filial,row.cod_filial,row.trans_id]);
+   const r=await db.query(`INSERT INTO cadastro_filiais(filial,cod_filial,trans_id,fantasia) VALUES($1,$2,$3,$4)
+    ON CONFLICT(filial) DO UPDATE SET cod_filial=EXCLUDED.cod_filial,fantasia=EXCLUDED.fantasia,trans_id=EXCLUDED.trans_id,atualizado_em=now()
+    WHERE EXCLUDED.trans_id>=cadastro_filiais.trans_id AND (EXCLUDED.trans_id,EXCLUDED.cod_filial,EXCLUDED.fantasia) IS DISTINCT FROM (cadastro_filiais.trans_id,cadastro_filiais.cod_filial,cadastro_filiais.fantasia)`,[row.filial,row.cod_filial,row.trans_id,row.fantasia??null]);
    gravadas+=r.rowCount;
   }
   await db.query(`UPDATE sync_cadastro_filiais SET cursor=$1,escopo=$2::jsonb,ultimo_sucesso=now(),ultimo_erro_codigo=NULL,falhas_consecutivas=0,proxima_tentativa=now()+$3*interval '1 second' WHERE singleton`,[maior.toString(),JSON.stringify(escopo),intervalo]);

@@ -1,0 +1,23 @@
+{
+  "verificadoEm": "2026-09-16T10:20:20.630519+00:00",
+  "entrega": "Filiais com Fantasia; ranking em lista, ordenação e detalhes",
+  "testesUnitarios": 58,
+  "testesIntegracao": 55,
+  "filiaisComFantasia": 14,
+  "ordenacaoPadrao": "valor",
+  "alternativa": "quantidade",
+  "detalhePorVariacao": true,
+  "subtotalItensSemReaplicarDesconto": true,
+  "escopoVendedorVerificado": true,
+  "estoqueSomenteComPermissao": true,
+  "interface": "docs/validacao-visao-geral-ui.json",
+  "producao": "docs/validacao-ranking-produtos-producao.json",
+  "backup": "backup-20260916T101111Z-CHKp1M",
+  "migrationTenant": "012_fantasia_filiais.sql",
+  "api": "sha256:300ef01b3ed6acbe9ad72c402f7c32286cef9b290842b1a935bb5c0920e254f7",
+  "worker": "sha256:6afc558f5556ff2db9febcc042efdb427956cff83c49b868d2855ef9885288ac",
+  "sincronizacaoRemotaRetomada": true,
+  "workerLocalAtivado": false,
+  "dadosComerciaisAlteradosPelosTestes": false,
+  "homologacaoMensalAnual": "pendente R11"
+}

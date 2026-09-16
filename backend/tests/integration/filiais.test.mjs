@@ -26,3 +26,11 @@ test('Resposta vazia preserva cursor; escopo ampliado exige carga total e cadast
  assert.equal((await pool.query('SELECT cursor FROM sync_cadastro_filiais')).rows[0].cursor,'13');
  await assert.rejects(sincronizarFiliais({pool,tenant:'outro',filiais:['1'],forcar:true,consultar:()=>assert.fail('tenant inválido não consulta ERP')}),/TENANT_INCORRETO/);
 });
+
+test('Fantasia é persistida, reaplicada na mesma transação e mantida na repetição incremental',async()=>{
+ const r=await executar(async()=>[{...row('1','20'),fantasia:'AERO BRASILIA'}]);assert.equal(r.gravadas,1);
+ assert.equal((await pool.query('SELECT fantasia FROM cadastro_filiais WHERE filial=1')).rows[0].fantasia,'AERO BRASILIA');
+ assert.equal((await executar(async()=>[{...row('1','20'),fantasia:'AERO BRASILIA'}])).gravadas,0);
+ assert.equal((await executar(async()=>[{...row('1','20'),fantasia:'AERO NOVO'}])).gravadas,1);
+ assert.equal((await pool.query('SELECT fantasia FROM cadastro_filiais WHERE filial=1')).rows[0].fantasia,'AERO NOVO');
+});

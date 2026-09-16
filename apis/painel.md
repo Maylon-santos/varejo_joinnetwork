@@ -144,10 +144,15 @@ Nenhuma das rotas chama o ERP. Contratos, fontes e limites: [Produtos e estoque]
 
 ## Visão geral — R19.2
 
-`GET /api/v1/produtos/top?filial=ID&inicio=AAAA-MM-DD&fim=AAAA-MM-DD` retorna no máximo 20 produtos ordenados por peças, agrupados pelo código (cores/tamanhos somados). Desempate por subtotal/código; participação sobre todos os itens elegíveis antes do limite. Exige produtos/vendas; imagem só retorna referência de item no mesmo escopo autorizado, quando há permissão de fotos. A imagem é servida pela rota autenticada já existente.
+`GET /api/v1/produtos/top?filial=ID&inicio=AAAA-MM-DD&fim=AAAA-MM-DD` retorna no máximo 20 produtos agrupados pelo código (cores/tamanhos somados). `ordenar=valor` é o padrão; `ordenar=quantidade` ordena por peças. O desempate usa a outra medida e a chave do grupo. A participação considera a medida selecionada sobre todos os itens elegíveis antes do limite. `total.subtotal_centavos` informa a base total em valor. Exige produtos/vendas; imagem só retorna referência de item no mesmo escopo autorizado, quando há permissão de fotos. A imagem é servida pela rota autenticada já existente.
 
 `GET /api/v1/produtos/resumo-estoque?filial=ID` exige produtos/estoque e agrupa saldo atual por marca e categoria. Sem classificação e saldo desconhecido são explícitos; datas não são aceitas porque não é posição histórica.
 
 Indicadores retornam `condicoes_pagamento`, agrupadas por identificador, usando valor final da venda uma única vez. Ranking de vendedores inclui `participacao_percentual`, com denominador completo antes de paginar. O resumo mensal da interface soma a série diária em centavos exatos, respeitando o intervalo já filtrado.
 
 Regras e dados ainda necessários: [Indicadores da Visão geral](../docs/INDICADORES_VISAO_GERAL.md).
+
+
+`GET /api/v1/produtos/detalhe?filial=ID&inicio=AAAA-MM-DD&fim=AAAA-MM-DD&chave=produto%3ACODIGO&pagina=1` recebe a chave exata retornada no ranking. Exige produtos/vendas e aplica o mesmo escopo por filial/vendedor antes de agregar. Retorna resumo e variações vendidas, com SKU, peças, vendas distintas, subtotal, último preço e data; 30 variações por página. Cor/tamanho/classificação vêm do cadastro local quando o SKU e o produto coincidem. Saldo atual só é retornado com `estoque:ler`. Produto sem vendas autorizadas no período retorna 404, sem expor existência em outro acesso.
+
+`GET /api/v1/filiais` inclui `fantasia` (nullable). A interface exibe `cod_filial - fantasia`, preservando o ID interno no valor do filtro. Fantasia é importada pelo mesmo cadastro incremental, não por consulta ao abrir o seletor. A migration tenant 012 solicita uma releitura cadastral inicial para preencher o campo sem zerar cursores ou alterar checkpoints comerciais.

@@ -39,9 +39,9 @@ export function criarPainel(pool,tenant,filiais,vendedores=null){
  return {
   restringir:(permitidas,porVendedor=null)=>criarPainel(pool,tenant,filiais.filter(f=>permitidas.includes(f)),porVendedor),
   filiais:()=>snapshot(async db=>{
-   const cadastros=(await db.query('SELECT filial::text,cod_filial,trans_id::text FROM cadastro_filiais WHERE filial=ANY($1::bigint[])',[filiais])).rows;
+   const cadastros=(await db.query('SELECT filial::text,cod_filial,fantasia,trans_id::text FROM cadastro_filiais WHERE filial=ANY($1::bigint[])',[filiais])).rows;
    const porId=new Map(cadastros.map(c=>[c.filial,c]));
-   return {filiais:filiais.map(id=>porId.get(id)??{filial:id,cod_filial:null,trans_id:null}),tenant};
+   return {filiais:filiais.map(id=>porId.get(id)??{filial:id,cod_filial:null,fantasia:null,trans_id:null}),tenant};
   }),
   indicadores:f=>snapshot(async db=>{
    const args=argumentos(f);

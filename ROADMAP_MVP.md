@@ -30,7 +30,7 @@
 - [ ] **R16 — Fila de atendimento:** R16.1 e relatórios/movimento intenso da R16.2 publicados em 15/09. Relatórios por filial/período (até 31 dias), vendedor/dia, tempos, motivos e histórico. Gestão liga/desliga ordem flexível com motivo, mantendo um atendimento aberto por vendedor. Permissão específica de relatórios; Vendas somente próprios dados. 52 testes unitários, 45 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Manual v1.1 entregue; treinamento da equipe ainda deve ser realizado. Pendentes: definição de correções gerenciais do histórico e R16.3 associação/confirmação de venda no ERP. Nenhum atendimento real alterado pelos testes.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
-- [ ] **R19 — Produtos, estoque e indicadores adicionais:** R19.1/R19.2 publicadas: catálogo/estoque nas 14 filiais; Top 20 por produto com fotos, somando tamanhos/cores; resumo mensal, condições de pagamento, participação por vendedor e saldo atual por marca/categoria. 57 testes unitários, 52 de integração, desktop/celular e consultas públicas nas 14 filiais aprovados. No Top 20 anual de ITUPEVA, 7 fotos carregam e 13 URLs retornam 404 na hospedagem; códigos na central pessoal. Pendências por indicador em docs/INDICADORES_VISAO_GERAL.md: evento/devoluções, tipo de pagamento conciliado, estoque inicial/entradas/saídas/final por marca/categoria, bruto/líquido e cobertura de cadastro/condições/fotos. Dependências R22/R25; conferência mensal/anual R11 ainda pendente.
+- [ ] **R19 — Produtos, estoque e indicadores adicionais:** R19.1/R19.2 publicadas. Ajuste de 16/09: Top 20 em lista com miniaturas e detalhes por variação; ordenação por valor (padrão) ou quantidade, sempre agrupado por produto somando cores/tamanhos. Filtros mostram COD_FILIAL - Fantasia, importada nas 14 filiais. 58 testes unitários, 55 de integração, interface desktop/celular e leitura pública das 14 filiais aprovados. Permanecem resumo mensal, condições de pagamento, participação por vendedor e saldo atual por marca/categoria. Pendências em docs/INDICADORES_VISAO_GERAL.md: fotos indisponíveis na origem, evento/devoluções, tipo de pagamento conciliado, estoque histórico completo, bruto/líquido e cobertura cadastral. Dependências R22/R25; conferência mensal/anual R11 pendente.
 - [ ] **R20 — SaaS: provisionamento, planos e cobrança:** Etapa 7. Manter isolamento por tenant e automatizar subdomínios após fechar o produto.
 - [ ] **R22 — Definir bruto, líquido e devoluções:** Maylon confirmou em 15/09: desconto do item é percentual (20 = 20%). Preços permanecem como recebidos, sem reaplicar desconto. Ainda definir bruto/líquido, frete, cortesia, trocas/devoluções e parcelas. A confirmação do item não define desconto no cabeçalho.
 - [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
@@ -38,6 +38,17 @@
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 
 <!-- KANBAN:FIM -->
+
+## Ajustes publicados — filiais e ranking de produtos — 16/09/2026
+
+- [x] Filtros exibem **COD_FILIAL - Fantasia**, com nomes recebidos do ERP nas 14 filiais. A identificação interna e o acesso por filial permanecem preservados.
+- [x] Top 20 em **lista compacta**, com foto pequena ampliável, quantidade, vendas, valor e participação.
+- [x] **Valor vendido é a ordenação padrão**; opção de quantidade recalcula os 20 primeiros entre todos os produtos do filtro. Cores e tamanhos continuam somados por produto. Participação acompanha a medida escolhida.
+- [x] Botão **Ver detalhes** mostra variações vendidas, SKU, peças, vendas, subtotal, último preço/data e cadastro disponível; saldo atual somente com permissão de estoque. Paginação e escopo do vendedor aplicados no servidor, sem consulta ERP ao abrir.
+- [x] 58 testes unitários e 55 de integração aprovados; interface desktop/celular, ordenações, detalhes e restrições verificadas com dados sintéticos. Consulta pública das 14 filiais aprovada, incluindo nomes, duas ordenações e totais dos detalhes.
+- [x] Backup `backup-20260916T101111Z-CHKp1M`, migration tenant 012 e preenchimento cadastral concluídos. API e PostgreSQL saudáveis; worker remoto retomado. Worker local desativado.
+
+Evidências: `docs/validacao-visao-geral-ui.json` e `docs/validacao-ranking-produtos-producao.json`. [Uso e regras](docs/INDICADORES_VISAO_GERAL.md). R19 mantém as pendências de dados anteriores; estes ajustes não homologam os totais mensais/anuais da R11.
 
 ## R19.2 publicada — indicadores na Visão geral — 16/09/2026
 

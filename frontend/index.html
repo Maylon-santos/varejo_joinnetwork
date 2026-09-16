@@ -74,8 +74,8 @@
           <section class="panel summary-panel"><div class="panel-heading"><div><h2>Leitura do período</h2><p>Os números por trás do resultado</p></div></div><div id="period-summary"></div><div class="quality-note"><span data-icon="info"></span><p>Os indicadores usam os totais informados pela loja. A conferência final dos dados está em andamento.</p></div></section>
         </div>
         <section id="top-products-panel" class="panel overview-block" hidden>
-          <div class="panel-heading"><div><span class="eyebrow red">OS MAIS VENDIDOS</span><h2>Top 20 produtos</h2><p>Por peças vendidas · tamanhos e cores somados por produto</p></div></div>
-          <p id="top-products-status" class="overview-note" role="status"></p><div id="top-products-grid" class="top-products-grid"></div>
+          <div class="panel-heading"><div><span class="eyebrow red">OS MAIS VENDIDOS</span><h2>Top 20 produtos</h2><p>Tamanhos e cores somados por produto</p></div><div class="ranking-sort"><label for="top-products-sort">Ordenar por</label><select id="top-products-sort"><option value="valor">Valor vendido</option><option value="quantidade">Quantidade de peças</option></select></div></div>
+          <p id="top-products-status" class="overview-note" role="status"></p><div id="top-products-list" class="top-products-list" role="list" aria-label="Ranking de produtos"></div>
         </section>
         <div id="overview-summaries" class="overview-summaries" hidden>
           <section class="panel"><div class="panel-heading"><div><h2>Resumo mensal</h2><p>Vendas não canceladas dentro do período selecionado</p></div></div><div class="table-scroll"><table><thead><tr><th>Mês</th><th>Peças</th><th>Vendas</th><th>Valor das vendas</th></tr></thead><tbody id="monthly-body"></tbody><tfoot id="monthly-total"></tfoot></table></div></section>
@@ -134,6 +134,7 @@
   </div>
 </div>
 <dialog id="detail-dialog" aria-labelledby="detail-title"><div class="dialog-heading"><div><p class="eyebrow">DETALHES DA MOVIMENTAÇÃO</p><h2 id="detail-title">Operação</h2></div><button id="detail-close" class="icon-button" aria-label="Fechar detalhes">×</button></div><div id="detail-content"></div></dialog>
+<dialog id="product-dialog" aria-labelledby="product-detail-title"><div class="dialog-heading"><div><p class="eyebrow">DETALHES DO PRODUTO</p><h2 id="product-detail-title">Produto</h2></div><button id="product-detail-close" class="icon-button" aria-label="Fechar detalhes do produto">×</button></div><div id="product-detail-content" aria-live="polite"></div></dialog>
 <div id="toast" role="status" class="toast" hidden></div>
 <dialog id="photo-dialog" aria-label="Imagem do produto"><button id="photo-close" class="icon-button" aria-label="Fechar imagem">×</button><img id="photo-large" alt=""><p id="photo-error" hidden>Imagem indisponível.</p></dialog>
 <dialog id="queue-action-dialog"><form id="queue-action-form" class="queue-action-form"><h2 id="queue-action-title"></h2><p id="queue-action-description"></p><label id="queue-reason-label">Motivo<textarea id="queue-reason" maxlength="300" rows="3"></textarea></label><p id="queue-action-error" role="alert"></p><div class="queue-actions"><button id="queue-action-cancel" type="button" class="button">Cancelar</button><button type="submit" class="button primary">Confirmar</button></div></form></dialog>

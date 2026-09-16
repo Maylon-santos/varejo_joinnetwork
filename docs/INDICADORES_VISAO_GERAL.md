@@ -1,6 +1,6 @@
 # Indicadores da Visão geral — modelos e pendências
 
-Pedido de Maylon em 16/09/2026: usar os exemplos de resumo mensal, evento, pagamento, vendedor, marca e categoria como referência e começar pelo **Top 20 de produtos vendidos com fotos**. Maylon confirmou agrupamento por produto, somando tamanhos e cores; ordenar por peças vendidas.
+Pedido de Maylon em 16/09/2026: usar os exemplos de resumo mensal, evento, pagamento, vendedor, marca e categoria como referência e começar pelo **Top 20 de produtos vendidos com fotos**. Maylon confirmou agrupamento por produto, somando tamanhos e cores. No ajuste seguinte, pediu lista compacta, detalhes e escolha entre valor (padrão) ou quantidade.
 
 ## Avaliação dos modelos
 
@@ -12,7 +12,7 @@ As imagens são referências de apresentação, não homologação dos valores d
 
 | Indicador | Apresentação e cálculo | Limite importante |
 | --- | --- | --- |
-| Top 20 produtos com fotos | Somar peças por `cod_produto`, reunindo cores/tamanhos; desempatar por subtotal e código. Mostrar peças, vendas distintas, subtotal e participação nas peças totais autorizadas. | Usa itens de vendas S não canceladas. Sem código, manter SKU; sem ambos, não unir itens desconhecidos. Subtotal não é faturamento líquido. |
+| Top 20 produtos com fotos | Agrupar por `cod_produto`, reunindo cores/tamanhos. Ordenar por subtotal vendido (padrão) ou peças; desempatar pela outra medida e chave. Lista com miniatura, peças, vendas distintas, valor e participação na medida selecionada de todos os itens autorizados. | Usa itens de vendas S não canceladas. Sem código, manter SKU; sem ambos, não unir itens desconhecidos. Subtotal não é faturamento líquido. |
 | Fotos dos produtos | Foto persistida em um item de venda autorizado do mesmo produto/período, entregue pelo proxy autenticado; clique amplia. | Recurso `imagens:ler`. Se não houver foto ou a origem falhar, mostrar ausência; não inventar imagem. Quatro downloads simultâneos no navegador, cancelados ao trocar consulta/sair. |
 | Resumo mensal | Somar a série diária do período, em centavos exatos: peças do cabeçalho, vendas distintas e valor das vendas. Total igual aos indicadores atuais. | Mês inicial/final pode ser parcial; meses sem vendas importadas não geram linha. A cobertura de sincronização continua visível. Não desconta devoluções sem regra aprovada. |
 | Condição de pagamento | Agrupar o valor final da venda pela condição cadastrada, uma vez por operação. Participação sobre todas as vendas elegíveis no filtro. | Identificador estável mantém condições distintas mesmo com nomes iguais. Sem identificador, incluir em “Não informada”, com cobertura explícita. Não somar parcelas/recebimentos. |
@@ -20,7 +20,18 @@ As imagens são referências de apresentação, não homologação dos valores d
 | Saldo disponível atual por marca | Agrupar saldo conhecido por marca, com quantidade de SKUs, saldo ausente e negativos sinalizados. | Já desconta reservas. Produtos não classificados permanecem em “Sem classificação”. Não é estoque inicial/final nem extrato de movimentos. |
 | Saldo disponível atual por categoria | Mesmo cálculo, agrupado por categoria. | Marca e categoria são cortes alternativos do mesmo estoque; não somar seus totais entre si. Saldo parcial e última atualização são explícitos. |
 
-Todos os resultados comerciais respeitam empresa, filial, período, permissões e vendedor antes de agregar. Top 20 exige `produtos:ler` e `vendas:ler`; fotos também exigem `imagens:ler`. Resumo mensal/condições usa `indicadores:ler`; participação por vendedor usa `ranking:ler`. Estoque agrupado exige `produtos:ler` e `estoque:ler` e considera toda a filial autorizada, independentemente do período de vendas. A navegação da Visão geral mantém a exigência existente de indicadores ou ranking.
+Todos os resultados comerciais respeitam empresa, filial, período, permissões e vendedor antes de agregar. Top 20 e detalhes por produto exigem `produtos:ler` e `vendas:ler`; fotos também exigem `imagens:ler`. Resumo mensal/condições usa `indicadores:ler`; participação por vendedor usa `ranking:ler`. Estoque agrupado exige `produtos:ler` e `estoque:ler` e considera toda a filial autorizada, independentemente do período de vendas. A navegação da Visão geral mantém a exigência existente de indicadores ou ranking.
+
+## Como usar a lista e os detalhes
+
+1. Escolha a filial pelo **COD_FILIAL - Fantasia** e aplique o período.
+2. O ranking abre por **Valor vendido**. Troque para **Quantidade de peças** para recalcular os 20 primeiros entre todos os produtos autorizados. O agrupamento continua somando cores e tamanhos.
+3. A participação acompanha a medida escolhida: valor do produto sobre valor de todos os itens, ou peças do produto sobre todas as peças. O denominador não se limita aos 20 exibidos.
+4. Clique na miniatura para ampliar a foto disponível ou em **Ver detalhes** para consultar o produto.
+5. Os detalhes mostram resumo, variações/SKUs vendidos, peças, vendas distintas, subtotal, último preço e data da última venda no período. Cor, tamanho e classificação aparecem quando o cadastro local corresponde ao SKU/produto. A lista de variações tem paginação de 30 linhas.
+6. Quem tem acesso a estoque vê também o saldo disponível atual. O cargo Vendas continua limitado às próprias vendas; essa regra é aplicada no servidor antes dos cálculos.
+
+O valor do ranking é **quantidade × preço importado dos itens**; não reaplica desconto e não inclui ajustes do cabeçalho. Preço e classificação ausentes não são inventados. Nenhum detalhe dispara consulta ao ERP.
 
 ## Pendências — informação necessária por indicador
 
@@ -72,11 +83,11 @@ Todos os resultados comerciais respeitam empresa, filial, período, permissões 
 
 ## Implementação e verificação
 
-- `/api/v1/produtos/top?filial=ID&inicio=AAAA-MM-DD&fim=AAAA-MM-DD`: no máximo 20 produtos. Fotos são referências de itens autorizados, sem expor URLs de origem.
+- `/api/v1/produtos/top?filial=ID&inicio=AAAA-MM-DD&fim=AAAA-MM-DD&ordenar=valor`: no máximo 20 produtos; `quantidade` alterna a ordenação. Fotos são referências de itens autorizados, sem expor URLs de origem.
 - `/api/v1/produtos/resumo-estoque?filial=ID`: marca/categoria, saldo conhecido, contagem desconhecida e estado de sincronização. Rejeita datas para não sugerir saldo histórico.
 - `/api/v1/indicadores`: inclui condições de pagamento. Resumo mensal deriva da série diária já usada pelo gráfico, preservando centavos e o total.
 - `/api/v1/ranking`: acrescenta participação no valor vendido, calculada sobre a população completa antes de paginar.
-- Não exige migrations nem reimportação. Nenhuma consulta ERP de dados é disparada ao abrir os quadros; fotos usam a hospedagem já autorizada.
+- A entrega inicial R19.2 não exigiu migrations nem reimportação. O ajuste de Fantasia das filiais usa a migration tenant 012. Nenhuma consulta ERP de dados é disparada ao abrir os quadros; fotos usam a hospedagem já autorizada.
 - Testes de integração: Top 20 entre mais de 20 produtos, variações, cancelamentos, entradas, foto do vendedor permitido, mês/condição, percentuais antes de paginar, estoque desconhecido e permissões. Navegador: fotos/ampliação, filtros, ausência de dados e desktop/celular.
 
 ## Entrega publicada — 16/09/2026
@@ -84,7 +95,7 @@ Todos os resultados comerciais respeitam empresa, filial, período, permissões 
 - [x] Top 20, resumo mensal, condições de pagamento, participação por vendedor e saldo atual por marca/categoria publicados na Visão geral.
 - [x] 57 testes unitários e 52 de integração; interface no computador/celular, permissões e consultas públicas nas 14 filiais aprovadas. Ordenação numérica validada também no relatório anterior por SKU.
 - [x] Backup `backup-20260916T041612Z-bZdNfh`; publicação somente da API, sem migrations e sem interromper o worker.
-- [x] Na consulta anual de ITUPEVA em 16/09, 7 de 20 fotos carregaram. As outras 13 possuem URL, mas a hospedagem retorna **HTTP 404 (arquivo não encontrado)**, confirmado diretamente a partir do servidor. A API apresenta 502 para essa falha; os cartões mostram “Foto indisponível”.
+- [x] Na consulta anual de ITUPEVA por quantidade, em 16/09, 7 de 20 fotos carregaram. As outras 13 possuem URL, mas a hospedagem retorna **HTTP 404 (arquivo não encontrado)**, confirmado diretamente a partir do servidor. A API apresenta 502 para essa falha; os cartões mostram “Foto indisponível”.
 - [ ] Corrigir as 13 imagens na origem. A relação de códigos/produtos está na central pessoal, em `docs/central/pendencias/fotos-top20-itupeva.md`, fora do Git. Contagem referente ao filtro e à data acima; pode mudar com as vendas.
 
 Evidências: `docs/validacao-visao-geral.json`, `docs/validacao-visao-geral-ui.json`, `docs/validacao-visao-geral-producao.json` e `docs/validacao-fotos-top20.json`. As verificações técnicas não substituem a conferência mensal/anual com o ERP (R11).
