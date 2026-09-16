@@ -1,0 +1,20 @@
+{
+  "verificadoEm": "2026-09-16T16:47:55.520751+00:00",
+  "testesUnitarios": 58,
+  "testesIntegracao": 57,
+  "filiaisVerificadas": 14,
+  "interfacePublicada": true,
+  "workerAlterado": false,
+  "recargaExecutada": false,
+  "origemAtual": "millenium_eco/produtos/saldodeestoque",
+  "filtrosAtuais": [
+    "filial",
+    "trans_id"
+  ],
+  "tipoProdAtivo": false,
+  "pendencia": "apis/estoque-custom.md",
+  "backup": "backup-20260916T164223Z-z1nzOT",
+  "imagemApi": "sha256:0107a340c61bcd8b15a55d4f54ddef92920860a2c104ab29dfdf0df95dea3cfb",
+  "producao": "docs/validacao-estoque-lista-producao.json",
+  "contrato": "docs/validacao-contrato-estoque-ajustado.json"
+}

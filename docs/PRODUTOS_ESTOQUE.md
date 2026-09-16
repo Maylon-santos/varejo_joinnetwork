@@ -10,7 +10,7 @@ O `saldo` da consulta de estoque **já desconta reservas**. Apresentar como sald
 
 1. Abrir **Produtos e estoque** e escolher a loja pelo código.
 2. Em **Catálogo e estoque atual**, buscar por código, nome, SKU ou código de barras; filtrar saldo positivo, zero, negativo ou não informado. A posição independe de datas de venda.
-3. Abrir **Dados do cadastro** para consultar classificação e atualização do produto. Classificação ainda não carregada fica identificada.
+3. A lista mostra miniatura quando disponível; usar **Ver detalhes** para consultar SKU, cor, tamanho, código de barras, classificação e atualização do produto. Classificação ainda não carregada fica identificada.
 4. Em **Produtos vendidos no período**, aplicar loja e datas. Produtos/SKUs são ordenados por peças vendidas, com quantidade de vendas, subtotal dos itens, desconto médio informado e cobertura.
 
 O estoque é uma posição sincronizada, não uma reserva nem uma garantia de disponibilidade instantânea. A tela informa última atualização, falhas e posição com mais de 30 minutos. Recarregar consulta o banco local; não faz chamada ao ERP. Não há baixa, reserva ou alteração de estoque nesta entrega.
@@ -42,7 +42,7 @@ Contrato validado por consultas de leitura na Locaweb: `docs/validacao-contrato-
 
 O worker prioriza vendas/cancelamentos, depois até duas filiais com estoque vencido por rodada, até cinco cadastros de produto, complementos e identidade de clientes. ERP é consultado sequencialmente. Cooldown de estoque usa o intervalo configurado (seis minutos no piloto); a frequência efetiva depende da duração da rodada. Revisita as filiais com sucesso mais antigo e aplica backoff em falhas. Não há promessa de atualização de todas as filiais a cada seis minutos.
 
-Incremental relê `cursor - 1` para proteger a borda. Gravação de estoque/histórico e cursor ocorre na mesma transação; falhas não avançam cursor nem alteram vendas. Releitura é idempotente, versões antigas não substituem novas e mudança de saldo com o mesmo trans_id é rejeitada. Há reconciliação completa após um dia. SKU ausente nessa carga fica com saldo desconhecido na API, preservando o valor anterior para auditoria, sem fabricar zero.
+Incremental relê `cursor - 1` para proteger a borda. Gravação de estoque/histórico e cursor ocorre na mesma transação; falhas não avançam cursor nem alteram vendas. Releitura é idempotente, versões antigas não substituem novas e mudança de saldo com o mesmo trans_id é rejeitada. Há reconciliação completa após um dia. SKU ausente nessa carga fica fora do catálogo e dos resumos atuais. O valor anterior permanece salvo para auditoria, sem fabricar zero. SKU presente com saldo null continua visível como desconhecido.
 
 Limites de resposta: 45 segundos e 32 MiB; qualquer truncamento, filial incorreta ou SKU conflitante invalida o lote. Tokens e dados individuais não aparecem nos relatórios de validação versionados. Os backups existentes abrangem as novas tabelas.
 
@@ -54,3 +54,12 @@ Limites de resposta: 45 segundos e 32 MiB; qualquer truncamento, filial incorret
 - Migrations aditivas `control/006_produtos_estoque.sql` e `tenant/011_produtos_estoque.sql`.
 - Carga operacional: `scripts/sincronizar-estoques.mjs`, exclusivamente com o worker remoto pausado. Adquire o mesmo lock global e compara hashes de operações, itens e checkpoints antes/depois. Filiais com erro ficam pendentes para retomada pelo worker.
 - Testes: `npm test`, `npm run test:integration`, `scripts/verificar-produtos-ui.mjs`, `scripts/verificar-complementos-ui.mjs`. Validação pública de leitura: `scripts/verificar-produtos-producao.mjs`.
+
+
+## Origem e recarga pendente — 16/09/2026
+
+A rota efetivamente em uso continua `millenium_eco/produtos/saldodeestoque`, com `filial` e `trans_id`. **Não há filtro tipo_prod na requisição**: a tentativa `tipo_prod=AC` retornou HTTP 400 por parâmetro não suportado. Os códigos foram confirmados por Maylon: AC acabado, SE serviço, MP matéria-prima e MC material de consumo.
+
+A rota `MILLENIUM!JOINNETWORK.VAREJO.CONSULTAESTOQUES` ajustada já exclui o material de consumo informado, mas só recebe a filial e filtros pontuais: rejeitou `trans_id`, e não retorna identificação completa do produto. [Contrato a completar](../apis/estoque-custom.md). A limpeza/nova carga solicitada ainda não ocorreu. O comando `--completa` está preparado e testado localmente, aguardando origem compatível para implantação no worker. Não se deve substituir posição salva por uma resposta incompleta.
+
+Fotos do catálogo são obtidas de itens de vendas do mesmo SKU/produto, dentro da filial/vendedor autorizados. Não há consulta ao ERP ao abrir os detalhes. Sem referência permitida, manter indicação de imagem ausente. O saldo e filtros de saldo continuam exigindo `estoque:ler`.

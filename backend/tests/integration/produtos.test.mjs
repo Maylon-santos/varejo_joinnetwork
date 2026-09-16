@@ -13,7 +13,7 @@ test('estoque: cursor por filial, sobreposição, atomicidade, reprocessamento, 
   assert.equal((await e.pool.query('SELECT cursor::text FROM sync_estoques WHERE filial=1')).rows[0].cursor,'25');assert.equal((await e.pool.query("SELECT 1 FROM estoque_atual WHERE sku LIKE 'C%'")).rowCount,0);
   await assert.rejects(sync([{...row('X'),filial:'2'}]),/ESCOPO_INVALIDO/);await assert.rejects(sync([],{tenant:'outro'}),/TENANT_INCORRETO/);
   await e.pool.query("UPDATE sync_estoques SET ultima_carga_completa=now()-interval '2 days' WHERE filial=1");await sync([row('A','4','25')]);
-  const d=(await api(e,'/produtos?filial=1')).data;assert.equal(d.total,2);assert.equal(d.produtos.find(p=>p.sku==='B').saldo,null);assert.equal((await api(e,'/produtos?filial=1&saldo=desconhecido')).data.total,1);
+  const d=(await api(e,'/produtos?filial=1')).data;assert.equal(d.total,1);assert.ok(!d.produtos.some(p=>p.sku==='B'));assert.equal((await api(e,'/produtos?filial=1&saldo=desconhecido')).data.total,0);
   assert.equal((await api(e,'/produtos?filial=2')).data.total,0);assert.equal((await api(e,'/produtos?filial=999')).status,403);
   assert.equal((await e.pool.query('SELECT count(*)::int AS n FROM sync_checkpoints')).rows[0].n,0);
  }finally{await e.close();}
@@ -47,5 +47,32 @@ test('indicadores: percentual ponderado com cobertura, preço não descontado du
   await e.control.query("UPDATE access_roles SET permissoes=permissoes||'[\"produtos:ler\",\"vendas:ler\"]'::jsonb WHERE role='Vendas' AND tenant_key='teste'");
   const v=(await api(e,path,'vendas')).data;assert.equal(v.pecas,'3');assert.equal(v.subtotal_centavos,'23000');assert.equal(v.produtos[0].desconto_medio_percentual,'20.0000');assert.equal(v.produtos[0].vendas,1);
   assert.equal((await api(e,path+'&busca=OUTRO')).data.total,0);assert.equal((await api(e,path+'&pagina=2')).data.produtos.length,0);
+ }finally{await e.close();}
+});
+
+test('recarga completa remove ausentes da apresentação sem apagar histórico e falha mantém posição anterior',async()=>{
+ const e=await ambienteFila();try{
+ const sync=(rows,extra={})=>sincronizarEstoque({pool:e.pool,tenant:'teste',filial:'1',forcar:true,consultar:async()=>rows,...extra});
+ await sync([row('ACABADO'),{...row('CONSUMO'),produto:'19',cod_produto:'CONSUMO',descricao:'Material de consumo'}]);
+ const antes=(await e.pool.query('SELECT count(*)::int AS n FROM estoque_historico')).rows[0].n;
+ await assert.rejects(sync([],{cargaCompleta:true,consultar:async()=>{throw Error('ERP_HTTP_503');}}));assert.equal((await api(e,'/produtos?filial=1')).data.total,2);
+ let cursor;await sync([row('ACABADO')],{cargaCompleta:true,consultar:async p=>{cursor=p.cursor;return [row('ACABADO')];}});assert.equal(cursor,'0');
+ const d=(await api(e,'/produtos?filial=1')).data;assert.equal(d.total,1);assert.equal(d.produtos[0].sku,'ACABADO');assert.equal((await api(e,'/produtos?filial=1&busca=CONSUMO')).data.total,0);
+ const summary=(await api(e,'/produtos/resumo-estoque?filial=1')).data;assert.equal(summary.grupos.marca.reduce((a,g)=>a+g.skus,0),1);
+ assert.equal((await e.pool.query('SELECT count(*)::int AS n FROM estoque_historico')).rows[0].n,antes);assert.equal((await e.pool.query('SELECT cursor::text FROM sync_estoques WHERE filial=1')).rows[0].cursor,'20');
+ const ids=[];await enriquecerProdutos({pool:e.pool,tenant:'teste',consultar:async({produto})=>{ids.push(produto);return {produto,cod_produto:'CAM',descricao:'Camiseta',trans_id:'30',classificacao:{}};}});assert.deepEqual(ids,['9']);
+ // Saldo desconhecido de um SKU ainda retornado continua visível.
+ await sync([row('ACABADO',null,'21')]);assert.equal((await api(e,'/produtos?filial=1&saldo=desconhecido')).data.total,1);
+ }finally{await e.close();}
+});
+test('fotos do catálogo respeitam filial, produto, vendedor e permissão de imagens',async()=>{
+ const e=await ambienteFila();try{
+ await sincronizarEstoque({pool:e.pool,tenant:'teste',filial:'1',consultar:async()=>[row('CAM-P')]});
+ await e.pool.query("INSERT INTO operacao_itens(cod_operacao,tipo_operacao,filial,ordem,sku,cod_produto,descricao,quantidade,preco_centavos,imagem_url) VALUES(20,'S',1,1,'CAM-P','CAM','Camiseta',1,1000,'https://aeropostale1.hospedagemdesites.ws/fotosaero/teste.jpg')");
+ assert.equal((await api(e,'/produtos?filial=1')).data.produtos[0].imagem.cod_operacao,'20');
+ await e.control.query("UPDATE access_roles SET permissoes=permissoes||'[\"produtos:ler\",\"vendas:ler\",\"imagens:ler\"]'::jsonb WHERE role='Vendas' AND tenant_key='teste'");
+ assert.equal((await api(e,'/produtos?filial=1','vendas')).data.produtos[0].imagem,null);
+ await e.pool.query("UPDATE operacao_itens SET cod_operacao=10 WHERE cod_operacao=20 AND filial=1");assert.equal((await api(e,'/produtos?filial=1','vendas')).data.produtos[0].imagem.cod_operacao,'10');
+ await e.control.query("UPDATE access_roles SET permissoes=permissoes-'imagens:ler' WHERE role='Vendas' AND tenant_key='teste'");assert.equal((await api(e,'/produtos?filial=1','vendas')).data.produtos[0].imagem,null);
  }finally{await e.close();}
 });

@@ -1,9 +1,9 @@
 import {erroSeguro} from './postgres.mjs';
 import {inteiroErp} from './produtos-estoque-erp.mjs';
 const colunas='filial bigint,sku text,produto bigint,cod_produto text,descricao text,cor text,tamanho text,barra text,saldo numeric,trans_id bigint,data_atualizacao_erp timestamptz';
-export async function sincronizarEstoque({pool,tenant,filial,consultar,intervalo=360,forcar=false}){
+export async function sincronizarEstoque({pool,tenant,filial,consultar,intervalo=360,forcar=false,cargaCompleta=false}){
  filial=inteiroErp(filial);
- if(!tenant||!Number.isSafeInteger(intervalo)||intervalo<30)throw Error('CONFIGURACAO_INVALIDA');
+ if(!tenant||!Number.isSafeInteger(intervalo)||intervalo<30||typeof cargaCompleta!=='boolean')throw Error('CONFIGURACAO_INVALIDA');
  const db=await pool.connect();let verificado=false;
  try{
   await db.query('BEGIN');await db.query("SET LOCAL lock_timeout='5s'");await db.query("SET LOCAL statement_timeout='50s'");
@@ -12,7 +12,7 @@ export async function sincronizarEstoque({pool,tenant,filial,consultar,intervalo
   await db.query('INSERT INTO sync_estoques(filial) VALUES($1) ON CONFLICT DO NOTHING',[filial]);
   const s=(await db.query("SELECT *,proxima_tentativa>now() AS aguardar,ultima_carga_completa IS NULL OR ultima_carga_completa<now()-interval '1 day' AS completa FROM sync_estoques WHERE filial=$1 FOR UPDATE",[filial])).rows[0];
   if(s.aguardar&&!forcar){await db.query('COMMIT');return {aguardando:true};}
-  const completa=s.completa||s.cursor===null,cursor=completa?'0':(BigInt(s.cursor)>0n?BigInt(s.cursor)-1n:0n).toString();
+  const completa=cargaCompleta||s.completa||s.cursor===null,cursor=completa?'0':(BigInt(s.cursor)>0n?BigInt(s.cursor)-1n:0n).toString();
   const rows=await consultar({filial,cursor});
   if(rows.some(r=>r.filial!==filial||BigInt(r.trans_id)<BigInt(cursor)))throw Error('ESTOQUE_ESCOPO_INVALIDO');
   let maior=BigInt(s.cursor??0);
@@ -41,7 +41,7 @@ export async function enriquecerProdutos({pool,tenant,consultar,limite=5,parar=(
  const db=await pool.connect();let total=0,falhas=0;
  try{
   if((await db.query('SELECT tenant_key FROM tenant_identity WHERE singleton')).rows[0]?.tenant_key!==tenant)throw Error('TENANT_INCORRETO');
-  const produtos=(await db.query('SELECT produto::text FROM cadastro_produtos WHERE proxima_tentativa<=now() ORDER BY proxima_tentativa,produto LIMIT $1',[limite])).rows;
+  const produtos=(await db.query('SELECT p.produto::text FROM cadastro_produtos p WHERE p.proxima_tentativa<=now() AND EXISTS(SELECT 1 FROM estoque_atual e WHERE e.produto=p.produto AND e.presente_ultima_carga) ORDER BY p.proxima_tentativa,p.produto LIMIT $1',[limite])).rows;
   for(const {produto} of produtos){
    if(parar())break;
    try{const p=await consultar({produto});if(p.produto!==produto)throw Error('PRODUTO_ERP_INVALIDO');

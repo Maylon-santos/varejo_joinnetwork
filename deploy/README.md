@@ -174,3 +174,11 @@ Aplicar a migration tenant `012_fantasia_filiais.sql` com o worker pausado após
 Top 20 aceita `ordenar=valor` (padrão) ou `ordenar=quantidade`; a seleção acontece antes do limite de 20. `/api/v1/produtos/detalhe` recebe filial, início, fim, chave exata do agrupamento e página; limita variações a 30 por página. Não consulta ERP ao abrir detalhes. Fotos mantêm ampliação; dados de estoque exigem permissão específica.
 
 Validação: `npm test`, `npm run test:integration`, `node --env-file=.env scripts/verificar-visao-geral-ui.mjs` e, após publicação, `node --env-file=.env scripts/verificar-visao-geral-producao.mjs`. Este último registra `docs/validacao-ranking-produtos-producao.json`.
+
+## Recarga e limpeza da apresentação de estoque — 16/09/2026
+
+`node scripts/sincronizar-estoques.mjs --completa` solicita carga com cursor zero em todas as filiais, mantendo o maior cursor persistido. Executar somente com backup e worker contínuo pausado; o lock global protege contra duas sincronizações. Qualquer filial com erro deixa saída não zero e mantém a posição anterior daquela filial. Os hashes comerciais/checkpoints são conferidos antes/depois.
+
+Catálogo e resumos atuais apresentam somente `presente_ultima_carga=true`; ausentes na carga completa ficam fora da apresentação e do enriquecimento cadastral, mantendo histórico/auditoria. Saldo nulo de um SKU retornado continua desconhecido, sem ser convertido em zero.
+
+A rota customizada ajustada por Maylon precisa cumprir [o contrato da nova origem](../apis/estoque-custom.md) antes da troca definitiva. Não apontar o worker para uma resposta sem identificação dos produtos ou sem suporte ao cursor. As correções de interface e leitura do catálogo podem ser publicadas independentemente dessa troca.

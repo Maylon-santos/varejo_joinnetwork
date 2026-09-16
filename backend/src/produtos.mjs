@@ -15,6 +15,16 @@ export function criarProdutos(pool,tenant,filiais){
    const result=await executar(db,acesso,{filial:params.get('filial'),busca:busca.trim(),pagina:+pagina,limite:30});await db.query('COMMIT');return result;
   }catch(e){await db.query('ROLLBACK');throw e;}finally{db.release();}
  }
+ async function fotos(db,acesso,filial,rows){
+  for(const row of rows)row.imagem=null;
+  if(!acesso.permissoes.includes('imagens:ler')||!acesso.permissoes.includes('vendas:ler')||!rows.length)return;
+  const refs=(await db.query(`SELECT DISTINCT ON(i.sku,i.cod_produto) i.sku,i.cod_produto,
+   jsonb_build_object('filial',i.filial::text,'tipo_operacao',i.tipo_operacao,'cod_operacao',i.cod_operacao::text,'ordem',i.ordem) AS imagem
+   FROM operacoes o JOIN operacao_itens i USING(cod_operacao,tipo_operacao,filial)
+   WHERE o.filial=$1 AND i.sku=ANY($2::text[]) AND ($3::text IS NULL OR o.vendedor_codigo=$3) AND ${elegivel} AND NULLIF(i.imagem_url,'') IS NOT NULL
+   ORDER BY i.sku,i.cod_produto,o.data_operacao DESC,i.cod_operacao DESC,i.ordem`,[filial,rows.map(p=>p.sku).filter(Boolean),acesso.vendedores===null?null:(acesso.vendedores[filial]??'')])).rows;
+  for(const row of rows)row.imagem=refs.find(r=>r.sku===row.sku&&r.cod_produto===row.cod_produto)?.imagem??null;
+ }
  return {
   top:(user,params)=>snapshot(user,params,async(db,acesso)=>{
    const ordenar=params.get('ordenar')??'valor';if(!['valor','quantidade'].includes(ordenar))throw new ErroApi(400,'FILTRO_INVALIDO');
@@ -66,7 +76,7 @@ export function criarProdutos(pool,tenant,filiais){
    const grupos={};
    for(const campo of ['marca','categoria'])grupos[campo]=(await db.query(`WITH base AS (
     SELECT COALESCE(NULLIF(p.classificacao->$2->>'codigo',''),'nao_classificado') AS codigo,
-      p.classificacao->$2->>'descricao' AS nome,e.* FROM estoque_atual e JOIN cadastro_produtos p USING(produto) WHERE filial=$1)
+      p.classificacao->$2->>'descricao' AS nome,e.* FROM estoque_atual e JOIN cadastro_produtos p USING(produto) WHERE filial=$1 AND e.presente_ultima_carga)
     SELECT codigo,CASE WHEN codigo='nao_classificado' THEN 'Sem classificação' ELSE COALESCE(max(NULLIF(nome,'')),codigo) END AS nome,
      count(*)::int AS skus,count(*) FILTER(WHERE NOT presente_ultima_carga OR saldo IS NULL)::int AS sem_saldo,
      count(*) FILTER(WHERE presente_ultima_carga AND saldo<0)::int AS negativos,
@@ -79,12 +89,13 @@ export function criarProdutos(pool,tenant,filiais){
    const estoque=acesso.permissoes.includes('estoque:ler'),estado=params.get('saldo')??'todos';
    if(!['todos','positivo','zero','negativo','desconhecido'].includes(estado))throw new ErroApi(400,'FILTRO_INVALIDO');
    if(estado!=='todos')exigirPermissao(acesso.permissoes,'estoque:ler');
-   const condicoes={todos:'true',positivo:'e.presente_ultima_carga AND e.saldo>0',zero:'e.presente_ultima_carga AND e.saldo=0',negativo:'e.presente_ultima_carga AND e.saldo<0',desconhecido:'(NOT e.presente_ultima_carga OR e.saldo IS NULL)'};
-   const where=`e.filial=$1 AND ($2::text='' OR strpos(lower(p.descricao),lower($2))>0 OR strpos(lower(p.cod_produto),lower($2))>0 OR strpos(lower(e.sku),lower($2))>0 OR strpos(e.barra,$2)>0) AND ${condicoes[estado]}`;
+   const condicoes={todos:'true',positivo:'e.presente_ultima_carga AND e.saldo>0',zero:'e.presente_ultima_carga AND e.saldo=0',negativo:'e.presente_ultima_carga AND e.saldo<0',desconhecido:'e.saldo IS NULL'};
+   const where=`e.filial=$1 AND e.presente_ultima_carga AND ($2::text='' OR strpos(lower(p.descricao),lower($2))>0 OR strpos(lower(p.cod_produto),lower($2))>0 OR strpos(lower(e.sku),lower($2))>0 OR strpos(e.barra,$2)>0) AND ${condicoes[estado]}`;
    const args=[f.filial,f.busca];
    const total=(await db.query(`SELECT count(*)::int AS total FROM estoque_atual e JOIN cadastro_produtos p USING(produto) WHERE ${where}`,args)).rows[0].total;
    const rows=(await db.query(`SELECT e.sku,e.produto::text,p.cod_produto,p.descricao,e.cor,e.tamanho,e.barra,p.classificacao,p.enriquecido_em ${estoque?',CASE WHEN e.presente_ultima_carga THEN e.saldo::text END AS saldo,e.presente_ultima_carga,e.data_atualizacao_erp':''}
     FROM estoque_atual e JOIN cadastro_produtos p USING(produto) WHERE ${where} ORDER BY p.cod_produto,e.sku LIMIT $3 OFFSET $4`,[...args,f.limite,(f.pagina-1)*f.limite])).rows;
+   await fotos(db,acesso,f.filial,rows);
    const sync=(await db.query('SELECT ultimo_sucesso,ultima_carga_completa,ultimo_erro_codigo,falhas_consecutivas,ultimo_sucesso<now()-interval \'30 minutes\' AS desatualizado FROM sync_estoques WHERE filial=$1',[f.filial])).rows[0]??null;
    return {total,pagina:f.pagina,limite:f.limite,produtos:rows,estoque_permitido:estoque,sincronizacao:sync,regra:'Saldo disponível informado pelo ERP, já descontadas as reservas. Estoque atual; não é posição histórica do período de vendas.'};
   }),
@@ -98,13 +109,15 @@ export function criarProdutos(pool,tenant,filiais){
    ), grupos AS (SELECT CASE WHEN NULLIF(sku,'') IS NOT NULL THEN 'sku:'||sku WHEN NULLIF(cod_produto,'') IS NOT NULL THEN 'codigo:'||cod_produto ELSE 'sem-identidade:'||cod_operacao||':'||ordem END AS chave,
     (array_agg(cod_produto ORDER BY data_operacao DESC,cod_operacao DESC,ordem))[1] AS cod_produto,
     (array_agg(descricao ORDER BY data_operacao DESC,cod_operacao DESC,ordem))[1] AS descricao,
-    max(sku) AS sku,sum(quantidade) AS pecas,count(DISTINCT cod_operacao)::int AS vendas,
+    max(sku) AS sku,
+    (array_agg(jsonb_build_object('filial',filial::text,'tipo_operacao',tipo_operacao,'cod_operacao',cod_operacao::text,'ordem',ordem) ORDER BY data_operacao DESC,cod_operacao DESC,ordem) FILTER(WHERE NULLIF(imagem_url,'') IS NOT NULL))[1] AS imagem,
+    sum(quantidade) AS pecas,count(DISTINCT cod_operacao)::int AS vendas,
     sum(quantidade::numeric*preco_centavos) AS subtotal_centavos,
     sum(quantidade) FILTER(WHERE desconto_informado IS NOT NULL) AS pecas_com_desconto,
     round(sum(quantidade*desconto_informado)/NULLIF(sum(quantidade) FILTER(WHERE desconto_informado IS NOT NULL),0),4) AS desconto_medio_percentual
     FROM itens GROUP BY chave)`;
    const resumo=(await db.query(`${cte} SELECT count(*)::int AS total,COALESCE(sum(pecas),0)::text AS pecas,COALESCE(sum(subtotal_centavos),0)::text AS subtotal_centavos,COALESCE(sum(pecas_com_desconto),0)::text AS pecas_com_desconto FROM grupos`,args)).rows[0];
-   const rows=(await db.query(`${cte} SELECT chave,cod_produto,descricao,sku,pecas::text,vendas,subtotal_centavos::text,COALESCE(pecas_com_desconto,0)::text AS pecas_com_desconto,desconto_medio_percentual::text FROM grupos ORDER BY grupos.pecas DESC,grupos.chave LIMIT $6 OFFSET $7`,[...args,base.limite,(base.pagina-1)*base.limite])).rows;
+   const rows=(await db.query(`${cte} SELECT chave,cod_produto,descricao,sku,${acesso.permissoes.includes('imagens:ler')?'imagem':'NULL::jsonb AS imagem'},pecas::text,vendas,subtotal_centavos::text,COALESCE(pecas_com_desconto,0)::text AS pecas_com_desconto,desconto_medio_percentual::text FROM grupos ORDER BY grupos.pecas DESC,grupos.chave LIMIT $6 OFFSET $7`,[...args,base.limite,(base.pagina-1)*base.limite])).rows;
    const sincronizacao=(await db.query(`SELECT c.recurso,c.ate::text,s.ultimo_sucesso,s.ultimo_erro_codigo FROM sync_checkpoints c LEFT JOIN sync_status s USING(filial,recurso) WHERE c.filial=$1 AND c.recurso IN ('vendas','cancelamentos')`,[f.filial])).rows;
    return {...resumo,produtos:rows,pagina:base.pagina,limite:base.limite,sincronizacao,checkpoints_cobrem_fim:['vendas','cancelamentos'].every(r=>sincronizacao.some(s=>s.recurso===r&&s.ate>=f.fim)),regra:'Vendas não canceladas no período. Subtotal dos produtos: quantidade × preço recebido, sem reaplicar desconto ou incluir ajustes da venda. Desconto médio ponderado pelas peças com percentual informado; itens sem informação ficam fora da média. Consulte também a cobertura do desconto.'};
   }),

@@ -12,10 +12,10 @@ try{
  (SELECT md5(string_agg(md5(to_jsonb(i)::text),'' ORDER BY filial,tipo_operacao,cod_operacao,ordem)) FROM operacao_itens i) AS itens,
  (SELECT md5(string_agg(row_to_json(c)::text,'' ORDER BY filial,recurso)) FROM sync_checkpoints c) AS checkpoints`)).rows[0]);
  const antes=await assinatura(),base={baseUrl:process.env.MILLENNIUM_BASE_URL,token:process.env.MILLENNIUM_BASIC_TOKEN},resultados=[];
- for(const filial of filiais){try{const r=await sincronizarEstoque({pool,tenant,filial,forcar:true,consultar:p=>consultarEstoque({...base,...p})});resultados.push(r);console.log(JSON.stringify({evento:'estoque_inicial',...r}));}catch(e){resultados.push({filial,erro:erroSeguro(e)});console.log(JSON.stringify({evento:'estoque_inicial_pendente',filial,codigo:erroSeguro(e)}));}}
+ for(const filial of filiais){try{const r=await sincronizarEstoque({pool,tenant,filial,forcar:true,cargaCompleta:process.argv.includes('--completa'),consultar:p=>consultarEstoque({...base,...p})});resultados.push(r);console.log(JSON.stringify({evento:'estoque_inicial',...r}));}catch(e){resultados.push({filial,erro:erroSeguro(e)});console.log(JSON.stringify({evento:'estoque_inicial_pendente',filial,codigo:erroSeguro(e)}));}}
  const enriquecimento=await enriquecerProdutos({pool,tenant,consultar:p=>consultarProduto({...base,...p}),limite:5});
  const preservado=antes===await assinatura();if(!preservado)throw Error('BASE_COMERCIAL_ALTERADA');
  const cobertura=(await pool.query(`SELECT count(*)::int AS produtos,count(*) FILTER(WHERE enriquecido_em IS NOT NULL)::int AS classificados FROM cadastro_produtos`)).rows[0];
  console.log(JSON.stringify({evento:'carga_estoques_concluida',resultados,enriquecimento,cobertura,baseComercialECheckpointsPreservados:preservado}));
- if(resultados.every(r=>r.erro))process.exitCode=1;
+ if(resultados.some(r=>r.erro))process.exitCode=1;
 }catch(e){console.error(erroSeguro(e));process.exitCode=1;}finally{if(lock){await lock.query('SELECT pg_advisory_unlock_all()');lock.release();}await pool.end();}

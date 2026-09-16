@@ -1,0 +1,38 @@
+{
+  "verificadoEm": "2026-09-16T16:47:55.520751+00:00",
+  "origemEmUso": "millenium_eco/produtos/saldodeestoque",
+  "parametrosEmUso": [
+    "filial",
+    "trans_id"
+  ],
+  "tipoProdEmUso": false,
+  "rotaAjustadaPeloUsuario": "MILLENIUM!JOINNETWORK.VAREJO.CONSULTAESTOQUES",
+  "verificacaoCustomizada": {
+    "filial": "30098297",
+    "comFilialApenas": 200,
+    "registros": 3946,
+    "materialInformadoRetornado": false,
+    "comFilialETransId": 400,
+    "erro": "Parameter trans_id not found",
+    "campos": [
+      "trans_id",
+      "primeira_entrada",
+      "data_atualizacao",
+      "sku",
+      "saldo"
+    ]
+  },
+  "recargaCompletaExecutada": false,
+  "pendencia": "Ampliar CONSULTAESTOQUES com trans_id de entrada e identificação dos produtos, ou expor filtro tipo_prod em uma rota que suporte carga completa e incremental. Não apagar a posição salva antes de validar a nova fonte.",
+  "tiposConfirmados": {
+    "AC": "Acabado",
+    "SE": "Serviço",
+    "MP": "Matéria-prima",
+    "MC": "Material de consumo"
+  },
+  "testeTipoProdNaPadrao": {
+    "tipo_prod": "AC",
+    "status": 400,
+    "erro": "Parameter tipo_prod not found in millenium_eco.produtos.saldodeestoque"
+  }
+}

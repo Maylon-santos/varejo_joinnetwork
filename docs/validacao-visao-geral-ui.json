@@ -1,5 +1,5 @@
 {
-  "verificadoEm": "2026-09-16T09:56:45.050Z",
+  "verificadoEm": "2026-09-16T15:04:47.971Z",
   "ambiente": "schemas isolados e dados sintéticos",
   "top20PorProduto": true,
   "listaComMiniaturas": true,
@@ -12,6 +12,7 @@
   "falhaNaOrigemExplicita": true,
   "ordenarVendedoresSemRebaixarFotos": true,
   "mensalETotal": true,
+  "condicoesContidasNoCardMobile": true,
   "condicoesSemDuplicar": true,
   "participacaoVendedor": true,
   "estoqueAtualSeparado": true,

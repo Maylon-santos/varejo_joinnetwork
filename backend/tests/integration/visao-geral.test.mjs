@@ -22,7 +22,7 @@ test('condições não duplicam vendas, preservam códigos com mesmo nome e tota
 });
 test('resumo de estoque separa desconhecido/negativo/sem classificação e exige recurso por filial',async()=>{
  const e=await ambienteFila();try{await semearVisaoGeral(e);
- const d=(await get(e,'/produtos/resumo-estoque?filial=1')).body;assert.equal(d.grupos.marca.length,3);const a=d.grupos.marca.find(g=>g.codigo==='A');assert.equal(a.saldo_disponivel,'3.000000');assert.equal(a.negativos,1);assert.equal(a.skus,2);assert.equal(d.grupos.marca.find(g=>g.codigo==='B').saldo_disponivel,null);assert.equal(d.grupos.marca.find(g=>g.codigo==='nao_classificado').sem_saldo,1);assert.equal(d.grupos.categoria.find(g=>g.codigo==='nao_classificado').sem_saldo,2);
+ const d=(await get(e,'/produtos/resumo-estoque?filial=1')).body;assert.equal(d.grupos.marca.length,2);const a=d.grupos.marca.find(g=>g.codigo==='A');assert.equal(a.saldo_disponivel,'3.000000');assert.equal(a.negativos,1);assert.equal(a.skus,2);assert.equal(d.grupos.marca.find(g=>g.codigo==='B').saldo_disponivel,null);assert.ok(!d.grupos.marca.some(g=>g.codigo==='nao_classificado'));assert.equal(d.grupos.categoria.find(g=>g.codigo==='nao_classificado').sem_saldo,1);
  assert.equal((await get(e,'/produtos/resumo-estoque?filial=1','vendas')).status,403);assert.equal((await get(e,'/produtos/resumo-estoque?filial=999')).status,403);assert.equal((await get(e,'/produtos/resumo-estoque?filial=1&inicio=2026-01-01')).status,400);
  }finally{await e.close();}
 });

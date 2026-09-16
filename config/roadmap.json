@@ -114,7 +114,7 @@
       "id": "R19",
       "titulo": "Produtos, estoque e indicadores adicionais",
       "status": "em_andamento",
-      "detalhe": "R19.1/R19.2 publicadas. Ajuste de 16/09: Top 20 em lista com miniaturas e detalhes por variação; ordenação por valor (padrão) ou quantidade, sempre agrupado por produto somando cores/tamanhos. Filtros mostram COD_FILIAL - Fantasia, importada nas 14 filiais. 58 testes unitários, 55 de integração, interface desktop/celular e leitura pública das 14 filiais aprovados. Permanecem resumo mensal, condições de pagamento, participação por vendedor e saldo atual por marca/categoria. Pendências em docs/INDICADORES_VISAO_GERAL.md: fotos indisponíveis na origem, evento/devoluções, tipo de pagamento conciliado, estoque histórico completo, bruto/líquido e cobertura cadastral. Dependências R22/R25; conferência mensal/anual R11 pendente."
+      "detalhe": "Publicados Top 20 por produto (valor padrão/quantidade), detalhes, estoque em lista com miniaturas, COD_FILIAL - Fantasia e correção do card de pagamento no celular. 58 testes unitários, 57 de integração e navegador local/público nas 14 filiais aprovados. Recarga dos acabados pendente: origem atual saldodeestoque aceita filial/trans_id, mas rejeita tipo_prod=AC (HTTP 400). Consulta customizada exclui a bobina, porém precisa de trans_id de entrada e campos de identificação; contrato em apis/estoque-custom.md. Não houve limpeza/recarga em produção; código --completa preparado localmente. Demais pendências: fotos na origem, eventos/devoluções, pagamentos conciliados, estoque histórico, bruto/líquido e cobertura; docs/INDICADORES_VISAO_GERAL.md. R11 mensal/anual pendente."
     },
     {
       "id": "R20",

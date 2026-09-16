@@ -79,7 +79,7 @@
         </section>
         <div id="overview-summaries" class="overview-summaries" hidden>
           <section class="panel"><div class="panel-heading"><div><h2>Resumo mensal</h2><p>Vendas não canceladas dentro do período selecionado</p></div></div><div class="table-scroll"><table><thead><tr><th>Mês</th><th>Peças</th><th>Vendas</th><th>Valor das vendas</th></tr></thead><tbody id="monthly-body"></tbody><tfoot id="monthly-total"></tfoot></table></div></section>
-          <section class="panel"><div class="panel-heading"><div><h2>Condição de pagamento</h2><p>Valor da venda agrupado pela condição informada</p></div></div><p id="payment-coverage" class="overview-note"></p><div class="table-scroll"><table><thead><tr><th>Condição / Código</th><th>Vendas</th><th>Valor</th><th>Participação</th></tr></thead><tbody id="payment-summary-body"></tbody><tfoot id="payment-summary-total"></tfoot></table></div></section>
+          <section id="payment-summary-panel" class="panel"><div class="panel-heading"><div><h2>Condição de pagamento</h2><p>Valor da venda agrupado pela condição informada</p></div></div><p id="payment-coverage" class="overview-note"></p><div class="table-scroll"><table><thead><tr><th>Condição / Código</th><th>Vendas</th><th>Valor</th><th>Participação</th></tr></thead><tbody id="payment-summary-body"></tbody><tfoot id="payment-summary-total"></tfoot></table></div></section>
         </div>
         <section id="stock-summary-panel" class="panel overview-block" hidden><div class="panel-heading"><div><h2>Estoque disponível por classificação</h2><p>Posição atual da loja · independente do período de vendas</p></div></div><p id="stock-summary-status" class="overview-note" role="status"></p><div class="overview-summaries stock-summary-tables">
           <div class="table-scroll"><table><thead><tr><th>Marca</th><th>SKUs</th><th>Saldo disponível</th><th>Sem saldo</th></tr></thead><tbody id="stock-brand-body"></tbody><tfoot id="stock-brand-total"></tfoot></table></div>
@@ -118,7 +118,7 @@
           <button class="button primary" type="submit">Consultar</button>
         </form>
         <p id="products-rule" class="muted"></p><p id="products-status" role="status"></p>
-        <div id="products-list" class="customer-cards"></div>
+        <div id="products-list" class="stock-product-list" role="list" aria-label="Produtos da filial"></div>
         <div class="pagination"><button id="products-prev" class="button" type="button">Anterior</button><span id="products-pagination"></span><button id="products-next" class="button" type="button">Próxima</button></div>
       </section>
       <section id="customers-panel" hidden aria-label="Cadastro de clientes" class="panel">

@@ -1,5 +1,19 @@
 # Comece aqui — estado atual em 16/09/2026
 
+## Estoque em lista e pagamento no celular — 16/09/2026
+
+- [x] Condições de pagamento da Visão geral organizadas dentro do card no celular, com identificação, vendas, valor, participação e total. Detalhe do pagamento com quebra de texto e contenção.
+- [x] Produtos e estoque em lista compacta com miniatura, ampliação e **Ver detalhes** por SKU. Detalhes mostram classificação, cor, tamanho, código de barras e saldo quando autorizado. Indicadores por SKU conservam desconto e cobertura.
+- [x] Fotos do catálogo usam referências de vendas autorizadas; isolamento por filial/vendedor e recurso de imagens preservados. Sem consulta ERP ao abrir.
+- [x] Catálogo/resumos atuais excluem SKUs marcados ausentes em carga completa. Saldo nulo de SKU presente continua diferente de zero. Histórico de vendas e de estoque preservado.
+- [x] 58 testes unitários e 57 de integração; navegador local e consulta pública das 14 filiais aprovados, incluindo card no celular e detalhes. API publicada com backup `backup-20260916T164223Z-z1nzOT`; worker existente continuou ativo.
+- [ ] **Recarga e retirada dos materiais ainda não executadas**: a rota em uso continua `millenium_eco/produtos/saldodeestoque`, com `filial` e `trans_id`, **sem tipo_prod**. Testar `tipo_prod=AC` retornou HTTP 400: parâmetro não suportado.
+- [x] Maylon confirmou os tipos: **AC acabado; SE serviço; MP matéria-prima; MC material de consumo**. A `CONSULTAESTOQUES` ajustada já exclui a bobina, mas não aceita `trans_id` de entrada e retorna somente SKU/saldo/datas.
+- [ ] Ampliar a rota customizada conforme [contrato da nova origem](apis/estoque-custom.md), validar completo/incremental e executar nova carga das 14 filiais. O código de recarga `--completa` e enriquecimento apenas de produtos presentes foi preparado/testado localmente; ainda não implantado no worker. Materiais ainda presentes na posição anterior podem continuar aparecendo até essa recarga.
+
+Evidências: `docs/validacao-estoque-lista-producao.json`, `docs/validacao-produtos-ui.json`, `docs/validacao-visao-geral-ui.json`, `docs/validacao-contrato-estoque-ajustado.json`. R19 mantém a pendência da recarga; R11 continua aguardando conferência mensal/anual.
+
+
 ## Ajustes publicados — filiais e ranking de produtos — 16/09/2026
 
 - [x] Filtros exibem **COD_FILIAL - Fantasia**, com nomes recebidos do ERP nas 14 filiais. A identificação interna e o acesso por filial permanecem preservados.
