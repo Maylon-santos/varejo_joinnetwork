@@ -1,0 +1,17 @@
+{
+  "verificadoEm": "2026-09-16T09:38:19.806324+00:00",
+  "entrega": "R19.2 publicada",
+  "testesUnitarios": 57,
+  "testesIntegracao": 52,
+  "interface": "docs/validacao-visao-geral-ui.json",
+  "producao": "docs/validacao-visao-geral-producao.json",
+  "fotos": "docs/validacao-fotos-top20.json",
+  "filiaisVerificadas": 14,
+  "backup": "backup-20260916T041612Z-bZdNfh",
+  "imagemAPI": "sha256:ec1c7b3a43c176a1919d94565809aa6796c47567839725c6d1ebb14aa4893489",
+  "migrations": false,
+  "workerInterrompido": false,
+  "nenhumaMutacaoComercial": true,
+  "homologacaoMensalAnual": "pendente R11",
+  "pendencias": "docs/INDICADORES_VISAO_GERAL.md"
+}

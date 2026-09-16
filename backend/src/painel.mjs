@@ -52,6 +52,14 @@ export function criarPainel(pool,tenant,filiais,vendedores=null){
     round(sum(o.quantidade)::numeric/NULLIF(count(*),0),4)::text AS pecas_por_venda,
     count(*) FILTER(WHERE ${statusConciliacao} NOT IN ('conciliada','erro_erp_confirmado'))::integer AS vendas_com_pendencia
     FROM operacoes o WHERE ${scope} AND ${elegivel}`,args)).rows[0];
+   const condicoes=(await db.query(`WITH vendas AS (
+    SELECT o.*,COALESCE(NULLIF(o.complementos->>'codigo_condicaopgto',''),'id:'||NULLIF(o.complementos->>'condicoes_pgto',''),'nao_informada') AS condicao
+    FROM operacoes o WHERE ${scope} AND ${elegivel})
+    SELECT condicao AS codigo,CASE WHEN condicao='nao_informada' THEN 'Não informada' ELSE
+      COALESCE((array_agg(NULLIF(complementos->>'desc_condicoes_pgto','') ORDER BY data_operacao DESC,cod_operacao DESC))[1],condicao) END AS nome,
+      count(*)::int AS vendas,sum(valor_final_centavos)::text AS valor_centavos,
+      round(100*sum(valor_final_centavos)::numeric/NULLIF(sum(sum(valor_final_centavos)) OVER(),0),4)::text AS participacao_percentual
+    FROM vendas GROUP BY condicao ORDER BY sum(valor_final_centavos) DESC,condicao`,args)).rows;
    const qualidade=(await db.query(`SELECT ${statusConciliacao} AS conciliacao,count(*)::integer AS quantidade FROM operacoes o
     WHERE ${scope} AND ${elegivel} GROUP BY ${statusConciliacao} ORDER BY ${statusConciliacao}`,args)).rows;
    const excluidas=(await db.query(`SELECT count(*) FILTER(WHERE ${efetiva})::integer AS canceladas,
@@ -60,7 +68,7 @@ export function criarPainel(pool,tenant,filiais,vendedores=null){
    const serie=(await db.query(`SELECT o.data_operacao::text AS data,count(*)::integer AS vendas,sum(o.valor_final_centavos)::text AS valor_vendas_centavos,
     sum(o.quantidade)::text AS pecas_cabecalho FROM operacoes o WHERE ${scope} AND ${elegivel}
     GROUP BY o.data_operacao ORDER BY o.data_operacao`,args)).rows;
-   return {filtros:{filial:f.filial,inicio:f.inicio,fim:f.fim},...total,indicadores_provisorios:true,qualidade,excluidas,serie_diaria:serie,...await cobertura(db,f),
+   return {filtros:{filial:f.filial,inicio:f.inicio,fim:f.fim},...total,indicadores_provisorios:true,qualidade,excluidas,condicoes_pagamento:condicoes,serie_diaria:serie,...await cobertura(db,f),
     regra:'Operações S não canceladas. Valor e peças do cabeçalho ERP; inclui pendências sinalizadas. Entradas não são subtraídas como devoluções sem regra homologada. Bruto/líquido ainda não definidos.'};
   }),
   vendas:(f,{tipo='S',estado='ativas',conciliacao}={})=>snapshot(async db=>{
@@ -124,7 +132,7 @@ export function criarPainel(pool,tenant,filiais,vendedores=null){
      count(*) FILTER(WHERE ${statusConciliacao} NOT IN ('conciliada','erro_erp_confirmado'))::integer AS vendas_com_pendencia
      FROM operacoes o WHERE ${scope} AND ${elegivel} GROUP BY o.vendedor_codigo)
     SELECT vendedor_codigo,COALESCE(vendedor_nome,'Sem identificação') AS vendedor_nome,vendas,
-     valor_vendas::text AS valor_vendas_centavos,pecas::text AS pecas_cabecalho,ticket::text AS ticket_medio_centavos,round(pecas::numeric/NULLIF(vendas,0),4)::text AS pecas_por_venda,vendas_com_pendencia
+     round(100*valor_vendas::numeric/NULLIF(sum(valor_vendas) OVER(),0),4)::text AS participacao_percentual,valor_vendas::text AS valor_vendas_centavos,pecas::text AS pecas_cabecalho,ticket::text AS ticket_medio_centavos,round(pecas::numeric/NULLIF(vendas,0),4)::text AS pecas_por_venda,vendas_com_pendencia
     FROM ranking ORDER BY ${ordem} DESC,vendedor_codigo NULLS LAST LIMIT $5 OFFSET $6`,[...args,f.limite,(f.pagina-1)*f.limite])).rows;
    return {total,pagina:f.pagina,limite:f.limite,ordenar,ranking:rows,indicadores_provisorios:true,...await cobertura(db,f)};
   }),

@@ -1,5 +1,24 @@
 # Comece aqui — estado atual em 16/09/2026
 
+## R19.2 publicada — indicadores na Visão geral — 16/09/2026
+
+- [x] **Top 20 por produto**, somando tamanhos e cores e ordenando por peças, conforme Maylon. Fotos com ampliação, vendas distintas, subtotal e participação nas peças de todo o escopo autorizado.
+- [x] Resumo mensal com peças, vendas e valor; condições de pagamento sem duplicar parcelas; participação dos vendedores calculada antes da paginação.
+- [x] Saldo disponível **atual** por marca e categoria, com classificação ausente, saldos desconhecidos e negativos explícitos. Não representa estoque histórico do período.
+- [x] Permissões por recurso e restrições de filial/vendedor preservadas. Consultas usam o banco local; somente as fotos acessam a hospedagem autorizada.
+- [x] 57 testes unitários e 52 de integração, interface desktop/celular e consultas públicas nas 14 filiais aprovados. Totais mensais/condições conservam os indicadores; ordenação numérica do Top 20 e do relatório por SKU verificada.
+- [x] Backup `backup-20260916T041612Z-bZdNfh`; publicação da API sem migrations. Worker permaneceu ativo.
+- [ ] Fotos: na consulta anual de ITUPEVA, 7 carregaram e 13 URLs retornaram **404 na hospedagem**. Lista de produtos para correção na central pessoal (`pendencias/fotos-top20-itupeva.md`).
+- [ ] Evento/devoluções: cadastro dos eventos, natureza/sinal e regras de vínculo e competência.
+- [ ] Tipo de pagamento: identificação, estado e vínculo dos lançamentos; base temporal e tratamento de parcelas/estornos.
+- [ ] Estoque inicial/entradas/saídas/final por marca e categoria: abertura histórica e movimentos completos, com base físico/disponível e classificações.
+- [ ] Bruto/líquido e cobertura de cadastro/condições/fotos continuam pendentes. Conferência mensal/anual pelo usuário permanece na R11.
+
+Acesse **Visão geral** e escolha filial/período; para o ano, use 01/01 até a data desejada. [Análise dos modelos e informações necessárias por indicador](docs/INDICADORES_VISAO_GERAL.md). Evidências em `docs/validacao-visao-geral*.json` e `docs/validacao-fotos-top20.json`.
+
+R19 continua em andamento pelas pendências de dados acima; R19.2 está publicada. Kanban mantém **16 de 26 tarefas concluídas**.
+
+
 ## R19.1 publicada — produtos, estoque e desconto percentual — 16/09/2026
 
 - [x] **Produtos e estoque**: catálogo por filial/SKU, busca, saldo atual, negativos sinalizados, posição desconhecida distinta de zero e data da sincronização. Consulta somente o banco local.

@@ -81,13 +81,13 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
     if(req.method==='POST'){if(url.search)throw new ErroApi(400,'PARAMETRO_INVALIDO');return enviar(200,await fila.executar(user,await lerJson(req),()=>auth.autenticar(token)));}
     throw new ErroApi(405,'METODO_NAO_PERMITIDO');
    }
-   if(['/api/v1/produtos','/api/v1/produtos/indicadores'].includes(path)){
+   if(['/api/v1/produtos','/api/v1/produtos/indicadores','/api/v1/produtos/top','/api/v1/produtos/resumo-estoque'].includes(path)){
     if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');
     if(!produtos)throw new ErroApi(503,'PRODUTOS_INDISPONIVEIS');
-    const indicadores=path.endsWith('/indicadores');
-    const campos=indicadores?['filial','inicio','fim','busca','pagina']:['filial','busca','pagina','saldo'];
+    const metodo=path.endsWith('/top')?'top':path.endsWith('/resumo-estoque')?'resumoEstoque':path.endsWith('/indicadores')?'indicadores':'listar';
+    const campos={top:['filial','inicio','fim'],resumoEstoque:['filial'],indicadores:['filial','inicio','fim','busca','pagina'],listar:['filial','busca','pagina','saldo']}[metodo];
     for(const k of url.searchParams.keys())if(!campos.includes(k)||url.searchParams.getAll(k).length!==1)throw new ErroApi(400,'PARAMETRO_INVALIDO');
-    return enviar(200,await produtos[indicadores?'indicadores':'listar'](user,url.searchParams));
+    return enviar(200,await produtos[metodo](user,url.searchParams));
    }
    if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');
    if(path==='/api/v1/filiais')return enviar(200,await painelUsuario.filiais());

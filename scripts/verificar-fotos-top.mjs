@@ -1,0 +1,17 @@
+import {chromium} from 'playwright';import assert from 'node:assert/strict';import {writeFile,mkdir} from 'node:fs/promises';
+const browser=await chromium.launch({channel:'chrome',headless:true,args:['--host-resolver-rules=MAP aeropostale.joinnetwork.com.br 191.252.1.241']});
+try{
+ const p=await browser.newPage();await p.goto('https://aeropostale.joinnetwork.com.br/health');
+ const session=await p.evaluate(async({email,senha})=>{const r=await fetch('/api/v1/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,senha})});if(!r.ok)throw Error('LOGIN_FALHOU');return r.json();},{email:process.env.ADMIN_EMAIL,senha:process.env.ADMIN_PASSWORD});
+ const fim=new Date().toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'}),filial='30098297';
+ const report=await p.evaluate(async({token,filial,fim})=>{
+  const headers={Authorization:'Bearer '+token};const q=new URLSearchParams({filial,inicio:'2026-01-01',fim});const response=await fetch('/api/v1/produtos/top?'+q,{headers});if(!response.ok)throw Error('CONSULTA_FALHOU');const data=await response.json(),produtos=[];
+  for(const item of data.top){let status=null;if(item.imagem){const r=item.imagem;const resp=await fetch(`/api/v1/operacoes/${r.filial}/${r.tipo_operacao}/${r.cod_operacao}/itens/${r.ordem}/imagem`,{headers});status=resp.status;await resp.arrayBuffer();}produtos.push({codigo:item.cod_produto,descricao:item.descricao,referencia:item.imagem,status,motivo:!item.imagem?'sem_imagem_cadastrada':status===200?'ok':'falha_no_carregamento'});}
+  await fetch('/api/v1/auth/logout',{method:'POST',headers});return {produtos};
+ },{token:session.token,filial,fim});
+ assert.equal(report.produtos.length,20);const totais={carregadas:report.produtos.filter(p=>p.status===200).length,semImagemCadastrada:report.produtos.filter(p=>p.motivo==='sem_imagem_cadastrada').length,falhas:report.produtos.filter(p=>p.motivo==='falha_no_carregamento').length,statusFalhas:[...new Set(report.produtos.filter(p=>p.status&&p.status!==200).map(p=>p.status))]};
+ await mkdir('artifacts/deploy',{recursive:true});await writeFile('artifacts/deploy/fotos-top-diagnostico.json',JSON.stringify({verificadoEm:new Date().toISOString(),filial,inicio:'2026-01-01',fim,...report},null,2)+'\n');
+ await mkdir('docs/central/pendencias',{recursive:true});const pending=report.produtos.filter(p=>p.motivo!=='ok');const clean=s=>String(s??'Não informado').replaceAll('|','/').replaceAll('\n',' ');
+ const md=`# Fotos pendentes — Top 20 de ITUPEVA\n\nConsulta: 01/01/2026 a ${fim}. Revisão em ${new Date().toISOString()}. Lista privada, fora do Git.\n\n${totais.carregadas} fotos carregadas; ${pending.length} pendentes. Precisamos de uma foto/URL válida associada ao código do produto.\n\n| Código | Produto | Pendência |\n| --- | --- | --- |\n`+pending.map(p=>`| ${clean(p.codigo)} | ${clean(p.descricao)} | ${p.motivo==='sem_imagem_cadastrada'?'Nenhuma URL de imagem recebida nos itens autorizados':'Carregamento falhou (HTTP '+p.status+'); conferir arquivo/URL na origem'} |`).join('\n')+'\n';
+ await writeFile('docs/central/pendencias/fotos-top20-itupeva.md',md);await writeFile('docs/validacao-fotos-top20.json',JSON.stringify({verificadoEm:new Date().toISOString(),filial,inicio:'2026-01-01',fim,top20:20,...totais,listaPrivada:'docs/central/pendencias/fotos-top20-itupeva.md'},null,2)+'\n');console.log(JSON.stringify(totais));
+}finally{await browser.close();}

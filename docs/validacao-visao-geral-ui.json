@@ -1,0 +1,18 @@
+{
+  "verificadoEm": "2026-09-16T04:23:21.547Z",
+  "ambiente": "schemas isolados e dados sintéticos",
+  "top20PorProduto": true,
+  "fotosEAmpliacao": true,
+  "fotoAusenteExplicita": true,
+  "falhaNaOrigemExplicita": true,
+  "ordenarVendedoresSemRebaixarFotos": true,
+  "mensalETotal": true,
+  "condicoesSemDuplicar": true,
+  "participacaoVendedor": true,
+  "estoqueAtualSeparado": true,
+  "periodoVazio": true,
+  "escopoVendedor": true,
+  "permissoesFotosEstoque": true,
+  "desktopMobileSemOverflow": true,
+  "errors": []
+}

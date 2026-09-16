@@ -1,0 +1,20 @@
+{
+  "verificadoEm": "2026-09-16T09:33:10.953Z",
+  "filial": "30098297",
+  "inicio": "2026-01-01",
+  "fim": "2026-09-16",
+  "top20": 20,
+  "carregadas": 7,
+  "semImagemCadastrada": 0,
+  "falhas": 13,
+  "statusFalhas": [
+    502
+  ],
+  "listaPrivada": "docs/central/pendencias/fotos-top20-itupeva.md",
+  "diagnosticoOrigem": {
+    "verificadoEm": "2026-09-16T09:38:19.806324+00:00",
+    "consultas": 13,
+    "http404": 13,
+    "motivo": "Arquivo não encontrado na hospedagem autorizada; API apresenta 502 para a falha da origem."
+  }
+}

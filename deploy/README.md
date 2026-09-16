@@ -159,3 +159,10 @@ O worker prioriza vendas/cancelamentos, até duas filiais de estoque por rodada 
 Acompanhar `estoque_sincronizado`, `estoque_falhou`, `cadastro_produtos_atualizado`, `sync_estoques` e a cobertura de `cadastro_produtos.enriquecido_em`. Apenas Admin recebe `produtos:ler`/`estoque:ler`; liberar outros cargos no gerenciador. Backups e retenção existentes cobrem as novas tabelas.
 
 Validar com `scripts/verificar-produtos-producao.mjs` (14 filiais, leitura) e conferir worker ativo. Preservar imagens anteriores para retorno compatível; schemas são aditivos. [Regras completas](../docs/PRODUTOS_ESTOQUE.md).
+
+
+## Indicadores da Visão geral — R19.2
+
+Entrega somente de API/interface, sem migrations ou reimportação. Construir a API, fazer backup e substituir a API com verificação de saúde; manter worker remoto ativo e local desabilitado. Novas rotas Top 20/resumo de estoque usam permissões existentes; indicadores/condições e participação de vendedores são aditivos.
+
+Testes: `scripts/verificar-visao-geral-ui.mjs` com dados sintéticos, incluindo falha de foto na origem e vendedor restrito. Validação pública de leitura: `scripts/verificar-visao-geral-producao.mjs`, com totais de condições/mês conservados nas 14 filiais, fotos/ampliação e celular. As fotos usam a hospedagem de imagens já autorizada, com no máximo quatro downloads simultâneos no navegador. Alterar ordenação/página de vendedores não recarrega fotos do Top 20.

@@ -140,3 +140,14 @@ Validações: 39 testes unitários, 33 de integração e navegador local/públic
 `GET /api/v1/produtos/indicadores` exige também `vendas:ler`, recebe `filial`, `inicio`, `fim`, `busca` e `pagina` e aplica a restrição do vendedor antes de calcular indicadores. Até 366 dias; 30 produtos/SKUs por página, ordenados por peças. Quantidades monetárias em centavos são strings. Desconto médio em percentual, com cobertura; não reaplica desconto nos preços.
 
 Nenhuma das rotas chama o ERP. Contratos, fontes e limites: [Produtos e estoque](../docs/PRODUTOS_ESTOQUE.md).
+
+
+## Visão geral — R19.2
+
+`GET /api/v1/produtos/top?filial=ID&inicio=AAAA-MM-DD&fim=AAAA-MM-DD` retorna no máximo 20 produtos ordenados por peças, agrupados pelo código (cores/tamanhos somados). Desempate por subtotal/código; participação sobre todos os itens elegíveis antes do limite. Exige produtos/vendas; imagem só retorna referência de item no mesmo escopo autorizado, quando há permissão de fotos. A imagem é servida pela rota autenticada já existente.
+
+`GET /api/v1/produtos/resumo-estoque?filial=ID` exige produtos/estoque e agrupa saldo atual por marca e categoria. Sem classificação e saldo desconhecido são explícitos; datas não são aceitas porque não é posição histórica.
+
+Indicadores retornam `condicoes_pagamento`, agrupadas por identificador, usando valor final da venda uma única vez. Ranking de vendedores inclui `participacao_percentual`, com denominador completo antes de paginar. O resumo mensal da interface soma a série diária em centavos exatos, respeitando o intervalo já filtrado.
+
+Regras e dados ainda necessários: [Indicadores da Visão geral](../docs/INDICADORES_VISAO_GERAL.md).

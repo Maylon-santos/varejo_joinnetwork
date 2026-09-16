@@ -30,7 +30,7 @@
 - [ ] **R16 — Fila de atendimento:** R16.1 e relatórios/movimento intenso da R16.2 publicados em 15/09. Relatórios por filial/período (até 31 dias), vendedor/dia, tempos, motivos e histórico. Gestão liga/desliga ordem flexível com motivo, mantendo um atendimento aberto por vendedor. Permissão específica de relatórios; Vendas somente próprios dados. 52 testes unitários, 45 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Manual v1.1 entregue; treinamento da equipe ainda deve ser realizado. Pendentes: definição de correções gerenciais do histórico e R16.3 associação/confirmação de venda no ERP. Nenhum atendimento real alterado pelos testes.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
-- [ ] **R19 — Produtos, estoque e indicadores adicionais:** R19.1 publicada: catálogo e estoque local nas 14 filiais (34.704 registros filial/SKU), cursor por filial, snapshots, produtos vendidos e desconto médio percentual com cobertura. Permissões específicas e escopo do vendedor. 57 testes unitários, 48 de integração e navegador local/público aprovados; dados comerciais/checkpoints preservados. Em 16/09 às 00h42: 1.292/7.034 produtos classificados; enriquecimento continua, com 18 cadastros ausentes no ERP. Pendentes: completar classificação e indicadores dependentes da R22; R11 ainda aguarda conferência mensal/anual.
+- [ ] **R19 — Produtos, estoque e indicadores adicionais:** R19.1/R19.2 publicadas: catálogo/estoque nas 14 filiais; Top 20 por produto com fotos, somando tamanhos/cores; resumo mensal, condições de pagamento, participação por vendedor e saldo atual por marca/categoria. 57 testes unitários, 52 de integração, desktop/celular e consultas públicas nas 14 filiais aprovados. No Top 20 anual de ITUPEVA, 7 fotos carregam e 13 URLs retornam 404 na hospedagem; códigos na central pessoal. Pendências por indicador em docs/INDICADORES_VISAO_GERAL.md: evento/devoluções, tipo de pagamento conciliado, estoque inicial/entradas/saídas/final por marca/categoria, bruto/líquido e cobertura de cadastro/condições/fotos. Dependências R22/R25; conferência mensal/anual R11 ainda pendente.
 - [ ] **R20 — SaaS: provisionamento, planos e cobrança:** Etapa 7. Manter isolamento por tenant e automatizar subdomínios após fechar o produto.
 - [ ] **R22 — Definir bruto, líquido e devoluções:** Maylon confirmou em 15/09: desconto do item é percentual (20 = 20%). Preços permanecem como recebidos, sem reaplicar desconto. Ainda definir bruto/líquido, frete, cortesia, trocas/devoluções e parcelas. A confirmação do item não define desconto no cabeçalho.
 - [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
@@ -38,6 +38,24 @@
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 
 <!-- KANBAN:FIM -->
+
+## R19.2 publicada — indicadores na Visão geral — 16/09/2026
+
+- [x] **Top 20 por produto**, somando tamanhos e cores e ordenando por peças, conforme Maylon. Fotos com ampliação, vendas distintas, subtotal e participação nas peças de todo o escopo autorizado.
+- [x] Resumo mensal com peças, vendas e valor; condições de pagamento sem duplicar parcelas; participação dos vendedores calculada antes da paginação.
+- [x] Saldo disponível **atual** por marca e categoria, com classificação ausente, saldos desconhecidos e negativos explícitos. Não representa estoque histórico do período.
+- [x] Permissões por recurso e restrições de filial/vendedor preservadas. Consultas usam o banco local; somente as fotos acessam a hospedagem autorizada.
+- [x] 57 testes unitários e 52 de integração, interface desktop/celular e consultas públicas nas 14 filiais aprovados. Totais mensais/condições conservam os indicadores; ordenação numérica do Top 20 e do relatório por SKU verificada.
+- [x] Backup `backup-20260916T041612Z-bZdNfh`; publicação da API sem migrations. Worker permaneceu ativo.
+- [ ] Fotos: na consulta anual de ITUPEVA, 7 carregaram e 13 URLs retornaram **404 na hospedagem**. Lista de produtos para correção na central pessoal (`pendencias/fotos-top20-itupeva.md`).
+- [ ] Evento/devoluções: cadastro dos eventos, natureza/sinal e regras de vínculo e competência.
+- [ ] Tipo de pagamento: identificação, estado e vínculo dos lançamentos; base temporal e tratamento de parcelas/estornos.
+- [ ] Estoque inicial/entradas/saídas/final por marca e categoria: abertura histórica e movimentos completos, com base físico/disponível e classificações.
+- [ ] Bruto/líquido e cobertura de cadastro/condições/fotos continuam pendentes. Conferência mensal/anual pelo usuário permanece na R11.
+
+Acesse **Visão geral** e escolha filial/período; para o ano, use 01/01 até a data desejada. [Análise dos modelos e informações necessárias por indicador](docs/INDICADORES_VISAO_GERAL.md). Evidências em `docs/validacao-visao-geral*.json` e `docs/validacao-fotos-top20.json`.
+
+R19 continua em andamento pelas pendências de dados acima; R19.2 está publicada. Kanban mantém **16 de 26 tarefas concluídas**.
 
 ## R19.1 publicada — produtos, estoque e desconto percentual — 16/09/2026
 
