@@ -1,7 +1,9 @@
 {
-  "verificadoEm": "2026-09-16T15:04:44.716Z",
+  "verificadoEm": "2026-09-19T15:22:55.102Z",
   "ambiente": "schemas isolados, dados sintéticos",
   "catalogo": true,
+  "tipoAcPadrao": true,
+  "totalFilialTodasPaginas": true,
   "listaComMiniaturas": true,
   "ampliacao": true,
   "detalhesCatalogo": true,

@@ -131,7 +131,7 @@ export function criarPainel(pool,tenant,filiais,vendedores=null){
      round(sum(o.valor_final_centavos)::numeric/NULLIF(count(*),0),0) AS ticket,
      count(*) FILTER(WHERE ${statusConciliacao} NOT IN ('conciliada','erro_erp_confirmado'))::integer AS vendas_com_pendencia
      FROM operacoes o WHERE ${scope} AND ${elegivel} GROUP BY o.vendedor_codigo)
-    SELECT vendedor_codigo,COALESCE(vendedor_nome,'Sem identificação') AS vendedor_nome,vendas,
+    SELECT vendedor_codigo,EXISTS(SELECT 1 FROM vendedor_fotos f WHERE f.filial=$1 AND f.vendedor_codigo=ranking.vendedor_codigo) AS possui_foto,COALESCE(vendedor_nome,'Sem identificação') AS vendedor_nome,vendas,
      round(100*valor_vendas::numeric/NULLIF(sum(valor_vendas) OVER(),0),4)::text AS participacao_percentual,valor_vendas::text AS valor_vendas_centavos,pecas::text AS pecas_cabecalho,ticket::text AS ticket_medio_centavos,round(pecas::numeric/NULLIF(vendas,0),4)::text AS pecas_por_venda,vendas_com_pendencia
     FROM ranking ORDER BY ${ordem} DESC,vendedor_codigo NULLS LAST LIMIT $5 OFFSET $6`,[...args,f.limite,(f.pagina-1)*f.limite])).rows;
    return {total,pagina:f.pagina,limite:f.limite,ordenar,ranking:rows,indicadores_provisorios:true,...await cobertura(db,f)};

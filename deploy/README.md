@@ -182,3 +182,9 @@ Validação: `npm test`, `npm run test:integration`, `node --env-file=.env scrip
 Catálogo e resumos atuais apresentam somente `presente_ultima_carga=true`; ausentes na carga completa ficam fora da apresentação e do enriquecimento cadastral, mantendo histórico/auditoria. Saldo nulo de um SKU retornado continua desconhecido, sem ser convertido em zero.
 
 A rota customizada ajustada por Maylon precisa cumprir [o contrato da nova origem](../apis/estoque-custom.md) antes da troca definitiva. Não apontar o worker para uma resposta sem identificação dos produtos ou sem suporte ao cursor. As correções de interface e leitura do catálogo podem ser publicadas independentemente dessa troca.
+
+## Fotos dos funcionários e filtro de estoque — 19/09/2026
+
+Construir API/worker com o novo lockfile (Sharp), fazer backup com os serviços pausados e aplicar migrations tenant 013/014. Fotos são bytea no banco existente; não requerem novo volume. Atualizar somente o virtual host do piloto com `deploy/nginx.conf`, validar `nginx -t` e recarregar: uploads precisam de limite 3 MB para o JSON/base64, restrito à rota de funcionários, com limite real de imagem 2 MB na API.
+
+O worker passa a armazenar `tipo_prod` do retorno padrão sem enviá-lo como parâmetro. A migration solicita uma carga completa; uma falha conserva a posição anterior. Conferir cobertura de `estoque_atual.tipo_prod` antes de declarar completa a filtragem AC. Nunca inferir tipo a partir do nome/SKU. Fotos são administrativas; leitura autenticada por filial e escopo próprio. Validar `scripts/verificar-fotos-funcionarios-ui.mjs` e `scripts/verificar-produtos-ui.mjs`.

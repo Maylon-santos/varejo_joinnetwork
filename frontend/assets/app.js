@@ -11,11 +11,11 @@ const decimal=v=>v==null?'—':new Intl.NumberFormat('pt-BR',{minimumFractionDig
 const dateBR=d=>d?d.slice(0,10).split('-').reverse().join('/'):'—';
 const when=d=>d?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(d)):'Ainda sem atualização';
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-const errorText={ESTOQUE_REQUER_PRODUTOS:'Para consultar estoque, habilite também a consulta de produtos.',USUARIO_INVALIDO:'Confira os dados do usuário.',VINCULOS_INVALIDOS:'Confira as filiais e os vínculos.',SENHA_INVALIDA:'Use uma senha com pelo menos 16 caracteres e no máximo 256 bytes.',PROPRIO_ACESSO_PROTEGIDO:'Seu próprio acesso é protegido. Outro Admin deve alterá-lo.',FILIAL_OBRIGATORIA:'Selecione pelo menos uma filial.',VENDEDOR_OBRIGATORIO:'Selecione o vendedor em cada filial.',VENDEDOR_NAO_ENCONTRADO:'Vendedor não encontrado no histórico desta filial.',EMAIL_JA_CADASTRADO:'Este e-mail já está cadastrado nesta empresa.',PERFIL_INVALIDO:'Confira o nome e as opções do cargo.',PERMISSAO_DEPENDENTE_DE_VENDAS:'Clientes, fotos e conferência precisam de acesso às movimentações.',VENDAS_REQUER_ESCOPO_PROPRIO:'O cargo Vendas deve acessar apenas as próprias vendas.',ESCOPO_INCOMPATIVEL:'Escolha filiais atribuídas para limitar às próprias vendas.',PERFIL_ADMIN_PROTEGIDO:'O perfil Admin mantém o acesso completo.',RECURSO_NAO_AUTORIZADO:'Seu acesso não permite consultar este recurso.',LOGIN_INVALIDO:'E-mail ou senha incorretos. Confira os dados e tente novamente.',LIMITE_DE_LOGIN:'Muitas tentativas de acesso. Aguarde 15 minutos antes de tentar novamente.',NAO_AUTENTICADO:'Sua sessão expirou. Entre novamente para continuar.',FILIAL_NAO_AUTORIZADA:'Esta loja ainda não está disponível para o seu acesso.',PERIODO_INVALIDO:'Escolha um período válido de até 366 dias.',LIMITE_DE_REQUISICOES:'Muitas consultas em sequência. Aguarde um minuto e tente novamente.',ERRO_INTERNO:'Não foi possível consultar os dados agora. Tente novamente.'};
+const errorText={FOTO_INVALIDA:'Escolha uma foto JPG, PNG ou WebP de até 2 MB, com até 20 megapixels.',ESTOQUE_REQUER_PRODUTOS:'Para consultar estoque, habilite também a consulta de produtos.',USUARIO_INVALIDO:'Confira os dados do usuário.',VINCULOS_INVALIDOS:'Confira as filiais e os vínculos.',SENHA_INVALIDA:'Use uma senha com pelo menos 16 caracteres e no máximo 256 bytes.',PROPRIO_ACESSO_PROTEGIDO:'Seu próprio acesso é protegido. Outro Admin deve alterá-lo.',FILIAL_OBRIGATORIA:'Selecione pelo menos uma filial.',VENDEDOR_OBRIGATORIO:'Selecione o vendedor em cada filial.',VENDEDOR_NAO_ENCONTRADO:'Vendedor não encontrado no histórico desta filial.',EMAIL_JA_CADASTRADO:'Este e-mail já está cadastrado nesta empresa.',PERFIL_INVALIDO:'Confira o nome e as opções do cargo.',PERMISSAO_DEPENDENTE_DE_VENDAS:'Clientes, fotos e conferência precisam de acesso às movimentações.',VENDAS_REQUER_ESCOPO_PROPRIO:'O cargo Vendas deve acessar apenas as próprias vendas.',ESCOPO_INCOMPATIVEL:'Escolha filiais atribuídas para limitar às próprias vendas.',PERFIL_ADMIN_PROTEGIDO:'O perfil Admin mantém o acesso completo.',RECURSO_NAO_AUTORIZADO:'Seu acesso não permite consultar este recurso.',LOGIN_INVALIDO:'E-mail ou senha incorretos. Confira os dados e tente novamente.',LIMITE_DE_LOGIN:'Muitas tentativas de acesso. Aguarde 15 minutos antes de tentar novamente.',NAO_AUTENTICADO:'Sua sessão expirou. Entre novamente para continuar.',FILIAL_NAO_AUTORIZADA:'Esta loja ainda não está disponível para o seu acesso.',PERIODO_INVALIDO:'Escolha um período válido de até 366 dias.',LIMITE_DE_REQUISICOES:'Muitas consultas em sequência. Aguarde um minuto e tente novamente.',ERRO_INTERNO:'Não foi possível consultar os dados agora. Tente novamente.'};
 let token=null,page='overview',filters=null,rankPage=1,salesPage=1,customerPage=1,abort=null,generation=0,refreshTimer=null,detailGeneration=0;
 let lastIndicators=null,permissoes=new Set(),isAdmin=false;
 const pode=recurso=>permissoes.has(recurso);
-const podePagina=next=>next==='products'?pode('produtos:ler'):next==='queue'?pode('fila:ler'):['permissions','users'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='customers'?(pode('clientes:ler')&&pode('vendas:ler')):next==='sales'&&pode('vendas:ler');
+const podePagina=next=>next==='products'?pode('produtos:ler'):next==='queue'?pode('fila:ler'):['permissions','users','employees'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='customers'?(pode('clientes:ler')&&pode('vendas:ler')):next==='sales'&&pode('vendas:ler');
 let detailAbort=null;const detailImageUrls=new Set();
 function clearDetailMedia(){detailAbort?.abort();$('photo-dialog').close();for(const url of detailImageUrls)URL.revokeObjectURL(url);detailImageUrls.clear();}
 async function api(path,options={}){
@@ -34,7 +34,7 @@ function exitSession(message=''){
  queueReportGeneration++;queueReportAbort?.abort();$('queue-report-content').replaceChildren();$('queue-report-section').open=false;queueReportFilters=null;
  clearInterval(queueTimer);$('queue-action-dialog').close();$('queue-content').replaceChildren();queueData=null;token=null;generation++;detailGeneration++;abort?.abort();clearInterval(refreshTimer);lastIndicators=null;
  $('app-view').hidden=true;$('login-view').hidden=false;$('password').value='';$('login-error').textContent=message;$('login-error').hidden=!message;
- $('products-list').replaceChildren();$('products-query').value='';$('products-mode').value='catalogo';$('products-balance').value='todos';
+ clearEmployeePhotos();clearSellerPhotos();$('employees-list').replaceChildren();$('employees-search').value='';$('products-type').value='AC';$('stock-total-card').hidden=true;$('products-list').replaceChildren();$('products-query').value='';$('products-mode').value='catalogo';$('products-balance').value='todos';
  $('customers-list').replaceChildren();$('customers-query').value='';$('customers-month').value='';$('detail-dialog').close();$('detail-content').replaceChildren();$('ranking-body').replaceChildren();$('sales-body').replaceChildren();$('chart').replaceChildren();
  for(const id of ['metric-value','metric-ticket','metric-pa','metric-pieces','metric-sales'])$(id).textContent='—';
  $('email').focus();
@@ -51,11 +51,11 @@ $('login-form').addEventListener('submit',async e=>{
   for(const button of document.querySelectorAll('[data-page]'))button.hidden=!podePagina(button.dataset.page);
   const inicial=['overview','sales','quality','queue','products','customers'].find(podePagina);
   if(!inicial)throw new Error('Seu perfil ainda não possui recursos liberados. Entre em contato com o administrador.');
-  $('user-email').textContent=me.usuario.email;$('branch').replaceChildren();$('queue-branch').replaceChildren();$('queue-day').value=today();queueData=null;$('queue-report-branch').replaceChildren();$('queue-report-start').value=today();$('queue-report-end').value=today();$('queue-report-seller').replaceChildren(new Option('Todos os autorizados',''));$('queue-report-section').hidden=!pode('fila:relatorios');$('queue-report-pagination').hidden=true;
-  for(const item of branches.filiais){const opt=el('option',branchLabel(item));opt.value=item.filial;$('branch').append(opt);$('queue-branch').append(opt.cloneNode(true));$('queue-report-branch').append(opt.cloneNode(true));}
+  $('user-email').textContent=me.usuario.email;$('branch').replaceChildren();$('employees-branch').replaceChildren();$('queue-branch').replaceChildren();$('queue-day').value=today();queueData=null;$('queue-report-branch').replaceChildren();$('queue-report-start').value=today();$('queue-report-end').value=today();$('queue-report-seller').replaceChildren(new Option('Todos os autorizados',''));$('queue-report-section').hidden=!pode('fila:relatorios');$('queue-report-pagination').hidden=true;
+  for(const item of branches.filiais){const opt=el('option',branchLabel(item));opt.value=item.filial;$('branch').append(opt);$('employees-branch').append(opt.cloneNode(true));$('queue-branch').append(opt.cloneNode(true));$('queue-report-branch').append(opt.cloneNode(true));}
   if(!branches.filiais.length)throw new Error('Nenhuma loja está liberada para este acesso.');
   $('login-view').hidden=true;$('app-view').hidden=false;page=inicial;rankPage=1;salesPage=1;$('period').value='month';setPeriod();setPage(inicial,false);applyFilters();
-  clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&!['permissions','users'].includes(page)&&!document.hidden&&!$('detail-dialog').open&&!$('product-dialog').open)loadData();},360000);
+  clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&!['permissions','users','employees'].includes(page)&&!document.hidden&&!$('detail-dialog').open&&!$('product-dialog').open)loadData();},360000);
  }catch(e){if(token){await api('/auth/logout',{method:'POST'}).catch(()=>{});token=null;}$('login-error').textContent=e.message;$('login-error').hidden=false;}
  finally{$('login-submit').disabled=false;$('login-submit').replaceChildren(document.createTextNode('Entrar no painel '),el('span','→'));}
 });
@@ -76,14 +76,14 @@ $('filters').addEventListener('submit',e=>{e.preventDefault();applyFilters();});
 function query(extra={}){return new URLSearchParams({...filters,...extra}).toString();}
 function setPage(next,load=true){
  if(!podePagina(next))return;
- clearOverviewMedia();
+ clearOverviewMedia();clearEmployeePhotos();clearSellerPhotos();
  clearInterval(queueTimer);if(next==='queue')queueTimer=setInterval(()=>{if(token&&!document.hidden&&!queueBusy&&!$('queue-action-dialog').open)loadQueue(true);},30000);
  page=next;salesPage=1;rankPage=1;customerPage=1;productPage=1;generation++;abort?.abort();
- $('products-panel').hidden=page!=='products';
+ $('products-panel').hidden=page!=='products';$('employees-panel').hidden=page!=='employees';
  for(const id of ['period','start-date','end-date'])$(id).parentElement.hidden=page==='products'&&$('products-mode').value==='catalogo';
- $('queue-panel').hidden=page!=='queue';$('customers-panel').hidden=page!=='customers';$('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users','queue'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users','queue'].includes(page);
- if(['permissions','users','queue'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
- const info={products:['Produtos e estoque','Consulte o saldo atual e os produtos vendidos na loja.'],queue:['Lista da Vez','Organize a equipe e acompanhe os atendimentos da loja.'],customers:['Clientes','Consulte o cadastro e os contatos dos seus clientes.'],users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
+ $('queue-panel').hidden=page!=='queue';$('customers-panel').hidden=page!=='customers';$('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users','employees','queue'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users','employees','queue'].includes(page);
+ if(['permissions','users','employees','queue'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
+ const info={employees:['Funcionários','Administre as fotos dos vendedores por filial.'],products:['Produtos e estoque','Consulte o saldo atual e os produtos vendidos na loja.'],queue:['Lista da Vez','Organize a equipe e acompanhe os atendimentos da loja.'],customers:['Clientes','Consulte o cadastro e os contatos dos seus clientes.'],users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
  $('page-title').textContent=info[0];$('breadcrumb-page').textContent=info[0];$('page-subtitle').textContent=info[1];
  for(const button of document.querySelectorAll('[data-page]')){const active=button.dataset.page===page;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');}
  $('sales-title').textContent=page==='quality'?'Conferência das operações':'Todas as movimentações';
@@ -99,6 +99,7 @@ async function loadData(){
  if(page==='queue'){await loadQueue();return;}
  if(page==='customers'){await loadCustomers();return;}
  if(page==='users'){await loadUsers();return;}
+ if(page==='employees'){await loadEmployees();return;}
  if(page==='permissions'){await loadPermissions();return;}
  if(!filters)return;
  const version=++generation;abort?.abort();abort=new AbortController();resetError();busy(true);$('data-notice').hidden=true;
@@ -157,12 +158,13 @@ function renderChart(d){
 }
 function initials(name){return(name||'?').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();}
 function renderRanking(d){
- const body=$('ranking-body');body.replaceChildren();
+ const body=$('ranking-body');body.replaceChildren();clearSellerPhotos();const photoVersion=++sellerPhotoVersion;
  if(!d.ranking.length)emptyTable(body,7,'Nenhum resultado para este período','O ranking aparecerá quando houver vendas.');
  d.ranking.forEach((r,index)=>{
   const row=el('tr'),seller=el('td'),cell=el('div',null,'seller-cell');
   const name=el('div');name.append(el('strong',r.vendedor_nome),el('small',r.vendas_com_pendencia?`${number(r.vendas_com_pendencia)} para conferir`:'Equipe de vendas'));
-  cell.append(el('span',String((rankPage-1)*5+index+1).padStart(2,'0'),'rank-number'),el('span',initials(r.vendedor_nome),'seller-avatar'),name);seller.append(cell);row.append(seller,el('td',number(r.vendas)),el('td',number(r.pecas_cabecalho)),el('td',decimal(r.pecas_por_venda)),el('td',money(r.ticket_medio_centavos)));
+  const avatar=el('span',initials(r.vendedor_nome),'seller-avatar');if(r.possui_foto)loadSellerPhoto(avatar,r,filters.filial,photoVersion);
+  cell.append(el('span',String((rankPage-1)*5+index+1).padStart(2,'0'),'rank-number'),avatar,name);seller.append(cell);row.append(seller,el('td',number(r.vendas)),el('td',number(r.pecas_cabecalho)),el('td',decimal(r.pecas_por_venda)),el('td',money(r.ticket_medio_centavos)));
   const amount=el('td');amount.append(el('strong',money(r.valor_vendas_centavos)));row.append(amount,el('td',r.participacao_percentual==null?'—':decimal(r.participacao_percentual)+'%'));body.append(row);
  });
  $('ranking-summary').textContent=d.total?`${(rankPage-1)*5+1}–${Math.min(rankPage*5,d.total)} de ${number(d.total)} vendedores`:'Nenhum vendedor com vendas';$('rank-prev').disabled=rankPage===1;$('rank-next').disabled=rankPage*5>=d.total;
@@ -441,11 +443,11 @@ let productPage=1;
 async function loadProducts(){
  if(!filters)return;
  const version=++generation;abort?.abort();clearOverviewMedia();abort=new AbortController();resetError();busy(true);$('data-notice').hidden=true;$('products-panel').hidden=false;$('products-list').replaceChildren();$('products-status').textContent='Consultando produtos…';
- const vendas=$('products-mode').value==='vendas';
+ const vendas=$('products-mode').value==='vendas';$('stock-total-card').hidden=true;$('products-type-label').hidden=vendas;
  for(const id of ['period','start-date','end-date'])$(id).parentElement.hidden=!vendas;
  $('products-mode').querySelector('[value="vendas"]').hidden=!pode('vendas:ler');$('products-balance-label').hidden=vendas||!pode('estoque:ler');
  $('products-prev').disabled=true;$('products-next').disabled=true;
- const params=new URLSearchParams({filial:filters.filial,busca:$('products-query').value,pagina:productPage,...(vendas?{inicio:filters.inicio,fim:filters.fim}:{saldo:pode('estoque:ler')?$('products-balance').value:'todos'})});
+ const params=new URLSearchParams({filial:filters.filial,busca:$('products-query').value,pagina:productPage,...(vendas?{inicio:filters.inicio,fim:filters.fim}:{saldo:pode('estoque:ler')?$('products-balance').value:'todos',tipo_prod:$('products-type').value})});
  try{
   const d=await api('/produtos'+(vendas?'/indicadores':'')+'?'+params,{signal:abort.signal});if(version!==generation||page!=='products')return;
   $('products-rule').textContent=d.regra;
@@ -456,7 +458,10 @@ async function loadProducts(){
    $('last-sync').textContent='Vendas atualizadas: '+when(d.sincronizacao.find(s=>s.recurso==='vendas')?.ultimo_sucesso);
   }else{
    const sync=d.sincronizacao;
+   if(d.resumo_estoque){const r=d.resumo_estoque;$('stock-total-card').hidden=false;$('stock-total-value').textContent=r.saldo_disponivel===null?(r.skus===0?(d.skus_sem_tipo&&d.tipo_prod!=='todos'?'Aguardando classificação':'0'):'Saldo não informado'):decimal(r.saldo_disponivel);$('stock-total-context').textContent=`${$('products-type').selectedOptions[0].textContent} · ${number(r.skus)} SKUs na filial. Soma dos saldos conhecidos, incluindo negativos; independente da busca, do filtro de saldo e da página. ${number(r.sem_saldo)} sem saldo informado.${d.skus_sem_tipo&&d.tipo_prod!=='todos'?' Total parcial: há SKUs sem tipo informado.':''} Atualizado: ${when(sync?.ultimo_sucesso)}.`;}
+
    $('products-status').textContent=`${number(d.total)} SKUs cadastrados. `+(!sync?.ultimo_sucesso?'Carga inicial de estoque pendente.':sync.ultimo_erro_codigo?'Atualização pendente; exibindo a última posição recebida.':sync.desatualizado?'A última posição tem mais de 30 minutos. Consulte a data de atualização.':'Posição salva na última sincronização.');
+   if(d.skus_sem_tipo)$('products-status').append(` ${number(d.skus_sem_tipo)} SKUs ainda sem tipo informado pelo ERP; consulte a opção Tipo não informado.`);
    $('last-sync').textContent='Estoque atualizado: '+when(sync?.ultimo_sucesso);
   }
   const jobs=[];overviewPhotoAbort=new AbortController();const photoSignal=overviewPhotoAbort.signal;
@@ -477,6 +482,7 @@ async function loadProducts(){
  finally{if(version===generation)busy(false);}
 }
 $('products-search').addEventListener('submit',e=>{e.preventDefault();productPage=1;loadData();});
+$('products-type').addEventListener('change',()=>{productPage=1;loadData();});
 $('products-mode').addEventListener('change',()=>{productPage=1;loadData();});
 $('products-prev').addEventListener('click',()=>{productPage--;loadData();});
 $('products-next').addEventListener('click',()=>{productPage++;loadData();});
@@ -585,3 +591,31 @@ function openCatalogDetails(p,estoque,sync){
  classification.append(el('p',p.enriquecido_em?'Cadastro atualizado: '+when(p.enriquecido_em):'Classificação do produto aguardando atualização.'));content.append(classification);
  if(!$('product-dialog').open)$('product-dialog').showModal();document.body.classList.add('modal-open');
 }
+
+const employeePhotoUrls=new Set();let employeeAbort=null;
+function clearEmployeePhotos(){employeeAbort?.abort();for(const u of employeePhotoUrls)URL.revokeObjectURL(u);employeePhotoUrls.clear();}
+function sellerPhotoPath(filial,codigo){return '/funcionarios/'+encodeURIComponent(filial)+'/'+encodeURIComponent(codigo)+'/foto';}
+async function loadEmployees(){
+ const version=++generation;abort?.abort();clearEmployeePhotos();abort=new AbortController();employeeAbort=new AbortController();const signal=employeeAbort.signal;resetError();$('loading').hidden=true;$('employees-list').replaceChildren();$('employees-status').textContent='Carregando vendedores…';
+ const filial=$('employees-branch').value;
+ try{
+  const d=await api('/funcionarios?'+new URLSearchParams({filial}),{signal:abort.signal});if(version!==generation)return;
+  const busca=$('employees-search').value.trim().toLocaleLowerCase('pt-BR'),rows=d.vendedores.filter(v=>(v.vendedor_nome+' '+v.vendedor_codigo).toLocaleLowerCase('pt-BR').includes(busca));
+  $('employees-status').textContent=rows.length+' vendedor(es). Fotos: JPG, PNG ou WebP de até 2 MB.';
+  const jobs=[];
+  for(const v of rows){
+   const card=el('article',null,'employee-card'),preview=el('span',initials(v.vendedor_nome),'employee-photo'),copy=el('div'),form=el('form',null,'employee-photo-form'),input=el('input'),save=el('button','Salvar foto','button primary'),remove=el('button','Remover foto','button'),status=el('p',null,'employee-photo-status');
+   card.dataset.codigo=v.vendedor_codigo;copy.append(el('h3',v.vendedor_nome||'Sem nome'),el('p','Código: '+v.vendedor_codigo));input.type='file';input.accept='image/jpeg,image/png,image/webp';input.required=true;input.setAttribute('aria-label','Foto de '+v.vendedor_nome);save.type='submit';remove.type='button';remove.hidden=!v.foto_atualizada_em;status.setAttribute('role','status');form.append(input,save,remove,status);card.append(preview,copy,form);$('employees-list').append(card);
+   if(v.foto_atualizada_em)jobs.push(async()=>{try{const response=await fetch('/api/v1'+sellerPhotoPath(filial,v.vendedor_codigo),{headers:{Authorization:'Bearer '+token},signal});if(!response.ok)return;const blob=await response.blob();if(version!==generation||signal.aborted)return;const u=URL.createObjectURL(blob);employeePhotoUrls.add(u);const img=el('img');img.src=u;img.alt=v.vendedor_nome;preview.replaceChildren(img);}catch{}});
+   form.addEventListener('submit',async event=>{event.preventDefault();const file=input.files[0];if(!file||file.size>2*1024*1024){status.textContent='Escolha uma foto de até 2 MB.';return;}save.disabled=true;remove.disabled=true;status.textContent='Salvando foto…';try{const buffer=new Uint8Array(await file.arrayBuffer());let binary='';for(const byte of buffer)binary+=String.fromCharCode(byte);await api(sellerPhotoPath(filial,v.vendedor_codigo),{method:'PUT',body:JSON.stringify({imagem:btoa(binary)})});if(version!==generation)return;await loadEmployees();$('employees-status').textContent='Foto salva para '+v.vendedor_nome+'.';}catch(e){status.textContent=e.message;}finally{save.disabled=false;remove.disabled=false;}});
+   remove.addEventListener('click',async()=>{if(!confirm('Remover a foto de '+v.vendedor_nome+'?'))return;remove.disabled=true;try{await api(sellerPhotoPath(filial,v.vendedor_codigo),{method:'DELETE'});if(version===generation)await loadEmployees();}catch(e){status.textContent=e.message;remove.disabled=false;}});
+  }
+  await Promise.all(Array.from({length:4},async()=>{while(jobs.length&&!signal.aborted&&version===generation)await jobs.shift()();}));
+ }catch(e){if(e.name!=='AbortError'&&version===generation)$('employees-status').textContent=e.message;}
+}
+$('employees-branch').addEventListener('change',loadEmployees);
+let employeeSearchTimer;$('employees-search').addEventListener('input',()=>{clearTimeout(employeeSearchTimer);employeeSearchTimer=setTimeout(()=>{if(page==='employees')loadEmployees();},300);});
+
+const sellerPhotoUrls=new Set();let sellerPhotoVersion=0,sellerPhotoAbort=null;
+function clearSellerPhotos(){sellerPhotoAbort?.abort();sellerPhotoAbort=new AbortController();sellerPhotoVersion++;for(const u of sellerPhotoUrls)URL.revokeObjectURL(u);sellerPhotoUrls.clear();}
+async function loadSellerPhoto(avatar,v,filial,version){try{const r=await fetch('/api/v1'+sellerPhotoPath(filial,v.vendedor_codigo),{headers:{Authorization:'Bearer '+token},signal:sellerPhotoAbort.signal});if(!r.ok)return;const blob=await r.blob();if(version!==sellerPhotoVersion||!avatar.isConnected)return;const url=URL.createObjectURL(blob);sellerPhotoUrls.add(url);const img=el('img');img.src=url;img.alt=v.vendedor_nome;avatar.replaceChildren(img);}catch{}}

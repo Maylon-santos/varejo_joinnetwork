@@ -1,4 +1,17 @@
-# Comece aqui — estado atual em 16/09/2026
+# Comece aqui — estado atual em 19/09/2026
+
+## Total de estoque, tipo de produto e fotos de funcionários — 19/09/2026
+
+- [x] Card com soma do estoque da filial para o tipo escolhido, considerando todos os SKUs/páginas e incluindo saldos negativos. Busca e filtro de saldo não alteram esse total; saldos desconhecidos são sinalizados.
+- [x] Filtro local **AC — Acabado** como padrão, com SE, MP, MC, Todos os tipos e Tipo não informado. `tipo_prod` é lido do **retorno** do ERP; a requisição padrão continua enviando somente `filial` e `trans_id`.
+- [x] **Funcionários**, exclusivo para Admin: seleção de filial/vendedor, upload, substituição e remoção de foto. JPEG/PNG/WebP até 2 MB, validação e armazenamento no banco do tenant. Foto também exibida no ranking; leitura respeita filial e escopo próprio.
+- [x] Foto fornecida cadastrada e conferida visualmente no vendedor indicado de **AERO-014 — Curitiba**. CPF/nascimento não foram adicionados ao cadastro; arquivo pessoal permanece fora do Git.
+- [x] 59 testes unitários e 59 de integração; interface no computador/celular e consulta pública das 14 filiais aprovadas. Backup `backup-20260919T152713Z-yH6mHK`; migrations 013/014, API/worker e proxy publicados. API/PostgreSQL saudáveis; worker remoto ativo, local desativado.
+- [ ] **Cobertura do tipo depende do retorno do ERP**: amostra da rota padrão trouxe quatro SKUs sem `tipo_prod`. Após publicação, 13 de 14 filiais concluíram releitura automática; uma estava em retentativa. Dos 34.434 SKUs presentes, nenhum tinha tipo preenchido na conferência final. Não homologar AC nem declarar concluída a separação dos materiais.
+- [ ] Confirmar publicação do campo no ERP e repetir a carga completa para preencher registros antigos. Enquanto isso, AC mostra **Aguardando classificação**; **Todos os tipos** permite consultar o total e a posição salva. Campos ausentes não são inferidos a partir do nome do produto.
+
+Evidências: `docs/validacao-tipo-fotos.json`, `docs/validacao-tipo-fotos-producao.json`, `docs/validacao-fotos-funcionarios-ui.json` e `docs/validacao-produtos-ui.json`. Uso: [Fotos dos funcionários](docs/FOTOS_FUNCIONARIOS.md). R23 concluída; R19 mantém a dependência de dados. A proposta anterior de trocar para CONSULTAESTOQUES foi substituída pela leitura do novo campo na rota padrão.
+
 
 ## Estoque em lista e pagamento no celular — 16/09/2026
 

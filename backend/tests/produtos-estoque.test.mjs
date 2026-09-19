@@ -16,8 +16,14 @@ test('cadastro usa produto interno e conserva somente classificação autorizada
  const p=normalizarProduto(body([{produto:9,cod_produto:'CAM',descricao:'Camiseta',trans_id:2,cod_marca:'A',desc_marca:'Exemplo',segredo:'ignorar'}]),'9');assert.deepEqual(p.classificacao.marca,{codigo:'A',descricao:'Exemplo'});assert.ok(!('segredo' in p));assert.throws(()=>normalizarProduto(body([]),'9'));
 });
 test('consulta envia cursor e filial e recusa redirecionamento',async()=>{
- let url,opt;await consultarEstoque({baseUrl:'https://erp.example/api',token:'teste',filial:'1',cursor:'19',fetchImpl:async(u,o)=>{url=u;opt=o;return new Response(JSON.stringify(body([item])));}});assert.equal(url.searchParams.get('filial'),'1');assert.equal(url.searchParams.get('trans_id'),'19');assert.equal(opt.redirect,'error');
+ let url,opt;await consultarEstoque({baseUrl:'https://erp.example/api',token:'teste',filial:'1',cursor:'19',fetchImpl:async(u,o)=>{url=u;opt=o;return new Response(JSON.stringify(body([item])));}});assert.equal(url.searchParams.get('filial'),'1');assert.equal(url.searchParams.get('trans_id'),'19');assert.equal(opt.redirect,'error');assert.equal(url.searchParams.has('tipo_prod'),false);
 });
 test('estoque requer produtos e não concede vendas',()=>{
  const p={nome:'Equipe',permissoes:['estoque:ler'],todas_filiais:false,somente_proprias_vendas:false};assert.throws(()=>validarPerfil('Gerentes',p),/ESTOQUE_REQUER/);p.permissoes.push('produtos:ler');assert.deepEqual(validarPerfil('Gerentes',p).permissoes,p.permissoes);
+});
+
+test('tipo_prod é lido do retorno e não inferido quando ausente',()=>{
+ for(const tipo_prod of ['AC','SE','MP','MC'])assert.equal(normalizarEstoque(body([{...item,tipo_prod}]),'1')[0].tipo_prod,tipo_prod);
+ assert.equal(normalizarEstoque(body([item]),'1')[0].tipo_prod,null);
+ assert.equal(normalizarEstoque(body([{...item,tipo_prod:' ac '}]),'1')[0].tipo_prod,'AC');
 });

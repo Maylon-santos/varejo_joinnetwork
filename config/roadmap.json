@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-09-16",
+  "atualizadoEm": "2026-09-19",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -114,7 +114,7 @@
       "id": "R19",
       "titulo": "Produtos, estoque e indicadores adicionais",
       "status": "em_andamento",
-      "detalhe": "Publicados Top 20 por produto (valor padrão/quantidade), detalhes, estoque em lista com miniaturas, COD_FILIAL - Fantasia e correção do card de pagamento no celular. 58 testes unitários, 57 de integração e navegador local/público nas 14 filiais aprovados. Recarga dos acabados pendente: origem atual saldodeestoque aceita filial/trans_id, mas rejeita tipo_prod=AC (HTTP 400). Consulta customizada exclui a bobina, porém precisa de trans_id de entrada e campos de identificação; contrato em apis/estoque-custom.md. Não houve limpeza/recarga em produção; código --completa preparado localmente. Demais pendências: fotos na origem, eventos/devoluções, pagamentos conciliados, estoque histórico, bruto/líquido e cobertura; docs/INDICADORES_VISAO_GERAL.md. R11 mensal/anual pendente."
+      "detalhe": "Publicados indicadores, Top 20, estoque em lista e card de total da filial com filtro tipo_prod (AC padrão). Tipo é campo do retorno da rota saldodeestoque; requisição mantém filial/trans_id. Na conferência de 19/09, 34.434 SKUs sem tipo; confirmar publicação do campo no ERP e recarregar, sem presumir AC. 13 filiais com releitura concluída e uma em retentativa. Interface aprovada nas 14 filiais; 118 testes. Pendências de eventos/devoluções, pagamentos conciliados, estoque histórico, bruto/líquido e cobertura mantidas; R11 mensal/anual pendente."
     },
     {
       "id": "R20",
@@ -137,8 +137,8 @@
     {
       "id": "R23",
       "titulo": "Fotos dos vendedores",
-      "status": "pendente",
-      "detalhe": "Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais."
+      "status": "concluido",
+      "detalhe": "Upload manual definido e publicado em 19/09: Admin inclui, substitui e remove foto por filial/código ERP em Funcionários; imagem aparece no ranking. Formatos validados, backup no tenant, escopo próprio preservado. Foto solicitada vinculada em AERO-014. 118 testes e navegador local/público aprovados."
     },
     {
       "id": "R24",

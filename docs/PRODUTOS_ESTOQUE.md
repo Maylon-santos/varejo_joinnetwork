@@ -63,3 +63,11 @@ A rota efetivamente em uso continua `millenium_eco/produtos/saldodeestoque`, com
 A rota `MILLENIUM!JOINNETWORK.VAREJO.CONSULTAESTOQUES` ajustada já exclui o material de consumo informado, mas só recebe a filial e filtros pontuais: rejeitou `trans_id`, e não retorna identificação completa do produto. [Contrato a completar](../apis/estoque-custom.md). A limpeza/nova carga solicitada ainda não ocorreu. O comando `--completa` está preparado e testado localmente, aguardando origem compatível para implantação no worker. Não se deve substituir posição salva por uma resposta incompleta.
 
 Fotos do catálogo são obtidas de itens de vendas do mesmo SKU/produto, dentro da filial/vendedor autorizados. Não há consulta ao ERP ao abrir os detalhes. Sem referência permitida, manter indicação de imagem ausente. O saldo e filtros de saldo continuam exigindo `estoque:ler`.
+
+## Total da filial e tipo de produto — 19/09/2026
+
+Na consulta **Catálogo e estoque atual**, o filtro de tipo inicia em **AC — Acabado**. Alternativas: SE — Serviço, MP — Matéria-prima, MC — Material de consumo, Todos os tipos e Tipo não informado. A troca consulta somente o banco local.
+
+O card **Total de estoque na filial** soma os saldos conhecidos de todos os SKUs presentes do tipo escolhido, incluindo negativos, independentemente da busca, do filtro de saldo e da página. Saldo desconhecido não vira zero. SKUs sem tipo não são presumidos acabados; a quantidade sem classificação aparece no aviso, e o total filtrado é sinalizado como parcial enquanto essa cobertura estiver pendente.
+
+A origem permanece `millenium_eco/produtos/saldodeestoque`, com parâmetros **filial e trans_id**. Conforme esclarecimento de Maylon, **tipo_prod é um campo do retorno**, não um parâmetro enviado ao ERP. A migration 014 acrescenta o campo à posição por SKU e solicita a releitura completa, conservando cursores e históricos comerciais.

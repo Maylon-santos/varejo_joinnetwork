@@ -1,0 +1,110 @@
+{
+  "verificadoEm": "2026-09-19T15:44:34.145Z",
+  "dominio": "aeropostale.joinnetwork.com.br",
+  "filiais": [
+    {
+      "filial": "30098297",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 3829,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098400",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 2821,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098401",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 3115,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098409",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 3038,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098495",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 2502,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098696",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 2710,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098697",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 2462,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098704",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 907,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098702",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 2462,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098708",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 2742,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098795",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 4295,
+      "erroEstoque": "23"
+    },
+    {
+      "filial": "30098802",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 1876,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098797",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 181,
+      "erroEstoque": null
+    },
+    {
+      "filial": "30098699",
+      "filtroLocalAc": true,
+      "skusAc": 0,
+      "skusSemTipo": 1494,
+      "erroEstoque": null
+    }
+  ],
+  "adminFuncionarios": true,
+  "acPadrao": true,
+  "totalTodosTipos": true,
+  "mobileSemOverflow": true,
+  "consultaFilialNaoAutorizada": 403,
+  "errors": []
+}

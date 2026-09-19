@@ -1,5 +1,12 @@
 # Contrato para carga e atualização do estoque
 
+## Atualização de 19/09/2026 — decisão atual
+
+Maylon esclareceu que `tipo_prod` foi acrescentado ao **retorno** de `millenium_eco/produtos/saldodeestoque`, não aos parâmetros da consulta. A implementação mantém essa rota, com `filial` e `trans_id`, e persiste o tipo por SKU para filtragem local. AC é o padrão da tela; não é enviado como parâmetro ERP.
+
+A amostra real consultada em 19/09 ainda retornou quatro SKUs sem esse campo. Cobertura após publicação: 34.434 SKUs presentes, zero com tipo; 13 releituras completas e uma filial em retentativa. Aguardamos o campo aparecer no ambiente acessado para completar a classificação, mantendo dados desconhecidos explícitos. A proposta customizada abaixo fica como registro histórico, **não é a implementação atual nem requisito para publicar fotos/total**.
+
+
 ## Rota e situação em 16/09/2026
 
 Maylon ajustou `MILLENIUM!JOINNETWORK.VAREJO.CONSULTAESTOQUES` para excluir materiais de consumo. Consulta de ITUPEVA apenas com `filial` retornou 3.946 SKUs e não retornou a bobina de código `050051` / SKU `30197580_0_0_U`.

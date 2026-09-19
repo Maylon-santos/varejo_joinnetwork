@@ -1,0 +1,26 @@
+{
+  "verificadoEm": "2026-09-19T15:47:03.737298+00:00",
+  "testesUnitarios": 59,
+  "testesIntegracao": 59,
+  "filiaisVerificadas": 14,
+  "fotoSolicitadaCadastrada": true,
+  "dadosPessoaisVersionados": false,
+  "backup": "backup-20260919T152713Z-yH6mHK",
+  "apiImage": "sha256:da5d468a295a2b13310b2ed42903a79114ea72d3b7753daee951feaf162042d9",
+  "workerImage": "sha256:dc3210e960cbb033a9c524f0b6fedbe477f304667f0ba186b4e5f800511dd29f",
+  "rotaErp": "millenium_eco/produtos/saldodeestoque",
+  "parametrosErp": [
+    "filial",
+    "trans_id"
+  ],
+  "tipoProdNoRetornoAmostrado": false,
+  "amostraIncrementalSkus": 4,
+  "tipoPadraoTela": "AC",
+  "skusPresentes": 34434,
+  "skusComTipo": 0,
+  "releiturasCompletasAposPublicacao": 13,
+  "filiaisEmRetentativa": 1,
+  "separacaoAcHomologada": false,
+  "apiPostgresSaudaveis": true,
+  "workerRemotoAtivo": true
+}

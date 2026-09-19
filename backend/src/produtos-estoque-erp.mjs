@@ -20,7 +20,8 @@ export function normalizarEstoque(body,filial,cursor='0'){
   if(typeof r.sku!=='string'||!r.sku.trim()||r.sku.length>200||!texto(r.cod_produto)||!texto(r.desc_produto))throw Error('PRODUTO_ERP_INVALIDO');
   const saldo=r.saldo==null?null:String(r.saldo);
   if(saldo!==null&&!/^-?\d{1,14}(\.\d{1,6})?$/.test(saldo))throw Error('SALDO_ERP_INVALIDO');
-  const item={filial,sku:r.sku,produto:inteiroErp(r.produto),cod_produto:texto(r.cod_produto),descricao:texto(r.desc_produto),cor:texto(r.cor),tamanho:texto(r.tamanho),barra:texto(r.barra),saldo,trans_id,data_atualizacao_erp:data(r.data_atualizacao)};
+  const tipo_prod=texto(r.tipo_prod,20)?.toUpperCase()||null;
+  const item={filial,tipo_prod,sku:r.sku,produto:inteiroErp(r.produto),cod_produto:texto(r.cod_produto),descricao:texto(r.desc_produto),cor:texto(r.cor),tamanho:texto(r.tamanho),barra:texto(r.barra),saldo,trans_id,data_atualizacao_erp:data(r.data_atualizacao)};
   const anterior=unicos.get(item.sku);if(anterior&&JSON.stringify(anterior)!==JSON.stringify(item))throw Error('ESTOQUE_SKU_DUPLICADO');
   unicos.set(item.sku,item);
  }

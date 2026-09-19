@@ -76,3 +76,17 @@ test('fotos do catálogo respeitam filial, produto, vendedor e permissão de ima
  await e.control.query("UPDATE access_roles SET permissoes=permissoes-'imagens:ler' WHERE role='Vendas' AND tenant_key='teste'");assert.equal((await api(e,'/produtos?filial=1','vendas')).data.produtos[0].imagem,null);
  }finally{await e.close();}
 });
+
+test('tipo retornado pelo ERP: filtro local e total de toda a filial independentes de página/busca/saldo, desconhecidos e permissões',async()=>{
+ const e=await ambienteFila();try{
+  const rows=[...Array.from({length:35},(_,i)=>({...row('AC'+i,'2'),tipo_prod:'AC'})),{...row('NEG','-3'),tipo_prod:'AC'},{...row('NULL',null),tipo_prod:'AC'},{...row('BOBINA','100'),tipo_prod:'MC'},row('SEM','5')];
+  await sincronizarEstoque({pool:e.pool,tenant:'teste',filial:'1',consultar:async()=>rows});
+  const d=(await api(e,'/produtos?filial=1&tipo_prod=AC')).data;assert.equal(d.total,37);assert.equal(d.produtos.length,30);assert.equal(Number(d.resumo_estoque.saldo_disponivel),67);assert.equal(d.resumo_estoque.sem_saldo,1);assert.equal(d.skus_sem_tipo,1);
+  const second=(await api(e,'/produtos?filial=1&tipo_prod=AC&pagina=2')).data;assert.deepEqual(second.resumo_estoque,d.resumo_estoque);
+  const busca=(await api(e,'/produtos?filial=1&tipo_prod=AC&busca=NEG&saldo=negativo')).data;assert.equal(busca.total,1);assert.deepEqual(busca.resumo_estoque,d.resumo_estoque);
+  assert.equal((await api(e,'/produtos?filial=1&tipo_prod=MC')).data.total,1);assert.equal((await api(e,'/produtos?filial=1&tipo_prod=desconhecido')).data.total,1);assert.equal((await api(e,'/produtos?filial=1&tipo_prod=SE')).data.total,0);assert.equal((await api(e,'/produtos?filial=1&tipo_prod=INVALIDO')).status,400);
+  assert.equal((await api(e,'/produtos?filial=2&tipo_prod=AC')).data.total,0);
+  await e.control.query("UPDATE access_roles SET permissoes='[\"produtos:ler\"]' WHERE role='Gerentes' AND tenant_key='teste'");
+  assert.equal((await api(e,'/produtos?filial=1&tipo_prod=AC','leitor')).data.resumo_estoque,null);
+ }finally{await e.close();}
+});

@@ -14,14 +14,14 @@ export function limitador({limite=120,janelaMs=60000,agora=Date.now}={}){
   const b=buckets.get(chave);b.total++;return b.total<=limite;
  };
 }
-async function lerJson(req){
+async function lerJson(req,limite=4096){
  if((req.headers['content-type']??'').split(';')[0]!=='application/json')throw new ErroApi(415,'JSON_OBRIGATORIO');
  const chunks=[];let bytes=0;
- for await(const chunk of req){bytes+=chunk.length;if(bytes>4096)throw new ErroApi(413,'CORPO_MUITO_GRANDE');chunks.push(chunk);}
+ for await(const chunk of req){bytes+=chunk.length;if(bytes>limite)throw new ErroApi(413,'CORPO_MUITO_GRANDE');chunks.push(chunk);}
  try{const v=JSON.parse(Buffer.concat(chunks).toString('utf8'));if(!v||typeof v!=='object'||Array.isArray(v))throw new Error();return v;}
  catch{throw new ErroApi(400,'JSON_INVALIDO');}
 }
-export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuarios,fila,produtos,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
+export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuarios,funcionarios,fila,produtos,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
  const server=createServer(async(req,res)=>{
   const requestId=randomUUID();
   res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
@@ -47,6 +47,23 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
    const painelUsuario=painel.restringir(acesso.filiais,acesso.vendedores);
    if(path==='/api/v1/auth/me'&&req.method==='GET')return enviar(200,{usuario:{id:user.id,email:user.email,role:user.role,role_nome:user.role_nome,tenant_key:user.tenant_key,permissoes:acesso.permissoes,filiais:acesso.filiais,somente_proprias_vendas:user.somente_proprias_vendas}});
    if(path==='/api/v1/auth/logout'&&req.method==='POST'){await auth.logout(token);return enviar(200,{ok:true});}
+   if(path==='/api/v1/funcionarios'){
+    if(!funcionarios)throw new ErroApi(503,'GESTAO_INDISPONIVEL');
+    if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');
+    if([...url.searchParams.keys()].some(k=>k!=='filial')||url.searchParams.getAll('filial').length!==1)throw new ErroApi(400,'PARAMETRO_INVALIDO');
+    return enviar(200,await funcionarios.listar(user,url.searchParams.get('filial')));
+   }
+   const fotoVendedor=/^\/api\/v1\/funcionarios\/(\d+)\/([^/]+)\/foto$/.exec(path);
+   if(fotoVendedor){
+    if(!funcionarios)throw new ErroApi(503,'GESTAO_INDISPONIVEL');
+    if(url.search)throw new ErroApi(400,'PARAMETRO_INVALIDO');
+    const filial=fotoVendedor[1],codigo=decodeURIComponent(fotoVendedor[2]);
+    if(req.method==='GET'){const bytes=await funcionarios.foto(user,filial,codigo);res.setHeader('Content-Type','image/jpeg');res.setHeader('Content-Length',bytes.length);res.writeHead(200);return res.end(bytes);}
+    if(user.role!=='Admin')throw new ErroApi(403,'RECURSO_NAO_AUTORIZADO');
+    if(req.method==='PUT')return enviar(200,await funcionarios.salvar(user,filial,codigo,await lerJson(req,2800000),()=>auth.autenticar(token)));
+    if(req.method==='DELETE')return enviar(200,await funcionarios.remover(user,filial,codigo));
+    throw new ErroApi(405,'METODO_NAO_PERMITIDO');
+   }
    const usuarios=/^\/api\/v1\/acessos\/usuarios(?:\/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}))?$/.exec(path);
    if(usuarios||path==='/api/v1/acessos/vendedores'){
     if(user.role!=='Admin')throw new ErroApi(403,'RECURSO_NAO_AUTORIZADO');
@@ -85,7 +102,7 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
     if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');
     if(!produtos)throw new ErroApi(503,'PRODUTOS_INDISPONIVEIS');
     const metodo=path.endsWith('/detalhe')?'detalhe':path.endsWith('/top')?'top':path.endsWith('/resumo-estoque')?'resumoEstoque':path.endsWith('/indicadores')?'indicadores':'listar';
-    const campos={top:['filial','inicio','fim','ordenar'],detalhe:['filial','inicio','fim','chave','pagina'],resumoEstoque:['filial'],indicadores:['filial','inicio','fim','busca','pagina'],listar:['filial','busca','pagina','saldo']}[metodo];
+    const campos={top:['filial','inicio','fim','ordenar'],detalhe:['filial','inicio','fim','chave','pagina'],resumoEstoque:['filial'],indicadores:['filial','inicio','fim','busca','pagina'],listar:['filial','busca','pagina','saldo','tipo_prod']}[metodo];
     for(const k of url.searchParams.keys())if(!campos.includes(k)||url.searchParams.getAll(k).length!==1)throw new ErroApi(400,'PARAMETRO_INVALIDO');
     return enviar(200,await produtos[metodo](user,url.searchParams));
    }

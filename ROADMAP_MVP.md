@@ -3,7 +3,7 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-16 de 26 tarefas deste quadro concluídas. Atualização: 2026-09-16. A contagem não representa prazo ou esforço.
+17 de 26 tarefas deste quadro concluídas. Atualização: 2026-09-19. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
@@ -11,7 +11,7 @@
 | R17 — Notificações internas e alertas | R19 — Produtos, estoque e indicadores adicionais | — | R02 — Painel e acesso Admin |
 | R18 — Campanhas e mensagens | R22 — Definir bruto, líquido e devoluções | — | R03 — Publicação com HTTPS e backup diário |
 | R20 — SaaS: provisionamento, planos e cobrança | R25 — Completar preços e pagamentos do histórico | — | R04 — Correções de celular e fotos |
-| R23 — Fotos dos vendedores | R26 — Completar identificação e aniversários do histórico | — | R05 — Clientes importados junto com a venda |
+| — | R26 — Completar identificação e aniversários do histórico | — | R05 — Clientes importados junto com a venda |
 | — | — | — | R06 — Homologação de ITUPEVA |
 | — | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
 | — | — | — | R08 — Exibir COD_FILIAL no seletor |
@@ -22,6 +22,7 @@
 | — | — | — | R14 — Retenção e cópia externa dos backups |
 | — | — | — | R15 — Cadastro unificado e aniversariantes |
 | — | — | — | R21 — Kanban na central e no roadmap |
+| — | — | — | R23 — Fotos dos vendedores |
 | — | — | — | R24 — Detalhes: preços e parcelas do pagamento |
 
 ### Pendências e dependências
@@ -30,14 +31,27 @@
 - [ ] **R16 — Fila de atendimento:** R16.1 e relatórios/movimento intenso da R16.2 publicados em 15/09. Relatórios por filial/período (até 31 dias), vendedor/dia, tempos, motivos e histórico. Gestão liga/desliga ordem flexível com motivo, mantendo um atendimento aberto por vendedor. Permissão específica de relatórios; Vendas somente próprios dados. 52 testes unitários, 45 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Manual v1.1 entregue; treinamento da equipe ainda deve ser realizado. Pendentes: definição de correções gerenciais do histórico e R16.3 associação/confirmação de venda no ERP. Nenhum atendimento real alterado pelos testes.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
-- [ ] **R19 — Produtos, estoque e indicadores adicionais:** Publicados Top 20 por produto (valor padrão/quantidade), detalhes, estoque em lista com miniaturas, COD_FILIAL - Fantasia e correção do card de pagamento no celular. 58 testes unitários, 57 de integração e navegador local/público nas 14 filiais aprovados. Recarga dos acabados pendente: origem atual saldodeestoque aceita filial/trans_id, mas rejeita tipo_prod=AC (HTTP 400). Consulta customizada exclui a bobina, porém precisa de trans_id de entrada e campos de identificação; contrato em apis/estoque-custom.md. Não houve limpeza/recarga em produção; código --completa preparado localmente. Demais pendências: fotos na origem, eventos/devoluções, pagamentos conciliados, estoque histórico, bruto/líquido e cobertura; docs/INDICADORES_VISAO_GERAL.md. R11 mensal/anual pendente.
+- [ ] **R19 — Produtos, estoque e indicadores adicionais:** Publicados indicadores, Top 20, estoque em lista e card de total da filial com filtro tipo_prod (AC padrão). Tipo é campo do retorno da rota saldodeestoque; requisição mantém filial/trans_id. Na conferência de 19/09, 34.434 SKUs sem tipo; confirmar publicação do campo no ERP e recarregar, sem presumir AC. 13 filiais com releitura concluída e uma em retentativa. Interface aprovada nas 14 filiais; 118 testes. Pendências de eventos/devoluções, pagamentos conciliados, estoque histórico, bruto/líquido e cobertura mantidas; R11 mensal/anual pendente.
 - [ ] **R20 — SaaS: provisionamento, planos e cobrança:** Etapa 7. Manter isolamento por tenant e automatizar subdomínios após fechar o produto.
 - [ ] **R22 — Definir bruto, líquido e devoluções:** Maylon confirmou em 15/09: desconto do item é percentual (20 = 20%). Preços permanecem como recebidos, sem reaplicar desconto. Ainda definir bruto/líquido, frete, cortesia, trocas/devoluções e parcelas. A confirmação do item não define desconto no cabeçalho.
-- [ ] **R23 — Fotos dos vendedores:** Maylon precisa definir upload manual ou aproveitamento do campo foto do ERP; até lá, manter iniciais.
 - [ ] **R25 — Completar preços e pagamentos do histórico:** Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json.
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 
 <!-- KANBAN:FIM -->
+
+## Total de estoque, tipo de produto e fotos de funcionários — 19/09/2026
+
+- [x] Card com soma do estoque da filial para o tipo escolhido, considerando todos os SKUs/páginas e incluindo saldos negativos. Busca e filtro de saldo não alteram esse total; saldos desconhecidos são sinalizados.
+- [x] Filtro local **AC — Acabado** como padrão, com SE, MP, MC, Todos os tipos e Tipo não informado. `tipo_prod` é lido do **retorno** do ERP; a requisição padrão continua enviando somente `filial` e `trans_id`.
+- [x] **Funcionários**, exclusivo para Admin: seleção de filial/vendedor, upload, substituição e remoção de foto. JPEG/PNG/WebP até 2 MB, validação e armazenamento no banco do tenant. Foto também exibida no ranking; leitura respeita filial e escopo próprio.
+- [x] Foto fornecida cadastrada e conferida visualmente no vendedor indicado de **AERO-014 — Curitiba**. CPF/nascimento não foram adicionados ao cadastro; arquivo pessoal permanece fora do Git.
+- [x] 59 testes unitários e 59 de integração; interface no computador/celular e consulta pública das 14 filiais aprovadas. Backup `backup-20260919T152713Z-yH6mHK`; migrations 013/014, API/worker e proxy publicados. API/PostgreSQL saudáveis; worker remoto ativo, local desativado.
+- [ ] **Cobertura do tipo depende do retorno do ERP**: amostra da rota padrão trouxe quatro SKUs sem `tipo_prod`. Após publicação, 13 de 14 filiais concluíram releitura automática; uma estava em retentativa. Dos 34.434 SKUs presentes, nenhum tinha tipo preenchido na conferência final. Não homologar AC nem declarar concluída a separação dos materiais.
+- [ ] Confirmar publicação do campo no ERP e repetir a carga completa para preencher registros antigos. Enquanto isso, AC mostra **Aguardando classificação**; **Todos os tipos** permite consultar o total e a posição salva. Campos ausentes não são inferidos a partir do nome do produto.
+
+Evidências: `docs/validacao-tipo-fotos.json`, `docs/validacao-tipo-fotos-producao.json`, `docs/validacao-fotos-funcionarios-ui.json` e `docs/validacao-produtos-ui.json`. Uso: [Fotos dos funcionários](docs/FOTOS_FUNCIONARIOS.md). R23 concluída; R19 mantém a dependência de dados. A proposta anterior de trocar para CONSULTAESTOQUES foi substituída pela leitura do novo campo na rota padrão.
+
+
 
 ## Estoque em lista e pagamento no celular — 16/09/2026
 

@@ -1,6 +1,6 @@
 import {erroSeguro} from './postgres.mjs';
 import {inteiroErp} from './produtos-estoque-erp.mjs';
-const colunas='filial bigint,sku text,produto bigint,cod_produto text,descricao text,cor text,tamanho text,barra text,saldo numeric,trans_id bigint,data_atualizacao_erp timestamptz';
+const colunas='filial bigint,sku text,tipo_prod text,produto bigint,cod_produto text,descricao text,cor text,tamanho text,barra text,saldo numeric,trans_id bigint,data_atualizacao_erp timestamptz';
 export async function sincronizarEstoque({pool,tenant,filial,consultar,intervalo=360,forcar=false,cargaCompleta=false}){
  filial=inteiroErp(filial);
  if(!tenant||!Number.isSafeInteger(intervalo)||intervalo<30||typeof cargaCompleta!=='boolean')throw Error('CONFIGURACAO_INVALIDA');
@@ -24,9 +24,9 @@ export async function sincronizarEstoque({pool,tenant,filial,consultar,intervalo
    if(conflito.rowCount)throw Error('ESTOQUE_TRANSACAO_DIVERGENTE');
    await db.query(`${cte} INSERT INTO cadastro_produtos(produto,cod_produto,descricao) SELECT DISTINCT ON(produto) produto,cod_produto,descricao FROM dados ORDER BY produto,trans_id DESC ON CONFLICT(produto) DO NOTHING`,[json]);
    await db.query(`${cte} INSERT INTO estoque_historico(filial,sku,trans_id,saldo,data_atualizacao_erp) SELECT filial,sku,trans_id,saldo,data_atualizacao_erp FROM dados ON CONFLICT DO NOTHING`,[json]);
-   await db.query(`${cte} INSERT INTO estoque_atual(filial,sku,produto,cor,tamanho,barra,saldo,trans_id,data_atualizacao_erp)
-    SELECT filial,sku,produto,cor,tamanho,barra,saldo,trans_id,data_atualizacao_erp FROM dados
-    ON CONFLICT(filial,sku) DO UPDATE SET produto=EXCLUDED.produto,cor=EXCLUDED.cor,tamanho=EXCLUDED.tamanho,barra=EXCLUDED.barra,saldo=EXCLUDED.saldo,trans_id=EXCLUDED.trans_id,data_atualizacao_erp=EXCLUDED.data_atualizacao_erp,consultado_em=now(),presente_ultima_carga=true WHERE EXCLUDED.trans_id>=estoque_atual.trans_id`,[json]);
+   await db.query(`${cte} INSERT INTO estoque_atual(filial,sku,tipo_prod,produto,cor,tamanho,barra,saldo,trans_id,data_atualizacao_erp)
+    SELECT filial,sku,tipo_prod,produto,cor,tamanho,barra,saldo,trans_id,data_atualizacao_erp FROM dados
+    ON CONFLICT(filial,sku) DO UPDATE SET tipo_prod=EXCLUDED.tipo_prod,produto=EXCLUDED.produto,cor=EXCLUDED.cor,tamanho=EXCLUDED.tamanho,barra=EXCLUDED.barra,saldo=EXCLUDED.saldo,trans_id=EXCLUDED.trans_id,data_atualizacao_erp=EXCLUDED.data_atualizacao_erp,consultado_em=now(),presente_ultima_carga=true WHERE EXCLUDED.trans_id>=estoque_atual.trans_id`,[json]);
   }
   await db.query(`UPDATE sync_estoques SET cursor=$2,ultimo_sucesso=now(),ultima_carga_completa=CASE WHEN $3 THEN now() ELSE ultima_carga_completa END,falhas_consecutivas=0,ultimo_erro_codigo=NULL,proxima_tentativa=now()+$4*interval '1 second' WHERE filial=$1`,[filial,maior.toString(),completa,intervalo]);
   await db.query('COMMIT');return {filial,completa,recebidas:rows.length,cursor:maior.toString()};
