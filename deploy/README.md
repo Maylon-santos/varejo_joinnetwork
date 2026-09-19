@@ -188,3 +188,11 @@ A rota customizada ajustada por Maylon precisa cumprir [o contrato da nova orige
 Construir API/worker com o novo lockfile (Sharp), fazer backup com os serviços pausados e aplicar migrations tenant 013/014. Fotos são bytea no banco existente; não requerem novo volume. Atualizar somente o virtual host do piloto com `deploy/nginx.conf`, validar `nginx -t` e recarregar: uploads precisam de limite 3 MB para o JSON/base64, restrito à rota de funcionários, com limite real de imagem 2 MB na API.
 
 O worker passa a armazenar `tipo_prod` do retorno padrão sem enviá-lo como parâmetro. A migration solicita uma carga completa; uma falha conserva a posição anterior. Conferir cobertura de `estoque_atual.tipo_prod` antes de declarar completa a filtragem AC. Nunca inferir tipo a partir do nome/SKU. Fotos são administrativas; leitura autenticada por filial e escopo próprio. Validar `scripts/verificar-fotos-funcionarios-ui.mjs` e `scripts/verificar-produtos-ui.mjs`.
+
+## Carga completa com primeira filial definida — 19/09/2026
+
+`node scripts/sincronizar-estoques.mjs --completa --primeira=AERO-023` faz a releitura de **estoque por SKU** nas filiais autorizadas, começando pelo código exato informado no cadastro local. A ordem das demais filiais é preservada; não altera `config/piloto.json` nem a ordem das vendas. Código inexistente, ambíguo ou fora do escopo interrompe antes das escritas.
+
+Executar no servidor com backup e worker contínuo pausado, garantindo sua retomada ao terminar, inclusive em falhas. Para tarefas independentes da sessão SSH, usar uma unidade transitória do systemd com log privado e rotina de retomada. A API permanece disponível. O processo adquire o mesmo lock do worker e confere hashes de operações, itens e checkpoints comerciais.
+
+Cada filial recebe `trans_id=0`, preservando o maior cursor salvo. Falhas mantêm a posição anterior e invalidam a marca de carga completa para que o worker repita a carga integral após o backoff. Sucessos voltam ao incremental; o relatório registra ordem, resultado por filial e cobertura de `tipo_prod`. Uma recarga sem esse campo não resolve a classificação AC. O enriquecimento cadastral permanece gradual, até cinco produtos por rodada.

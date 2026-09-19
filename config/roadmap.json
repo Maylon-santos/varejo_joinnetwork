@@ -114,7 +114,7 @@
       "id": "R19",
       "titulo": "Produtos, estoque e indicadores adicionais",
       "status": "em_andamento",
-      "detalhe": "Publicados indicadores, Top 20, estoque em lista e card de total da filial com filtro tipo_prod (AC padrão). Tipo é campo do retorno da rota saldodeestoque; requisição mantém filial/trans_id. Na conferência de 19/09, 34.434 SKUs sem tipo; confirmar publicação do campo no ERP e recarregar, sem presumir AC. 13 filiais com releitura concluída e uma em retentativa. Interface aprovada nas 14 filiais; 118 testes. Pendências de eventos/devoluções, pagamentos conciliados, estoque histórico, bruto/líquido e cobertura mantidas; R11 mensal/anual pendente."
+      "detalhe": "Recarga completa solicitada nas 14 filiais, iniciando AERO-023: dez concluíram no lote e AERO-023/ITUPEVA na retentativa (12/14 na última conferência); AERO-009 e AERO-010 continuam agendadas. Worker retomado, hashes comerciais/checkpoints preservados. Publicados indicadores, Top 20, estoque em lista e card de total da filial com filtro tipo_prod (AC padrão). Tipo é campo do retorno da rota saldodeestoque; requisição mantém filial/trans_id. Na conferência de 19/09, 34.434 SKUs sem tipo; confirmar publicação do campo no ERP e recarregar, sem presumir AC. 13 filiais com releitura concluída e uma em retentativa. Interface aprovada nas 14 filiais; 118 testes. Pendências de eventos/devoluções, pagamentos conciliados, estoque histórico, bruto/líquido e cobertura mantidas; R11 mensal/anual pendente."
     },
     {
       "id": "R20",

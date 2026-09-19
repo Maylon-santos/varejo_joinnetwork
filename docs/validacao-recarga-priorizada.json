@@ -1,0 +1,249 @@
+{
+  "verificadoEm": "2026-09-19T23:45:28.434489+00:00",
+  "backup": "backup-20260919T233559Z-BtobA2",
+  "unit": "aeropostale-recarga-estoque-20260919",
+  "primeiraFilial": "AERO-023",
+  "ordem": [
+    {
+      "filial": "30098802",
+      "cod_filial": "AERO-023"
+    },
+    {
+      "filial": "30098297",
+      "cod_filial": "ITUPEVA"
+    },
+    {
+      "filial": "30098400",
+      "cod_filial": "AERO-009"
+    },
+    {
+      "filial": "30098401",
+      "cod_filial": "AERO-010"
+    },
+    {
+      "filial": "30098409",
+      "cod_filial": "AERO-014"
+    },
+    {
+      "filial": "30098495",
+      "cod_filial": "AERO-015"
+    },
+    {
+      "filial": "30098696",
+      "cod_filial": "AERO-018"
+    },
+    {
+      "filial": "30098697",
+      "cod_filial": "AERO-019"
+    },
+    {
+      "filial": "30098704",
+      "cod_filial": "AERO-019-2"
+    },
+    {
+      "filial": "30098702",
+      "cod_filial": "AERO-020"
+    },
+    {
+      "filial": "30098708",
+      "cod_filial": "AERO-021"
+    },
+    {
+      "filial": "30098795",
+      "cod_filial": "AERO-022"
+    },
+    {
+      "filial": "30098797",
+      "cod_filial": "AERO-MKTP"
+    },
+    {
+      "filial": "30098699",
+      "cod_filial": "BABIES-002"
+    }
+  ],
+  "primeiroLote": {
+    "evento": "carga_estoques_concluida",
+    "resultados": [
+      {
+        "filial": "30098802",
+        "erro": 23
+      },
+      {
+        "filial": "30098297",
+        "erro": 23
+      },
+      {
+        "filial": "30098400",
+        "erro": 23
+      },
+      {
+        "filial": "30098401",
+        "erro": 23
+      },
+      {
+        "filial": "30098409",
+        "completa": true,
+        "recebidas": 3037,
+        "cursor": "769937835"
+      },
+      {
+        "filial": "30098495",
+        "completa": true,
+        "recebidas": 2501,
+        "cursor": "769937094"
+      },
+      {
+        "filial": "30098696",
+        "completa": true,
+        "recebidas": 2706,
+        "cursor": "769941087"
+      },
+      {
+        "filial": "30098697",
+        "completa": true,
+        "recebidas": 2462,
+        "cursor": "769789034"
+      },
+      {
+        "filial": "30098704",
+        "completa": true,
+        "recebidas": 907,
+        "cursor": "768058450"
+      },
+      {
+        "filial": "30098702",
+        "completa": true,
+        "recebidas": 2460,
+        "cursor": "769939741"
+      },
+      {
+        "filial": "30098708",
+        "completa": true,
+        "recebidas": 2737,
+        "cursor": "769893422"
+      },
+      {
+        "filial": "30098795",
+        "completa": true,
+        "recebidas": 4468,
+        "cursor": "769802985"
+      },
+      {
+        "filial": "30098797",
+        "completa": true,
+        "recebidas": 181,
+        "cursor": "769634712"
+      },
+      {
+        "filial": "30098699",
+        "completa": true,
+        "recebidas": 1494,
+        "cursor": "769756172"
+      }
+    ],
+    "enriquecimento": {
+      "enriquecidos": 0,
+      "falhas": 0
+    },
+    "cobertura": {
+      "produtos": 7045,
+      "classificados": 7009
+    },
+    "tipos": [
+      {
+        "filial": "30098297",
+        "skus": 3829,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098400",
+        "skus": 2821,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098401",
+        "skus": 3115,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098409",
+        "skus": 3037,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098495",
+        "skus": 2501,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098696",
+        "skus": 2706,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098697",
+        "skus": 2462,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098699",
+        "skus": 1494,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098702",
+        "skus": 2460,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098704",
+        "skus": 907,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098708",
+        "skus": 2737,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098795",
+        "skus": 4468,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098797",
+        "skus": 181,
+        "com_tipo": 0
+      },
+      {
+        "filial": "30098802",
+        "skus": 1877,
+        "com_tipo": 0
+      }
+    ],
+    "baseComercialECheckpointsPreservados": true
+  },
+  "concluidasPrimeiroLote": 10,
+  "testesUnitarios": 61,
+  "testesIntegracaoEstoque": 6,
+  "workerRetomado": true,
+  "apiPostgresSaudaveis": true,
+  "retentativasConfirmadas": [
+    {
+      "filial": "30098802",
+      "cod_filial": "AERO-023",
+      "ultima_carga_completa": "2026-09-19T23:44:07.458Z"
+    },
+    {
+      "filial": "30098297",
+      "cod_filial": "ITUPEVA",
+      "ultima_carga_completa": "2026-09-19T23:43:43.328Z"
+    }
+  ],
+  "concluidasAposRetentativas": 12,
+  "pendentesNaUltimaConferencia": [
+    "AERO-009",
+    "AERO-010"
+  ],
+  "usuarioSolicitouDeixarRetentativasRodando": true
+}

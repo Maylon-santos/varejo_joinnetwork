@@ -31,13 +31,27 @@
 - [ ] **R16 — Fila de atendimento:** R16.1 e relatórios/movimento intenso da R16.2 publicados em 15/09. Relatórios por filial/período (até 31 dias), vendedor/dia, tempos, motivos e histórico. Gestão liga/desliga ordem flexível com motivo, mantendo um atendimento aberto por vendedor. Permissão específica de relatórios; Vendas somente próprios dados. 52 testes unitários, 45 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Manual v1.1 entregue; treinamento da equipe ainda deve ser realizado. Pendentes: definição de correções gerenciais do histórico e R16.3 associação/confirmação de venda no ERP. Nenhum atendimento real alterado pelos testes.
 - [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
-- [ ] **R19 — Produtos, estoque e indicadores adicionais:** Publicados indicadores, Top 20, estoque em lista e card de total da filial com filtro tipo_prod (AC padrão). Tipo é campo do retorno da rota saldodeestoque; requisição mantém filial/trans_id. Na conferência de 19/09, 34.434 SKUs sem tipo; confirmar publicação do campo no ERP e recarregar, sem presumir AC. 13 filiais com releitura concluída e uma em retentativa. Interface aprovada nas 14 filiais; 118 testes. Pendências de eventos/devoluções, pagamentos conciliados, estoque histórico, bruto/líquido e cobertura mantidas; R11 mensal/anual pendente.
+- [ ] **R19 — Produtos, estoque e indicadores adicionais:** Recarga completa solicitada nas 14 filiais, iniciando AERO-023: dez concluíram no lote e AERO-023/ITUPEVA na retentativa (12/14 na última conferência); AERO-009 e AERO-010 continuam agendadas. Worker retomado, hashes comerciais/checkpoints preservados. Publicados indicadores, Top 20, estoque em lista e card de total da filial com filtro tipo_prod (AC padrão). Tipo é campo do retorno da rota saldodeestoque; requisição mantém filial/trans_id. Na conferência de 19/09, 34.434 SKUs sem tipo; confirmar publicação do campo no ERP e recarregar, sem presumir AC. 13 filiais com releitura concluída e uma em retentativa. Interface aprovada nas 14 filiais; 118 testes. Pendências de eventos/devoluções, pagamentos conciliados, estoque histórico, bruto/líquido e cobertura mantidas; R11 mensal/anual pendente.
 - [ ] **R20 — SaaS: provisionamento, planos e cobrança:** Etapa 7. Manter isolamento por tenant e automatizar subdomínios após fechar o produto.
 - [ ] **R22 — Definir bruto, líquido e devoluções:** Maylon confirmou em 15/09: desconto do item é percentual (20 = 20%). Preços permanecem como recebidos, sem reaplicar desconto. Ainda definir bruto/líquido, frete, cortesia, trocas/devoluções e parcelas. A confirmação do item não define desconto no cabeçalho.
 - [ ] **R25 — Completar preços e pagamentos do histórico:** Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json.
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 
 <!-- KANBAN:FIM -->
+
+## Recarga completa priorizando AERO-023 — 19/09/2026
+
+- [x] Pedido de Maylon: agendar todas as filiais para carga completa, começando por **AERO-023 — Ibirapuera (30098802)**.
+- [x] Rotina executada como tarefa independente no servidor (`aeropostale-recarga-estoque-20260919`), com backup `backup-20260919T233559Z-BtobA2`, worker contínuo pausado durante a execução e retomada automática ao finalizar. API disponível.
+- [x] Ordem: AERO-023 → ITUPEVA → AERO-009 → AERO-010 → AERO-014 → AERO-015 → AERO-018 → AERO-019 → AERO-019-2 → AERO-020 → AERO-021 → AERO-022 → AERO-MKTP → BABIES-002.
+- [x] Carga por SKU com cursor zero e maior cursor preservado. Falhas deixam a posição anterior e mantêm solicitação de carga completa para retentativa; não avançam para incremental como se a recarga tivesse terminado.
+- [x] 61 testes unitários e seis testes de integração de estoque aprovados. Código da primeira filial validado contra o cadastro, sem alterar o escopo autorizado nem a ordem da sincronização de vendas.
+- [x] Primeiro lote: dez filiais concluídas e quatro timeouts. Na retentativa automática, AERO-023 e ITUPEVA concluíram: **12 de 14** na última conferência; AERO-009/AERO-010 continuam agendadas. Hashes comerciais/checkpoints preservados e worker retomado. Maylon pediu deixar as retentativas rodando. Evidência: `docs/validacao-recarga-priorizada.json`.
+- [ ] Conclusão das filiais em retentativa e cobertura de tipo_prod: conferir o relatório da execução; uma carga completa sem o campo no retorno não homologa a classificação AC. O enriquecimento do cadastro continua em lotes de cinco produtos.
+
+Comando: `node scripts/sincronizar-estoques.mjs --completa --primeira=AERO-023`. Log privado no servidor: `/opt/aeropostale-varejo/artifacts/recargas/recarga-aero023-20260919.log`.
+
+
 
 ## Total de estoque, tipo de produto e fotos de funcionários — 19/09/2026
 
