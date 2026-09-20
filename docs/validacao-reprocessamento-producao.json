@@ -1,0 +1,13 @@
+{
+  "verificadoEm": "2026-09-20T23:32:53.981Z",
+  "dominio": "aeropostale.joinnetwork.com.br",
+  "somenteLeitura": true,
+  "vendasReprocessadasNoTeste": 0,
+  "adminBotaoListaEDetalhe": true,
+  "statusAutenticado": 200,
+  "toleranciaDoisCentavosInformada": true,
+  "filtroConferido": "erro_erp_confirmado",
+  "acaoMobileSemRolagemHorizontal": true,
+  "desktopMobileSemOverflow": true,
+  "errors": []
+}

@@ -21,7 +21,7 @@ async function lerJson(req,limite=4096){
  try{const v=JSON.parse(Buffer.concat(chunks).toString('utf8'));if(!v||typeof v!=='object'||Array.isArray(v))throw new Error();return v;}
  catch{throw new ErroApi(400,'JSON_INVALIDO');}
 }
-export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuarios,funcionarios,fila,produtos,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
+export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuarios,funcionarios,reprocessamentos,fila,produtos,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
  const server=createServer(async(req,res)=>{
   const requestId=randomUUID();
   res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
@@ -47,6 +47,15 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
    const painelUsuario=painel.restringir(acesso.filiais,acesso.vendedores);
    if(path==='/api/v1/auth/me'&&req.method==='GET')return enviar(200,{usuario:{id:user.id,email:user.email,role:user.role,role_nome:user.role_nome,tenant_key:user.tenant_key,permissoes:acesso.permissoes,filiais:acesso.filiais,somente_proprias_vendas:user.somente_proprias_vendas}});
    if(path==='/api/v1/auth/logout'&&req.method==='POST'){await auth.logout(token);return enviar(200,{ok:true});}
+   const reprocessar=/^\/api\/v1\/operacoes\/(\d+)\/([A-Z]+)\/(\d+)\/reprocessar$/.exec(path);
+   if(reprocessar){
+    if(user.role!=='Admin')throw new ErroApi(403,'RECURSO_NAO_AUTORIZADO');
+    if(!reprocessamentos)throw new ErroApi(503,'REPROCESSAMENTO_INDISPONIVEL');
+    if(url.search)throw new ErroApi(400,'PARAMETRO_INVALIDO');
+    if(req.method==='GET')return enviar(200,await reprocessamentos.ler(user,...reprocessar.slice(1)));
+    if(req.method==='POST')return enviar(202,await reprocessamentos.solicitar(user,...reprocessar.slice(1),await lerJson(req)));
+    throw new ErroApi(405,'METODO_NAO_PERMITIDO');
+   }
    if(path==='/api/v1/funcionarios'){
     if(!funcionarios)throw new ErroApi(503,'GESTAO_INDISPONIVEL');
     if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');

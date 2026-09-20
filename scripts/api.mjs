@@ -1,3 +1,4 @@
+import {criarReprocessamentos} from '../backend/src/reprocessar-vendas.mjs';
 import {criarFuncionarios} from '../backend/src/funcionarios.mjs';
 import {criarProdutos} from '../backend/src/produtos.mjs';
 import {criarFila} from '../backend/src/fila-atendimento.mjs';
@@ -26,7 +27,7 @@ try{
  };
  await health();
  const auth=await criarAuth(control,tenant),painel=criarPainel(tenantDb,tenant,filiais);
- server=criarServidor({funcionarios:criarFuncionarios(tenantDb,tenant,filiais),auth,painel,filiais,produtos:criarProdutos(tenantDb,tenant,filiais),fila:criarFila(tenantDb,tenant,filiais),gestaoPermissoes:criarGestaoPermissoes(control,tenant),gestaoUsuarios:criarGestaoUsuarios(control,tenantDb,tenant,filiais),imagemProduto:carregarImagemProduto,frontend:await criarFrontend(),health,log:e=>console.error(JSON.stringify(e))});
+ server=criarServidor({reprocessamentos:criarReprocessamentos(tenantDb,tenant,filiais),funcionarios:criarFuncionarios(tenantDb,tenant,filiais),auth,painel,filiais,produtos:criarProdutos(tenantDb,tenant,filiais),fila:criarFila(tenantDb,tenant,filiais),gestaoPermissoes:criarGestaoPermissoes(control,tenant),gestaoUsuarios:criarGestaoUsuarios(control,tenantDb,tenant,filiais),imagemProduto:carregarImagemProduto,frontend:await criarFrontend(),health,log:e=>console.error(JSON.stringify(e))});
  const port=Number(process.env.PORT||3000);
  if(!Number.isInteger(port)||port<1||port>65535)throw new Error('PORTA_INVALIDA');
  await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,process.env.API_HOST||'127.0.0.1',resolve);});

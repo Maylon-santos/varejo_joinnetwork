@@ -1,4 +1,15 @@
-# Comece aqui — estado atual em 19/09/2026
+# Comece aqui — estado atual em 20/09/2026
+
+## Reprocessamento Admin e tolerância de dois centavos — 20/09/2026
+
+- [x] **Conferência → Reprocessar venda**, exclusivo Admin, também nos detalhes. Confirmação, fila persistida, atualização automática do resultado e apresentação em cards no celular. Filtro padrão reúne todas as pendências; erros ERP anteriormente aceitos continuam no filtro específico.
+- [x] Worker consulta o dia/filial no ERP e grava somente a operação selecionada. Guarda responsável e versões anterior/posterior; mantém cancelamentos, valores recebidos e cursores. Falhas preservam dados anteriores; pedido interrompido pode ser retomado.
+- [x] Maylon autorizou tolerância de **até R$ 0,02 por venda**, em ambos os sentidos. Diferenças maiores, de quantidade, dados incompletos e composição não homologada permanecem pendentes. Nenhum arredondamento dos valores importados.
+- [x] Migration 016 reclassificou **145 vendas** existentes; comparação de hashes comprovou preservação dos campos comerciais, itens, checkpoints e cancelamentos. Migration 015 criou a fila/auditoria administrativa. Backup final: `backup-20260920T122853Z-a3R3Nm`.
+- [x] 62 testes unitários e 66 de integração aprovados. Reprocessamento completo testado com ERP sintético; leitura pública verifica botão, status e celular sem reprocessar vendas reais. API/PostgreSQL saudáveis, worker remoto retomado e local desativado.
+- [ ] Maylon selecionar e reprocessar as vendas corrigidas no ERP; resolução depende da versão devolvida pela API. Não foi disparado reprocessamento em massa. Recargas de estoque continuam automáticas; conferência mensal/anual R11 permanece pendente.
+
+Uso: [Reprocessar vendas](docs/REPROCESSAR_VENDAS.md). Evidências: `docs/validacao-reprocessamento-ui.json`, `docs/validacao-reprocessamento-producao.json`, `docs/validacao-tolerancia.json`.
 
 ## Recarga completa priorizando AERO-023 — 19/09/2026
 

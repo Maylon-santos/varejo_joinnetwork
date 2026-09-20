@@ -10,6 +10,7 @@ export function filtros(params,filiais){
  return {filial,inicio,fim,limite:Number(limite),pagina:Number(pagina)};
 }
 const efetiva="(o.cancelada OR EXISTS(SELECT 1 FROM cancelamentos c WHERE c.cod_operacao=o.cod_operacao AND c.tipo_operacao=o.tipo_operacao AND c.filial=o.filial))";
+const reprocessamentoSql="(SELECT jsonb_build_object('id',r.id,'estado',r.estado,'criado_em',r.criado_em,'finalizado_em',r.finalizado_em,'erro_codigo',r.erro_codigo,'resultado',r.resultado) FROM reprocessamentos_venda r WHERE r.filial=o.filial AND r.tipo_operacao=o.tipo_operacao AND r.cod_operacao=o.cod_operacao ORDER BY r.criado_em DESC,r.id DESC LIMIT 1)";
 const statusConciliacao="(CASE WHEN o.erro_erp_confirmado_por IS NOT NULL AND o.conciliacao IN ('quantidade_divergente','divergente') THEN 'erro_erp_confirmado' ELSE o.conciliacao END)";
 const scopeBase='o.filial=$1 AND o.data_operacao BETWEEN $2::date AND $3::date';
 export const elegivel=`o.tipo_operacao='S' AND NOT ${efetiva}`;
@@ -76,11 +77,12 @@ export function criarPainel(pool,tenant,filiais,vendedores=null){
    const args=argumentos(f);let where=scope;
    if(tipo!=='todas'){args.push(tipo);where+=` AND o.tipo_operacao=$${args.length}`;}
    if(estado!=='todas')where+=` AND ${estado==='ativas'?'NOT ':''}${efetiva}`;
-   if(conciliacao){if(conciliacao.length>50)throw new ErroApi(400,'FILTRO_INVALIDO');args.push(conciliacao);where+=` AND ${statusConciliacao}=$${args.length}`;}
+   if(conciliacao==='pendentes')where+=` AND ${statusConciliacao} NOT IN ('conciliada','erro_erp_confirmado')`;
+   else if(conciliacao){if(conciliacao.length>50)throw new ErroApi(400,'FILTRO_INVALIDO');args.push(conciliacao);where+=` AND ${statusConciliacao}=$${args.length}`;}
    const total=(await db.query(`SELECT count(*)::integer AS total FROM operacoes o WHERE ${where}`,args)).rows[0].total;
    args.push(f.limite,(f.pagina-1)*f.limite);
    const rows=(await db.query(`SELECT o.cod_operacao::text,o.tipo_operacao,o.filial::text,o.data_operacao::text,
-    o.quantidade,o.valor_final_centavos::text,${statusConciliacao} AS conciliacao,o.vendedor_codigo,o.vendedor_nome,${efetiva} AS cancelada
+    o.quantidade,o.valor_final_centavos::text,${reprocessamentoSql} AS reprocessamento,${statusConciliacao} AS conciliacao,o.vendedor_codigo,o.vendedor_nome,${efetiva} AS cancelada
     FROM operacoes o WHERE ${where} ORDER BY o.data_operacao DESC,o.cod_operacao DESC,o.tipo_operacao
     LIMIT $${args.length-1} OFFSET $${args.length}`,args)).rows;
    return {total,pagina:f.pagina,limite:f.limite,operacoes:rows,...await cobertura(db,f)};
@@ -114,7 +116,7 @@ export function criarPainel(pool,tenant,filiais,vendedores=null){
    if(!filiais.includes(filial))throw new ErroApi(403,'FILIAL_NAO_AUTORIZADA');
    if(!/^[A-Z]+$/.test(tipo)||!/^\d{1,18}$/.test(codigo))throw new ErroApi(400,'CHAVE_INVALIDA');
    const args=[codigo,tipo,filial,vendedor(filial)];
-   const r=await db.query(`SELECT o.*,o.conciliacao AS conciliacao_original,${statusConciliacao} AS conciliacao,o.data_operacao::text,${efetiva} AS cancelada FROM operacoes o
+   const r=await db.query(`SELECT o.*,${reprocessamentoSql} AS reprocessamento,o.conciliacao AS conciliacao_original,${statusConciliacao} AS conciliacao,o.data_operacao::text,${efetiva} AS cancelada FROM operacoes o
     WHERE o.cod_operacao=$1 AND o.tipo_operacao=$2 AND o.filial=$3 AND ($4::text IS NULL OR o.vendedor_codigo=$4)`,args);
    if(!r.rowCount)throw new ErroApi(404,'OPERACAO_NAO_ENCONTRADA');
    const itens=(await db.query('SELECT ordem,sku,cod_produto,descricao,quantidade,imagem_url,preco_centavos::text,preco_tabela_centavos::text,desconto_informado::text,preco_aplicado_centavos::text FROM operacao_itens WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 ORDER BY ordem',args.slice(0,3))).rows;

@@ -79,6 +79,17 @@ export class RepositorioPostgres {
           }
           return atualizadas;
         },
+        reprocessarVenda: async (id,op) => {
+          const key=[op.cod_operacao,op.tipo_operacao,filial];
+          const job=(await client.query("SELECT 1 FROM reprocessamentos_venda WHERE id=$1 AND cod_operacao=$2 AND tipo_operacao=$3 AND filial=$4 AND estado='processando' FOR UPDATE",[id,...key])).rowCount;
+          if(!job)throw Error('REPROCESSAMENTO_DESATUALIZADO');
+          const snapshot=async()=> (await client.query(`SELECT jsonb_build_object('operacao',to_jsonb(o),'itens',COALESCE((SELECT jsonb_agg(to_jsonb(i) ORDER BY i.ordem) FROM operacao_itens i WHERE i.cod_operacao=o.cod_operacao AND i.tipo_operacao=o.tipo_operacao AND i.filial=o.filial),'[]'::jsonb))::text AS dados FROM operacoes o WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 FOR UPDATE`,key)).rows[0]?.dados;
+          const antes=await snapshot();if(!antes)throw Error('OPERACAO_NAO_ENCONTRADA');
+          await tx.salvarOperacoes([op]);
+          await client.query('UPDATE operacoes SET erro_erp_confirmado_por=NULL,erro_erp_confirmado_em=NULL WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',key);
+          const depois=await snapshot(),v=(await client.query('SELECT conciliacao,cancelada,quantidade,valor_final_centavos::text FROM operacoes WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',key)).rows[0];
+          await client.query("UPDATE reprocessamentos_venda SET estado='concluido',finalizado_em=now(),antes=$2::jsonb,depois=$3::jsonb,resultado=$4::jsonb WHERE id=$1",[id,antes,depois,JSON.stringify({conciliacao:v.conciliacao,cancelada:v.cancelada,quantidade:v.quantidade,valor_final_centavos:String(v.valor_final_centavos)})]);
+        },
         salvarOperacoes: async operacoes => {
           for (const op of operacoes) {
             chaveOperacao(op.cod_operacao, op.tipo_operacao, op.filial);

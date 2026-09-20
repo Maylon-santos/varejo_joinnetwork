@@ -1,0 +1,14 @@
+{
+  "verificadoEm": "2026-09-20T00:04:22.235Z",
+  "ambiente": "schemas isolados e ERP sintético",
+  "confirmacao": true,
+  "adminExclusivo": true,
+  "filaPersistida": true,
+  "botaoDesabilitadoDuranteExecucao": true,
+  "resultadoAutomatico": true,
+  "vendaResolvidaSaiDasPendencias": true,
+  "divergenciaValorNoFiltro": true,
+  "desktopMobileSemOverflow": true,
+  "acaoMobileSemRolagemHorizontal": true,
+  "errors": []
+}

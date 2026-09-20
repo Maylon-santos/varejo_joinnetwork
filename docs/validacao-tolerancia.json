@@ -1,0 +1,66 @@
+{
+  "verificadoEm": "2026-09-20T12:29:12.773Z",
+  "toleranciaCentavos": 2,
+  "vendasReclassificadas": 145,
+  "camposComerciaisPreservados": true,
+  "itensPreservados": true,
+  "checkpointsPreservados": true,
+  "cancelamentosPreservados": true,
+  "antes": {
+    "verificadoEm": "2026-09-20T12:29:04.067Z",
+    "hashes": {
+      "operacoes": "69d02bb2d2a34fc59ef157f32f2518de",
+      "itens": "fb8f9faa3d2d6a7807f5bb18a42e3fc1",
+      "checkpoints": "6b776535b13381bfaf4c710957863b4f",
+      "cancelamentos": "eee70f20ef94b8f39af3df9e9ab9d13b"
+    },
+    "estados": [
+      {
+        "conciliacao": "conciliada",
+        "quantidade": 23529
+      },
+      {
+        "conciliacao": "divergente",
+        "quantidade": 930
+      },
+      {
+        "conciliacao": "nao_elegivel",
+        "quantidade": 2074
+      },
+      {
+        "conciliacao": "quantidade_divergente",
+        "quantidade": 53
+      }
+    ]
+  },
+  "depois": {
+    "verificadoEm": "2026-09-20T12:29:12.773Z",
+    "hashes": {
+      "operacoes": "69d02bb2d2a34fc59ef157f32f2518de",
+      "itens": "fb8f9faa3d2d6a7807f5bb18a42e3fc1",
+      "checkpoints": "6b776535b13381bfaf4c710957863b4f",
+      "cancelamentos": "eee70f20ef94b8f39af3df9e9ab9d13b"
+    },
+    "estados": [
+      {
+        "conciliacao": "conciliada",
+        "quantidade": 23674
+      },
+      {
+        "conciliacao": "divergente",
+        "quantidade": 785
+      },
+      {
+        "conciliacao": "nao_elegivel",
+        "quantidade": 2074
+      },
+      {
+        "conciliacao": "quantidade_divergente",
+        "quantidade": 53
+      }
+    ]
+  },
+  "testesUnitarios": 62,
+  "testesIntegracao": 66,
+  "backup": "backup-20260920T122853Z-a3R3Nm"
+}

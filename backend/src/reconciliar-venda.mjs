@@ -9,6 +9,8 @@ export function centavos(valor) {
   return (negativo ? -1n : 1n) * (BigInt(inteiro) * 100n + BigInt(decimal.padEnd(2, '0')));
 }
 
+export const TOLERANCIA_VALOR_CENTAVOS = 2n;
+
 export function reconciliarVenda(venda) {
   if (venda.tipo_operacao !== 'S' || venda.cancelada !== false) {
     return { status: 'nao_elegivel' };
@@ -33,7 +35,7 @@ export function reconciliarVenda(venda) {
   const esperado = itens + ajuste;
   // acerto é percentual informativo: não aplicar novamente sobre os itens.
   return {
-    status: esperado === informado ? 'conciliada' : 'divergente',
+    status: esperado - informado >= -TOLERANCIA_VALOR_CENTAVOS && esperado - informado <= TOLERANCIA_VALOR_CENTAVOS ? 'conciliada' : 'divergente',
     subtotalItensCentavos: itens.toString(),
     ajusteCentavos: ajuste.toString(),
     totalEsperadoCentavos: esperado.toString(),

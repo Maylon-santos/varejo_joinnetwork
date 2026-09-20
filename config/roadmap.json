@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-09-19",
+  "atualizadoEm": "2026-09-20",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -12,7 +12,7 @@
       "id": "R02",
       "titulo": "Painel e acesso Admin",
       "status": "concluido",
-      "detalhe": "Indicadores, ranking, filtros e detalhes publicados."
+      "detalhe": "Indicadores, ranking, filtros e detalhes publicados. Reprocessar venda publicado para Admin na Conferência, com fila/auditoria e interface no celular. Tolerância autorizada de até R$ 0,02 por venda; 145 operações históricas reclassificadas sem alterar valores, itens ou checkpoints. 128 testes aprovados. Uso: docs/REPROCESSAR_VENDAS.md."
     },
     {
       "id": "R03",

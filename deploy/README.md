@@ -196,3 +196,15 @@ O worker passa a armazenar `tipo_prod` do retorno padrão sem enviá-lo como par
 Executar no servidor com backup e worker contínuo pausado, garantindo sua retomada ao terminar, inclusive em falhas. Para tarefas independentes da sessão SSH, usar uma unidade transitória do systemd com log privado e rotina de retomada. A API permanece disponível. O processo adquire o mesmo lock do worker e confere hashes de operações, itens e checkpoints comerciais.
 
 Cada filial recebe `trans_id=0`, preservando o maior cursor salvo. Falhas mantêm a posição anterior e invalidam a marca de carga completa para que o worker repita a carga integral após o backoff. Sucessos voltam ao incremental; o relatório registra ordem, resultado por filial e cobertura de `tipo_prod`. Uma recarga sem esse campo não resolve a classificação AC. O enriquecimento cadastral permanece gradual, até cinco produtos por rodada.
+
+## Reprocessamento administrativo de vendas — 19/09/2026
+
+Construir API e worker; pausar ambos brevemente para backup coordenado e aplicar a migration aditiva `tenant/015_reprocessar_vendas.sql` antes de publicar a API. Retomar API saudável e worker remoto. A fila de recargas de estoque permanece persistida. Não há alteração de Nginx, dependências ou credenciais da API.
+
+`POST /api/v1/operacoes/:filial/S/:codigo/reprocessar`, exclusivo Admin, recebe `requisicao` UUID. Retorna 202 e enfileira no banco do tenant. GET na mesma rota consulta o último resultado. Worker processa um pedido por rodada antes das outras rotinas, usando a consulta de vendas existente. A API continua sem acesso direto ao ERP. Logs `venda_reprocessada`/`reprocessamento_falhou` contêm apenas identificador, estado e código seguro.
+
+Snapshots anterior/posterior ficam no banco, com backups/retenção existentes. Migration compatível com retorno às imagens anteriores; nesse retorno, pedidos pendentes ficam aguardando o worker atualizado. Manter imagens anteriores identificadas até validar saúde e leitura pública. Uso: [Reprocessar vendas](../docs/REPROCESSAR_VENDAS.md).
+
+### Tolerância de dois centavos
+
+Migration tenant 016 aplica a tolerância autorizada a operações antes classificadas como divergência de valor, verificando quantidade/soma dos itens e excluindo cancelamentos. Atualiza somente `conciliacao`; não altera valores, marcações anteriores, itens ou checkpoints. Construir API/worker e fazer backup com ambos pausados antes da migration, para impedir reclassificação concorrente com a regra antiga. Novas importações e reprocessamentos usam BigInt com limite inclusivo de ±2 centavos.

@@ -1,3 +1,4 @@
+import {processarReprocessamento} from '../backend/src/reprocessar-vendas.mjs';
 import {sincronizarEstoque,enriquecerProdutos} from '../backend/src/sincronizar-estoque.mjs';
 import {consultarEstoque,consultarProduto} from '../backend/src/produtos-estoque-erp.mjs';
 import {preencherIdentidadeClientes} from '../backend/src/preencher-identidade-clientes.mjs';
@@ -38,6 +39,7 @@ try{
  const consultas={vendas:p=>consultarVendas({...base,...p,onDuplicado:info=>console.log(JSON.stringify({evento:'duplicado_identico_ignorado',...info}))}),cancelamentos:p=>consultarCancelamentos({...base,...p})};
  console.log(JSON.stringify({evento:'worker_iniciado',modo:once?'carga_inicial':'periodico',filiais,intervaloSegundos:intervalo}));
  do{
+  if(!once&&!encerrar)try{const r=await processarReprocessamento({pool,repositorio:repo,tenant,filiais,consultar:consultas.vendas});if(!r.vazio&&!r.ocupado)console.log(JSON.stringify({evento:'venda_reprocessada',...r}));}catch(e){console.error(JSON.stringify({evento:'reprocessamento_falhou',codigo:erroSeguro(e)}));}
   if(!encerrar)try{const cadastro=await sincronizarFiliais({pool,tenant,filiais,intervalo,consultar:p=>consultarFiliais({...base,...p})});if(!cadastro.aguardando)console.log(JSON.stringify({evento:'cadastro_filiais_sincronizado',...cadastro}));}catch(e){console.error(JSON.stringify({evento:'cadastro_filiais_falhou',codigo:erroSeguro(e)}));if(once)process.exitCode=1;}
   const fim=once?fimInicial:new Date().toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'});
   for(const filial of filiais)for(const recurso of ['vendas','cancelamentos']){
