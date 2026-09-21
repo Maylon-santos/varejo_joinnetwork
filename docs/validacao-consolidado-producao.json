@@ -1,0 +1,15 @@
+{
+  "verificadoEm": "2026-09-21T00:13:10.849Z",
+  "somenteLeitura": true,
+  "filiais": 14,
+  "comparativoVisaoGeralPorFilial": true,
+  "periodoConferido": {
+    "inicio": "2026-09-19",
+    "fim": "2026-09-19"
+  },
+  "totaisConservados": true,
+  "metasSetembro": 9,
+  "totalMetasCentavos": "149000000",
+  "desktopMobileSemOverflow": true,
+  "errors": []
+}

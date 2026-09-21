@@ -208,3 +208,13 @@ Snapshots anterior/posterior ficam no banco, com backups/retenção existentes
 ### Tolerância de dois centavos
 
 Migration tenant 016 aplica a tolerância autorizada a operações antes classificadas como divergência de valor, verificando quantidade/soma dos itens e excluindo cancelamentos. Atualiza somente `conciliacao`; não altera valores, marcações anteriores, itens ou checkpoints. Construir API/worker e fazer backup com ambos pausados antes da migration, para impedir reclassificação concorrente com a regra antiga. Novas importações e reprocessamentos usam BigInt com limite inclusivo de ±2 centavos.
+
+## Dashboard consolidado e metas mensais — 20/09/2026
+
+Publicação somente da API/interface. Construir API, pausar brevemente API/worker para backup coordenado, aplicar migrations aditivas `control/007_consolidado_metas.sql` e `tenant/017_metas_filiais.sql`, subir API saudável e retomar o worker remoto existente. Nenhuma reimportação nem alteração de Nginx; worker local permanece desativado.
+
+`GET /api/v1/consolidado?inicio=AAAA-MM-DD&fim=AAAA-MM-DD` agrega somente o escopo autorizado em snapshot consistente. `GET /api/v1/metas?competencia=AAAA-MM` compara o mês inteiro. `PUT /api/v1/metas/:filial/:AAAA-MM` recebe `valor` decimal textual ou null para remoção, `versao` e `requisicao` UUID. Atualização atômica com versão, lock por filial/mês, auditoria e nova autorização após espera. Valores monetários usam centavos exatos; leituras não consultam ERP.
+
+Somente Admin/Diretoria/Supervisão, com recursos específicos. Diretoria/Supervisão usam vínculos explícitos, mesmo se outros recursos tiverem todas_filiais. Admin pode desabilitar os recursos desses cargos. Metas e auditoria estão no banco tenant e nos backups. Não carregar nomes ambíguos; script de cadastro inicial deve conferir código, nome, competência e versão, sem sobrescrever meta divergente existente.
+
+Validar `scripts/verificar-consolidado-ui.mjs` em schemas isolados e `scripts/verificar-consolidado-producao.mjs` em leitura pública. As imagens antigas permanecem compatíveis com as tabelas aditivas. Uso e limites: [Visão das filiais e metas](../docs/CONSOLIDADO_METAS.md).

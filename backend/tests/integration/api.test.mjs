@@ -173,7 +173,7 @@ test('Permissão de recurso não pode ser contornada por detalhe ou URL de clien
 test('Gerenciador permite editar cargos só ao Admin, sem alterar outra empresa ou remover a proteção de Vendas',async()=>{
  const url='/api/v1/acessos/perfis';
  assert.equal((await get(url,'')).status,401);
- const data=await (await get(url)).json();assert.ok(data.perfis.some(p=>p.role==='Admin'));assert.equal(data.recursos.length,12);
+ const data=await (await get(url)).json();assert.ok(data.perfis.some(p=>p.role==='Admin'));assert.equal(data.recursos.length,14);
  const payload={nome:'Direção',permissoes:['indicadores:ler','vendas:ler'],todas_filiais:true,somente_proprias_vendas:false};
  const put=(role,body,t=token)=>fetch(base+url+'/'+role,{method:'PUT',headers:{Authorization:`Bearer ${t}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
  assert.equal((await put('Diretoria',payload)).status,200);
@@ -181,6 +181,8 @@ test('Gerenciador permite editar cargos só ao Admin, sem alterar outra empresa 
  assert.equal((await put('Admin',payload)).status,403);assert.equal((await put('Vendas',payload)).status,400);
  assert.equal((await put('Gerentes',{...payload,tenant:'outro'})).status,400);
  assert.equal((await put('Gerentes',{...payload,permissoes:['clientes:ler']})).status,400);
+ assert.equal((await put('Gerentes',{...payload,permissoes:['consolidado:ler']})).status,400);
+ assert.equal((await put('Diretoria',{...payload,permissoes:['metas:gerenciar']})).status,400);
  const vendedor=await auth.login('vendas@teste.local',senha);assert.equal((await get(url,vendedor.token)).status,403);assert.equal((await put('Gerentes',payload,vendedor.token)).status,403);
 });
 

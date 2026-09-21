@@ -1,5 +1,7 @@
 import {ErroApi} from './painel.mjs';
 export const recursos=[
+ {codigo:'consolidado:ler',nome:'Dashboard consolidado (Admin, Diretoria e Supervisão)'},
+ {codigo:'metas:gerenciar',nome:'Cadastrar metas por filial (Admin, Diretoria e Supervisão)'},
  {codigo:'produtos:ler',nome:'Consultar produtos e seus indicadores de venda'},
  {codigo:'estoque:ler',nome:'Consultar saldo de estoque'},
  {codigo:'fila:ler',nome:'Consultar Lista da Vez'},
@@ -18,6 +20,8 @@ export function validarPerfil(role,body){
  const campos=['nome','permissoes','todas_filiais','somente_proprias_vendas'];
  if(Object.keys(body).some(k=>!campos.includes(k))||typeof body.nome!=='string'||!body.nome.trim()||body.nome.trim().length>80||typeof body.todas_filiais!=='boolean'||typeof body.somente_proprias_vendas!=='boolean'||!Array.isArray(body.permissoes)||body.permissoes.some(p=>!recursos.some(r=>r.codigo===p)))throw new ErroApi(400,'PERFIL_INVALIDO');
  const permissoes=[...new Set(body.permissoes)];
+ if(permissoes.some(p=>['consolidado:ler','metas:gerenciar'].includes(p))&&(!['Diretoria','Supervisao'].includes(role)||body.somente_proprias_vendas))throw new ErroApi(400,'CONSOLIDADO_CARGO_INVALIDO');
+ if(permissoes.includes('metas:gerenciar')&&!permissoes.includes('consolidado:ler'))throw new ErroApi(400,'METAS_REQUER_CONSOLIDADO');
  if(permissoes.includes('estoque:ler')&&!permissoes.includes('produtos:ler'))throw new ErroApi(400,'ESTOQUE_REQUER_PRODUTOS');
  if(permissoes.some(p=>['fila:operar','fila:gerenciar','fila:relatorios'].includes(p))&&!permissoes.includes('fila:ler'))throw new ErroApi(400,'FILA_PERMISSAO_DEPENDENTE');
  if(permissoes.includes('fila:gerenciar')&&(!permissoes.includes('fila:operar')||body.somente_proprias_vendas))throw new ErroApi(400,'FILA_GESTAO_INCOMPATIVEL');

@@ -3,7 +3,7 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-17 de 26 tarefas deste quadro concluídas. Atualização: 2026-09-20. A contagem não representa prazo ou esforço.
+18 de 27 tarefas deste quadro concluídas. Atualização: 2026-09-20. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
@@ -24,6 +24,7 @@
 | — | — | — | R21 — Kanban na central e no roadmap |
 | — | — | — | R23 — Fotos dos vendedores |
 | — | — | — | R24 — Detalhes: preços e parcelas do pagamento |
+| — | — | — | R27 — Dashboard de filiais e metas mensais |
 
 ### Pendências e dependências
 
@@ -38,6 +39,19 @@
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 
 <!-- KANBAN:FIM -->
+
+## Visão das filiais e metas mensais — 20/09/2026
+
+- [x] Novo dashboard **Visão das filiais**, com período independente, valor de vendas, peças, quantidade de vendas, ranking, participação, total, pendências e cobertura por filial. Inclui filiais sem vendas.
+- [x] Restrito a **Admin, Diretoria e Supervisão**, com validação na API. Admin acessa as 14 filiais autorizadas; Diretoria/Supervisão consultam e editam somente vínculos explícitos, mesmo se outros recursos permitirem todas as filiais. Gerentes/Vendas bloqueados.
+- [x] Cadastro mensal de metas pelos três cargos, com filial, competência e valor; edição/remoção com versão, auditoria e proteção contra concorrência. Acompanhamento do mês inteiro separado do período do ranking, percentual e valor faltante. Filiais sem meta não entram no atingimento conjunto.
+- [x] **Setembro/2026: nove metas cadastradas, total R$ 1.490.000,00**, conforme imagem e autorização. OUTLET 729 vinculado a **AERO-019**; TIVOLI a **AERO-009**, por confirmação expressa. AERO-009 conserva Fantasia **AERO - SBDE** do ERP. As cinco filiais não listadas na imagem ficam sem meta, sem inferir zero.
+- [x] 62 testes unitários e 70 de integração; computador/celular com dados sintéticos, cargos, filial atribuída, edição e limpeza de sessão aprovados. Leitura pública comparou os resultados de **19/09/2026** com os indicadores individuais das 14 filiais, preservando os totais.
+- [x] API publicada com backup `backup-20260921T001032Z-tCu61y`, migrations central 007/tenant 017 e worker remoto retomado. Nove metas verificadas após gravação; nenhum cadastro anterior sobrescrito. Nenhuma venda alterada por esta entrega.
+- [ ] **R22:** identificar os eventos de devolução e homologar a composição bruto/líquido antes de reproduzir essas colunas do relatório ERP. Hoje o consolidado usa o mesmo valor de vendas da Visão geral; entradas não são presumidas como devoluções.
+- [ ] **R11:** conferência mensal/anual com o ERP permanece pendente; comparação entre telas do painel não substitui esse aceite.
+
+Manual: [Visão das filiais e metas](docs/CONSOLIDADO_METAS.md). Evidências: `docs/validacao-consolidado-ui.json`, `docs/validacao-consolidado-producao.json` e `docs/validacao-cadastro-metas.json`. Plano de carga e capturas ficam em `artifacts/deploy`, fora do Git.
 
 ## Reprocessamento Admin e tolerância de dois centavos — 20/09/2026
 

@@ -37,6 +37,7 @@
     <div class="nav-label">ACOMPANHAMENTO</div>
     <nav aria-label="Navegação principal">
       <button class="nav-button active" data-page="overview"><span data-icon="grid"></span>Visão geral</button>
+      <button class="nav-button" data-page="consolidated" hidden><span data-icon="trend"></span>Visão das filiais</button>
       <button class="nav-button" data-page="sales"><span data-icon="receipt"></span>Movimentações</button>
       <button class="nav-button" data-page="quality"><span data-icon="check"></span>Conferência<span id="nav-pending" class="count-badge" hidden></span></button>
       <button class="nav-button" data-page="queue"><span data-icon="receipt"></span>Lista da Vez</button>
@@ -63,6 +64,12 @@
       <div id="page-error" class="notice error" role="alert" hidden><span data-icon="alert"></span><p id="page-error-text"></p><button id="retry" class="button subtle" type="button">Tentar novamente</button></div>
       <div id="data-notice" class="notice" hidden><span data-icon="info"></span><p id="data-notice-text"></p><button type="button" id="review-notice" class="text-button">Conferir <span aria-hidden="true">→</span></button></div>
       <div id="loading" class="loading-state" role="status" hidden><span class="spinner"></span>Carregando resultados da loja…</div>
+      <section id="consolidated-panel" hidden aria-label="Dashboard de filiais">
+        <p id="consolidated-rule" class="consolidated-note"></p>
+        <div id="consolidated-metrics" class="consolidated-metrics"></div>
+        <section class="panel consolidated-ranking"><div class="panel-heading"><div><p class="eyebrow">RESULTADO DO PERÍODO</p><h2>Ranking das filiais</h2><p id="consolidated-coverage"></p></div></div><div class="table-scroll"><table class="consolidated-table"><thead><tr><th>Posição / Filial</th><th>Vendas</th><th>Peças</th><th>Valor de vendas</th><th>Participação</th><th>Conferência / Atualização</th></tr></thead><tbody id="consolidated-body"></tbody><tfoot id="consolidated-total"></tfoot></table></div></section>
+        <section class="panel consolidated-goals"><div class="panel-heading"><div><p class="eyebrow">ACOMPANHAMENTO MENSAL</p><h2>Metas por filial</h2><p>Compare as vendas do mês inteiro com a meta cadastrada, independentemente do período do ranking.</p></div><label class="goal-month">Mês da meta<input id="goals-month" type="month" min="2000-01" max="2099-12" required></label></div><p id="goals-status" class="consolidated-note" role="status"></p><div id="goals-metrics" class="consolidated-metrics"></div><div class="table-scroll"><table class="consolidated-table"><thead><tr><th>Filial</th><th>Vendas do mês</th><th>Meta mensal</th><th>Atingimento</th><th>Falta para a meta</th><th>Ações</th></tr></thead><tbody id="goals-body"></tbody></table></div></section>
+      </section>
       <section id="overview-panel" aria-label="Resumo de resultados">
         <div class="metrics">
           <article class="metric feature"><div class="metric-label">Valor das vendas<span data-icon="trend"></span></div><strong id="metric-value">—</strong><div class="metric-foot"><span class="light-dot"></span>Vendas não canceladas no período</div></article>
@@ -139,6 +146,7 @@
 </div>
 <dialog id="detail-dialog" aria-labelledby="detail-title"><div class="dialog-heading"><div><p class="eyebrow">DETALHES DA MOVIMENTAÇÃO</p><h2 id="detail-title">Operação</h2></div><button id="detail-close" class="icon-button" aria-label="Fechar detalhes">×</button></div><div id="detail-content"></div></dialog>
 <dialog id="product-dialog" aria-labelledby="product-detail-title"><div class="dialog-heading"><div><p class="eyebrow">DETALHES DO PRODUTO</p><h2 id="product-detail-title">Produto</h2></div><button id="product-detail-close" class="icon-button" aria-label="Fechar detalhes do produto">×</button></div><div id="product-detail-content" aria-live="polite"></div></dialog>
+<dialog id="goal-dialog" aria-labelledby="goal-title"><form id="goal-form" class="goal-form"><h2 id="goal-title">Meta da filial</h2><label>Filial<input id="goal-branch" readonly></label><label>Competência<input id="goal-competence" type="month" readonly></label><label>Meta mensal (R$)<input id="goal-value" type="text" inputmode="decimal" maxlength="20" required placeholder="200.000,00"></label><p>Valor de vendas do cabeçalho ERP, sem subtrair devoluções ainda não homologadas.</p><p id="goal-error" role="alert"></p><div class="goal-actions"><button id="goal-cancel" type="button" class="button">Cancelar</button><button id="goal-remove" type="button" class="button">Remover meta</button><button id="goal-save" type="submit" class="button primary">Salvar meta</button></div></form></dialog>
 <div id="toast" role="status" class="toast" hidden></div>
 <dialog id="photo-dialog" aria-label="Imagem do produto"><button id="photo-close" class="icon-button" aria-label="Fechar imagem">×</button><img id="photo-large" alt=""><p id="photo-error" hidden>Imagem indisponível.</p></dialog>
 <dialog id="queue-action-dialog"><form id="queue-action-form" class="queue-action-form"><h2 id="queue-action-title"></h2><p id="queue-action-description"></p><label id="queue-reason-label">Motivo<textarea id="queue-reason" maxlength="300" rows="3"></textarea></label><p id="queue-action-error" role="alert"></p><div class="queue-actions"><button id="queue-action-cancel" type="button" class="button">Cancelar</button><button type="submit" class="button primary">Confirmar</button></div></form></dialog>
