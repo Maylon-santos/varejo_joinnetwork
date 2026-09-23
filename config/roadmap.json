@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-09-20",
+  "atualizadoEm": "2026-09-23",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -163,6 +163,12 @@
       "titulo": "Dashboard de filiais e metas mensais",
       "status": "concluido",
       "detalhe": "Visão das filiais publicada: ranking e totais por período; Admin nas 14 filiais e Diretoria/Supervisão apenas nas atribuídas. Cadastro/edição de metas pelos três cargos, com auditoria e controle de versão. Nove metas de setembro/2026 cadastradas, total R$ 1.490.000,00; OUTLET 729 em AERO-019 e TIVOLI em AERO-009 conforme confirmação. 132 testes, navegador/celular e comparação pública das 14 filiais aprovados. Bruto/líquido e devoluções continuam na R22; homologação mensal/anual na R11."
+    },
+    {
+      "id": "R28",
+      "titulo": "Carga inicial de AERO-BAZAR",
+      "status": "em_andamento",
+      "detalhe": "AERO-BAZAR (30098803) habilitada em 23/09 com autorização de Maylon: API, cadastro, seletor e consolidado publicados, total de 15 filiais. Histórico desde 01/01/2026 em lotes automáticos; vendas/cancelamentos até 07/04/2026 na conferência de 23/09 às 20h12 de Brasília, sem erro ativo. Aguardar cobertura até a data atual. Sem meta ou vínculos de usuários inferidos. Conferência das demais filiais adiada por Maylon."
     }
   ]
 }

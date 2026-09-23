@@ -1,4 +1,14 @@
-# Comece aqui — estado atual em 20/09/2026
+# Comece aqui — estado atual em 23/09/2026
+
+## AERO-BAZAR habilitada — 23/09/2026
+
+- [x] Maylon autorizou publicar somente a nova **AERO-BAZAR — BAZAR AERO COMPANY LTDA**, ID `30098803`, deixando a conferência das demais para depois.
+- [x] Cadastro confirmado na API ERP e acrescentado ao escopo em `config/piloto.json`. Agora são **15 filiais**. As 14 anteriores foram preservadas; a ordem da nova filial é a última da rodada.
+- [x] API/worker publicados com backup `backup-20260923T211529Z-5HlZ1y`. Releitura cadastral recebeu 15 filiais e gravou apenas a nova. API/banco saudáveis, worker remoto ativo.
+- [x] Verificação pública: código/Fantasia no seletor Admin, indicadores disponíveis, inclusão no consolidado e bloqueio de filial não autorizada. Seis testes de cadastro/ordenação aprovados. Nenhum vínculo de usuário ou meta criado por inferência.
+- [ ] **R28 — carga inicial em andamento:** histórico desde 01/01/2026, em lotes automáticos de até sete dias por recurso/rodada. Na conferência de 23/09 às 20h12 de Brasília, vendas e cancelamentos alcançaram **07/04/2026**, sem erro ativo. Não declarar cobertura integral antes de os checkpoints alcançarem a data consultada.
+
+Evidência: `docs/validacao-aero-bazar.json`. A descoberta de cadastro no ERP continua separada da habilitação no painel; novas filiais não são autorizadas automaticamente. Conferência das outras filiais adiada a pedido de Maylon.
 
 ## Visão das filiais e metas mensais — 20/09/2026
 
