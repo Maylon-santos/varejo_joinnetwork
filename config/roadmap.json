@@ -167,8 +167,8 @@
     {
       "id": "R28",
       "titulo": "Carga inicial de AERO-BAZAR",
-      "status": "em_andamento",
-      "detalhe": "AERO-BAZAR (30098803) habilitada em 23/09 com autorização de Maylon: API, cadastro, seletor e consolidado publicados, total de 15 filiais. Histórico desde 01/01/2026 em lotes automáticos; vendas/cancelamentos até 07/04/2026 na conferência de 23/09 às 20h12 de Brasília, sem erro ativo. Aguardar cobertura até a data atual. Sem meta ou vínculos de usuários inferidos. Conferência das demais filiais adiada por Maylon."
+      "status": "concluido",
+      "detalhe": "AERO-BAZAR (30098803) publicada e carga inicial concluída em 23/09 às 22h58 de Brasília. Maylon confirmou início em 20/09/2026; importação direcionada de 20/09 a 23/09 recebeu 26 operações e 16 eventos de cancelamento, restando 15 vendas ativas. Checkpoints dos dois recursos em 23/09, totais e cobertura verificados no painel. Worker automático retomado e hashes das demais filiais preservados. Backup backup-20260924T015804Z-tQFhcd; evidência docs/validacao-carga-bazar.json. Conferência comercial pelo usuário permanece separada da carga técnica."
     }
   ]
 }

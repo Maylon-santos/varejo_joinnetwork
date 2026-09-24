@@ -3,7 +3,7 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-18 de 28 tarefas deste quadro concluídas. Atualização: 2026-09-23. A contagem não representa prazo ou esforço.
+19 de 28 tarefas deste quadro concluídas. Atualização: 2026-09-23. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
@@ -12,7 +12,7 @@
 | R18 — Campanhas e mensagens | R22 — Definir bruto, líquido e devoluções | — | R03 — Publicação com HTTPS e backup diário |
 | R20 — SaaS: provisionamento, planos e cobrança | R25 — Completar preços e pagamentos do histórico | — | R04 — Correções de celular e fotos |
 | — | R26 — Completar identificação e aniversários do histórico | — | R05 — Clientes importados junto com a venda |
-| — | R28 — Carga inicial de AERO-BAZAR | — | R06 — Homologação de ITUPEVA |
+| — | — | — | R06 — Homologação de ITUPEVA |
 | — | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
 | — | — | — | R08 — Exibir COD_FILIAL no seletor |
 | — | — | — | R09 — Sincronizar cadastro por trans_id |
@@ -25,6 +25,7 @@
 | — | — | — | R23 — Fotos dos vendedores |
 | — | — | — | R24 — Detalhes: preços e parcelas do pagamento |
 | — | — | — | R27 — Dashboard de filiais e metas mensais |
+| — | — | — | R28 — Carga inicial de AERO-BAZAR |
 
 ### Pendências e dependências
 
@@ -37,7 +38,6 @@
 - [ ] **R22 — Definir bruto, líquido e devoluções:** Maylon confirmou em 15/09: desconto do item é percentual (20 = 20%). Preços permanecem como recebidos, sem reaplicar desconto. Ainda definir bruto/líquido, frete, cortesia, trocas/devoluções e parcelas. A confirmação do item não define desconto no cabeçalho.
 - [ ] **R25 — Completar preços e pagamentos do histórico:** Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json.
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
-- [ ] **R28 — Carga inicial de AERO-BAZAR:** AERO-BAZAR (30098803) habilitada em 23/09 com autorização de Maylon: API, cadastro, seletor e consolidado publicados, total de 15 filiais. Histórico desde 01/01/2026 em lotes automáticos; vendas/cancelamentos até 07/04/2026 na conferência de 23/09 às 20h12 de Brasília, sem erro ativo. Aguardar cobertura até a data atual. Sem meta ou vínculos de usuários inferidos. Conferência das demais filiais adiada por Maylon.
 
 <!-- KANBAN:FIM -->
 
@@ -47,7 +47,7 @@
 - [x] Cadastro confirmado na API ERP e acrescentado ao escopo em `config/piloto.json`. Agora são **15 filiais**. As 14 anteriores foram preservadas; a ordem da nova filial é a última da rodada.
 - [x] API/worker publicados com backup `backup-20260923T211529Z-5HlZ1y`. Releitura cadastral recebeu 15 filiais e gravou apenas a nova. API/banco saudáveis, worker remoto ativo.
 - [x] Verificação pública: código/Fantasia no seletor Admin, indicadores disponíveis, inclusão no consolidado e bloqueio de filial não autorizada. Seis testes de cadastro/ordenação aprovados. Nenhum vínculo de usuário ou meta criado por inferência.
-- [ ] **R28 — carga inicial em andamento:** histórico desde 01/01/2026, em lotes automáticos de até sete dias por recurso/rodada. Na conferência de 23/09 às 20h12 de Brasília, vendas e cancelamentos alcançaram **07/04/2026**, sem erro ativo. Não declarar cobertura integral antes de os checkpoints alcançarem a data consultada.
+- [x] **R28 — carga inicial concluída em 23/09 às 22h58 de Brasília:** Maylon confirmou início das vendas em **20/09/2026**. A carga estava percorrendo meses sem vendas; foi executada a importação direcionada de 20/09 a 23/09 usando as rotinas existentes, sem avançar checkpoint sem consultar o dia. ERP retornou 26 operações e 16 eventos de cancelamento; 15 vendas ativas após aplicação dos cancelamentos. Checkpoints de vendas/cancelamentos em 23/09; leitura pública confirmou cobertura e totais. API/banco saudáveis e worker automático retomado. Hashes das operações, itens, cancelamentos e checkpoints das demais filiais preservados. Backup `backup-20260924T015804Z-tQFhcd`; evidência `docs/validacao-carga-bazar.json`. A rotina contínua segue do checkpoint atual; nenhuma data global de importação foi alterada.
 
 Evidência: `docs/validacao-aero-bazar.json`. A descoberta de cadastro no ERP continua separada da habilitação no painel; novas filiais não são autorizadas automaticamente. Conferência das outras filiais adiada a pedido de Maylon.
 
