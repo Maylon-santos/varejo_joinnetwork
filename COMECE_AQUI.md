@@ -1,4 +1,13 @@
-# Comece aqui — estado atual em 23/09/2026
+# Comece aqui — estado atual em 28/09/2026
+
+## Vendas por hora — preparação em 28/09/2026
+
+- [x] Pedido registrado como **R29**, com proposta para Visão geral e Visão das filiais: 24 faixas, valor, quantidade de vendas e peças, acumulados no período e respeitando permissões.
+- [x] Fonte conferida: nas 21 operações de ITUPEVA de 27/09, `data` veio às 00:00 no horário de São Paulo; sem campo específico do horário de venda. O banco guarda somente o dia.
+- [ ] **Dependência ERP:** incluir/confirmar o horário real na resposta da LISTAVENDAS. Proposto `hora_venda` em `HH:mm:ss`, horário de Brasília; aguardando confirmação de Maylon. Não usar meia-noite do campo data nem horário da importação como venda por hora.
+- [ ] Persistência, carga dos horários do histórico, gráficos e validação pendentes. **Ainda não publicado.** Vendas sem horário deverão ter cobertura explícita e grupo separado.
+
+[Planejamento e contrato proposto](docs/VENDAS_POR_HORA.md). [Evidência da consulta](docs/validacao-fonte-horarios.json).
 
 ## AERO-BAZAR habilitada — 23/09/2026
 

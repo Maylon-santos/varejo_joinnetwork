@@ -1,0 +1,20 @@
+{
+  "verificadoEm": "2026-09-28T19:07:15.676Z",
+  "rota": "MILLENIUM!JOINNETWORK.VAREJO.LISTAVENDAS",
+  "filial": "30098297",
+  "dia": "2026-09-27",
+  "operacoes": 21,
+  "fuso": "America/Sao_Paulo",
+  "horariosDoCampoData": ["00:00:00"],
+  "camposTemporais": [
+    "customers[].data_aniversario",
+    "customers[].data_cadastro",
+    "data",
+    "data_cancelou",
+    "lancamentos[].data_emissao",
+    "lancamentos[].data_vencimento"
+  ],
+  "horarioRealDaVendaDisponivel": false,
+  "limitacao": "Amostra de uma filial/dia; campo data não comprova horário real. Aguardar campo específico ou contrato de timestamp confirmado.",
+  "somenteLeitura": true
+}

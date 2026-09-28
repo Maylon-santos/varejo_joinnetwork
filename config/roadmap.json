@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-09-23",
+  "atualizadoEm": "2026-09-28",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -169,6 +169,12 @@
       "titulo": "Carga inicial de AERO-BAZAR",
       "status": "concluido",
       "detalhe": "AERO-BAZAR (30098803) publicada e carga inicial concluída em 23/09 às 22h58 de Brasília. Maylon confirmou início em 20/09/2026; importação direcionada de 20/09 a 23/09 recebeu 26 operações e 16 eventos de cancelamento, restando 15 vendas ativas. Checkpoints dos dois recursos em 23/09, totais e cobertura verificados no painel. Worker automático retomado e hashes das demais filiais preservados. Backup backup-20260924T015804Z-tQFhcd; evidência docs/validacao-carga-bazar.json. Conferência comercial pelo usuário permanece separada da carga técnica."
+    },
+    {
+      "id": "R29",
+      "titulo": "Vendas por hora nos dashboards",
+      "status": "em_andamento",
+      "detalhe": "Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json."
     }
   ]
 }

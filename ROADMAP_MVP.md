@@ -3,7 +3,7 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-19 de 28 tarefas deste quadro concluídas. Atualização: 2026-09-23. A contagem não representa prazo ou esforço.
+19 de 29 tarefas deste quadro concluídas. Atualização: 2026-09-28. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
@@ -12,7 +12,7 @@
 | R18 — Campanhas e mensagens | R22 — Definir bruto, líquido e devoluções | — | R03 — Publicação com HTTPS e backup diário |
 | R20 — SaaS: provisionamento, planos e cobrança | R25 — Completar preços e pagamentos do histórico | — | R04 — Correções de celular e fotos |
 | — | R26 — Completar identificação e aniversários do histórico | — | R05 — Clientes importados junto com a venda |
-| — | — | — | R06 — Homologação de ITUPEVA |
+| — | R29 — Vendas por hora nos dashboards | — | R06 — Homologação de ITUPEVA |
 | — | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
 | — | — | — | R08 — Exibir COD_FILIAL no seletor |
 | — | — | — | R09 — Sincronizar cadastro por trans_id |
@@ -38,8 +38,18 @@
 - [ ] **R22 — Definir bruto, líquido e devoluções:** Maylon confirmou em 15/09: desconto do item é percentual (20 = 20%). Preços permanecem como recebidos, sem reaplicar desconto. Ainda definir bruto/líquido, frete, cortesia, trocas/devoluções e parcelas. A confirmação do item não define desconto no cabeçalho.
 - [ ] **R25 — Completar preços e pagamentos do histórico:** Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json.
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
+- [ ] **R29 — Vendas por hora nos dashboards:** Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json.
 
 <!-- KANBAN:FIM -->
+
+## Vendas por hora — preparação em 28/09/2026
+
+- [x] Pedido registrado como **R29**, com proposta para Visão geral e Visão das filiais: 24 faixas, valor, quantidade de vendas e peças, acumulados no período e respeitando permissões.
+- [x] Fonte conferida: nas 21 operações de ITUPEVA de 27/09, `data` veio às 00:00 no horário de São Paulo; sem campo específico do horário de venda. O banco guarda somente o dia.
+- [ ] **Dependência ERP:** incluir/confirmar o horário real na resposta da LISTAVENDAS. Proposto `hora_venda` em `HH:mm:ss`, horário de Brasília; aguardando confirmação de Maylon. Não usar meia-noite do campo data nem horário da importação como venda por hora.
+- [ ] Persistência, carga dos horários do histórico, gráficos e validação pendentes. **Ainda não publicado.** Vendas sem horário deverão ter cobertura explícita e grupo separado.
+
+[Planejamento e contrato proposto](docs/VENDAS_POR_HORA.md). [Evidência da consulta](docs/validacao-fonte-horarios.json).
 
 ## AERO-BAZAR habilitada — 23/09/2026
 
