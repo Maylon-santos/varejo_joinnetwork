@@ -1,0 +1,13 @@
+{
+  "data": "2026-10-19",
+  "dominio": "https://aeropostale.joinnetwork.com.br",
+  "somenteLeitura": true,
+  "assetsIdenticos": true,
+  "login": true,
+  "detalheAutenticado": true,
+  "comparacaoVisivel": true,
+  "desktopCelular": true,
+  "semOverflow": true,
+  "semErrosJS": true,
+  "backup": "backup-20261019T180222Z-Zx25Ne"
+}

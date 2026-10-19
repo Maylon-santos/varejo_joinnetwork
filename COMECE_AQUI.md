@@ -5,7 +5,7 @@
 - [x] Detalhes apresentam comparação de peças, soma de preços × quantidades, ajuste, valor do cabeçalho e diferença com tolerância de R$ 0,02. Dados ausentes não são presumidos como zero.
 - [x] Motivo e orientação por situação; regra pendente identificada como frete/cortesia ainda não homologados, mesmo quando os números coincidem. Reprocessamento sem alteração não garante resolução. Nenhuma regra financeira ou dado importado alterado.
 - [x] Validação: 62 testes unitários e sintaxe aprovados; Chrome em 1280 e 390 px com dados sintéticos, comparação de 2 peças/R$ 369,98/diferença zero e ausência de transbordamento.
-- [ ] Publicar no piloto e verificar a interface pública. R22 e homologação ERP permanecem pendentes.
+- [x] Publicado no piloto em 19/10/2026, backup `backup-20261019T180222Z-Zx25Ne`. API saudável; banco e worker remoto preservados. Chrome público validou assets idênticos, login, detalhes, comparação, desktop/celular sem transbordamento ou erros JS. Evidência: `docs/validacao-conferencia-clareza.json`. R22 e homologação ERP permanecem pendentes.
 
 
 ## Vendas por hora — preparação em 28/09/2026
