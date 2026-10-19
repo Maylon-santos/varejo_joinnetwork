@@ -174,7 +174,7 @@ function renderRanking(d){
  });
  $('ranking-summary').textContent=d.total?`${(rankPage-1)*5+1}–${Math.min(rankPage*5,d.total)} de ${number(d.total)} vendedores`:'Nenhum vendedor com vendas';$('rank-prev').disabled=rankPage===1;$('rank-next').disabled=rankPage*5>=d.total;
 }
-const statusText={erro_erp_confirmado:'Erro ERP · Cabeçalho validado',conciliada:'Conciliada',quantidade_divergente:'Conferir itens',divergente:'Conferir valor',nao_elegivel:'Não se aplica',pendente:'Pendente',contrato_incompleto:'Dados incompletos',regra_pendente:'Regra pendente'};
+const statusText={erro_erp_confirmado:'Erro ERP · Cabeçalho validado',conciliada:'Conciliada',quantidade_divergente:'Conferir itens',divergente:'Conferir valor',nao_elegivel:'Não se aplica',pendente:'Pendente',contrato_incompleto:'Dados incompletos',regra_pendente:'Conferir frete/cortesia'};
 function renderSales(d){
  const body=$('sales-body');body.replaceChildren();body.closest('table').classList.toggle('quality-table',page==='quality');
  if(!d.operacoes.length)emptyTable(body,6,page==='quality'?'Nenhuma operação nesta situação':'Nenhuma operação encontrada',page==='quality'?'A homologação geral dos indicadores continua em andamento.':'Ajuste o período ou os filtros para consultar outras operações.');
@@ -190,6 +190,34 @@ function renderSales(d){
 $('ranking-sort').addEventListener('change',()=>{rankPage=1;loadRankingPage();});
 for(const id of ['sales-type','sales-state'])$(id).addEventListener('change',()=>{salesPage=1;loadData();});
 for(const[id,kind,delta]of [['rank-prev','rank',-1],['rank-next','rank',1],['sales-prev','sales',-1],['sales-next','sales',1]])$(id).addEventListener('click',()=>{if(kind==='rank'){rankPage+=delta;loadRankingPage();}else{salesPage+=delta;loadData();}});
+function renderConference(d,content){
+ const o=d.operacao;if(o.cancelada||o.conciliacao==='nao_elegivel')return;
+ const box=el('section',null,'detail-notice');box.append(el('h3','Conferência da venda'));
+ const complete=d.itens.length>0&&d.itens.every(i=>i.preco_centavos!=null&&i.quantidade!=null);
+ const quantity=complete?d.itens.reduce((sum,i)=>sum+BigInt(i.quantidade),0n):null;
+ const subtotal=complete?d.itens.reduce((sum,i)=>sum+BigInt(i.preco_centavos)*BigInt(i.quantidade),0n):null;
+ const expected=subtotal!=null&&o.ajuste_centavos!=null?subtotal+BigInt(o.ajuste_centavos):null;
+ const difference=expected!=null&&o.valor_final_centavos!=null?expected-BigInt(o.valor_final_centavos):null;
+ const list=el('ul');
+ for(const text of [
+  `Peças: ${number(o.quantidade)} no cabeçalho · ${number(quantity)} na soma dos itens${quantity!=null&&o.quantidade!=null?(quantity===BigInt(o.quantidade)?' · Quantidades iguais':' · Quantidades diferentes'):''}.`,
+  `Soma dos itens (preço × quantidade): ${money(subtotal)}.`,
+  `Soma dos itens + ajuste da operação: ${money(expected)} · Valor da operação: ${money(o.valor_final_centavos)}.`,
+  difference==null?'Diferença de valor: não calculável com os dados disponíveis.':`Diferença (itens + ajuste − operação): ${money(difference)} · ${difference>=-2n&&difference<=2n?'Dentro da tolerância de R$ 0,02':'Fora da tolerância de R$ 0,02'}.`
+ ])list.append(el('li',text));box.append(list);
+ const guidance={
+  conciliada:['Valores e quantidades conferidos','Nenhuma ação necessária nesta conferência.'],
+  quantidade_divergente:['Quantidade de peças diferente','Confira no ERP a quantidade total e a quantidade de cada item. Se houver erro, corrija no ERP e solicite ao Admin o reprocessamento da venda.'],
+  divergente:['Valor da venda diferente da soma dos itens com o ajuste','Confira no ERP os preços, as quantidades e o ajuste da operação. Após corrigir, solicite ao Admin o reprocessamento da venda. O desconto informado não é aplicado novamente.'],
+  contrato_incompleto:['Ajuste da operação não informado pelo ERP','É necessário conferir com o responsável pelo ERP o envio do ajuste, inclusive quando for zero. Após corrigir o retorno, solicite ao Admin o reprocessamento.'],
+  regra_pendente:['Composição de frete ou cortesia ainda não validada','O retorno do ERP acionou a regra de frete/cortesia. Mesmo que os números acima coincidam, a conferência automática depende de definir como esses campos compõem o total. Confira no ERP se há frete ou cortesia e encaminhe essa composição ao responsável pela integração. Reprocessar sem mudança no retorno ou na regra pode manter a pendência.'],
+  pendente:['Conferência ainda não concluída','Solicite ao Admin o reprocessamento para consultar a versão atual da venda no ERP.'],
+  erro_erp_confirmado:['Erro no ERP confirmado',`Cabeçalho validado por ${o.erro_erp_confirmado_por||'Admin'}. Os indicadores usam o valor e a quantidade do cabeçalho; os itens originais foram preservados.`]
+ };
+ const [reason,action]=guidance[o.conciliacao]||['Situação de conferência não identificada','Solicite ao responsável pela integração a análise desta operação.'];
+ box.append(el('strong',reason),el('p',action),el('p','A comparação usa os preços recebidos dos itens. Não reaplica o desconto informado nem inclui frete ou cortesia no cálculo acima.'));
+ content.append(box);
+}
 async function openDetail(o){
  clearTimeout(reprocessTimer);clearDetailMedia();detailAbort=new AbortController();
  const version=++detailGeneration;$('detail-title').textContent=`Operação #${o.cod_operacao}`;$('detail-content').replaceChildren(el('p','Carregando os detalhes…','empty'));$('detail-dialog').showModal();document.body.classList.add('modal-open');
@@ -201,7 +229,7 @@ async function openDetail(o){
   if(isAdmin){const control=reprocessControl(d.operacao,true);if(control)content.append(control);}
   renderPayment(d.operacao,content);
   if(pode('clientes:ler')){const customer=el('section',null,'detail-customer');customer.id='detail-customer';customer.setAttribute('aria-live','polite');content.append(customer);loadCustomer(d.operacao,customer,version);}
-  if(d.operacao.conciliacao!=='conciliada'&&!d.operacao.cancelada)content.append(el('div',d.operacao.conciliacao==='erro_erp_confirmado'?`Erro no ERP confirmado por ${d.operacao.erro_erp_confirmado_por}. Contabilização pelo valor e pela quantidade do cabeçalho. Itens originais preservados.`:`Conferência: ${statusText[d.operacao.conciliacao]||'pendente'}. Cabeçalho e itens foram preservados conforme recebidos.`, 'detail-notice'));
+  renderConference(d,content);
   if(d.cancelamento)content.append(el('div',`Cancelamento registrado em ${when(d.cancelamento.data_cancelou)}. Esta operação não compõe o valor das vendas.`, 'detail-notice'));
   const wrap=el('div',null,'detail-table');wrap.append(el('h3','Itens da operação'));const scroll=el('div',null,'table-scroll'),table=el('table'),head=el('thead'),headrow=el('tr');for(const t of ['Produto','Qtd.','Tabela','Desconto informado (%)','Preço','Aplicado','Subtotal'])headrow.append(el('th',t));head.append(headrow);table.append(head);const tbody=el('tbody');
   for(const item of d.itens){const row=el('tr'),product=el('td');const copy=el('div');product.append(copy);product.classList.add('product-cell');addProductImage(product,item,d.operacao,version);copy.append(el('strong',item.descricao||item.cod_produto||'Produto'),el('small',`Código ${item.cod_produto||'não informado'}`));if(item.sku)copy.append(el('small',`SKU ${item.sku}`));const applied=el('td',money(item.preco_aplicado_centavos));if(item.desconto_informado!=null&&Number(item.desconto_informado)===0&&item.preco_aplicado_centavos!=null&&item.preco_tabela_centavos!=null&&BigInt(item.preco_aplicado_centavos)<BigInt(item.preco_tabela_centavos)){const warning=el('span',' ⚠️','price-warning');warning.title='Preço aplicado abaixo da tabela, com desconto informado igual a zero.';warning.setAttribute('aria-label',warning.title);applied.append(warning);}row.append(product,el('td',number(item.quantidade)),el('td',money(item.preco_tabela_centavos)),el('td',item.desconto_informado==null?'—':new Intl.NumberFormat('pt-BR',{maximumFractionDigits:6}).format(Number(item.desconto_informado))+'%'),el('td',money(item.preco_centavos)),applied,el('td',money(BigInt(item.preco_centavos)*BigInt(item.quantidade))));tbody.append(row);}if(!d.itens.length)emptyTable(tbody,7,'Itens não disponíveis','O detalhamento ainda não foi importado.');table.append(tbody);scroll.append(table);wrap.append(scroll);content.append(wrap);

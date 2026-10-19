@@ -1,5 +1,13 @@
 # Comece aqui — estado atual em 28/09/2026
 
+## Clareza da conferência — 19/10/2026
+
+- [x] Detalhes apresentam comparação de peças, soma de preços × quantidades, ajuste, valor do cabeçalho e diferença com tolerância de R$ 0,02. Dados ausentes não são presumidos como zero.
+- [x] Motivo e orientação por situação; regra pendente identificada como frete/cortesia ainda não homologados, mesmo quando os números coincidem. Reprocessamento sem alteração não garante resolução. Nenhuma regra financeira ou dado importado alterado.
+- [x] Validação: 62 testes unitários e sintaxe aprovados; Chrome em 1280 e 390 px com dados sintéticos, comparação de 2 peças/R$ 369,98/diferença zero e ausência de transbordamento.
+- [ ] Publicar no piloto e verificar a interface pública. R22 e homologação ERP permanecem pendentes.
+
+
 ## Vendas por hora — preparação em 28/09/2026
 
 - [x] Pedido registrado como **R29**, com proposta para Visão geral e Visão das filiais: 24 faixas, valor, quantidade de vendas e peças, acumulados no período e respeitando permissões.
