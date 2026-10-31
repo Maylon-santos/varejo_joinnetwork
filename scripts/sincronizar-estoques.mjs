@@ -20,7 +20,7 @@ try{
  for(const filial of filiais){try{const r=await sincronizarEstoque({pool,tenant,filial,forcar:true,cargaCompleta:opcoes.completa,consultar:p=>consultarEstoque({...base,...p})});resultados.push(r);console.log(JSON.stringify({evento:'estoque_inicial',...r}));}catch(e){if(opcoes.completa)await pool.query('UPDATE sync_estoques SET ultima_carga_completa=NULL WHERE filial=$1',[filial]);resultados.push({filial,erro:erroSeguro(e)});console.log(JSON.stringify({evento:'estoque_inicial_pendente',filial,codigo:erroSeguro(e)}));}}
  const enriquecimento=await enriquecerProdutos({pool,tenant,consultar:p=>consultarProduto({...base,...p}),limite:5});
  const preservado=antes===await assinatura();if(!preservado)throw Error('BASE_COMERCIAL_ALTERADA');
- const tipos=(await pool.query('SELECT filial::text,count(*)::int AS skus,count(*) FILTER(WHERE tipo_prod IS NOT NULL)::int AS com_tipo FROM estoque_atual WHERE presente_ultima_carga AND filial=ANY($1::bigint[]) GROUP BY filial ORDER BY filial',[filiais])).rows;
+ const tipos=(await pool.query('SELECT e.filial::text,count(*)::int AS skus,count(*) FILTER(WHERE COALESCE(p.tipo_prod,e.tipo_prod) IS NOT NULL)::int AS com_tipo FROM estoque_atual e JOIN cadastro_produtos p USING(produto) WHERE e.presente_ultima_carga AND e.filial=ANY($1::bigint[]) GROUP BY e.filial ORDER BY e.filial',[filiais])).rows;
  const cobertura=(await pool.query(`SELECT count(*)::int AS produtos,count(*) FILTER(WHERE enriquecido_em IS NOT NULL)::int AS classificados FROM cadastro_produtos`)).rows[0];
  console.log(JSON.stringify({evento:'carga_estoques_concluida',resultados,enriquecimento,cobertura,tipos,baseComercialECheckpointsPreservados:preservado}));
  if(resultados.some(r=>r.erro))process.exitCode=1;

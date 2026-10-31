@@ -1,8 +1,10 @@
 {
-  "verificadoEm": "2026-09-19T15:22:55.102Z",
+  "verificadoEm": "2026-10-31T22:48:55.930Z",
   "ambiente": "schemas isolados, dados sintéticos",
   "catalogo": true,
   "tipoAcPadrao": true,
+  "tipoDoCadastroClassificaTodosSkus": true,
+  "tipoVisivelNosDetalhes": true,
   "totalFilialTodasPaginas": true,
   "listaComMiniaturas": true,
   "ampliacao": true,

@@ -90,3 +90,26 @@ test('tipo retornado pelo ERP: filtro local e total de toda a filial independent
   assert.equal((await api(e,'/produtos?filial=1&tipo_prod=AC','leitor')).data.resumo_estoque,null);
  }finally{await e.close();}
 });
+test('tipo do cadastro classifica todas as variações por produto e mantém saldos e filtro coerentes após novas cargas',async()=>{
+ const e=await ambienteFila();try{
+  const rows=[row('P','2'),row('M','-1'),row('G',null),{...row('MC','100'),produto:'19',cod_produto:'MAT',descricao:'Material'},
+   {...row('SEM','4'),produto:'29',cod_produto:'SEM'},{...row('FALLBACK','5'),produto:'39',cod_produto:'FB',tipo_prod:'AC'}];
+  await sincronizarEstoque({pool:e.pool,tenant:'teste',filial:'1',consultar:async()=>rows});
+  const saldos=(await e.pool.query('SELECT sku,saldo::text,trans_id::text FROM estoque_atual ORDER BY sku')).rows;
+  const consultar=async({produto})=>({produto,cod_produto:produto==='9'?'CAM':'MAT',descricao:'Cadastro de exemplo',trans_id:'100',tipo_prod:produto==='9'?'AC':'MC',classificacao:{}});
+  const r=await enriquecerProdutos({pool:e.pool,tenant:'teste',produtos:['9','19'],limite:2,consultar});assert.equal(r.enriquecidos,2);
+  const ac=(await api(e,'/produtos?filial=1&tipo_prod=AC')).data;assert.equal(ac.total,4);assert.equal(Number(ac.resumo_estoque.saldo_disponivel),6);assert.equal(ac.resumo_estoque.sem_saldo,1);assert.equal(ac.skus_sem_tipo,1);
+  assert.ok(ac.produtos.filter(p=>['P','M','G'].includes(p.sku)).every(p=>p.tipo_prod==='AC'&&p.tipo_prod_origem==='cadastro'));
+  assert.equal(ac.produtos.find(p=>p.sku==='FALLBACK').tipo_prod_origem,'estoque');
+  assert.equal((await api(e,'/produtos?filial=1&tipo_prod=MC')).data.total,1);assert.equal((await api(e,'/produtos?filial=1&tipo_prod=desconhecido')).data.total,1);
+  assert.deepEqual((await e.pool.query('SELECT sku,saldo::text,trans_id::text FROM estoque_atual ORDER BY sku')).rows,saldos);
+  // Estoque sem tipo ou com classificação divergente não apaga o cadastro confirmado.
+  await sincronizarEstoque({pool:e.pool,tenant:'teste',filial:'1',forcar:true,cargaCompleta:true,consultar:async()=>rows.map(r=>({...r,tipo_prod:'MC'}))});
+  assert.equal((await api(e,'/produtos?filial=1&tipo_prod=AC')).data.total,3);
+  await assert.rejects(enriquecerProdutos({pool:e.pool,tenant:'outro',produtos:['9'],limite:1,consultar}),/TENANT_INCORRETO/);
+  assert.equal((await api(e,'/produtos?filial=2&tipo_prod=AC')).data.total,0);
+  const antes=(await e.pool.query("SELECT tipo_prod,cod_produto FROM cadastro_produtos WHERE produto=9")).rows;
+  await enriquecerProdutos({pool:e.pool,tenant:'teste',produtos:['9'],limite:1,consultar:async()=>{throw Error('ERP_HTTP_503');}});
+  assert.deepEqual((await e.pool.query("SELECT tipo_prod,cod_produto FROM cadastro_produtos WHERE produto=9")).rows,antes);
+ }finally{await e.close();}
+});

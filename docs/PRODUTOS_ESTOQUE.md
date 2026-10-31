@@ -1,5 +1,9 @@
 # Produtos, estoque e indicadores — R19
 
+## Atualização em 31/10/2026 — classificação cadastral
+
+A consulta CONSULTAPRODUTOS já retorna tipo_prod, confirmado no ERP. Implementado tipo principal em cadastro_produtos, com vínculo dos SKUs pelo ID produto; tipo do saldo é alternativa. Filtros, lista e totais usam o mesmo tipo efetivo. Saldo continua na rota saldodeestoque, com filial/trans_id, e nenhum tipo é presumido. Publicação/recarga ainda em preparação nesta etapa. Guia: [tipo pelo cadastro](TIPO_PRODUTO_CADASTRO.md). As seções antigas abaixo são histórico.
+
 ## Regras confirmadas por Maylon
 
 Em 15/09/2026, Maylon confirmou que `desconto` no item é **percentual**: `20` significa **20%**. A interface apresenta `%`, mas mantém os preços importados e não reaplica o desconto. Zero é um percentual informado; ausência continua desconhecida. A confirmação não define automaticamente o desconto no cabeçalho, bruto/líquido, frete, cortesia ou tratamento de devoluções (R22).

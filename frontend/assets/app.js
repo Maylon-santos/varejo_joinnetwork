@@ -631,7 +631,8 @@ function runPhotoJobs(jobs,version,photoSignal){
 function openCatalogDetails(p,estoque,sync){
  productDetailAbort?.abort();productDetailVersion++;
  $('product-detail-title').textContent=p.descricao||p.cod_produto||'Produto';const content=$('product-detail-content');content.replaceChildren();
- const summary=el('div',null,'detail-summary'),values=[['Código',p.cod_produto],['SKU',p.sku],['Cor',p.cor],['Tamanho',p.tamanho],['Código de barras',p.barra]];
+ const tipos={AC:'AC — Acabado',SE:'SE — Serviço',MP:'MP — Matéria-prima',MC:'MC — Material de consumo'};
+ const summary=el('div',null,'detail-summary'),values=[['Código',p.cod_produto],['SKU',p.sku],['Tipo do produto',tipos[p.tipo_prod]||p.tipo_prod],['Cor',p.cor],['Tamanho',p.tamanho],['Código de barras',p.barra]];
  if(estoque)values.push(['Saldo disponível',p.saldo===null?'Não informado':decimal(p.saldo)],['Movimentação no ERP',when(p.data_atualizacao_erp)]);
  for(const [label,value] of values){const cell=el('div');cell.append(el('small',label),el('strong',value||'Não informado'));summary.append(cell);}content.append(summary);
  if(estoque)content.append(el('p','Saldo atual, já descontadas as reservas. Sincronizado em '+when(sync?.ultimo_sucesso)+'.'+(sync?.ultimo_erro_codigo||sync?.desatualizado?' Atualização pendente; consulte a data da posição.':''),'detail-notice'));

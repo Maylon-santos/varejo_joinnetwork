@@ -31,7 +31,7 @@ export function normalizarProduto(body,produto){
  const rows=envelope(body);if(rows.length!==1)throw Error('CADASTRO_PRODUTO_AUSENTE');
  const r=rows[0];if(inteiroErp(r.produto)!==inteiroErp(produto)||!texto(r.cod_produto)||!texto(r.descricao))throw Error('PRODUTO_ERP_INVALIDO');
  const classificacao={};for(const campo of ['colecao','departamento','grupo','categoria','grade','marca'])classificacao[campo]={codigo:texto(r['cod_'+campo]),descricao:texto(r['desc_'+campo])};
- return {produto:inteiroErp(r.produto),cod_produto:texto(r.cod_produto),descricao:texto(r.descricao),trans_id:inteiroErp(r.trans_id),classificacao};
+ return {produto:inteiroErp(r.produto),cod_produto:texto(r.cod_produto),descricao:texto(r.descricao),trans_id:inteiroErp(r.trans_id),tipo_prod:texto(r.tipo_prod,20)?.toUpperCase()||null,classificacao};
 }
 async function consultar({baseUrl,token,fetchImpl=fetch},caminho,params){
  const url=new URL(baseUrl);if(!['http:','https:'].includes(url.protocol)||url.username||url.password||!token)throw Error('CONFIGURACAO_INVALIDA');

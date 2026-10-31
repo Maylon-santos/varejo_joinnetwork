@@ -27,3 +27,10 @@ test('tipo_prod é lido do retorno e não inferido quando ausente',()=>{
  assert.equal(normalizarEstoque(body([item]),'1')[0].tipo_prod,null);
  assert.equal(normalizarEstoque(body([{...item,tipo_prod:' ac '}]),'1')[0].tipo_prod,'AC');
 });
+test('tipo do cadastro é importado pelo ID de produto e permanece desconhecido quando ausente',()=>{
+ const p={produto:9,cod_produto:'CAM',descricao:'Camiseta',trans_id:2};
+ for(const tipo_prod of ['AC','SE','MP','MC'])assert.equal(normalizarProduto(body([{...p,tipo_prod}]),'9').tipo_prod,tipo_prod);
+ assert.equal(normalizarProduto(body([{...p,tipo_prod:' ac '}]),'9').tipo_prod,'AC');
+ assert.equal(normalizarProduto(body([p]),'9').tipo_prod,null);
+ assert.equal(normalizarProduto(body([{...p,tipo_prod:''}]),'9').tipo_prod,null);
+});

@@ -1,5 +1,9 @@
 # Contrato para carga e atualização do estoque
 
+## Atualização em 31/10/2026 — classificação cadastral
+
+A consulta CONSULTAPRODUTOS já retorna tipo_prod, confirmado no ERP. Implementado tipo principal em cadastro_produtos, com vínculo dos SKUs pelo ID produto; tipo do saldo é alternativa. Filtros, lista e totais usam o mesmo tipo efetivo. Saldo continua na rota saldodeestoque, com filial/trans_id, e nenhum tipo é presumido. Publicação/recarga ainda em preparação nesta etapa. Guia: [tipo pelo cadastro](../docs/TIPO_PRODUTO_CADASTRO.md). As seções antigas abaixo são histórico.
+
 ## Atualização de 19/09/2026 — decisão atual
 
 Maylon esclareceu que `tipo_prod` foi acrescentado ao **retorno** de `millenium_eco/produtos/saldodeestoque`, não aos parâmetros da consulta. A implementação mantém essa rota, com `filial` e `trans_id`, e persiste o tipo por SKU para filtragem local. AC é o padrão da tela; não é enviado como parâmetro ERP.

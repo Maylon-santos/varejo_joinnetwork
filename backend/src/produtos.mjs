@@ -1,6 +1,7 @@
 import {ErroApi,filtros,elegivel} from './painel.mjs';
 import {escopoUsuario,exigirPermissao} from './permissoes.mjs';
 const chaveProduto="CASE WHEN NULLIF(i.cod_produto,'') IS NOT NULL THEN 'produto:'||i.cod_produto WHEN NULLIF(i.sku,'') IS NOT NULL THEN 'sku:'||i.sku ELSE 'item:'||i.cod_operacao||':'||i.ordem END";
+const tipoEfetivo='COALESCE(p.tipo_prod,e.tipo_prod)';
 export function criarProdutos(pool,tenant,filiais){
  async function snapshot(user,params,executar){
   if(user.tenant_key!==tenant)throw new ErroApi(403,'TENANT_INCORRETO');
@@ -88,17 +89,17 @@ export function criarProdutos(pool,tenant,filiais){
   listar:(user,params)=>snapshot(user,params,async(db,acesso,f)=>{
    const estoque=acesso.permissoes.includes('estoque:ler'),estado=params.get('saldo')??'todos',tipo=params.get('tipo_prod')??'todos';
    if(!['todos','AC','SE','MP','MC','desconhecido'].includes(tipo))throw new ErroApi(400,'FILTRO_INVALIDO');
-   const filtroTipo="($3='todos' OR ($3='desconhecido' AND e.tipo_prod IS NULL) OR e.tipo_prod=$3)";
+   const filtroTipo=`($3='todos' OR ($3='desconhecido' AND ${tipoEfetivo} IS NULL) OR ${tipoEfetivo}=$3)`;
    if(!['todos','positivo','zero','negativo','desconhecido'].includes(estado))throw new ErroApi(400,'FILTRO_INVALIDO');
    if(estado!=='todos')exigirPermissao(acesso.permissoes,'estoque:ler');
    const condicoes={todos:'true',positivo:'e.presente_ultima_carga AND e.saldo>0',zero:'e.presente_ultima_carga AND e.saldo=0',negativo:'e.presente_ultima_carga AND e.saldo<0',desconhecido:'e.saldo IS NULL'};
    const where=`e.filial=$1 AND e.presente_ultima_carga AND ($2::text='' OR strpos(lower(p.descricao),lower($2))>0 OR strpos(lower(p.cod_produto),lower($2))>0 OR strpos(lower(e.sku),lower($2))>0 OR strpos(e.barra,$2)>0) AND ${condicoes[estado]} AND ${filtroTipo}`;
    const args=[f.filial,f.busca,tipo];
    const total=(await db.query(`SELECT count(*)::int AS total FROM estoque_atual e JOIN cadastro_produtos p USING(produto) WHERE ${where}`,args)).rows[0].total;
-   const rows=(await db.query(`SELECT e.sku,e.tipo_prod,e.produto::text,p.cod_produto,p.descricao,e.cor,e.tamanho,e.barra,p.classificacao,p.enriquecido_em ${estoque?',CASE WHEN e.presente_ultima_carga THEN e.saldo::text END AS saldo,e.presente_ultima_carga,e.data_atualizacao_erp':''}
+   const rows=(await db.query(`SELECT e.sku,${tipoEfetivo} AS tipo_prod,CASE WHEN p.tipo_prod IS NOT NULL THEN 'cadastro' WHEN e.tipo_prod IS NOT NULL THEN 'estoque' END AS tipo_prod_origem,e.produto::text,p.cod_produto,p.descricao,e.cor,e.tamanho,e.barra,p.classificacao,p.enriquecido_em ${estoque?',CASE WHEN e.presente_ultima_carga THEN e.saldo::text END AS saldo,e.presente_ultima_carga,e.data_atualizacao_erp':''}
     FROM estoque_atual e JOIN cadastro_produtos p USING(produto) WHERE ${where} ORDER BY p.cod_produto,e.sku LIMIT $4 OFFSET $5`,[...args,f.limite,(f.pagina-1)*f.limite])).rows;
-   const resumo=estoque?(await db.query(`SELECT sum(e.saldo)::text AS saldo_disponivel,count(*)::int AS skus,count(*) FILTER(WHERE e.saldo IS NULL)::int AS sem_saldo,count(*) FILTER(WHERE e.saldo<0)::int AS negativos FROM estoque_atual e WHERE e.filial=$1 AND e.presente_ultima_carga AND ($2='todos' OR ($2='desconhecido' AND e.tipo_prod IS NULL) OR e.tipo_prod=$2)`,[f.filial,tipo])).rows[0]:null;
-   const sem_tipo=(await db.query('SELECT count(*)::int AS total FROM estoque_atual WHERE filial=$1 AND presente_ultima_carga AND tipo_prod IS NULL',[f.filial])).rows[0].total;
+   const resumo=estoque?(await db.query(`SELECT sum(e.saldo)::text AS saldo_disponivel,count(*)::int AS skus,count(*) FILTER(WHERE e.saldo IS NULL)::int AS sem_saldo,count(*) FILTER(WHERE e.saldo<0)::int AS negativos FROM estoque_atual e JOIN cadastro_produtos p USING(produto) WHERE e.filial=$1 AND e.presente_ultima_carga AND ($2='todos' OR ($2='desconhecido' AND ${tipoEfetivo} IS NULL) OR ${tipoEfetivo}=$2)`,[f.filial,tipo])).rows[0]:null;
+   const sem_tipo=(await db.query(`SELECT count(*)::int AS total FROM estoque_atual e JOIN cadastro_produtos p USING(produto) WHERE e.filial=$1 AND e.presente_ultima_carga AND ${tipoEfetivo} IS NULL`,[f.filial])).rows[0].total;
    await fotos(db,acesso,f.filial,rows);
    const sync=(await db.query('SELECT ultimo_sucesso,ultima_carga_completa,ultimo_erro_codigo,falhas_consecutivas,ultimo_sucesso<now()-interval \'30 minutes\' AS desatualizado FROM sync_estoques WHERE filial=$1',[f.filial])).rows[0]??null;
    return {resumo_estoque:resumo,tipo_prod:tipo,skus_sem_tipo:sem_tipo,total,pagina:f.pagina,limite:f.limite,produtos:rows,estoque_permitido:estoque,sincronizacao:sync,regra:'Saldo disponível informado pelo ERP, já descontadas as reservas. Estoque atual; não é posição histórica do período de vendas.'};

@@ -36,16 +36,19 @@ export async function sincronizarEstoque({pool,tenant,filial,consultar,intervalo
   throw e;
  }finally{db.release();}
 }
-export async function enriquecerProdutos({pool,tenant,consultar,limite=5,parar=()=>false}){
+export async function enriquecerProdutos({pool,tenant,consultar,limite=5,parar=()=>false,produtos=null}){
  if(!Number.isSafeInteger(limite)||limite<1||limite>20)throw Error('LIMITE_INVALIDO');
+ if(produtos!==null&&(!Array.isArray(produtos)||produtos.length>limite||produtos.some(p=>!/^\d{1,18}$/.test(p))||new Set(produtos).size!==produtos.length))throw Error('PRODUTOS_INVALIDOS');
  const db=await pool.connect();let total=0,falhas=0;
  try{
   if((await db.query('SELECT tenant_key FROM tenant_identity WHERE singleton')).rows[0]?.tenant_key!==tenant)throw Error('TENANT_INCORRETO');
-  const produtos=(await db.query('SELECT p.produto::text FROM cadastro_produtos p WHERE p.proxima_tentativa<=now() AND EXISTS(SELECT 1 FROM estoque_atual e WHERE e.produto=p.produto AND e.presente_ultima_carga) ORDER BY p.proxima_tentativa,p.produto LIMIT $1',[limite])).rows;
-  for(const {produto} of produtos){
+  const alvos=(await db.query(`SELECT p.produto::text FROM cadastro_produtos p WHERE ($2::bigint[] IS NOT NULL OR p.proxima_tentativa<=now())
+   AND ($2::bigint[] IS NULL OR p.produto=ANY($2::bigint[])) AND EXISTS(SELECT 1 FROM estoque_atual e WHERE e.produto=p.produto AND e.presente_ultima_carga)
+   ORDER BY (p.tipo_prod IS NULL) DESC,p.proxima_tentativa,p.produto LIMIT $1`,[limite,produtos])).rows;
+  for(const {produto} of alvos){
    if(parar())break;
    try{const p=await consultar({produto});if(p.produto!==produto)throw Error('PRODUTO_ERP_INVALIDO');
-    await db.query(`UPDATE cadastro_produtos SET cod_produto=$2,descricao=$3,classificacao=$4,trans_id=$5,enriquecido_em=now(),proxima_tentativa=now()+interval '1 day',falhas_consecutivas=0,ultimo_erro_codigo=NULL WHERE produto=$1`,[produto,p.cod_produto,p.descricao,p.classificacao,p.trans_id]);total++;
+    await db.query(`UPDATE cadastro_produtos SET cod_produto=$2,descricao=$3,classificacao=$4,trans_id=$5,tipo_prod=$6,enriquecido_em=now(),proxima_tentativa=now()+interval '1 day',falhas_consecutivas=0,ultimo_erro_codigo=NULL WHERE produto=$1`,[produto,p.cod_produto,p.descricao,p.classificacao,p.trans_id,p.tipo_prod??null]);total++;
    }catch(e){falhas++;await db.query(`UPDATE cadastro_produtos SET falhas_consecutivas=falhas_consecutivas+1,ultimo_erro_codigo=$2,proxima_tentativa=now()+interval '6 minutes'*power(2,least(falhas_consecutivas,6)) WHERE produto=$1`,[produto,erroSeguro(e)]);}
   }
   return {enriquecidos:total,falhas};
