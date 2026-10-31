@@ -1,0 +1,11 @@
+{
+  "verificadoEm": "2026-10-31T21:55:11.288Z",
+  "ambiente": "schemas isolados, dados sintéticos",
+  "freteECortesiaVisiveis": true,
+  "legadoSemInventarZero": true,
+  "zeroSemCortesia": true,
+  "freteNuloDistintoDeZero": true,
+  "reprocessamentoRemovePendencia": true,
+  "desktopCelularSemOverflow": true,
+  "errors": []
+}

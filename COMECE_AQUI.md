@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 31/10/2026
 
+## Cortesia zero e campos de conferência — 31/10/2026
+
+- [x] Cortesia zero explícita não aciona regra pendente. Quantidades, valor, ajuste e tolerância de dois centavos continuam verificados; frete/cortesia não zerados ou formatos não confirmados continuam pendentes.
+- [x] Detalhes incluem Frete e Cortesia, distinguindo zero, resposta nula e histórico aguardando importação. Campos persistidos nos complementos, sem migration. Preenchimento gradual conserva pagamentos, itens, totais e checkpoints e rejeita cabeçalho divergente.
+- [x] 72 testes unitários, 73 de integração PostgreSQL e navegador sintético em 1280/390 px aprovados. [Regra e operação](docs/FRETE_CORTESIA.md); evidência `docs/validacao-cortesia-ui.json`.
+- [ ] Publicar API/worker e reprocessar a venda indicada; conferir resultado e campos no piloto. R22 permanece aberta para composições não zeradas, bruto/líquido e devoluções.
+
 ## Exportações CSV, layout ajustado e envio diário — 31/10/2026
 
 - [x] Amostra **01 a 20/10/2026** e histórico **01/01 a 30/10/2026**, após substituição de 2025 por 2026. Seis CSVs iniciais e dois de vendas por cupom ajustados aceitos pela API Talk, exclusivamente ao WhatsApp administrativo autorizado; aceite não comprova entrega/leitura.

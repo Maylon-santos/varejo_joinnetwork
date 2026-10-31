@@ -64,3 +64,39 @@ test('filtro de pendências inclui todas as divergências e exclui conciliadas e
   await e.pool.query("UPDATE operacoes SET conciliacao='divergente',erro_erp_confirmado_por='Teste',erro_erp_confirmado_em=now() WHERE filial=1 AND cod_operacao=10");assert.equal((await consultar()).length,0);
  }finally{await e.close();}
 });
+test('reprocessa cortesia zero para conciliada e expõe frete/cortesia preservando totais e checkpoints',async()=>{
+ const e=await ambienteFila();try{
+  await e.pool.query("UPDATE operacoes SET conciliacao='conciliada'");
+  await e.pool.query("UPDATE operacoes SET conciliacao='regra_pendente',quantidade=2,valor_final_centavos=2000,ajuste_centavos=0,subtotal_itens_centavos=2000 WHERE filial=1 AND cod_operacao=10");
+  const checkpoints=(await e.pool.query('SELECT to_jsonb(c)::text AS c FROM sync_checkpoints c ORDER BY filial,recurso')).rows;
+  const antes=(await e.pool.query('SELECT quantidade,valor_final_centavos::text,ajuste_centavos::text,subtotal_itens_centavos::text FROM operacoes WHERE filial=1 AND cod_operacao=10')).rows;
+  await request(e);assert.equal((await run(e,async()=>[venda(e,{cortesia:0,v_frete:null})])).estado,'concluido');
+  const r=await fetch(e.base+'/api/v1/operacoes/1/S/10',{headers:{Authorization:'Bearer '+e.tokens.admin}});assert.equal(r.status,200);const d=await r.json();
+  assert.equal(d.operacao.conciliacao,'conciliada');assert.equal(d.operacao.complementos.cortesia_informada,0);assert.equal(d.operacao.complementos.frete_centavos,null);
+  const pendentes=await fetch(e.base+`/api/v1/vendas?filial=1&inicio=${e.dia}&fim=${e.dia}&conciliacao=pendentes`,{headers:{Authorization:'Bearer '+e.tokens.admin}});
+  assert.equal((await pendentes.json()).total,0);
+  assert.deepEqual((await e.pool.query('SELECT quantidade,valor_final_centavos::text,ajuste_centavos::text,subtotal_itens_centavos::text FROM operacoes WHERE filial=1 AND cod_operacao=10')).rows,antes);
+  assert.deepEqual((await e.pool.query('SELECT to_jsonb(c)::text AS c FROM sync_checkpoints c ORDER BY filial,recurso')).rows,checkpoints);
+  await e.pool.query("UPDATE reprocessamentos_venda SET criado_em=now()-interval '2 minutes'");await e.pool.query("UPDATE operacoes SET conciliacao='regra_pendente' WHERE filial=1 AND cod_operacao=10");
+  await request(e);await run(e,async()=>[venda(e,{cortesia:'1.00',v_frete:5})]);
+  const positiva=(await e.pool.query('SELECT conciliacao,complementos FROM operacoes WHERE filial=1 AND cod_operacao=10')).rows[0];
+  assert.equal(positiva.conciliacao,'regra_pendente');assert.equal(positiva.complementos.frete_centavos,'500');assert.equal(positiva.complementos.cortesia_informada,'1.00');
+ }finally{await e.close();}
+});
+test('preenchimento gradual acrescenta frete/cortesia ao legado sem substituir dados comerciais ou pagamentos',async()=>{
+ const e=await ambienteFila();try{
+  const repo=new RepositorioPostgres(e.pool,'teste'),op=venda(e,{cortesia:0,v_frete:null});
+  await repo.transacao({tenant:'teste',filial:'1'},tx=>tx.salvarOperacoes([op]));
+  await e.pool.query("UPDATE operacoes SET conciliacao='regra_pendente',complementos=(complementos-'frete_centavos'-'cortesia_informada')||'{\"desc_condicoes_pgto\":\"Pagamento preservado\"}'::jsonb WHERE filial=1 AND cod_operacao=10");
+  const comercial=async()=>(await e.pool.query("SELECT quantidade,valor_final_centavos::text,ajuste_centavos::text,subtotal_itens_centavos::text,clientes FROM operacoes WHERE filial=1 AND cod_operacao=10")).rows;
+  const antes=await comercial(),itens=(await e.pool.query("SELECT to_jsonb(i)::text AS item FROM operacao_itens i WHERE filial=1 AND cod_operacao=10 ORDER BY ordem")).rows;
+  assert.equal(await repo.transacao({tenant:'teste',filial:'1'},tx=>tx.preencherComplementos([op])),1);
+  assert.equal(await repo.transacao({tenant:'teste',filial:'1'},tx=>tx.preencherComplementos([op])),0);
+  const atual=(await e.pool.query('SELECT conciliacao,complementos FROM operacoes WHERE filial=1 AND cod_operacao=10')).rows[0];
+  assert.equal(atual.conciliacao,'conciliada');assert.equal(atual.complementos.desc_condicoes_pgto,'Pagamento preservado');assert.equal(atual.complementos.cortesia_informada,0);assert.equal(atual.complementos.frete_centavos,null);
+  assert.deepEqual(await comercial(),antes);assert.deepEqual((await e.pool.query("SELECT to_jsonb(i)::text AS item FROM operacao_itens i WHERE filial=1 AND cod_operacao=10 ORDER BY ordem")).rows,itens);
+  await e.pool.query("UPDATE operacoes SET complementos=complementos-'cortesia_informada' WHERE filial=1 AND cod_operacao=10");
+  await assert.rejects(repo.transacao({tenant:'teste',filial:'1'},tx=>tx.preencherComplementos([{...op,valor_final_centavos:'999'}])),/CONFERENCIA_CABECALHO_DIVERGENTE/);
+  assert.deepEqual(await comercial(),antes);
+ }finally{await e.close();}
+});

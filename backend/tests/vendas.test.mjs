@@ -13,6 +13,12 @@ test('Preserva canceladas e sinaliza divergência monetária',()=>{
  assert.equal(normalizarVenda({...v,valor_final:91},'30098297','2026-09-09','2026-09-09').conciliacao,'divergente');
  assert.equal(normalizarVenda({...v,cancelada:true},'30098297','2026-09-09','2026-09-09').cancelada,true);
 });
+test('armazena frete e cortesia nos complementos sem converter nulo em zero nem perder o tipo',()=>{
+ for(const [v_frete,cortesia,frete] of [[null,0,null],[0,'0.00','0'],['12.34',true,'1234'],[null,null,null]]){
+  const op=normalizarVenda({...v,v_frete,cortesia},'30098297','2026-09-09','2026-09-09');
+  assert.equal(op.complementos.frete_centavos,frete);assert.equal(op.complementos.cortesia_informada,cortesia);
+ }
+});
 test('API incompleta ou chaves duplicadas não são aceitas',async()=>{
  for(const body of [{'odata.count':2,value:[v]},{'odata.count':2,value:[v,{...v,valor_final:91}]}]){
  await assert.rejects(consultarVendas({baseUrl:'http://example.invalid/api',token:'fake',filial:'30098297',inicio:'2026-09-09',fim:'2026-09-09',fetchImpl:async()=>({ok:true,json:async()=>body})}));

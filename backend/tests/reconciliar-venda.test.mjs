@@ -21,6 +21,16 @@ test('Não inventa composição de frete ou cortesia', () => {
   assert.equal(reconciliarVenda({ ...casos[0], v_frete: 12 }).status, 'regra_pendente');
   assert.equal(reconciliarVenda({ ...casos[0], cortesia: true }).status, 'regra_pendente');
 });
+test('cortesia zero não impede conferência de valor e quantidade; demais valores permanecem protegidos',()=>{
+ for(const cortesia of [0,'0','0.00','-0.00',null,undefined]){
+  assert.equal(reconciliarVenda({...casos[0],cortesia}).status,'conciliada');
+  assert.equal(reconciliarVenda({...casos[0],cortesia,qtde:99}).status,'quantidade_divergente');
+  assert.equal(reconciliarVenda({...casos[0],cortesia,valor_final:'1.00'}).status,'divergente');
+ }
+ for(const cortesia of [1,-1,'0.01',true,false,'',{},'não'])assert.equal(reconciliarVenda({...casos[0],cortesia}).status,'regra_pendente');
+ assert.equal(reconciliarVenda({...casos[0],cortesia:0,v_frete:1}).status,'regra_pendente');
+ assert.equal(reconciliarVenda({...casos[0],cortesia:0,v_acerto:null}).status,'contrato_incompleto');
+});
 test('Não inclui cancelamentos e entradas', () => {
   assert.equal(reconciliarVenda({ ...casos[0], cancelada: true }).status, 'nao_elegivel');
   assert.equal(reconciliarVenda({ ...casos[0], tipo_operacao: 'E' }).status, 'nao_elegivel');

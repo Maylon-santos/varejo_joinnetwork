@@ -156,3 +156,10 @@ Regras e dados ainda necessários: [Indicadores da Visão geral](../docs/INDICAD
 `GET /api/v1/produtos/detalhe?filial=ID&inicio=AAAA-MM-DD&fim=AAAA-MM-DD&chave=produto%3ACODIGO&pagina=1` recebe a chave exata retornada no ranking. Exige produtos/vendas e aplica o mesmo escopo por filial/vendedor antes de agregar. Retorna resumo e variações vendidas, com SKU, peças, vendas distintas, subtotal, último preço e data; 30 variações por página. Cor/tamanho/classificação vêm do cadastro local quando o SKU e o produto coincidem. Saldo atual só é retornado com `estoque:ler`. Produto sem vendas autorizadas no período retorna 404, sem expor existência em outro acesso.
 
 `GET /api/v1/filiais` inclui `fantasia` (nullable). A interface exibe `cod_filial - fantasia`, preservando o ID interno no valor do filtro. Fantasia é importada pelo mesmo cadastro incremental, não por consulta ao abrir o seletor. A migration tenant 012 solicita uma releitura cadastral inicial para preencher o campo sem zerar cursores ou alterar checkpoints comerciais.
+
+
+## Frete e cortesia nos detalhes — 31/10/2026
+
+`GET /api/v1/operacoes/:filial/:tipo/:codigo` inclui, quando já importados, `operacao.complementos.frete_centavos` (string de centavos ou null) e `cortesia_informada` (valor/tipo recebido ou null). Ausência da chave representa histórico ainda sem a carga desses campos; chave com null representa resposta não informada. Permissões de vendas/filial/vendedor existentes preservadas.
+
+Cortesia zero explícita permite conferir quantidade/valor/ajuste com a tolerância vigente. Frete não zerado, cortesia não zerada e formatos não homologados continuam em regra pendente. O preenchimento gradual só reclassifica após comparar cabeçalho/itens com o retorno atual. Detalhes e limites em [Frete e cortesia](../docs/FRETE_CORTESIA.md).

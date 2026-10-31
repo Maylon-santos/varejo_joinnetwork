@@ -70,12 +70,27 @@ export class RepositorioPostgres {
             chaveOperacao(op.cod_operacao,op.tipo_operacao,op.filial);
             if(String(op.filial)!==String(filial)||!op.complementos||!Array.isArray(op.produtos))throw new Error('COMPLEMENTOS_INVALIDOS');
             const key=[op.cod_operacao,op.tipo_operacao,filial];
-            const target=await client.query('SELECT 1 FROM operacoes WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 AND complementos IS NULL',key);
+            const target=await client.query(`SELECT complementos,conciliacao,cancelada,quantidade,valor_final_centavos::text,ajuste_centavos::text,subtotal_itens_centavos::text
+              FROM operacoes WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3
+              AND (complementos IS NULL OR NOT (complementos ? 'frete_centavos' AND complementos ? 'cortesia_informada')) FOR UPDATE`,key);
             if(!target.rowCount)continue;
             const existing=(await client.query('SELECT ordem,sku,cod_produto,quantidade,preco_centavos FROM operacao_itens WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 ORDER BY ordem',key)).rows;
             const associados=associarItensComplementares(existing,op.produtos);
+            const atual=target.rows[0];
+            const mesmoCabecalho=atual.quantidade===op.quantidade&&atual.valor_final_centavos===String(op.valor_final_centavos)
+              &&atual.ajuste_centavos===(op.ajuste_centavos??null)&&atual.subtotal_itens_centavos===(op.subtotal_itens_centavos??null);
+            const conciliacao=mesmoCabecalho&&!atual.cancelada&&!op.cancelada&&op.tipo_operacao==='S'&&atual.conciliacao==='regra_pendente'?op.conciliacao:atual.conciliacao;
+            if(atual.complementos!==null){
+              if(!mesmoCabecalho)throw Error('CONFERENCIA_CABECALHO_DIVERGENTE');
+              if(!Object.hasOwn(op.complementos,'frete_centavos')||!Object.hasOwn(op.complementos,'cortesia_informada'))throw Error('CAMPOS_CONFERENCIA_AUSENTES');
+              // Histórico já preenchido: acrescentar somente os dois campos novos,
+              // preservando pagamentos, itens, valores e cursores originais.
+              const campos={frete_centavos:op.complementos.frete_centavos,cortesia_informada:op.complementos.cortesia_informada};
+              await client.query('UPDATE operacoes SET complementos=complementos||$4::jsonb,complementos_importados_em=now(),conciliacao=$5 WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',[...key,JSON.stringify(campos),conciliacao]);
+              atualizadas++;continue;
+            }
             for(const item of associados)await client.query('UPDATE operacao_itens SET preco_tabela_centavos=$5,desconto_informado=$6,preco_aplicado_centavos=$7 WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 AND ordem=$4',[...key,item.ordem,item.preco_tabela_centavos,item.desconto_informado,item.preco_aplicado_centavos]);
-            await client.query('UPDATE operacoes SET complementos=$4::jsonb,complementos_importados_em=now() WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',[...key,JSON.stringify(op.complementos)]);atualizadas++;
+            await client.query('UPDATE operacoes SET complementos=$4::jsonb,complementos_importados_em=now(),conciliacao=$5 WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',[...key,JSON.stringify(op.complementos),conciliacao]);atualizadas++;
           }
           return atualizadas;
         },

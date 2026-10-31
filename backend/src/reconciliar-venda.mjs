@@ -11,6 +11,13 @@ export function centavos(valor) {
 
 export const TOLERANCIA_VALOR_CENTAVOS = 2n;
 
+// Zero explícito no ERP significa ausência de cortesia. Outros tipos/valores
+// continuam pendentes: não presumir que booleanos, vazio ou texto sejam dinheiro.
+export function cortesiaZerada(valor) {
+  return ['number', 'string'].includes(typeof valor)
+    && /^-?0+(?:\.0+)?$/.test(String(valor));
+}
+
 export function reconciliarVenda(venda) {
   if (venda.tipo_operacao !== 'S' || venda.cancelada !== false) {
     return { status: 'nao_elegivel' };
@@ -20,7 +27,7 @@ export function reconciliarVenda(venda) {
     return { status: 'contrato_incompleto', motivo: 'v_acerto ausente; não presumir desconto zero' };
   }
   if ((venda.v_frete !== null && venda.v_frete !== undefined && centavos(venda.v_frete) !== 0n)
-      || (venda.cortesia !== null && venda.cortesia !== undefined)) {
+      || (venda.cortesia !== null && venda.cortesia !== undefined && !cortesiaZerada(venda.cortesia))) {
     return { status: 'regra_pendente', motivo: 'Composição de frete/cortesia ainda não homologada' };
   }
   let quantidade = 0;

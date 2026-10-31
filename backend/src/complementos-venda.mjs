@@ -8,7 +8,8 @@ export function precosComplementares(p){
 }
 export function complementosDaVenda(v,normalizarDia){
  if(v.lancamentos!=null&&!Array.isArray(v.lancamentos))throw new Error('LANCAMENTOS_INVALIDOS');
- return {condicoes_pgto:texto(v.condicoes_pgto),codigo_condicaopgto:texto(v.codigo_condicaopgto),desc_condicoes_pgto:texto(v.desc_condicoes_pgto),lancamentos:v.lancamentos==null?null:v.lancamentos.map(l=>{
+ return {frete_centavos:valor(v.v_frete),cortesia_informada:v.cortesia??null,
+  condicoes_pgto:texto(v.condicoes_pgto),codigo_condicaopgto:texto(v.codigo_condicaopgto),desc_condicoes_pgto:texto(v.desc_condicoes_pgto),lancamentos:v.lancamentos==null?null:v.lancamentos.map(l=>{
   if(!l||typeof l!=='object'||Array.isArray(l))throw new Error('LANCAMENTO_INVALIDO');
   return {origem:texto(l.origem),n_documento:texto(l.n_documento),data_emissao:l.data_emissao==null?null:normalizarDia(l.data_emissao),data_vencimento:l.data_vencimento==null?null:normalizarDia(l.data_vencimento),desc_gerador:texto(l.desc_gerador),historico:texto(l.historico),desc_tipopgto:texto(l.desc_tipopgto),nsu:texto(l.nsu),valor_inicial_centavos:valor(l.valor_inicial)};
  })};

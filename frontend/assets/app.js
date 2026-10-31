@@ -210,13 +210,25 @@ function renderConference(d,content){
   quantidade_divergente:['Quantidade de peças diferente','Confira no ERP a quantidade total e a quantidade de cada item. Se houver erro, corrija no ERP e solicite ao Admin o reprocessamento da venda.'],
   divergente:['Valor da venda diferente da soma dos itens com o ajuste','Confira no ERP os preços, as quantidades e o ajuste da operação. Após corrigir, solicite ao Admin o reprocessamento da venda. O desconto informado não é aplicado novamente.'],
   contrato_incompleto:['Ajuste da operação não informado pelo ERP','É necessário conferir com o responsável pelo ERP o envio do ajuste, inclusive quando for zero. Após corrigir o retorno, solicite ao Admin o reprocessamento.'],
-  regra_pendente:['Composição de frete ou cortesia ainda não validada','O retorno do ERP acionou a regra de frete/cortesia. Mesmo que os números acima coincidam, a conferência automática depende de definir como esses campos compõem o total. Confira no ERP se há frete ou cortesia e encaminhe essa composição ao responsável pela integração. Reprocessar sem mudança no retorno ou na regra pode manter a pendência.'],
+  regra_pendente:['Composição de frete ou cortesia ainda não validada','Confira os campos Frete e Cortesia acima. Frete não zerado ou cortesia diferente de zero ainda exigem validar a composição, mesmo que os números coincidam. Cortesia zero não gera pendência; registros antigos podem precisar de reprocessamento para aplicar a regra atual.'],
   pendente:['Conferência ainda não concluída','Solicite ao Admin o reprocessamento para consultar a versão atual da venda no ERP.'],
   erro_erp_confirmado:['Erro no ERP confirmado',`Cabeçalho validado por ${o.erro_erp_confirmado_por||'Admin'}. Os indicadores usam o valor e a quantidade do cabeçalho; os itens originais foram preservados.`]
  };
  const [reason,action]=guidance[o.conciliacao]||['Situação de conferência não identificada','Solicite ao responsável pela integração a análise desta operação.'];
  box.append(el('strong',reason),el('p',action),el('p','A comparação usa os preços recebidos dos itens. Não reaplica o desconto informado nem inclui frete ou cortesia no cálculo acima.'));
  content.append(box);
+}
+function freteDetalhe(o){
+ const c=o.complementos;
+ return !c||!Object.hasOwn(c,'frete_centavos')?'Aguardando importação':c.frete_centavos==null?'Não informado':money(c.frete_centavos);
+}
+function cortesiaDetalhe(o){
+ const c=o.complementos;
+ if(!c||!Object.hasOwn(c,'cortesia_informada'))return 'Aguardando importação';
+ const valor=c.cortesia_informada;
+ if(valor==null)return 'Não informada';
+ if(['number','string'].includes(typeof valor)&&/^-?0+(?:\.0+)?$/.test(String(valor)))return 'Sem cortesia (0)';
+ return typeof valor==='string'?valor:JSON.stringify(valor);
 }
 async function openDetail(o){
  clearTimeout(reprocessTimer);clearDetailMedia();detailAbort=new AbortController();
@@ -225,7 +237,7 @@ async function openDetail(o){
   const d=await api(`/operacoes/${encodeURIComponent(o.filial)}/${encodeURIComponent(o.tipo_operacao)}/${encodeURIComponent(o.cod_operacao)}`);
   if(version!==detailGeneration||!$('detail-dialog').open&&!$('product-dialog').open)return;
   const content=$('detail-content');content.replaceChildren();const summary=el('div',null,'detail-summary');
-  for(const[label,value]of [['Data',dateBR(d.operacao.data_operacao)],['Situação',d.operacao.cancelada?'Cancelada':'Ativa'],['Vendedor',d.operacao.vendedor_nome||'Sem identificação'],['Valor da operação',money(d.operacao.valor_final_centavos)],['Peças no cabeçalho',number(d.operacao.quantidade)],['Ajuste da operação',money(d.operacao.ajuste_centavos)]]){const cell=el('div');cell.append(el('small',label),el('strong',value));summary.append(cell);}content.append(summary);
+  for(const[label,value]of [['Data',dateBR(d.operacao.data_operacao)],['Situação',d.operacao.cancelada?'Cancelada':'Ativa'],['Vendedor',d.operacao.vendedor_nome||'Sem identificação'],['Valor da operação',money(d.operacao.valor_final_centavos)],['Peças no cabeçalho',number(d.operacao.quantidade)],['Ajuste da operação',money(d.operacao.ajuste_centavos)],['Frete',freteDetalhe(d.operacao)],['Cortesia',cortesiaDetalhe(d.operacao)]]){const cell=el('div');cell.append(el('small',label),el('strong',value));summary.append(cell);}content.append(summary);
   if(isAdmin){const control=reprocessControl(d.operacao,true);if(control)content.append(control);}
   renderPayment(d.operacao,content);
   if(pode('clientes:ler')){const customer=el('section',null,'detail-customer');customer.id='detail-customer';customer.setAttribute('aria-live','polite');content.append(customer);loadCustomer(d.operacao,customer,version);}
