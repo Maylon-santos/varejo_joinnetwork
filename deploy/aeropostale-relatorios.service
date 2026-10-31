@@ -1,0 +1,10 @@
+[Unit]
+Description=Exportação CSV e envio diário Aeropostale
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/aeropostale-varejo
+ExecStart=/bin/bash /opt/aeropostale-varejo/deploy/relatorios-diarios.sh
+UMask=0077

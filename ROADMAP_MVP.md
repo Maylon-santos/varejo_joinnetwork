@@ -1,5 +1,15 @@
 # Roadmap — Aeropostale Varejo
 
+## Exportações CSV e envio pela Talk — 31/10/2026
+
+- [x] Amostra de **01 a 20/10/2026** e histórico de **01/01 a 30/10/2026**, após Maylon substituir o pedido inicial de 2025 por 2026. Um CSV por relatório: faturamento diário, vendas por operação/cupom e cadastro das 15 filiais. UTF-8, `;`, datas AAAA-MM-DD, valores BRL com ponto decimal.
+- [x] **Seis CSVs aceitos pela API Talk**, exclusivamente para o WhatsApp administrativo configurado, conforme novo pedido de Maylon após falha do Gmail. Recibos privados preservados; aceite da API não comprova entrega/leitura. Nenhum envio de e-mail confirmado.
+- [x] Snapshot de produção somente leitura, sem clientes/contatos. Conferência independente das somas, peças, chaves e checksums; 69 testes unitários Node, um teste de integração da exportação e três testes SMTP simulados aprovados. Worker local permanece desativado, remoto preservado; sem publicação ou alteração comercial.
+- [ ] **R30 — rotina diária:** janela automática do primeiro dia do mês anterior até ontem preparada; horário proposto 08h de São Paulo. Aguardar definição se o canal recorrente também será Talk ou continuará e-mail; timer ainda não ativado. SMTP exige remetente configurado.
+- [ ] **Contrato complementar:** empresa/unidade/canal sem mapeamento confirmado, número fiscal do cupom não disponível e marca ausente em cupons mistos/incompletos. Valor atual é o cabeçalho das vendas S ativas. Devoluções e bruto/líquido continuam na R22; homologação comercial R11 preservada.
+
+Uso e limites: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-exportacao-csv.json`. Arquivos e recibos em `artifacts/exportacoes-csv/`, fora do Git.
+
 ## Clareza da conferência — 19/10/2026
 
 - [x] Detalhes apresentam comparação de peças, soma de preços × quantidades, ajuste, valor do cabeçalho e diferença com tolerância de R$ 0,02. Dados ausentes não são presumidos como zero.
@@ -11,7 +21,7 @@
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-19 de 29 tarefas deste quadro concluídas. Atualização: 2026-09-28. A contagem não representa prazo ou esforço.
+19 de 30 tarefas deste quadro concluídas. Atualização: 2026-10-31. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
@@ -21,7 +31,7 @@
 | R20 — SaaS: provisionamento, planos e cobrança | R25 — Completar preços e pagamentos do histórico | — | R04 — Correções de celular e fotos |
 | — | R26 — Completar identificação e aniversários do histórico | — | R05 — Clientes importados junto com a venda |
 | — | R29 — Vendas por hora nos dashboards | — | R06 — Homologação de ITUPEVA |
-| — | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
+| — | R30 — Exportações CSV e envio diário | — | R07 — Autorizar 14 filiais no mesmo ambiente |
 | — | — | — | R08 — Exibir COD_FILIAL no seletor |
 | — | — | — | R09 — Sincronizar cadastro por trans_id |
 | — | — | — | R10 — Concluir históricos das novas filiais |
@@ -47,6 +57,7 @@
 - [ ] **R25 — Completar preços e pagamentos do histórico:** Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json.
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 - [ ] **R29 — Vendas por hora nos dashboards:** Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json.
+- [ ] **R30 — Exportações CSV e envio diário:** Amostra 01–20/10/2026 e histórico 01/01–30/10/2026 gerados em três relatórios por lote, UTF-8 e separador ;. Seis CSVs aceitos pela API Talk ao único WhatsApp administrativo autorizado; não comprova leitura. Totais, peças, IDs e checksums verificados; 69 testes unitários Node, um teste PostgreSQL da exportação e três testes SMTP simulados aprovados. Janela recorrente do primeiro dia do mês anterior até ontem preparada; falta definir canal diário (Talk/e-mail) e ativar timer. Empresa/unidade/canal, número fiscal, marca completa e R22 devoluções/bruto/líquido seguem pendentes. Fonte: docs/EXPORTACAO_CSV.md; evidência docs/validacao-exportacao-csv.json. Sem publicação ou alteração comercial.
 
 <!-- KANBAN:FIM -->
 

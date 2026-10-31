@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-09-28",
+  "atualizadoEm": "2026-10-31",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -175,6 +175,12 @@
       "titulo": "Vendas por hora nos dashboards",
       "status": "em_andamento",
       "detalhe": "Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json."
+    },
+    {
+      "id": "R30",
+      "titulo": "Exportações CSV e envio diário",
+      "status": "em_andamento",
+      "detalhe": "Amostra 01–20/10/2026 e histórico 01/01–30/10/2026 gerados em três relatórios por lote, UTF-8 e separador ;. Seis CSVs aceitos pela API Talk ao único WhatsApp administrativo autorizado; não comprova leitura. Totais, peças, IDs e checksums verificados; 69 testes unitários Node, um teste PostgreSQL da exportação e três testes SMTP simulados aprovados. Janela recorrente do primeiro dia do mês anterior até ontem preparada; falta definir canal diário (Talk/e-mail) e ativar timer. Empresa/unidade/canal, número fiscal, marca completa e R22 devoluções/bruto/líquido seguem pendentes. Fonte: docs/EXPORTACAO_CSV.md; evidência docs/validacao-exportacao-csv.json. Sem publicação ou alteração comercial."
     }
   ]
 }

@@ -1,0 +1,65 @@
+{
+  "data": "2026-10-31",
+  "fonte": "Snapshot somente leitura da base do piloto em produção",
+  "amostra": {
+    "inicio": "2026-10-01",
+    "fim": "2026-10-20",
+    "faturamento_diario_linhas": 213,
+    "vendas_por_cupom_linhas": 1708,
+    "cadastro_filiais_linhas": 15
+  },
+  "historico": {
+    "ano": 2026,
+    "inicio": "2026-01-01",
+    "fim": "2026-10-30",
+    "faturamento_diario_linhas": 4929,
+    "vendas_por_cupom_linhas": 27711,
+    "cadastro_filiais_linhas": 15,
+    "um_csv_por_relatorio_ano": true
+  },
+  "verificacao": {
+    "utf8_sem_bom": true,
+    "separador": ";",
+    "datas": "AAAA-MM-DD",
+    "decimais": "ponto, duas casas, BRL",
+    "totais_csv_iguais_snapshot": true,
+    "totais_diario_iguais_operacoes": true,
+    "pecas_conferidas": true,
+    "chaves_sem_duplicidade": true,
+    "checksums_conferidos": true,
+    "testes_unitarios_node": 69,
+    "teste_integracao_exportacao_postgresql": 1,
+    "testes_smtp_simulados": 3,
+    "sintaxe_node_shell": true
+  },
+  "limites": [
+    "Somente vendas S ativas; cancelamentos conhecidos excluídos",
+    "Devoluções e bruto/líquido aguardam homologação R22",
+    "Empresa, unidade e canal ausentes sem mapeamento confirmado",
+    "Código interno de operação não equivale ao número fiscal do cupom",
+    "Marca atual por SKU/produto; sem rateio de cupons mistos",
+    "Cadastro das filiais representa posição atual"
+  ],
+  "envio": {
+    "destinatarios_autorizados": 1,
+    "cc_bcc": false,
+    "motivo": "Tentativa de e-mail falhou; usuário autorizou envio dos CSVs pela API Talk",
+    "gmail_instalado_habilitado_verificado": true,
+    "smtp_servidor_configurado": false,
+    "canal_atual": "WhatsApp via API Talk, autorizado após falha do e-mail",
+    "email_confirmado": false,
+    "arquivos_aceitos_api_talk": 6,
+    "entrega_leitura_whatsapp": "não verificada"
+  },
+  "automacao": {
+    "janela": "Primeiro dia do mês anterior até ontem, America/Sao_Paulo",
+    "horario_proposto": "08:00 America/Sao_Paulo",
+    "codigo_preparado": true,
+    "timer_instalado": false,
+    "envio_diario_ativo": false
+  },
+  "arquivos_comerciais": "artifacts/exportacoes-csv/, ignorado pelo Git",
+  "publicado": false,
+  "worker_local_ativado": false,
+  "dados_comerciais_modificados": false
+}
