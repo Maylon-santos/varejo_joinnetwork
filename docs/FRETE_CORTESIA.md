@@ -24,3 +24,10 @@ Em um registro já preenchido, compara cabeçalho e associa itens por identidade
 Construir API/worker atualizados. Antes de publicar, guardar imagens anteriores e fazer backup com ambos pausados, conforme `deploy/README.md`. Não requer migrations, Nginx ou dependências novas. Reprocessar a venda indicada pela rotina administrativa existente e verificar `conciliada`, campos e totais preservados. Não executar carga histórica em massa; o histórico segue gradual. Manter worker local desativado e preservar a rotina diária Talk.
 
 Retorno: imagens anteriores compatíveis com os campos JSON aditivos; parar o worker atualizado antes de reverter. A versão anterior volta a tratar cortesia zero como pendente quando importar/reprocessar. Os campos e recibos permanecem no banco/backups.
+
+
+### Publicado e verificado — 31/10/2026
+
+API/worker publicados com backup `backup-20261031T220134Z-4D11RO` e imagens anteriores preservadas. Hashes dos campos comerciais, itens, cancelamentos e checkpoints idênticos antes/depois da troca. API saudável e worker remoto retomado; worker local desativado. Timer de relatórios Talk preservado ativo.
+
+A venda indicada foi conferida pelo painel público: conciliada, fora do filtro de pendências, frete não informado e cortesia zero visíveis. Comparação com o snapshot privado anterior confirmou valores, peças e itens preservados. Computador/celular sem transbordamento ou erros JS. Evidência: `docs/validacao-cortesia-producao.json`; capturas comerciais permanecem em `artifacts/deploy/`, fora do Git. R22 não foi encerrada pelas composições restantes.

@@ -1,0 +1,23 @@
+{
+  "verificadoEm": "2026-10-31T22:03:00.072Z",
+  "dominio": "aeropostale.joinnetwork.com.br",
+  "vendaIndicadaConciliada": true,
+  "reprocessamentoSolicitado": true,
+  "freteNuloECortesiaZeroPersistidos": true,
+  "valoresPecasItensPreservados": true,
+  "comparacaoComSnapshotAnterior": true,
+  "vendaAusenteDoFiltroPendencias": true,
+  "camposVisiveisNoDetalhe": true,
+  "desktopCelularSemOverflow": true,
+  "errors": [],
+  "backup": "backup-20261031T220134Z-4D11RO",
+  "imagensAnterioresPreservadas": true,
+  "hashesComerciaisItensCancelamentosCheckpointsPreservadosNaPublicacao": true,
+  "apiPostgresWorkerRemotoAtivos": true,
+  "workerLocalDesativado": true,
+  "timerTalkPreservadoAtivo": true,
+  "migrationsAplicadas": false,
+  "nginxAlterado": false,
+  "testesUnitarios": 72,
+  "testesIntegracao": 73
+}

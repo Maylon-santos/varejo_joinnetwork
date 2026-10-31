@@ -5,7 +5,7 @@
 - [x] Cortesia zero explícita não aciona regra pendente. Quantidades, valor, ajuste e tolerância de dois centavos continuam verificados; frete/cortesia não zerados ou formatos não confirmados continuam pendentes.
 - [x] Detalhes incluem Frete e Cortesia, distinguindo zero, resposta nula e histórico aguardando importação. Campos persistidos nos complementos, sem migration. Preenchimento gradual conserva pagamentos, itens, totais e checkpoints e rejeita cabeçalho divergente.
 - [x] 72 testes unitários, 73 de integração PostgreSQL e navegador sintético em 1280/390 px aprovados. [Regra e operação](docs/FRETE_CORTESIA.md); evidência `docs/validacao-cortesia-ui.json`.
-- [ ] Publicar API/worker e reprocessar a venda indicada; conferir resultado e campos no piloto. R22 permanece aberta para composições não zeradas, bruto/líquido e devoluções.
+- [x] API/worker publicados com backup `backup-20261031T220134Z-4D11RO` e imagens de retorno preservadas. Venda indicada conciliada, fora das pendências e com campos visíveis; comparação com snapshot anterior confirmou valores, peças e itens preservados. Hashes comerciais/cancelamentos/checkpoints iguais na publicação; API saudável, worker remoto e timer Talk ativos, local desativado. Evidência: `docs/validacao-cortesia-producao.json`. R22 continua aberta para composições não zeradas, bruto/líquido e devoluções.
 
 ## Exportações CSV, layout ajustado e envio diário — 31/10/2026
 
