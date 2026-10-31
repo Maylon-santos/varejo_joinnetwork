@@ -179,8 +179,8 @@
     {
       "id": "R30",
       "titulo": "Exportações CSV e envio diário",
-      "status": "em_andamento",
-      "detalhe": "Amostra 01–20/10/2026 e histórico 01/01–30/10/2026 gerados em três relatórios por lote, UTF-8 e separador ;. Seis CSVs aceitos pela API Talk ao único WhatsApp administrativo autorizado; não comprova leitura. Totais, peças, IDs e checksums verificados; 69 testes unitários Node, um teste PostgreSQL da exportação e três testes SMTP simulados aprovados. Janela recorrente do primeiro dia do mês anterior até ontem preparada; falta definir canal diário (Talk/e-mail) e ativar timer. Empresa/unidade/canal, número fiscal, marca completa e R22 devoluções/bruto/líquido seguem pendentes. Fonte: docs/EXPORTACAO_CSV.md; evidência docs/validacao-exportacao-csv.json. Sem publicação ou alteração comercial."
+      "status": "concluido",
+      "detalhe": "Exportações concluídas e rotina diária ativa em 31/10, às 08h de São Paulo pela Talk, conforme confirmação. Janela do primeiro dia do mês anterior até ontem. Seis CSVs iniciais, dois ajustados e três do primeiro lote diário aceitos pela API, sem afirmar leitura. Layout final de vendas por cupom: sete colunas, empresa código - Fantasia, loja física, descrição ERP, data com meia-noite convencional, valor com vírgula; MKTP excluída somente dos CSVs, 14 filiais. Reexecução sem reenvios; lock/recibos privados. 70 testes Node, um teste PostgreSQL e três SMTP simulados; validação de valores/peças e geração final no servidor. Backup backup-20261031T213658Z-zzmj4o. API/banco/worker preservados; local desativado. R22/R11 e dimensões dos outros relatórios permanecem separadas. Evidência docs/validacao-exportacao-csv.json."
     }
   ]
 }

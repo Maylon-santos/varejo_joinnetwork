@@ -1,0 +1,20 @@
+{
+  "vendas_por_cupom": "resumido",
+  "filiais_excluidas": [
+    "30098797"
+  ],
+  "canal_lojas_fisicas": "varejo - loja fisica",
+  "descricoes_confirmadas_em": "2026-10-31",
+  "descricoes_eventos": {
+    "30098": "(II) - FATURAMENTO PARA FUNCIONÁRIO",
+    "FR-02": "VENDA VAREJO CUPOM FISCAL  - FRANQUIA",
+    "NFCE": "VENDA VAREJO CUPOM FISCAL  - FRANQUIA",
+    "CFIMG": "VENDA VAREJO CUPOM FISCAL  - AERO IMIGRANTES",
+    "CFRBP": "VENDA VAREJO CUPOM FISCAL  - AERO RIBEIRAO",
+    "SUNIF": "SAIDA UNIFORME LOJAS",
+    "CF729": "VENDA VAREJO CUPOM FISCAL  - AERO 729",
+    "VF729": "VENDA PARA FUNCIONÁRIO - 729",
+    "CFIBR": "VENDA VAREJO CUPOM FISCAL  - AERO IBIRAPUERA",
+    "CFBZR": "VENDA VAREJO CUPOM FISCAL  - BAZAR AERO"
+  }
+}

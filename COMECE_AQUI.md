@@ -1,14 +1,14 @@
-# Comece aqui — estado atual em 28/09/2026
+# Comece aqui — estado atual em 31/10/2026
 
-## Exportações CSV e envio pela Talk — 31/10/2026
+## Exportações CSV, layout ajustado e envio diário — 31/10/2026
 
-- [x] Amostra de **01 a 20/10/2026** e histórico de **01/01 a 30/10/2026**, após Maylon substituir o pedido inicial de 2025 por 2026. Um CSV por relatório: faturamento diário, vendas por operação/cupom e cadastro das 15 filiais. UTF-8, `;`, datas AAAA-MM-DD, valores BRL com ponto decimal.
-- [x] **Seis CSVs aceitos pela API Talk**, exclusivamente para o WhatsApp administrativo configurado, conforme novo pedido de Maylon após falha do Gmail. Recibos privados preservados; aceite da API não comprova entrega/leitura. Nenhum envio de e-mail confirmado.
-- [x] Snapshot de produção somente leitura, sem clientes/contatos. Conferência independente das somas, peças, chaves e checksums; 69 testes unitários Node, um teste de integração da exportação e três testes SMTP simulados aprovados. Worker local permanece desativado, remoto preservado; sem publicação ou alteração comercial.
-- [ ] **R30 — rotina diária:** janela automática do primeiro dia do mês anterior até ontem preparada; horário proposto 08h de São Paulo. Aguardar definição se o canal recorrente também será Talk ou continuará e-mail; timer ainda não ativado. SMTP exige remetente configurado.
-- [ ] **Contrato complementar:** empresa/unidade/canal sem mapeamento confirmado, número fiscal do cupom não disponível e marca ausente em cupons mistos/incompletos. Valor atual é o cabeçalho das vendas S ativas. Devoluções e bruto/líquido continuam na R22; homologação comercial R11 preservada.
+- [x] Amostra **01 a 20/10/2026** e histórico **01/01 a 30/10/2026**, após substituição de 2025 por 2026. Seis CSVs iniciais e dois de vendas por cupom ajustados aceitos pela API Talk, exclusivamente ao WhatsApp administrativo autorizado; aceite não comprova entrega/leitura.
+- [x] **Vendas por cupom:** uma linha por operação, exatamente `data;empresa;canal;DESCRICAO;TIPO_OPERACAO;VALOR_FINAL;QTDE`. Empresa = código - Fantasia, canal de loja física, descrição dos dez eventos confirmada no ERP e valor com vírgula. AERO-MKTP excluída somente dos CSVs: **14 filiais exportáveis**, sem mudar painel/sincronização. Meia-noite é convenção do layout, sem afirmar hora real.
+- [x] **R30 — rotina ativa às 08h de São Paulo pela Talk**, do primeiro dia do mês anterior até ontem, conforme confirmação. Primeira janela 01/09–30/10 aceita; repetição sem novos envios. Próxima execução conferida: **01/11 às 08h**. Configuração privada, serviço isolado, lock e recibos por arquivo. Backup `backup-20261031T213658Z-zzmj4o`; API saudável, banco/worker remoto preservados e worker local desativado.
+- [x] Totais, peças, campos e checksums verificados; 70 testes unitários Node, um teste PostgreSQL da exportação e três SMTP simulados aprovados. Geração final no servidor: sete colunas, 4.990 operações na janela e 14 filiais.
+- [ ] Devoluções/bruto/líquido continuam na R22 e homologação comercial na R11. Consolidado/cadastro preservam dimensões sem mapeamento. Nenhuma regra financeira ou venda alterada.
 
-Uso e limites: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-exportacao-csv.json`. Arquivos e recibos em `artifacts/exportacoes-csv/`, fora do Git.
+Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-exportacao-csv.json`. Arquivos e recibos em `artifacts/exportacoes-csv/`, fora do Git.
 
 ## Clareza da conferência — 19/10/2026
 

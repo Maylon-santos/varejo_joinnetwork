@@ -26,8 +26,8 @@ try{
   for(const [indice,item] of lote.arquivos.entries()){
    if(lote.recibo.arquivos.some(a=>a.arquivo===item.arquivo))continue;
    const registro={arquivo:item.arquivo,sha256:item.sha256,estado:'em_envio',iniciado_em:new Date().toISOString()};lote.recibo.arquivos.push(registro);await salvar();
-   const legenda=`Aeropostale — ${lote.manifesto.inicio} a ${lote.manifesto.fim}. Arquivo ${indice+1}/${lote.arquivos.length}. CSV UTF-8; separador ;, datas AAAA-MM-DD, valores BRL com ponto decimal.`+
-    (indice===0?'\n\n'+lote.manifesto.avisos.join('\n\n')+'\n\nEnvio diário automático ainda não ativado.':'');
+   const legenda=`Aeropostale — ${lote.manifesto.inicio} a ${lote.manifesto.fim}. Arquivo ${indice+1}/${lote.arquivos.length}. CSV UTF-8; separador ;. Datas e valores BRL conforme o layout solicitado.`+
+    (indice===0?'\n\n'+lote.manifesto.avisos.join('\n\n'):'');
    try{Object.assign(registro,await enviarArquivoTalk({...destino,nome:item.arquivo,bytes:item.bytes,legenda}),{estado:'aceito_api',finalizado_em:new Date().toISOString()});await salvar();}
    catch(e){registro.estado='indeterminado';registro.erro=erroSeguro(e);await salvar();throw e;}
    console.log(JSON.stringify({arquivo:item.arquivo,aceito_api:true}));

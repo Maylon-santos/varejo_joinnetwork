@@ -218,3 +218,20 @@ Publicação somente da API/interface. Construir API, pausar brevemente API/work
 Somente Admin/Diretoria/Supervisão, com recursos específicos. Diretoria/Supervisão usam vínculos explícitos, mesmo se outros recursos tiverem todas_filiais. Admin pode desabilitar os recursos desses cargos. Metas e auditoria estão no banco tenant e nos backups. Não carregar nomes ambíguos; script de cadastro inicial deve conferir código, nome, competência e versão, sem sobrescrever meta divergente existente.
 
 Validar `scripts/verificar-consolidado-ui.mjs` em schemas isolados e `scripts/verificar-consolidado-producao.mjs` em leitura pública. As imagens antigas permanecem compatíveis com as tabelas aditivas. Uso e limites: [Visão das filiais e metas](../docs/CONSOLIDADO_METAS.md).
+
+
+## Exportação diária CSV pela Talk — 31/10/2026
+
+`aeropostale-relatorios.timer` envia diariamente às **08h America/Sao_Paulo** os relatórios do primeiro dia do mês anterior até ontem. `relatorios-csv` é serviço isolado, definido no segundo Compose `deploy/relatorios.compose.yaml`; usa a imagem existente da API com montagens somente dos módulos/scripts/configuração necessários e saída privada. Sem portas públicas, migrations, reinício de API/worker ou ativação do worker local.
+
+Credenciais e destino único em `.env.relatorios` privado (600), sem alterar `.env`. Saída `artifacts/exportacoes-csv/` pertence a UID/GID 1000, modo 700. `flock` serializa execuções; o lote diário tem caminho determinístico e mantém recibos por arquivo. Reexecuções pulam aceitos; em resultado incerto, conferir no Talk antes de qualquer repetição manual.
+
+```sh
+systemctl list-timers aeropostale-relatorios.timer
+systemctl show aeropostale-relatorios.service -p Result -p ExecMainStatus
+journalctl -u aeropostale-relatorios.service -n 20 --no-pager
+```
+
+O serviço gera e envia; iniciá-lo manualmente pode enviar um lote ainda não entregue. Antes da primeira implantação foi feito backup `backup-20261031T213658Z-zzmj4o`. Primeiro envio aceito e reexecução sem novos envios verificados; layout final gerado e validado no servidor. Saúde pública e API/PostgreSQL/worker preservados. Próxima execução conferida em 01/11 às 08h de São Paulo.
+
+Para interromper a recorrência, parar/desabilitar **somente** `aeropostale-relatorios.timer`. Não remover recibos para forçar reenvio. Para retornar o código, parar o timer e restaurar somente os arquivos da rotina a partir da cópia privada `artifacts/relatorios-antes-layout-*`; nenhuma restauração de banco é necessária. Novo evento ERP sem descrição confirmada exige atualizar `config/exportacao-csv.json`. AERO-MKTP é excluída somente dos CSVs. Manual: [Exportações CSV](../docs/EXPORTACAO_CSV.md).

@@ -1,0 +1,28 @@
+# Usar como segundo arquivo: docker compose -f compose.yaml -f deploy/relatorios.compose.yaml ...
+services:
+  relatorios-csv:
+    image: aeropostale-varejo-api
+    user: "1000:1000"
+    working_dir: /app
+    init: true
+    restart: "no"
+    env_file:
+      - ${RELATORIOS_ENV_FILE:-.env.relatorios}
+    environment:
+      TZ: America/Sao_Paulo
+      TENANT_KEY: ${TENANT_KEY:?Configure TENANT_KEY}
+      TENANT_DATABASE_URL: postgresql://varejo_aeropostale:${TENANT_DB_PASSWORD}@postgres:5432/varejo_aeropostale
+    volumes:
+      - ./config/exportacao-csv.json:/app/config/exportacao-csv.json:ro
+      - ./backend/src/exportacao-csv.mjs:/app/backend/src/exportacao-csv.mjs:ro
+      - ./backend/src/envio-talk.mjs:/app/backend/src/envio-talk.mjs:ro
+      - ./scripts/exportar-relatorios.mjs:/app/scripts/exportar-relatorios.mjs:ro
+      - ./scripts/enviar-relatorios-talk.mjs:/app/scripts/enviar-relatorios-talk.mjs:ro
+      - ./scripts/relatorios-diarios.mjs:/app/scripts/relatorios-diarios.mjs:ro
+      - ./artifacts/exportacoes-csv:/app/artifacts/exportacoes-csv
+    command: ["node", "scripts/relatorios-diarios.mjs"]
+    logging:
+      driver: json-file
+      options:
+        max-size: "2m"
+        max-file: "2"

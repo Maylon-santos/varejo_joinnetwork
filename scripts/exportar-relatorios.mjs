@@ -16,7 +16,8 @@ try{
   base=await lerBaseExportacao(pool,{tenant:process.env.TENANT_KEY,filiais:config.tenantGroupingConfirmed?config.branchIds:['30098297'],...periodo});
  }
  const dimensoes=v.dimensoes?JSON.parse(await readFile(v.dimensoes,'utf8')):{};
- const {relatorios,manifesto}=montarRelatorios(base,dimensoes);
+ const layout=JSON.parse(await readFile(new URL('../config/exportacao-csv.json',import.meta.url),'utf8'));
+ const {relatorios,manifesto}=montarRelatorios(base,dimensoes,layout);
  // Exportações comerciais ficam exclusivamente na árvore privada ignorada pelo Git.
  const raiz=resolve('artifacts/exportacoes-csv'),saida=resolve(v.saida??`${raiz}/${base.inicio}_${base.fim}_${randomUUID()}`);
  if(!relative(raiz,saida)||relative(raiz,saida).startsWith('..')||relative(raiz,saida).startsWith('/'))throw Error('SAIDA_DEVE_SER_SUBPASTA_PRIVADA');

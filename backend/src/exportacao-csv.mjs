@@ -44,8 +44,12 @@ export async function lerBaseExportacao(pool,{tenant,filiais,inicio,fim}){
  }catch(e){await db.query('ROLLBACK');throw e;}finally{db.release();}
 }
 
-export function montarRelatorios(base,dimensoes={}){
+export function montarRelatorios(base,dimensoes={},layout=null){
  periodoExportacao(base);
+ if(layout?.filiais_excluidas?.length){
+  const excluidas=new Set(layout.filiais_excluidas);
+  base={...base,filiais:base.filiais.filter(f=>!excluidas.has(f.filial)),operacoes:base.operacoes.filter(o=>!excluidas.has(o.filial)),marcas:base.marcas.filter(i=>!excluidas.has(i.filial)),cobertura:base.cobertura.filter(c=>!excluidas.has(c.filial))};
+ }
  const filiais=new Map(base.filiais.map(f=>[f.filial,f]));const marcas=new Map();
  for(const item of base.marcas){const chave=JSON.stringify([item.filial,item.cod_operacao]);if(!marcas.has(chave))marcas.set(chave,[]);marcas.get(chave).push(item);}
  const cadastro=base.filiais.map(f=>({empresa:dimensoes[f.filial]?.empresa??'',unidade:dimensoes[f.filial]?.unidade??'',canal:dimensoes[f.filial]?.canal??'',filial:f.filial,cod_filial:f.cod_filial,fantasia:f.fantasia}));
@@ -69,12 +73,26 @@ export function montarRelatorios(base,dimensoes={}){
  const diario=[...grupos.values()].map(({centavos,pecas,...g})=>({...g,valor:decimalCentavos(centavos),pecas:pecas.toString()}));
  const comum=['data','empresa','unidade','canal','marca_codigo','marca','situacao_marca','filial','cod_filial','fantasia','tipo_movimento'];
  const relatorios={faturamento_diario:{colunas:[...comum,'operacoes','valor','pecas'],linhas:diario},vendas_por_cupom:{colunas:[...comum,'cod_operacao','cupom_fiscal','valor','subtotal_itens','ajuste_informado','pecas','conciliacao','evento','vendedor_codigo'],linhas:cupons},cadastro_filiais:{colunas:['empresa','unidade','canal','filial','cod_filial','fantasia'],linhas:cadastro}};
+ if(layout?.vendas_por_cupom==='resumido'){
+  relatorios.vendas_por_cupom={colunas:['data','empresa','canal','DESCRICAO','TIPO_OPERACAO','VALOR_FINAL','QTDE'],linhas:base.operacoes.map(o=>{
+   const f=filiais.get(o.filial),descricao=layout.descricoes_eventos?.[o.evento_codigo];
+   if(!f?.cod_filial||!f?.fantasia)throw Error('CADASTRO_FILIAL_INCOMPLETO');
+   if(typeof descricao!=='string'||!descricao.trim())throw Error('DESCRICAO_EVENTO_NAO_CONFIRMADA');
+   return {data:o.data_operacao+' 00:00:00.000',empresa:f.cod_filial+' - '+f.fantasia,canal:layout.canal_lojas_fisicas,
+    DESCRICAO:descricao,TIPO_OPERACAO:'S',VALOR_FINAL:decimalCentavos(o.valor_final_centavos).replace('.',','),QTDE:String(o.quantidade)};
+  })};
+ }
  const avisos=['Devoluções e bruto/líquido aguardam homologação (R22). Valor representa o cabeçalho das vendas S ativas, sem presumir líquido.',
   'Empresa, unidade e canal ficam vazios quando não há mapeamento confirmado. Cupom fiscal ausente; cod_operacao é a chave interna do ERP.',
   'Marca vem do cadastro atual por SKU/produto, sem ratear o cabeçalho entre marcas. Marca vazia: classificação incompleta ou cupom com múltiplas marcas.',
   'Cadastro de filiais é a posição atual na extração; não representa cadastro histórico.'];
+ if(layout?.vendas_por_cupom==='resumido'){
+  avisos[1]='No consolidado diário e no cadastro, empresa/unidade/canal continuam vazios sem mapeamento específico. Em vendas por cupom, empresa identifica a filial e canal é o confirmado pelo usuário. Código interno de operação não equivale ao número fiscal.';
+  avisos.push('Vendas por cupom: uma linha por operação; sete colunas no layout solicitado. Empresa = COD_FILIAL - Fantasia; canal de lojas físicas confirmado pelo usuário. AERO-MKTP excluída da exportação, sem alterar o painel ou a sincronização.');
+  avisos.push('Em vendas por cupom, VALOR_FINAL usa vírgula decimal. 00:00:00.000 é convenção para a data diária armazenada; não representa horário real. DESCRICAO é descricao_evento confirmada no ERP em '+layout.descricoes_confirmadas_em+'.');
+ }
  if(base.origem==='banco_piloto'&&base.inicio<'2026-01-01')avisos.push('Histórico anterior a 2026 não carregado no piloto; ausência de registros não comprova ausência de vendas.');
  if(base.origem==='banco_piloto'&&base.filiais.some(f=>['vendas','cancelamentos'].some(r=>!base.cobertura.some(c=>c.filial===f.filial&&c.recurso===r&&c.ate>=base.fim))))avisos.push('Checkpoints não cobrem o fim do período em todas as filiais.');
  if(base.origem==='erp_direto')avisos.push('Consulta direta ERP; cancelamentos refletem o estado no cabeçalho recebido. Não houve homologação dos totais de 2025.');
- return {relatorios,manifesto:{inicio:base.inicio,fim:base.fim,origem:base.origem,extraido_em:base.extraido_em,formato:{encoding:'UTF-8',separador:';',datas:'AAAA-MM-DD',decimal:'.',moeda:'BRL',ausente:'campo vazio'},avisos,linhas:Object.fromEntries(Object.entries(relatorios).map(([k,v])=>[k,v.linhas.length])),cobertura:base.cobertura,excluidas:base.excluidas}};
+ return {relatorios,manifesto:{inicio:base.inicio,fim:base.fim,origem:base.origem,extraido_em:base.extraido_em,formato:{encoding:'UTF-8',separador:';',datas:'AAAA-MM-DD',decimal:'.',moeda:'BRL',ausente:'campo vazio',...(layout?.vendas_por_cupom==='resumido'?{vendas_por_cupom:{datas:'AAAA-MM-DD 00:00:00.000',decimal:',',colunas:relatorios.vendas_por_cupom.colunas}}:{})},filiais_excluidas:layout?.filiais_excluidas??[],avisos,linhas:Object.fromEntries(Object.entries(relatorios).map(([k,v])=>[k,v.linhas.length])),cobertura:base.cobertura,excluidas:base.excluidas}};
 }

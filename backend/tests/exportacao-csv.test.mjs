@@ -29,3 +29,15 @@ test('histórico sem carga recebe aviso e operações fora do escopo são rejeit
  const b=base();b.inicio='2025-01-01';b.fim='2025-12-31';b.operacoes=[];assert.ok(montarRelatorios(b).manifesto.avisos.some(a=>a.includes('não carregado')));
  b.operacoes=base().operacoes;assert.throws(()=>montarRelatorios(b),/FORA_DO_ESCOPO/);
 });
+test('layout solicitado tem sete colunas, uma linha por operação, vírgula decimal e exclui MKTP',()=>{
+ const b=base();b.filiais[0]={filial:'1',cod_filial:'ITUPEVA',fantasia:'AERO - ITUPEVA'};
+ b.operacoes[0]={...b.operacoes[0],quantidade:2,valor_final_centavos:'21998',data_operacao:'2026-10-02',evento_codigo:'FR-02'};
+ b.operacoes[1]={...b.operacoes[1],evento_codigo:'FR-02'};
+ b.filiais.push({filial:'30098797',cod_filial:'AERO-MKTP',fantasia:'Marketplace'});
+ b.operacoes.push({...b.operacoes[0],filial:'30098797',cod_operacao:'003'});
+ const layout={vendas_por_cupom:'resumido',filiais_excluidas:['30098797'],canal_lojas_fisicas:'varejo - loja fisica',descricoes_eventos:{'FR-02':'VENDA VAREJO CUPOM FISCAL  - FRANQUIA'},descricoes_confirmadas_em:'2026-10-31'};
+ const {relatorios:r}=montarRelatorios(b,{},layout);assert.deepEqual(r.vendas_por_cupom.colunas,['data','empresa','canal','DESCRICAO','TIPO_OPERACAO','VALOR_FINAL','QTDE']);
+ assert.equal(r.vendas_por_cupom.linhas.length,2);assert.deepEqual(r.vendas_por_cupom.linhas[0],{data:'2026-10-02 00:00:00.000',empresa:'ITUPEVA - AERO - ITUPEVA',canal:'varejo - loja fisica',DESCRICAO:'VENDA VAREJO CUPOM FISCAL  - FRANQUIA',TIPO_OPERACAO:'S',VALOR_FINAL:'219,98',QTDE:'2'});
+ assert.ok(!r.cadastro_filiais.linhas.some(f=>f.filial==='30098797'));assert.ok(!r.faturamento_diario.linhas.some(f=>f.filial==='30098797'));
+ assert.throws(()=>montarRelatorios(b,{}, {...layout,descricoes_eventos:{}}),/DESCRICAO_EVENTO_NAO_CONFIRMADA/);
+});

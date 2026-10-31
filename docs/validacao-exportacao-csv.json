@@ -27,7 +27,7 @@
     "pecas_conferidas": true,
     "chaves_sem_duplicidade": true,
     "checksums_conferidos": true,
-    "testes_unitarios_node": 69,
+    "testes_unitarios_node": 70,
     "teste_integracao_exportacao_postgresql": 1,
     "testes_smtp_simulados": 3,
     "sintaxe_node_shell": true
@@ -35,7 +35,7 @@
   "limites": [
     "Somente vendas S ativas; cancelamentos conhecidos excluídos",
     "Devoluções e bruto/líquido aguardam homologação R22",
-    "Empresa, unidade e canal ausentes sem mapeamento confirmado",
+    "Empresa/canal preenchidos no layout resumido de vendas por cupom conforme definição do usuário; consolidado e cadastro preservam dimensões sem mapeamento",
     "Código interno de operação não equivale ao número fiscal do cupom",
     "Marca atual por SKU/produto; sem rateio de cupons mistos",
     "Cadastro das filiais representa posição atual"
@@ -55,11 +55,50 @@
     "janela": "Primeiro dia do mês anterior até ontem, America/Sao_Paulo",
     "horario_proposto": "08:00 America/Sao_Paulo",
     "codigo_preparado": true,
-    "timer_instalado": false,
-    "envio_diario_ativo": false
+    "timer_instalado": true,
+    "envio_diario_ativo": true,
+    "horario": "08:00 America/Sao_Paulo",
+    "canal": "WhatsApp via Talk",
+    "proxima_execucao": "2026-11-01 08:00 America/Sao_Paulo",
+    "primeiro_envio_diario_aceito_api": 3,
+    "reexecucao_sem_novos_envios": true,
+    "validacao_layout_servidor": {
+      "inicio": "2026-09-01",
+      "fim": "2026-10-30",
+      "faturamento_diario_linhas": 714,
+      "vendas_por_cupom_linhas": 4990,
+      "cadastro_filiais_linhas": 14,
+      "valores_e_pecas_conferidos": true
+    },
+    "backup": "backup-20261031T213658Z-zzmj4o",
+    "api_postgres_worker_preservados": true
   },
   "arquivos_comerciais": "artifacts/exportacoes-csv/, ignorado pelo Git",
-  "publicado": false,
+  "publicado": true,
   "worker_local_ativado": false,
-  "dados_comerciais_modificados": false
+  "dados_comerciais_modificados": false,
+  "ajuste_layout": {
+    "colunas": [
+      "data",
+      "empresa",
+      "canal",
+      "DESCRICAO",
+      "TIPO_OPERACAO",
+      "VALOR_FINAL",
+      "QTDE"
+    ],
+    "granularidade": "Uma linha por operação/venda",
+    "empresa": "COD_FILIAL - Fantasia",
+    "canal": "varejo - loja fisica",
+    "descricao": "descricao_evento confirmada no ERP para os dez códigos presentes",
+    "data": "AAAA-MM-DD 00:00:00.000; meia-noite convencional, sem horário real",
+    "valores": "BRL com vírgula decimal e duas casas",
+    "filial_excluida": "AERO-MKTP (30098797)",
+    "filiais_exportadas": 14,
+    "amostra_linhas": 1708,
+    "historico_linhas": 27711,
+    "arquivos_corrigidos_aceitos_api_talk": 2,
+    "totais_e_pecas_conferidos": true
+  },
+  "escopo_publicado": "Somente rotina isolada de relatórios; API, banco e worker sem reinício"
 }
