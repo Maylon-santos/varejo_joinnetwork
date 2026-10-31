@@ -1,5 +1,14 @@
 # Comece aqui — estado atual em 31/10/2026
 
+## Todas as pendências reprocessadas — 31/10/2026
+
+- [x] Pedido expresso de Maylon: reprocessar todas as pendências. Levantamento inicial com 3.462; 228 resolvidas pelo preenchimento automático antes de iniciar. Lote congelado nas **3.234 vendas S ativas pendentes** das 15 filiais autorizadas, mantendo erros ERP já aceitos separados.
+- [x] **3.234 vendas com reprocessamento concluído; 2.390 conciliadas.** Uma falha inicial de validação de cliente foi superada com consulta isolada por código da operação, mantendo a mesma validação. 3.235 tentativas auditadas, nenhuma falha técnica ou pedido ativo ao terminar. ERP consultado sequencialmente, com resposta por dia/filial reaproveitada (718 consultas no lote principal).
+- [x] Rotina administrativa existente, responsável Admin e snapshots antes/depois; 40 cabeçalhos atualizados conforme retorno ERP. Vendas fora dos lotes, cancelamentos e checkpoints preservados em ambas as execuções. Backups `backup-20261031T221053Z-Lc45fa` e `backup-20261031T221804Z-g2Ud46`. API saudável, worker remoto retomado, local desativado e timer Talk preservado. Nenhuma regra financeira alterada.
+- [ ] **844 continuam pendentes no retorno atual:** 15 diferenças de quantidade e 829 com cortesia numérica não zerada, cuja composição depende da R22. Reprocessamento não força conciliação nem homologa os totais da R11.
+
+Evidência agregada: `docs/validacao-reprocessamento-lote.json`. Plano, recibos e detalhes das vendas permanecem nos artifacts privados, fora do Git.
+
 ## Cortesia zero e campos de conferência — 31/10/2026
 
 - [x] Cortesia zero explícita não aciona regra pendente. Quantidades, valor, ajuste e tolerância de dois centavos continuam verificados; frete/cortesia não zerados ou formatos não confirmados continuam pendentes.
