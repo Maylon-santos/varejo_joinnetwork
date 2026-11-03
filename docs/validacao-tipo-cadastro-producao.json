@@ -1,0 +1,155 @@
+{
+  "verificadoEm": "2026-11-01T13:34:49.979Z",
+  "filiaisVerificadas": 15,
+  "cobertura": [
+    {
+      "filial": "30098297",
+      "skus": 4275,
+      "acabados": 4256,
+      "sem_tipo": 19,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098400",
+      "skus": 2978,
+      "acabados": 2975,
+      "sem_tipo": 3,
+      "erro_estoque": "23"
+    },
+    {
+      "filial": "30098401",
+      "skus": 3094,
+      "acabados": 3094,
+      "sem_tipo": 0,
+      "erro_estoque": "23"
+    },
+    {
+      "filial": "30098409",
+      "skus": 2805,
+      "acabados": 2802,
+      "sem_tipo": 3,
+      "erro_estoque": "23"
+    },
+    {
+      "filial": "30098495",
+      "skus": 3027,
+      "acabados": 3026,
+      "sem_tipo": 1,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098696",
+      "skus": 3050,
+      "acabados": 3049,
+      "sem_tipo": 1,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098697",
+      "skus": 2424,
+      "acabados": 2424,
+      "sem_tipo": 0,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098704",
+      "skus": 1691,
+      "acabados": 1691,
+      "sem_tipo": 0,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098702",
+      "skus": 2498,
+      "acabados": 2498,
+      "sem_tipo": 0,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098708",
+      "skus": 3009,
+      "acabados": 2988,
+      "sem_tipo": 21,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098795",
+      "skus": 4098,
+      "acabados": 4098,
+      "sem_tipo": 0,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098802",
+      "skus": 1988,
+      "acabados": 1988,
+      "sem_tipo": 0,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098797",
+      "skus": 181,
+      "acabados": 181,
+      "sem_tipo": 0,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098699",
+      "skus": 1462,
+      "acabados": 1462,
+      "sem_tipo": 0,
+      "erro_estoque": null
+    },
+    {
+      "filial": "30098803",
+      "skus": 2026,
+      "acabados": 2026,
+      "sem_tipo": 0,
+      "erro_estoque": null
+    }
+  ],
+  "listaFiltroTotalContagemCoerentes": true,
+  "origemCadastralObservada": true,
+  "tipoVisivelNosDetalhes": true,
+  "desktopCelularSemOverflow": true,
+  "somenteLeitura": true,
+  "errors": [],
+  "publicado": true,
+  "dataDaRecarga": "2026-11-01",
+  "migration018Aplicada": true,
+  "backup": "backup-20261101T125720Z-scBjC3",
+  "filiaisRecarregadas": 15,
+  "tentativasDeRecarga": 16,
+  "produtosConsultados": 7337,
+  "produtosAtualizados": 7301,
+  "cadastrosSemRetorno": 36,
+  "skusPresentes": 38606,
+  "skusClassificados": 38558,
+  "skusSemTipo": 48,
+  "tipos": [
+    {
+      "tipo_prod": "AC",
+      "skus": 38558
+    },
+    {
+      "tipo_prod": null,
+      "skus": 48
+    }
+  ],
+  "origemTipo": "CONSULTAPRODUTOS por ID produto; alternativa tipo do saldo",
+  "consultaAlternativa": {
+    "porIdSemRetorno": 36,
+    "porCodigoSemRetorno": 33,
+    "porCodigoOutroProduto": 3,
+    "identidadesTrocadas": false
+  },
+  "vendasItensCancelamentosCheckpointsPreservados": true,
+  "workerRemotoRetomado": true,
+  "workerLocalAtivado": false,
+  "timerTalkPreservado": true,
+  "apiSaudavel": true,
+  "imagensAnterioresPreservadas": true,
+  "testesUnitarios": 73,
+  "testesIntegracao": 74,
+  "observacao": "Cobertura e contagens são da recarga/validação de 01/11; a sincronização contínua segue ativa. Tipos ausentes não foram inferidos."
+}

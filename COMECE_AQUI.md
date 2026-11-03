@@ -1,10 +1,11 @@
-# Comece aqui — estado atual em 31/10/2026
+# Comece aqui — estado atual em 03/11/2026
 
 ## Classificação pelo cadastro e recarga do estoque — 31/10/2026
 
 - [x] `CONSULTAPRODUTOS` passou a retornar `tipo_prod`, confirmado em consulta ao ERP. Implementado o vínculo por ID interno do produto: tipo cadastral principal, tipo do saldo como alternativa e ausência explícita quando ambos não informados. Todas as variações usam a mesma classificação; filtros/total/paginação coerentes e tipo visível nos detalhes.
 - [x] Migration aditiva 018 e rotina de recarga completa/classificação por produto preparadas, com lock, lotes sequenciais e hashes das vendas/itens/cancelamentos/checkpoints. 73 testes unitários, 74 de integração e navegador sintético computador/celular aprovados.
-- [ ] Publicar, executar recarga das 15 filiais e conferir cobertura e saldos no piloto. Estoque atual observado antes da execução: 38.619 SKUs presentes, 7.338 produtos distintos, sem tipo no retorno de saldo.
+- [x] Publicado e reprocessado em **01/11**: recarga completa das **15 filiais**, 7.337 produtos consultados e 7.301 cadastros atualizados. **38.558 SKUs AC entre 38.606 presentes**; em ITUPEVA, **4.256 AC e 19 sem tipo**. Backup `backup-20261101T125720Z-scBjC3`, migration 018 e imagens anteriores preservadas. Vendas/itens/cancelamentos/checkpoints iguais por hash, API saudável, worker remoto e timer Talk ativos; local desativado.
+- [ ] **48 SKUs / 36 produtos** continuam sem cadastro pelo ID na API. Conferência por código: 33 sem retorno e 3 retornando outro ID; nenhuma identidade trocada ou classificação presumida. Evidência: `docs/validacao-tipo-cadastro-producao.json`.
 
 Regra e comando: [Tipo pelo cadastro](docs/TIPO_PRODUTO_CADASTRO.md). Não representa homologação das demais pendências da R19/R22/R11.
 

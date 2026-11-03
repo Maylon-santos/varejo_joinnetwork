@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-10-31",
+  "atualizadoEm": "2026-11-03",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -114,7 +114,7 @@
       "id": "R19",
       "titulo": "Produtos, estoque e indicadores adicionais",
       "status": "em_andamento",
-      "detalhe": "Recarga completa solicitada nas 14 filiais, iniciando AERO-023: dez concluíram no lote e AERO-023/ITUPEVA na retentativa (12/14 na última conferência); AERO-009 e AERO-010 continuam agendadas. Worker retomado, hashes comerciais/checkpoints preservados. Publicados indicadores, Top 20, estoque em lista e card de total da filial com filtro tipo_prod (AC padrão). Tipo é campo do retorno da rota saldodeestoque; requisição mantém filial/trans_id. Na conferência de 19/09, 34.434 SKUs sem tipo; confirmar publicação do campo no ERP e recarregar, sem presumir AC. 13 filiais com releitura concluída e uma em retentativa. Interface aprovada nas 14 filiais; 118 testes. Pendências de eventos/devoluções, pagamentos conciliados, estoque histórico, bruto/líquido e cobertura mantidas; R11 mensal/anual pendente."
+      "detalhe": "Tipo pelo cadastro publicado e estoque reprocessado em 01/11: migration 018, vínculo por produto com prioridade cadastral e tipo do saldo como alternativa. Recarga das 15 filiais concluída (16 tentativas); 7.337 produtos consultados e 7.301 atualizados. 38.558 SKUs AC entre 38.606 presentes; ITUPEVA 4.256 AC e 19 sem tipo. Restam 48 SKUs em 36 cadastros ausentes pelo ID; alternativa por código vazia em 33 e outro ID em 3, sem trocar identidades/inferir classificação. 73 testes unitários, 74 de integração e navegador sintético/público computador/celular aprovados. Backup backup-20261101T125720Z-scBjC3, hashes comerciais/checkpoints preservados, worker remoto e timer Talk ativos, local desativado. Indicadores, Top 20, produtos e estoque publicados; completar cadastros ausentes e demais indicadores de movimentos/pagamentos/estoque histórico/bruto-líquido depende da R22, com homologação mensal/anual na R11. Evidência docs/validacao-tipo-cadastro-producao.json."
     },
     {
       "id": "R20",

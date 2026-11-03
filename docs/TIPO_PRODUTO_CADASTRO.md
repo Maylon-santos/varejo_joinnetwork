@@ -27,3 +27,12 @@ Cadastro não retornado ou sem tipo continua explícito na cobertura final. Prod
 73 testes unitários e 74 de integração PostgreSQL em schemas isolados. Cobrem importação AC/SE/MP/MC, ausência sem inferência, vínculo de múltiplos SKUs por produto, totais/paginação, negativos/nulos, isolamento, prioridade cadastral, alternativa do estoque, nova recarga e falhas preservando classificação. Navegador com dados sintéticos valida a origem cadastral no filtro AC e nos detalhes, saldo total, permissões e computador/celular sem transbordamento. Evidência `docs/validacao-produtos-ui.json`.
 
 Publicação exige API e worker novos, backup e migration tenant 018 antes de iniciar os serviços atualizados. Guardar imagens anteriores. Retorno às imagens anteriores é compatível com a coluna aditiva, mas volta a filtrar somente pelo tipo do estoque. Preservar o worker remoto único e a rotina de relatórios Talk. A classificação/recarga não homologa estoque histórico, ERP financeiro, outras filiais ou cargos.
+
+
+## Publicação e recarga concluídas — 01/11/2026
+
+15 filiais recarregadas em 16 tentativas (uma retentativa resolvida). 7.337 produtos distintos consultados, 7.301 atualizados; posição com 38.606 SKUs, sendo **38.558 AC** e **48 sem tipo**. ITUPEVA: 4.256 AC e 19 sem tipo entre 4.275 SKUs. Os totais refletem a recarga e a validação de 01/11; o worker permanece sincronizando.
+
+36 cadastros retornaram vazios pelo ID. A conferência alternativa por código retornou vazio em 33 e outro ID em 3. Não associar automaticamente um cadastro de identidade diferente; esses 48 SKUs continuam em Tipo não informado até corrigir/completar a origem ERP. Detalhes privados em artifacts/diagnosticos/falhas-tipo-cadastro.json e revisao-falhas-tipo.json.
+
+Backup `backup-20261101T125720Z-scBjC3`, migration 018 aplicada e imagens anteriores preservadas. Hashes de operações, itens de vendas, cancelamentos e checkpoints idênticos antes/depois do processamento. API saudável, worker remoto retomado e timer Talk preservado; worker local desativado. API das 15 filiais e interface pública em computador/celular verificadas, com filtro AC, tipo nos detalhes e contagens/totais coerentes. Evidência agregada: docs/validacao-tipo-cadastro-producao.json. Evidência operacional privada: artifacts/estoque-cadastro/20261101T125710Z no servidor.
