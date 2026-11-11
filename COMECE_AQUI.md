@@ -5,7 +5,8 @@
 - [x] Quatro campos confirmados na LISTAVENDAS e implementados em **Nota fiscal** nos detalhes: número da nota, modelo, IDNFE e status original do ERP. Identificadores textuais preservados; status nulo separado de histórico aguardando importação.
 - [x] Importação/reprocessamento e preenchimento gradual do histórico preparados, sem migration. Carga exclusivamente fiscal preserva pagamentos, frete/cortesia existentes, valores, peças, itens, conciliação, cancelamentos e checkpoints; divergências bloqueiam a atualização.
 - [x] 74 testes unitários, 76 de integração em PostgreSQL 16 isolado e navegador sintético em 1280/390 px aprovados. Regressão de cortesia zero verificada. Evidências: `docs/validacao-fonte-nota-fiscal.json`, `docs/validacao-nota-fiscal.json` e `docs/validacao-nota-fiscal-ui.json`.
-- [ ] Publicação e preenchimento do histórico de produção. **Ainda não publicado no piloto**; worker local permanece desativado. Status veio nulo nas cinco operações da amostra, sem presumir significado fiscal.
+- [x] Publicado e validado em **11/11/2026**, backup `backup-20261111T122541Z-Gpm2lu` e imagens de retorno preservadas. Saúde, login, 15 filiais, conteúdo fiscal e computador/celular conferidos. Hashes de vendas, itens, cancelamentos e checkpoints iguais na troca; amostra fiscal preservou também pagamentos, frete/cortesia e conciliação. Worker remoto retomado e local desativado; outros serviços e timer Talk preservados. Evidência: `docs/validacao-nota-fiscal-producao.json`.
+- [ ] Preenchimento completo do histórico continua gradual: 358 de 31.192 operações na conferência posterior; retentativas por validação de cliente/itens registradas na evidência, sem forçar gravação. Status nulo permanece sem interpretação fiscal. Falha da última execução diária de relatórios já existia antes da publicação; timer ativo preservado, sem disparar novos envios.
 
 Uso e operação: [Nota fiscal na venda](docs/NOTA_FISCAL_VENDA.md).
 

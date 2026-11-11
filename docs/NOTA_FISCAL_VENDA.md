@@ -1,6 +1,6 @@
 # Nota fiscal nos detalhes da venda
 
-Implementado em 11/11/2026; ainda não publicado no piloto.
+Publicado no piloto em 11/11/2026.
 
 Em **Movimentações → Ver detalhes** e **Conferência → Ver detalhes**, a seção **Nota fiscal** mostra:
 
@@ -22,3 +22,12 @@ Os dados ficam no JSONB existente, sem migration ou novas rotas. A API mantém a
 Validação: 74 testes unitários, 76 testes de integração em PostgreSQL 16 temporário/isolado, Chrome sintético em 1280/390 px e regressão da cortesia zero. Evidências: `validacao-nota-fiscal.json` e `validacao-nota-fiscal-ui.json`. A validação local não comprova publicação nem preenchimento do histórico de produção.
 
 Para publicar, seguir `deploy/README.md`: construir API/worker atualizados, preservar imagens anteriores, pausar ambos para backup coordenado, publicar API saudável e retomar somente o worker remoto. Nenhuma migration ou alteração de banco/Nginx/rotina Talk é necessária. O histórico será preenchido gradualmente; nulidade do status não deve ser interpretada como autorização fiscal.
+
+
+## Publicação validada — 11/11/2026
+
+Publicado e validado em **11/11/2026**, backup `backup-20261111T122541Z-Gpm2lu` e imagens de retorno preservadas. Saúde, login, 15 filiais, conteúdo fiscal e computador/celular conferidos. Hashes de vendas, itens, cancelamentos e checkpoints iguais na troca; amostra fiscal preservou também pagamentos, frete/cortesia e conciliação. Worker remoto retomado e local desativado; outros serviços e timer Talk preservados. Evidência: `validacao-nota-fiscal-producao.json`.
+
+Amostra dirigida de ITUPEVA em 10/11 preenchida pela rotina existente, com o worker contínuo pausado e comparação dos hashes antes/depois. O restante do histórico segue os lotes automáticos; esta entrega não declara cobertura fiscal completa. A configuração privada, o Nginx e os serviços vizinhos foram preservados. A última execução dos relatórios diários já estava com falha antes da publicação; o timer segue ativo, sem reenvio manual.
+
+Conferência posterior: **358 de 31.192 operações** com grupo fiscal, 30.834 ainda aguardando. O worker segue ativo sem reinícios; há retentativas por validação de cliente e divergência de itens, além de outros códigos sem diagnóstico nesta entrega. Não forçar preenchimento de operações divergentes.

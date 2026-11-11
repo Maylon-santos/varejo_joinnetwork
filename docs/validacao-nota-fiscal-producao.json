@@ -1,0 +1,80 @@
+{
+  "verificadoEm": "2026-11-11T12:33:40.061Z",
+  "dominio": "aeropostale.joinnetwork.com.br",
+  "assetsIdenticosAoCodigoLocal": true,
+  "health": 200,
+  "login": 200,
+  "filiaisAutorizadas": 15,
+  "filialNaoAutorizada": 403,
+  "notaFiscalPersistida": true,
+  "quatroCamposVisiveis": true,
+  "conteudoIgualAoBanco": true,
+  "statusNuloNaAmostra": true,
+  "desktopCelularSemOverflow": true,
+  "somenteLeitura": true,
+  "errors": [],
+  "publicacaoEm": "2026-11-11T12:27:01.796591+00:00",
+  "commitPublicado": "5ae7a3929b094cf10a91aa1c987271379a27292b",
+  "backup": "backup-20261111T122541Z-Gpm2lu",
+  "imagensAnterioresPreservadas": true,
+  "hashesPublicacaoPreservados": true,
+  "amostraComercialItensCancelamentosCheckpointsPagamentosPreservados": true,
+  "amostraFiscal": {
+    "operacoes": 5,
+    "com_nota_fiscal": 5,
+    "numero_nota_preenchido": 5,
+    "idnfe_preenchido": 5
+  },
+  "coberturaInicial": {
+    "total": 31192,
+    "com_nota_fiscal": 5,
+    "pendentes": 31187
+  },
+  "outrosServicosPreservados": true,
+  "timerTalkPreservado": true,
+  "falhaRelatoriosPreexistente": true,
+  "apiPostgresWorkerRemotoAtivos": true,
+  "workerLocalDesativado": true,
+  "migrationsAplicadas": false,
+  "conferenciaFinalEm": "2026-11-11T12:41:47.271793+00:00",
+  "servicos": {
+    "api": {
+      "ativo": true,
+      "saude": "healthy",
+      "reinicios": 0
+    },
+    "postgres": {
+      "ativo": true,
+      "saude": "healthy",
+      "reinicios": 0
+    },
+    "sync-worker": {
+      "ativo": true,
+      "saude": null,
+      "reinicios": 0
+    }
+  },
+  "coberturaObservada": {
+    "total": 31192,
+    "com_nota_fiscal": 358,
+    "pendentes": 30834
+  },
+  "errosComplementosObservados": [
+    {
+      "codigo": "23",
+      "filiais": 1
+    },
+    {
+      "codigo": "CLIENTE_CODIGO_INVALIDO",
+      "filiais": 2
+    },
+    {
+      "codigo": "COMPLEMENTOS_ITENS_DIVERGENTES",
+      "filiais": 4
+    },
+    {
+      "codigo": "FALHA_VALIDACAO_OU_EXECUCAO",
+      "filiais": 1
+    }
+  ]
+}

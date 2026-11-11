@@ -5,7 +5,8 @@
 - [x] LISTAVENDAS confirmada com `numero_nota`, `modelo`, `idnfe` e `status`. Seção Nota fiscal nos detalhes de Movimentações/Conferência, identificadores preservados, status sem interpretação e legado/nulo distintos.
 - [x] Persistência no JSONB existente e preenchimento gradual do histórico, preservando campos já importados e conciliação na carga exclusivamente fiscal. Sem migration; autorização existente e consultas locais preservadas.
 - [x] 74 testes unitários, 76 de integração em PostgreSQL 16 temporário e navegador sintético computador/celular aprovados; regressão de cortesia zero verificada. Evidência `docs/validacao-nota-fiscal.json` e documentação `docs/NOTA_FISCAL_VENDA.md`.
-- [ ] Publicar API/worker e acompanhar preenchimento do histórico. **Ainda não publicado no piloto.** Não altera homologação R11/R22 nem conclui dimensões fiscais das exportações CSV.
+- [x] Publicado e validado em **11/11/2026**, backup `backup-20261111T122541Z-Gpm2lu` e imagens de retorno preservadas. Saúde, login, 15 filiais, conteúdo fiscal e computador/celular conferidos. Hashes de vendas, itens, cancelamentos e checkpoints iguais na troca; amostra fiscal preservou também pagamentos, frete/cortesia e conciliação. Worker remoto retomado e local desativado; outros serviços e timer Talk preservados. Evidência: `docs/validacao-nota-fiscal-producao.json`.
+- [ ] Acompanhar preenchimento gradual do histórico: 358 de 31.192 operações na conferência posterior; retentativas por cliente/itens registradas, sem forçar gravação. Não altera homologação R11/R22 nem conclui dimensões fiscais das exportações CSV. Falha anterior da execução de relatórios registrada separadamente; timer ativo preservado.
 
 ## Classificação pelo cadastro e recarga do estoque — 31/10/2026
 
