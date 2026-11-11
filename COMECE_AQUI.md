@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 11/11/2026
 
+## Base da API externa e webhooks — 11/11/2026
+
+- [x] **R31 — documentação inicial concluída:** [portal visual offline](docs/integracoes/index.html), [guia](docs/integracoes/README.md), [OpenAPI 3.1](apis/integracoes.openapi.json), oito capítulos, 51 schemas, 277 campos e 11 exemplos JSON fictícios. Domínio confirmado por Maylon: `api-varejo.aeropostale.joinnetwork.com.br`.
+- [x] Desenho de consultas de vendas/filiais/produtos/estoques, OAuth Client Credentials com private_key_jwt, escopos/filiais, cotas, cursores/revisões e webhooks HMAC com outbox, retentativas, replay e proteção do destino. Inclui console proposto de SuperAdmin para controle de clientes/permissões e logs de acesso/entrega com tempos de resposta. Distinção explícita entre dados existentes e capacidades propostas.
+- [x] OpenAPI e exemplos validados; prova JWT e assinatura Python/Node verificadas, incluindo adulteração/replay temporal, rotação e checkpoint. Portal conferido em 1440/390 px, com busca, filtro do dicionário, cópia e sem dependências remotas. Evidências: `docs/validacao-documentacao-integracoes.json` e `docs/validacao-portal-integracoes.json`.
+- [ ] Implementação, homologação e publicação da API externa/webhooks permanecem futuras. A entrega é documental: nenhum DNS, cliente externo, credencial ou webhook criado; produção e worker local não alterados. R11/R22/R29 continuam abertas para suas regras/dados.
+
 ## Nota fiscal nos detalhes da venda — 11/11/2026
 
 - [x] Quatro campos confirmados na LISTAVENDAS e implementados em **Nota fiscal** nos detalhes: número da nota, modelo, IDNFE e status original do ERP. Identificadores textuais preservados; status nulo separado de histórico aguardando importação.

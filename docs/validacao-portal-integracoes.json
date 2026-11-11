@@ -1,0 +1,15 @@
+{
+  "verificadoEm": "2026-11-11T14:15:12.702Z",
+  "portalOffline": true,
+  "capitulos": 8,
+  "larguras": [
+    1440,
+    390
+  ],
+  "semOverflow": true,
+  "buscaGeral": true,
+  "filtroDicionario": true,
+  "copiarExemplosSemClipboardReal": true,
+  "semChamadasDeRede": true,
+  "errors": []
+}

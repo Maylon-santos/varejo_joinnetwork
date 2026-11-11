@@ -1,0 +1,57 @@
+{
+  "data": {
+    "id": "vnd_1001_S_900001",
+    "filial_id": "1001",
+    "cod_operacao": "900001",
+    "tipo_operacao": "S",
+    "data_operacao": "2026-11-10",
+    "hora_venda": null,
+    "quantidade": 2,
+    "valor_final_centavos": "18000",
+    "cancelada": false,
+    "vendedor": {
+      "codigo": "42"
+    },
+    "evento_codigo": "10",
+    "conferencia": {
+      "situacao": "conciliada",
+      "tolerancia_centavos": "2",
+      "erro_erp_confirmado": false,
+      "homologacao_comercial": "nao_declarada"
+    },
+    "versao": "12",
+    "atualizado_em": "2026-11-11T12:00:00Z",
+    "ajuste_centavos": "-2000",
+    "subtotal_itens_centavos": "20000",
+    "frete_centavos": null,
+    "cortesia_informada": 0,
+    "nota_fiscal": {
+      "numero_nota": "000123",
+      "modelo": "65",
+      "idnfe": "ID-FISCAL-DEMONSTRATIVO",
+      "status": null
+    },
+    "condicao_pagamento": {
+      "id": "5",
+      "codigo": "CREDITO2",
+      "descricao": "Crédito em duas parcelas"
+    },
+    "cobertura": {
+      "itens": "disponivel",
+      "pagamentos": "disponivel",
+      "nota_fiscal": "disponivel",
+      "pessoas": "restrito",
+      "complementos_importados_em": "2026-11-11T12:00:00Z"
+    },
+    "cancelada_em": null,
+    "itens_url": "/v1/vendas/vnd_1001_S_900001/itens",
+    "pagamentos_url": "/v1/vendas/vnd_1001_S_900001/pagamentos"
+  },
+  "meta": {
+    "request_id": "11111111-1111-4111-8111-111111111111",
+    "gerado_em": "2026-11-11T12:00:00Z",
+    "snapshot_id": null,
+    "snapshot_expira_em": null,
+    "recurso_versao": null
+  }
+}

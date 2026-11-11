@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## R31 — base da API externa e webhooks — 11/11/2026
+
+- [x] Base documental entregue com domínio confirmado, portal visual, oito capítulos, OpenAPI 3.1, 51 schemas/277 campos e 11 exemplos JSON. Consultas dos quatro recursos, autenticação assimétrica, limites, isolamento, sincronização e webhooks assinados detalhados para desenvolvedores.
+- [x] Contrato, exemplos, criptografia, retomada de cursor e portal computador/celular verificados. Fontes primárias referenciadas e campos existentes/propostos/indisponíveis distinguidos. [Guia](docs/integracoes/README.md), [portal](docs/integracoes/index.html), [OpenAPI](apis/integracoes.openapi.json). Evidências `docs/validacao-documentacao-integracoes.json` e `docs/validacao-portal-integracoes.json`.
+- [ ] R31 segue em andamento pela implementação e homologação futuras. A documentação não publica rotas, DNS, OAuth ou webhooks, não concede filiais e não altera a produção nem conclui SaaS/R11/R22/R29.
+
 ## Nota fiscal nos detalhes da venda — 11/11/2026
 
 - [x] LISTAVENDAS confirmada com `numero_nota`, `modelo`, `idnfe` e `status`. Seção Nota fiscal nos detalhes de Movimentações/Conferência, identificadores preservados, status sem interpretação e legado/nulo distintos.
@@ -54,7 +60,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-20 de 30 tarefas deste quadro concluídas. Atualização: 2026-11-03. A contagem não representa prazo ou esforço.
+20 de 31 tarefas deste quadro concluídas. Atualização: 2026-11-11. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
@@ -64,7 +70,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 | R20 — SaaS: provisionamento, planos e cobrança | R25 — Completar preços e pagamentos do histórico | — | R04 — Correções de celular e fotos |
 | — | R26 — Completar identificação e aniversários do histórico | — | R05 — Clientes importados junto com a venda |
 | — | R29 — Vendas por hora nos dashboards | — | R06 — Homologação de ITUPEVA |
-| — | — | — | R07 — Autorizar 14 filiais no mesmo ambiente |
+| — | R31 — API externa e webhooks de vendas | — | R07 — Autorizar 14 filiais no mesmo ambiente |
 | — | — | — | R08 — Exibir COD_FILIAL no seletor |
 | — | — | — | R09 — Sincronizar cadastro por trans_id |
 | — | — | — | R10 — Concluir históricos das novas filiais |
@@ -91,6 +97,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 - [ ] **R25 — Completar preços e pagamentos do histórico:** Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json.
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 - [ ] **R29 — Vendas por hora nos dashboards:** Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json.
+- [ ] **R31 — API externa e webhooks de vendas:** Base documental entregue em 11/11: domínio api-varejo.aeropostale.joinnetwork.com.br confirmado; portal offline, oito capítulos, OpenAPI 3.1, 51 schemas, 277 campos e 11 exemplos fictícios. OAuth Client Credentials/private_key_jwt, escopos/filiais, cotas, cursores, revisões, outbox e webhooks HMAC com retries/replay detalhados. OpenAPI, exemplos JSON, assinatura/JWT Python/Node e portal em 1440/390 px aprovados. Guia docs/integracoes/README.md; evidências docs/validacao-documentacao-integracoes.json e docs/validacao-portal-integracoes.json. Implementação, homologação e publicação externas pendentes; entrega documental, sem DNS/credenciais/webhooks criados ou alteração de produção. Não conclui SaaS/R11/R22/R29. Inclui desenho do console de SuperAdmin para controle de clientes/permissões, logs de API/webhook e tempos de resposta reais, ainda não implementado.
 
 <!-- KANBAN:FIM -->
 

@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-11-03",
+  "atualizadoEm": "2026-11-11",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -181,6 +181,12 @@
       "titulo": "Exportações CSV e envio diário",
       "status": "concluido",
       "detalhe": "Exportações concluídas e rotina diária ativa em 31/10, às 08h de São Paulo pela Talk, conforme confirmação. Janela do primeiro dia do mês anterior até ontem. Seis CSVs iniciais, dois ajustados e três do primeiro lote diário aceitos pela API, sem afirmar leitura. Layout final de vendas por cupom: sete colunas, empresa código - Fantasia, loja física, descrição ERP, data com meia-noite convencional, valor com vírgula; MKTP excluída somente dos CSVs, 14 filiais. Reexecução sem reenvios; lock/recibos privados. 70 testes Node, um teste PostgreSQL e três SMTP simulados; validação de valores/peças e geração final no servidor. Backup backup-20261031T213658Z-zzmj4o. API/banco/worker preservados; local desativado. R22/R11 e dimensões dos outros relatórios permanecem separadas. Evidência docs/validacao-exportacao-csv.json."
+    },
+    {
+      "id": "R31",
+      "titulo": "API externa e webhooks de vendas",
+      "status": "em_andamento",
+      "detalhe": "Base documental entregue em 11/11: domínio api-varejo.aeropostale.joinnetwork.com.br confirmado; portal offline, oito capítulos, OpenAPI 3.1, 51 schemas, 277 campos e 11 exemplos fictícios. OAuth Client Credentials/private_key_jwt, escopos/filiais, cotas, cursores, revisões, outbox e webhooks HMAC com retries/replay detalhados. OpenAPI, exemplos JSON, assinatura/JWT Python/Node e portal em 1440/390 px aprovados. Guia docs/integracoes/README.md; evidências docs/validacao-documentacao-integracoes.json e docs/validacao-portal-integracoes.json. Implementação, homologação e publicação externas pendentes; entrega documental, sem DNS/credenciais/webhooks criados ou alteração de produção. Não conclui SaaS/R11/R22/R29. Inclui desenho do console de SuperAdmin para controle de clientes/permissões, logs de API/webhook e tempos de resposta reais, ainda não implementado."
     }
   ]
 }

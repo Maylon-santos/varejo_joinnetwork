@@ -7,6 +7,7 @@ Piloto de indicadores de vendas da Aeropostale: Node.js, PostgreSQL 17 e Docker.
 - [Planejamento visual](docs/planejamento/index.html).
 - [Desenho futuro do SaaS](docs/PLANEJAMENTO_SAAS.md).
 - [API](apis/painel.md) e [banco/sincronização](database/README.md).
+- [Guia para integradores](docs/integracoes/index.html): portal offline, [contrato externo proposto](apis/integracoes.openapi.json), segurança, 277 campos e webhooks. API externa ainda não implementada.
 
 ## Desenvolvimento
 

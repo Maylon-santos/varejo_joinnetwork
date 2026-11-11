@@ -1,0 +1,37 @@
+// Testa somente exemplos com dados fictícios e fetch simulado. Sem chamadas de rede.
+import assert from 'node:assert/strict';
+import {createHmac} from 'node:crypto';
+import {readFile} from 'node:fs/promises';
+import {verificarWebhook} from '../docs/integracoes/exemplos/verificar-webhook.mjs';
+import {consumirAlteracoes} from '../docs/integracoes/exemplos/consumir-alteracoes.mjs';
+const body=await readFile(new URL('../docs/integracoes/exemplos/webhook-venda.json',import.meta.url));
+const event=JSON.parse(body),now=1794398400,key=Buffer.alloc(32),secret='whsec_'+key.toString('base64');
+const sign=(bytes,id=event.id,ts=String(now))=>'v1,'+createHmac('sha256',key).update(`${id}.${ts}.`).update(bytes).digest('base64');
+const headers={'webhook-id':event.id,'webhook-timestamp':String(now),'webhook-signature':sign(body)};
+const verify=changes=>verificarWebhook({body,headers,secret,agora:now,filiais:['1001'],...changes});
+assert.deepEqual(verify(),event);
+assert.deepEqual(verify({headers:{...headers,'webhook-signature':'v1,'+Buffer.alloc(32,1).toString('base64')+' '+sign(body)}}),event);
+assert.throws(()=>verify({body:Buffer.concat([body,Buffer.from('\n')])}),/ASSINATURA_INVALIDA/);
+for(const delta of [-301,301])assert.throws(()=>verify({agora:now+delta}),/TIMESTAMP_INVALIDO/);
+assert.throws(()=>verify({filiais:['1002']}),/FILIAL_OU_TIPO_INVALIDO/);
+assert.throws(()=>verify({secret:'whsec_invalido'}),/CHAVE_INVALIDA/);
+assert.throws(()=>verify({headers:{...headers,'webhook-signature':'v1,AQ=='}}),/ASSINATURA_INVALIDA/);
+assert.throws(()=>verify({body:Buffer.alloc(65537)}),/CORPO_INVALIDO/);
+const changed=Buffer.from(JSON.stringify({...event,id:'33333333-3333-4333-8333-333333333333'}));
+assert.throws(()=>verify({body:changed,headers:{...headers,'webhook-signature':sign(changed)}}),/EVENTO_INVALIDO/);
+
+const response=(cursor,more,data=[])=>new Response(JSON.stringify({data,paginacao:{cursor_proximo:cursor,tem_mais:more}}),{status:200});
+let fetched=[],saved=[],waits=[];
+const base={baseUrl:'https://integrador.example.invalid',filial:'1001',recurso:'vendas',cursor:'c0',obterToken:async()=> 'TOKEN_SINTETICO',esperar:async ms=>waits.push(ms)};
+let result=await consumirAlteracoes({...base,fetchImpl:async url=>{fetched.push(new URL(url).searchParams.get('cursor'));return fetched.length===1?response('c1',true,[{id:'demo'}]):response('c2',false);},persistirPagina:async p=>saved.push(p)});
+assert.deepEqual(fetched,['c0','c1']);assert.deepEqual(saved.map(p=>p.cursor),['c1','c2']);assert.equal(result.cursor,'c2');assert.equal(result.aguardarSegundos,60);
+let calls=0;
+await assert.rejects(consumirAlteracoes({...base,fetchImpl:async()=>{calls++;return response('c1',true);},persistirPagina:async()=>{throw Error('BANCO_INDISPONIVEL');}}),/BANCO_INDISPONIVEL/);assert.equal(calls,1);
+let attempts=0,renewals=[];waits=[];
+await consumirAlteracoes({...base,obterToken:async flags=>{renewals.push(flags.renovar);return 'TOKEN_SINTETICO';},fetchImpl:async()=>++attempts===1?new Response('',{status:429,headers:{'Retry-After':'2'}}):response('c1',false),persistirPagina:async()=>{}});
+assert.deepEqual(renewals,[false,false]);assert.ok(waits[0]>=2000);
+attempts=0;renewals=[];
+await consumirAlteracoes({...base,obterToken:async flags=>{renewals.push(flags.renovar);return 'TOKEN_SINTETICO';},fetchImpl:async()=>++attempts===1?new Response('',{status:401}):response('c1',false),persistirPagina:async()=>{}});
+assert.deepEqual(renewals,[false,true]);
+await assert.rejects(consumirAlteracoes({...base,fetchImpl:async()=>new Response('',{status:410}),persistirPagina:async()=>{throw Error('NAO_DEVE_PERSISTIR');}}),/REFAZER_BOOTSTRAP/);
+console.log(JSON.stringify({assinaturaNode:true,rawBytesProtegidos:true,rotacaoMultiplasAssinaturas:true,timestampPassadoEFuturo:true,filialValidada:true,limiteCorpo:true,idCorpoValidado:true,cursorAtomico:true,retry429:true,renovacaoUnica401:true,cursorExpirado:true}));

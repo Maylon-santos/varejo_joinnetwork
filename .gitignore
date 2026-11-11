@@ -5,6 +5,8 @@
 node_modules/
 dist/
 coverage/
+__pycache__/
+*.py[cod]
 *.log
 .DS_Store
 # Pasta de ideias inserida por engano; não faz parte do produto.

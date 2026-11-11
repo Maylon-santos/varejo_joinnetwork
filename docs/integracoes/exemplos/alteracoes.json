@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "id": "22222222-2222-4222-8222-222222222222",
+      "recurso": "vendas",
+      "recurso_id": "vnd_1001_S_900001",
+      "filial_id": "1001",
+      "acao": "upsert",
+      "versao": "12",
+      "registrado_em": "2026-11-11T12:00:00Z",
+      "consulta_url": "/v1/vendas/vnd_1001_S_900001"
+    }
+  ],
+  "paginacao": {
+    "limite": 100,
+    "quantidade": 1,
+    "tem_mais": false,
+    "cursor_proximo": "cur_demo_continuacao"
+  },
+  "meta": {
+    "request_id": "11111111-1111-4111-8111-111111111111",
+    "gerado_em": "2026-11-11T12:00:00Z",
+    "retencao_dias": 30
+  }
+}

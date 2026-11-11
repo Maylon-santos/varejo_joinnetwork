@@ -1,0 +1,13 @@
+{
+  "venda.json": "RespostaVenda",
+  "vendas.json": "ListaVendaResumo",
+  "itens.json": "ListaItemVenda",
+  "pagamentos.json": "ListaPagamento",
+  "filiais.json": "ListaFilial",
+  "produtos.json": "ListaProduto",
+  "estoque.json": "RespostaEstoque",
+  "webhook-venda.json": "EventoVenda",
+  "webhook-teste.json": "EventoTeste",
+  "erro.json": "Problem",
+  "alteracoes.json": "ListaAlteracoes"
+}

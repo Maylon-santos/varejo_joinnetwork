@@ -1,0 +1,31 @@
+{
+  "verificadoEm": "2026-11-11T14:05:02.261367+00:00",
+  "escopo": "documentação e exemplos sintéticos, sem implementar serviço",
+  "openapiValido": true,
+  "schemas": 51,
+  "camposDocumentados": 277,
+  "operacoes": 21,
+  "exemplosJSONValidados": 11,
+  "linksLocaisEAncorasValidos": true,
+  "portalSemDependenciasRemotas": true,
+  "assinaturaPython": true,
+  "provaJWTAssinadaEVerificada": true,
+  "jtiUnico": true,
+  "interoperabilidadePythonNode": true,
+  "node": {
+    "assinaturaNode": true,
+    "rawBytesProtegidos": true,
+    "rotacaoMultiplasAssinaturas": true,
+    "timestampPassadoEFuturo": true,
+    "filialValidada": true,
+    "limiteCorpo": true,
+    "idCorpoValidado": true,
+    "cursorAtomico": true,
+    "retry429": true,
+    "renovacaoUnica401": true,
+    "cursorExpirado": true
+  },
+  "apiExternaImplementada": false,
+  "webhookAtivado": false,
+  "producaoAlterada": false
+}

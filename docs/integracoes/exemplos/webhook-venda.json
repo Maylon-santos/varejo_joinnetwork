@@ -1,0 +1,21 @@
+{
+  "id": "22222222-2222-4222-8222-222222222222",
+  "tipo": "venda.atualizada",
+  "schema_version": "1.0",
+  "criado_em": "2026-11-11T12:00:00Z",
+  "recurso_versao": "12",
+  "origem_carga": "continua",
+  "campos_alterados": [
+    "nota_fiscal"
+  ],
+  "data": {
+    "id": "vnd_1001_S_900001",
+    "filial_id": "1001",
+    "cod_operacao": "900001",
+    "tipo_operacao": "S",
+    "cancelada": false,
+    "quantidade": 2,
+    "valor_final_centavos": "18000",
+    "consulta_url": "/v1/vendas/vnd_1001_S_900001"
+  }
+}
