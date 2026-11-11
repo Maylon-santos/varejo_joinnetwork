@@ -14,6 +14,7 @@
 /* Mantém elementos acessíveis dentro do scroll da tabela, sem ampliar a página. */
 .table-scroll{position:relative;max-width:100%}
 .sr-only{clip-path:inset(50%)}
+.detail-invoice{margin:0 24px 22px;padding:18px;border:1px solid var(--line);border-radius:10px;min-width:0}.detail-invoice h3{font-size:14px;margin:0 0 14px}.invoice-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.invoice-fields>div{min-width:0;overflow-wrap:anywhere}.invoice-fields small{font-size:10px;color:#8c96a7;display:block;margin-bottom:8px}.invoice-fields strong{font-size:14px}
 .detail-customer{margin:0 24px 22px;padding:18px;background:#f6f8fb;border:1px solid var(--line);border-radius:10px}
 .detail-customer h3{font-size:14px;margin:0 0 12px}.detail-customer p{margin:8px 0;line-height:1.6}.detail-customer ul{padding-left:18px}.detail-customer a{color:var(--navy)}
 @media(max-width:760px){

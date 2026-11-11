@@ -1,6 +1,6 @@
 import {atrasoAposFalhas} from './ciclo-sync.mjs';
 import {erroSeguro} from './postgres.mjs';
-const faltamCampos="(complementos IS NULL OR NOT (complementos ? 'frete_centavos' AND complementos ? 'cortesia_informada'))";
+import {faltamComplementos as faltamCampos} from './complementos-venda.mjs';
 export async function preencherComplementos({pool,repositorio,tenant,filial,consultar,limite=3,intervalo=360,parar=()=>false}){
  if(!Number.isSafeInteger(limite)||limite<1||limite>7)throw new Error('LIMITE_DIAS_INVALIDO');
  await repositorio.transacao({tenant,filial},async()=>{});

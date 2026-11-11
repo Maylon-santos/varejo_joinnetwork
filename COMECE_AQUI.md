@@ -1,4 +1,13 @@
-# Comece aqui — estado atual em 03/11/2026
+# Comece aqui — estado atual em 11/11/2026
+
+## Nota fiscal nos detalhes da venda — 11/11/2026
+
+- [x] Quatro campos confirmados na LISTAVENDAS e implementados em **Nota fiscal** nos detalhes: número da nota, modelo, IDNFE e status original do ERP. Identificadores textuais preservados; status nulo separado de histórico aguardando importação.
+- [x] Importação/reprocessamento e preenchimento gradual do histórico preparados, sem migration. Carga exclusivamente fiscal preserva pagamentos, frete/cortesia existentes, valores, peças, itens, conciliação, cancelamentos e checkpoints; divergências bloqueiam a atualização.
+- [x] 74 testes unitários, 76 de integração em PostgreSQL 16 isolado e navegador sintético em 1280/390 px aprovados. Regressão de cortesia zero verificada. Evidências: `docs/validacao-fonte-nota-fiscal.json`, `docs/validacao-nota-fiscal.json` e `docs/validacao-nota-fiscal-ui.json`.
+- [ ] Publicação e preenchimento do histórico de produção. **Ainda não publicado no piloto**; worker local permanece desativado. Status veio nulo nas cinco operações da amostra, sem presumir significado fiscal.
+
+Uso e operação: [Nota fiscal na venda](docs/NOTA_FISCAL_VENDA.md).
 
 ## Classificação pelo cadastro e recarga do estoque — 31/10/2026
 

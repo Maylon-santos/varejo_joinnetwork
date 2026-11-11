@@ -1,5 +1,12 @@
 # Roadmap — Aeropostale Varejo
 
+## Nota fiscal nos detalhes da venda — 11/11/2026
+
+- [x] LISTAVENDAS confirmada com `numero_nota`, `modelo`, `idnfe` e `status`. Seção Nota fiscal nos detalhes de Movimentações/Conferência, identificadores preservados, status sem interpretação e legado/nulo distintos.
+- [x] Persistência no JSONB existente e preenchimento gradual do histórico, preservando campos já importados e conciliação na carga exclusivamente fiscal. Sem migration; autorização existente e consultas locais preservadas.
+- [x] 74 testes unitários, 76 de integração em PostgreSQL 16 temporário e navegador sintético computador/celular aprovados; regressão de cortesia zero verificada. Evidência `docs/validacao-nota-fiscal.json` e documentação `docs/NOTA_FISCAL_VENDA.md`.
+- [ ] Publicar API/worker e acompanhar preenchimento do histórico. **Ainda não publicado no piloto.** Não altera homologação R11/R22 nem conclui dimensões fiscais das exportações CSV.
+
 ## Classificação pelo cadastro e recarga do estoque — 31/10/2026
 
 - [x] `CONSULTAPRODUTOS` passou a retornar `tipo_prod`, confirmado em consulta ao ERP. Implementado o vínculo por ID interno do produto: tipo cadastral principal, tipo do saldo como alternativa e ausência explícita quando ambos não informados. Todas as variações usam a mesma classificação; filtros/total/paginação coerentes e tipo visível nos detalhes.

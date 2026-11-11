@@ -1,0 +1,47 @@
+{
+  "verificadoEm": "2026-11-11T11:36:11.083Z",
+  "fonte": "LISTAVENDAS",
+  "filial": "30098297",
+  "dia": "2026-11-10",
+  "operacoes": 5,
+  "campos": {
+    "numero_nota": {
+      "chaves": [
+        "numero_nota"
+      ],
+      "presentes": 5,
+      "nulos": 0,
+      "tipos": [
+        "number"
+      ]
+    },
+    "modelo": {
+      "chaves": [
+        "modelo"
+      ],
+      "presentes": 5,
+      "nulos": 0,
+      "tipos": [
+        "number"
+      ]
+    },
+    "idnfe": {
+      "chaves": [
+        "idnfe"
+      ],
+      "presentes": 5,
+      "nulos": 0,
+      "tipos": [
+        "string"
+      ]
+    },
+    "status": {
+      "chaves": [
+        "status"
+      ],
+      "presentes": 5,
+      "nulos": 5,
+      "tipos": []
+    }
+  }
+}

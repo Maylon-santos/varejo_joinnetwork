@@ -1,0 +1,12 @@
+{
+  "verificadoEm": "2026-11-11T11:59:30.775Z",
+  "ambiente": "schemas isolados, dados sintéticos",
+  "quatroCamposVisiveis": true,
+  "identificadoresPreservados": true,
+  "statusSemInterpretacao": true,
+  "textoSemHTML": true,
+  "legadoDistintoDeNulo": true,
+  "semConsultaERPNoDetalhe": true,
+  "desktopCelularSemOverflow": true,
+  "errors": []
+}

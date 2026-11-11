@@ -24,6 +24,20 @@ test('API incompleta ou chaves duplicadas não são aceitas',async()=>{
  await assert.rejects(consultarVendas({baseUrl:'http://example.invalid/api',token:'fake',filial:'30098297',inicio:'2026-09-09',fim:'2026-09-09',fetchImpl:async()=>({ok:true,json:async()=>body})}));
  }
 });
+test('nota fiscal preserva identificadores textuais, zeros, status original e ausência sem alterar a venda',()=>{
+ const normal=fields=>normalizarVenda({...v,...fields},'30098297','2026-09-09','2026-09-09');
+ const base=normal({}),idnfe='0'.repeat(43)+'1';
+ for(const [fields,expected] of [
+  [{numero_nota:123,modelo:65,idnfe,status:null},{numero_nota:'123',modelo:'65',idnfe,status:null}],
+  [{numero_nota:'000123',modelo:'065',idnfe,status:'100'},{numero_nota:'000123',modelo:'065',idnfe,status:'100'}],
+  [{numero_nota:0,modelo:0,status:0},{numero_nota:'0',modelo:'0',idnfe:null,status:'0'}],
+  [{},{numero_nota:null,modelo:null,idnfe:null,status:null}]
+ ]){
+  const op=normal(fields);assert.deepEqual(op.complementos.nota_fiscal,expected);
+  assert.deepEqual({...op,complementos:null},{...base,complementos:null});
+ }
+ for(const fields of [{idnfe:9007199254740992},{status:{}},{modelo:65.5},{numero_nota:'1'.repeat(501)}])assert.throws(()=>normal(fields),/CAMPO_FISCAL_INVALIDO/);
+});
 test('Janelas diárias incluem bordas e backoff começa após três erros',()=>{
  assert.deepEqual([...dias('2026-01-31','2026-02-01')],['2026-01-31','2026-02-01']);
  assert.equal(atrasoAposFalhas(360,2),360);assert.equal(atrasoAposFalhas(360,3),720);assert.equal(atrasoAposFalhas(360,100),5760);

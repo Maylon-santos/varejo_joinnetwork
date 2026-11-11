@@ -255,3 +255,10 @@ Publicar API e worker novos com backup e ambos pausados; aplicar migrations ante
 Publicação/recarga de 01/11 validada: 15 filiais, 38.558 SKUs AC e 48 sem tipo (36 cadastros ausentes pelo ID). Uma retentativa de estoque foi resolvida. Consulta por código não autoriza trocar ID: em três casos voltou outro produto. Backup backup-20261101T125720Z-scBjC3; imagens e arquivos anteriores em artifacts/publicacao-tipo-cadastro-20261101T125710Z. Relatório privado em artifacts/estoque-cadastro/20261101T125710Z/resultado.json. API/worker e timer Talk preservados, sem Nginx ou alterações de regras financeiras.
 
 Validação pública somente leitura: `node --env-file=.env scripts/verificar-tipo-cadastro-producao.mjs`; relatórios e capturas comerciais ficam nos artifacts privados. Para retorno, parar worker, restaurar imagens anteriores e retomar API/worker; a coluna aditiva é compatível com a versão anterior, que volta a usar somente o tipo do saldo. Não desfazer a recarga apagando histórico. [Regras e cobertura](../docs/TIPO_PRODUTO_CADASTRO.md).
+
+
+## Nota fiscal nos detalhes — preparada em 11/11/2026
+
+API e worker devem ser atualizados juntos para importar/exibir número da nota, modelo, IDNFE e status original. Campos aditivos em `operacoes.complementos.nota_fiscal`, sem migration. Fazer backup coordenado com API/worker pausados e guardar imagens anteriores antes da publicação. Subir a API saudável e retomar somente o worker remoto; local desativado. Não requer alteração de PostgreSQL, Nginx ou timer Talk.
+
+A rotina existente de complementos preencherá gradualmente operações sem o grupo fiscal, mantendo lotes/cooldown/backoff. Carga exclusivamente fiscal preserva conciliação e todos os dados comerciais, inclusive frete/cortesia/pagamentos existentes. Cabeçalho/itens divergentes bloqueiam o preenchimento; status nulo não recebe interpretação. Conferir campos nos detalhes, cobertura `complementos ? 'nota_fiscal'` e saúde dos serviços. Versão anterior é compatível com o JSON aditivo, mas deixa de importar/exibir os novos campos. [Contrato e validação](../docs/NOTA_FISCAL_VENDA.md). **Ainda não publicado.**

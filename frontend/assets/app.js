@@ -230,6 +230,15 @@ function cortesiaDetalhe(o){
  if(['number','string'].includes(typeof valor)&&/^-?0+(?:\.0+)?$/.test(String(valor)))return 'Sem cortesia (0)';
  return typeof valor==='string'?valor:JSON.stringify(valor);
 }
+function renderInvoice(o,content){
+ const section=el('section',null,'detail-invoice');section.append(el('h3','Nota fiscal'));
+ const note=o.complementos?.nota_fiscal,summary=el('div',null,'invoice-fields');
+ for(const [label,key] of [['Número da nota','numero_nota'],['Modelo','modelo'],['IDNFE','idnfe'],['Status da nota (ERP)','status']]){
+  const value=!note||!Object.hasOwn(note,key)?'Aguardando importação':note[key]==null||note[key]===''?'Não informado':String(note[key]);
+  const cell=el('div');cell.append(el('small',label),el('strong',value));summary.append(cell);
+ }
+ section.append(summary);content.append(section);
+}
 async function openDetail(o){
  clearTimeout(reprocessTimer);clearDetailMedia();detailAbort=new AbortController();
  const version=++detailGeneration;$('detail-title').textContent=`Operação #${o.cod_operacao}`;$('detail-content').replaceChildren(el('p','Carregando os detalhes…','empty'));$('detail-dialog').showModal();document.body.classList.add('modal-open');
@@ -239,6 +248,7 @@ async function openDetail(o){
   const content=$('detail-content');content.replaceChildren();const summary=el('div',null,'detail-summary');
   for(const[label,value]of [['Data',dateBR(d.operacao.data_operacao)],['Situação',d.operacao.cancelada?'Cancelada':'Ativa'],['Vendedor',d.operacao.vendedor_nome||'Sem identificação'],['Valor da operação',money(d.operacao.valor_final_centavos)],['Peças no cabeçalho',number(d.operacao.quantidade)],['Ajuste da operação',money(d.operacao.ajuste_centavos)],['Frete',freteDetalhe(d.operacao)],['Cortesia',cortesiaDetalhe(d.operacao)]]){const cell=el('div');cell.append(el('small',label),el('strong',value));summary.append(cell);}content.append(summary);
   if(isAdmin){const control=reprocessControl(d.operacao,true);if(control)content.append(control);}
+  renderInvoice(d.operacao,content);
   renderPayment(d.operacao,content);
   if(pode('clientes:ler')){const customer=el('section',null,'detail-customer');customer.id='detail-customer';customer.setAttribute('aria-live','polite');content.append(customer);loadCustomer(d.operacao,customer,version);}
   renderConference(d,content);

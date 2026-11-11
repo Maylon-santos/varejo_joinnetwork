@@ -1,4 +1,4 @@
-import {associarItensComplementares} from './complementos-venda.mjs';
+import {associarItensComplementares,faltamComplementos} from './complementos-venda.mjs';
 import { aplicarCancelamentos, chaveOperacao } from './cancelamentos.mjs';
 import { validarDia } from './sincronizar-cancelamentos.mjs';
 
@@ -72,7 +72,7 @@ export class RepositorioPostgres {
             const key=[op.cod_operacao,op.tipo_operacao,filial];
             const target=await client.query(`SELECT complementos,conciliacao,cancelada,quantidade,valor_final_centavos::text,ajuste_centavos::text,subtotal_itens_centavos::text
               FROM operacoes WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3
-              AND (complementos IS NULL OR NOT (complementos ? 'frete_centavos' AND complementos ? 'cortesia_informada')) FOR UPDATE`,key);
+              AND ${faltamComplementos} FOR UPDATE`,key);
             if(!target.rowCount)continue;
             const existing=(await client.query('SELECT ordem,sku,cod_produto,quantidade,preco_centavos FROM operacao_itens WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 ORDER BY ordem',key)).rows;
             const associados=associarItensComplementares(existing,op.produtos);
@@ -83,10 +83,14 @@ export class RepositorioPostgres {
             if(atual.complementos!==null){
               if(!mesmoCabecalho)throw Error('CONFERENCIA_CABECALHO_DIVERGENTE');
               if(!Object.hasOwn(op.complementos,'frete_centavos')||!Object.hasOwn(op.complementos,'cortesia_informada'))throw Error('CAMPOS_CONFERENCIA_AUSENTES');
-              // Histórico já preenchido: acrescentar somente os dois campos novos,
-              // preservando pagamentos, itens, valores e cursores originais.
-              const campos={frete_centavos:op.complementos.frete_centavos,cortesia_informada:op.complementos.cortesia_informada};
-              await client.query('UPDATE operacoes SET complementos=complementos||$4::jsonb,complementos_importados_em=now(),conciliacao=$5 WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',[...key,JSON.stringify(campos),conciliacao]);
+              // Acrescentar somente campos ausentes; preservar pagamentos e
+              // conferência já importados ao completar a nota fiscal do histórico.
+              const campos={};for(const campo of ['frete_centavos','cortesia_informada','nota_fiscal'])if(!Object.hasOwn(atual.complementos,campo)){
+                if(!Object.hasOwn(op.complementos,campo))throw Error('CAMPOS_COMPLEMENTARES_AUSENTES');
+                campos[campo]=op.complementos[campo];
+              }
+              const novaConciliacao=Object.hasOwn(campos,'frete_centavos')||Object.hasOwn(campos,'cortesia_informada')?conciliacao:atual.conciliacao;
+              await client.query('UPDATE operacoes SET complementos=complementos||$4::jsonb,complementos_importados_em=now(),conciliacao=$5 WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',[...key,JSON.stringify(campos),novaConciliacao]);
               atualizadas++;continue;
             }
             for(const item of associados)await client.query('UPDATE operacao_itens SET preco_tabela_centavos=$5,desconto_informado=$6,preco_aplicado_centavos=$7 WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3 AND ordem=$4',[...key,item.ordem,item.preco_tabela_centavos,item.desconto_informado,item.preco_aplicado_centavos]);

@@ -1,0 +1,38 @@
+{
+  "verificadoEm": "2026-11-11T12:01:04.373979+00:00",
+  "ambiente": "local; PostgreSQL 16 temporário e schemas isolados; dados sintéticos",
+  "fonteERP": "LISTAVENDAS: amostra de leitura, cinco operações de ITUPEVA em 10/11/2026",
+  "testesUnitarios": {
+    "aprovados": 74,
+    "falhas": 0
+  },
+  "testesIntegracao": {
+    "aprovados": 76,
+    "falhas": 0
+  },
+  "interface": {
+    "larguras": [
+      1280,
+      390
+    ],
+    "quatroCampos": true,
+    "semOverflow": true,
+    "identificadoresPreservados": true,
+    "statusSemInterpretacao": true,
+    "ausenteDistintoDeNulo": true,
+    "textoSemHTML": true,
+    "semConsultaERPAoAbrir": true
+  },
+  "historico": {
+    "preenchimentoEmLotes": true,
+    "idempotente": true,
+    "cabecalhoDivergenteBloqueado": true,
+    "pagamentosFreteCortesiaPreservados": true,
+    "valoresItensConciliacaoCancelamentosCheckpointsPreservados": true
+  },
+  "regressaoCortesiaZero": "aprovada em computador/celular",
+  "sintaxeEDiff": "aprovados",
+  "migrationsNecessarias": false,
+  "publicadoNoPiloto": false,
+  "workerLocalAtivado": false
+}
