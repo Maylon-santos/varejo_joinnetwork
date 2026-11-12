@@ -1,0 +1,86 @@
+{
+  "verificadoEm": "2026-11-12T01:10:58.849649+00:00",
+  "escopo": "Backup, snapshot e reinicialização autorizada da VPS compartilhada, com conferência dos serviços e da capacidade. Não representa publicação da R31.",
+  "backup": {
+    "nome": "backup-20261112T004339Z-u1FTI2",
+    "bancos": [
+      "control",
+      "tenant"
+    ],
+    "marcadorComplete": true,
+    "pgRestoreListAprovado": true,
+    "checksumsServidorValidos": true,
+    "copiaExternaLocal": true,
+    "checksumsCopiaExternaValidos": true,
+    "conteudoForaDoGit": true,
+    "restauracaoCompletaDesteBackupTestada": false
+  },
+  "snapshot": {
+    "nome": "pre-upgrade-disco-20261111",
+    "dataExibidaNoPainel": "11/11/2026 21:50:38",
+    "estado": "Disponível",
+    "confirmadoPorMaylon": true,
+    "conferidoNoPainel": true,
+    "snapshotAnteriorPreservado": true
+  },
+  "reinicializacoes": {
+    "ssh": {
+      "novoBootConfirmado": true,
+      "servicosRetornaram": true,
+      "discoAmpliado": false
+    },
+    "painelLocaweb": {
+      "acao": "Reinicialização pelo provedor após encerrar os 16 containers e sincronizar o disco.",
+      "novoBootConfirmado": true,
+      "containersRetomadosPeloPlanoPrivado": 16,
+      "discoAmpliado": false
+    }
+  },
+  "servicos": {
+    "containersAtivosAntes": 16,
+    "containersAtivosDepois": 16,
+    "containersAnteriormenteInativosPreservados": true,
+    "idsImagensEMontagensPreservados": true,
+    "healthchecksConfigurados": 5,
+    "healthchecksSaudaveis": 5,
+    "nginx": "active",
+    "docker": "active",
+    "painelPublicoHTTPS": 200,
+    "painelHealth": "ok",
+    "coletorRemotoRetomado": true,
+    "workerLocalDesativado": true,
+    "timerBackupAtivo": true,
+    "timerRelatoriosAtivo": true
+  },
+  "disco": {
+    "discosBytes": [
+      10737418240,
+      10737418240
+    ],
+    "volumeRaizBytes": 19855835136,
+    "filesystem": "ext4",
+    "filesystemRaizTotalBytes": 19430862848,
+    "filesystemRaizDisponivelBytes": 1565093888,
+    "grupoLVM": "ubuntu",
+    "espacoLivreLVMBytes": 0,
+    "capacidadeNovaDisponivel": false,
+    "particionamentoLVMFilesystemAlterados": false,
+    "totalExibido": "19G",
+    "disponivelExibido": "1.5G",
+    "usoPercentual": 92
+  },
+  "painelHospedagem": {
+    "adicionalExibido": "2 Disco de 10 GB — Ativo / PACOTE 2 DE 10 GB",
+    "capacidadeApresentadaAoSistemaAindaIgual": true
+  },
+  "limites": [
+    "Snapshot é um ponto de restauração do provedor; não substitui cópia externa.",
+    "Checksums e leitura estrutural aprovados; não foi realizada nova restauração integral deste backup.",
+    "Conferência de todos os containers, imagens, montagens e healthchecks configurados; não homologa os fluxos comerciais dos demais sistemas."
+  ],
+  "pendencias": [
+    "A capacidade física adicional ainda não apareceu, mesmo após os dois reinícios. Confirmar a conclusão do provisionamento com a hospedagem.",
+    "Após o novo espaço aparecer, identificar o dispositivo e preparar expansão do LVM/ext4.",
+    "R31 continua pendente de capacidade/carga, TLS/egress, provisionamento e homologação do consumidor."
+  ]
+}

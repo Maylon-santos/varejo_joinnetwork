@@ -1,5 +1,14 @@
 # Comece aqui — estado atual em 11/11/2026
 
+## Backup e reinicialização da VPS — 11/11/2026
+
+- [x] Backup atualizado dos dois bancos, `backup-20261112T004339Z-u1FTI2`, com leitura estrutural aprovada, checksums no servidor e cópia privada fora da VPS conferida. Dumps e capturas permanecem fora do Git; não foi feita nova restauração integral deste backup.
+- [x] Snapshot `pre-upgrade-disco-20261111` disponível, conferido no painel da Locaweb; snapshot anterior preservado. Reinício por SSH concluído e, após o disco permanecer igual, reinício pelo provedor com encerramento controlado dos 16 containers e sincronização do disco. Novos boots confirmados.
+- [x] Os 16 containers anteriores retomados; cinco healthchecks configurados saudáveis, mesmos IDs/imagens/montagens e container anteriormente inativo preservado. Nginx, Docker, API/PostgreSQL, coletor remoto e timers de backup/relatórios ativos; HTTPS público com HTTP 200. Worker local continua desativado. Não representa homologação dos fluxos comerciais dos demais serviços.
+- [ ] **Ampliação ainda pendente na hospedagem:** adicional de disco aparece ativo na Central, mas o Linux continua vendo dois discos de 10 GiB, raiz de 19G com 1,5G livres (92%) e LVM sem espaço livre, mesmo após os dois reinícios. Nenhuma partição/LVM/filesystem alterado. Aguardar apresentação da capacidade física antes de estender o volume; publicação da R31 continua pendente.
+
+Evidência: `docs/validacao-reinicio-vps.json`. Snapshot complementa a cópia externa e não a substitui.
+
 ## API externa e webhooks implementados — 11/11/2026
 
 - [x] **GitHub confirmado:** implementação registrada no commit `62891ea` e enviada ao remoto configurado; [workflow de validação aprovado](https://github.com/Maylon-santos/varejo_joinnetwork/actions/runs/43126674181) com PostgreSQL 17 descartável e Chromium. Código publicado no GitHub não ativa produção.

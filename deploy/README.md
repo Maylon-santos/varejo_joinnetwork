@@ -3,6 +3,14 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor: alias SSH `localweb`. Diretório: `/opt/aeropostale-varejo`.
 
+## Backup e reinicialização — 11/11/2026
+
+Manutenção autorizada para verificar o upgrade de disco: backup `backup-20261112T004339Z-u1FTI2` dos dois bancos, leitura estrutural aprovada e cópia privada externa com checksums conferidos. Snapshot `pre-upgrade-disco-20261111` disponível no painel, com o anterior preservado. Não foi realizada nova restauração integral deste backup.
+
+Reinícios por SSH e pelo provedor concluídos; antes da ação forçada do painel, os 16 containers foram encerrados e o disco sincronizado. O plano privado de retomada está em `/opt/aeropostale-varejo/artifacts/manutencao-disco-20261111/retomar-containers.json`. Os mesmos 16 containers retornaram, com IDs/imagens/montagens preservados e cinco healthchecks saudáveis. Container antes inativo permanece inativo. Nginx/Docker, API/PostgreSQL, coletor remoto e timers de backup/relatórios ativos; HTTPS público HTTP 200, worker local desativado.
+
+O adicional aparece ativo na Central, mas a capacidade física continua em dois discos de 10 GiB. Raiz 19G, 1,5G livres, 92% de uso; grupo LVM sem espaço livre. Nenhuma partição/LVM/filesystem alterado. Confirmar provisionamento com a hospedagem antes de qualquer extensão e da publicação da R31. Evidência agregada: `docs/validacao-reinicio-vps.json`; inventários e cópia dos dumps em `artifacts/manutencao-disco`, fora do Git. Snapshot não substitui a cópia externa.
+
 ## Serviços
 
 API e PostgreSQL publicados somente em loopback; Nginx atende o domínio com HTTPS. O worker remoto é o responsável pela sincronização. O worker local foi parado e `SYNC_ENABLED=false` foi salvo no `.env` local.
