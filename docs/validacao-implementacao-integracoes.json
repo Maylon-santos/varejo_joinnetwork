@@ -64,7 +64,11 @@
     "workflow": ".github/workflows/ci.yml",
     "postgresCI": 17,
     "deployAutomatico": false,
-    "execucaoRemotaConfirmada": false
+    "execucaoRemotaConfirmada": true,
+    "conclusao": "success",
+    "commitImplementacao": "62891ea405fc2a0267e270de156413beae3d6433",
+    "workflowRunURL": "https://github.com/Maylon-santos/varejo_joinnetwork/actions/runs/43126674181",
+    "verificadoEm": "2026-11-12T00:23:14.822664+00:00"
   },
   "apiExternaImplementada": true,
   "migrationsProducaoAplicadas": false,

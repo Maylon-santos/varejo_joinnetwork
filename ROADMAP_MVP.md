@@ -2,6 +2,8 @@
 
 ## API externa e webhooks implementados — 11/11/2026
 
+- [x] **GitHub confirmado:** implementação registrada no commit `62891ea` e enviada ao remoto configurado; [workflow de validação aprovado](https://github.com/Maylon-santos/varejo_joinnetwork/actions/runs/43126674181) com PostgreSQL 17 descartável e Chromium. Código publicado no GitHub não ativa produção.
+
 - [x] **Retomada e preparação da publicação — 11/11:** repetidos 80 unitários, 92 integração em PostgreSQL descartável, 19 respostas OpenAPI, console e portal em computador/celular; sintaxe e revisão do escopo aprovadas. Consulta SSH somente leitura confirmou DNS no resolvedor do servidor, painel/banco saudáveis e coletor remoto ativo.
 - [ ] **Infraestrutura antes de ativar:** raiz em 92% de uso, 1,6 GB livres e certificado específico ausente. Maylon escolheu ampliar o disco e preservar imagens de retorno; nenhuma limpeza autorizada. Os dois discos de 10 GiB estão alocados no LVM, sem espaço livre no grupo; a ampliação depende da hospedagem. Reserva para projeções/retenção/backups, carga real e egress ainda precisam de validação. Migration 019 e serviços externos não ativados; timers preservados. Evidência: `docs/validacao-preparacao-integracoes.json`.
 
