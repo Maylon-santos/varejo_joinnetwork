@@ -88,6 +88,6 @@ subprocess.run(['node','--input-type=module','-e',js],cwd=ROOT,input=json.dumps(
 report={'verificadoEm':datetime.datetime.now(datetime.timezone.utc).isoformat(),'escopo':'documentação e exemplos sintéticos, sem implementar serviço',
  'openapiValido':True,'schemas':len(spec['components']['schemas']),'camposDocumentados':sum(len(x.get('properties',{})) for x in spec['components']['schemas'].values()),
  'operacoes':sum(len(x) for x in spec['paths'].values()),'exemplosJSONValidados':len(manifest),'linksLocaisEAncorasValidos':True,'portalSemDependenciasRemotas':True,
- 'assinaturaPython':True,'provaJWTAssinadaEVerificada':True,'jtiUnico':True,'interoperabilidadePythonNode':True,'node':node,'apiExternaImplementada':False,'webhookAtivado':False,'producaoAlterada':False}
+ 'assinaturaPython':True,'provaJWTAssinadaEVerificada':True,'jtiUnico':True,'interoperabilidadePythonNode':True,'node':node,'validaImplementacaoRuntime':False,'webhookAtivado':False,'producaoAlterada':False}
 (ROOT/'docs/validacao-documentacao-integracoes.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(report,ensure_ascii=False))

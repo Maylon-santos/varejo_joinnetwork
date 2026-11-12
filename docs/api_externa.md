@@ -32,11 +32,11 @@ Pedido original acima preservado. Maylon confirmou posteriormente o domínio **a
 
 - [Portal visual para desenvolvedores](integracoes/index.html).
 - [Guia completo](integracoes/README.md).
-- [Contrato OpenAPI proposto](../apis/integracoes.openapi.json).
+- [Contrato OpenAPI](../apis/integracoes.openapi.json).
 - [Dicionário de 277 campos](integracoes/dicionario.md).
 - [Autenticação e limites](integracoes/autenticacao.md).
 - [Webhooks assinados](integracoes/webhooks.md).
 - [Console de SuperAdmin e auditoria](integracoes/administracao.md).
 - [Plano e critérios de implementação](integracoes/implementacao.md).
 
-Base documental concluída e verificada. API externa, OAuth, DNS e webhooks ainda não implementados/publicados por esta entrega.
+Documentação e implementação concluídas e testadas em ambiente isolado. OAuth, consultas, revisões, log, webhooks e console delegado com MFA implementados. Publicação do domínio, operação real e consumidor homologado continuam pendentes. [Roteiro de ativação e limites](integracoes/operacao.md).

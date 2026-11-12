@@ -1,6 +1,6 @@
 # Console de SuperAdmin e auditoria
 
-> Requisito de produto acrescentado ao rascunho por Maylon. Console, papel SuperAdmin, permissões administrativas e instrumentação abaixo são propostas; não foram implementados por esta documentação. O Admin atual do painel não deve ser tratado automaticamente como administrador global de todos os tenants.
+> Requisitos de produto de Maylon. Gestão delegada de um tenant com MFA, clientes/chaves, logs/métricas e ações de webhook está implementada. SuperAdmin global, exportação de logs e campos administrativos adicionais continuam evoluções. A tabela de requisitos abaixo inclui essas evoluções; o escopo entregue está em [operação](operacao.md).
 
 ## O que o console precisa responder
 
@@ -33,7 +33,7 @@ O console é uma superfície administrativa separada do OAuth de máquina. Um to
 | Leitura de auditoria | Responsável técnico/segurança autorizado | Sem alteração de concessões ou acesso a segredos |
 | Métricas operacionais | Equipe de operação autorizada | Preferir agregados; detalhes de acesso exigem concessão própria |
 
-Exigir MFA para administração humana e nova confirmação forte em concessões, revogação de chave, rotação de segredo e exportação de logs. Este é um requisito futuro; o login atual por senha do painel não implementa MFA ou um papel global SuperAdmin.
+Exigir MFA para administração humana e nova confirmação forte em concessões, revogação de chave, rotação de segredo e exportação de logs. O console delegado implementa TOTP e step-up de cinco minutos, sem alterar o login comum do painel. Não existe papel global SuperAdmin.
 
 Registrar o ator humano e o tenant alvo em cada ação. A ampliação de acesso não pode ser aprovada apenas pela própria credencial de integração. Evitar ações globais por padrão; acesso excepcional deve ter motivo e trilha específica. Redução/revogação precisa impedir novas chamadas, cursores e entregas que perderam autorização.
 

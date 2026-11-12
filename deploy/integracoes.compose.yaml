@@ -1,0 +1,68 @@
+# Opt-in explícito: compose.yaml do piloto permanece igual.
+services:
+  integracoes-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.integracoes
+    restart: unless-stopped
+    init: true
+    cpus: 0.5
+    mem_limit: 256m
+    pids_limit: 80
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment: &integracoes_env
+      NODE_ENV: production
+      TZ: America/Sao_Paulo
+      TENANT_KEY: ${TENANT_KEY:?Configure TENANT_KEY}
+      INTEGRATIONS_DATABASE_URL: ${INTEGRATIONS_DATABASE_URL:?Configure o LOGIN restrito da API}
+      INTEGRATIONS_CONTROL_DATABASE_URL: ${INTEGRATIONS_CONTROL_DATABASE_URL:-}
+      INTEGRATIONS_ENABLED: ${INTEGRATIONS_ENABLED:-false}
+      INTEGRATIONS_ENVIRONMENT: ${INTEGRATIONS_ENVIRONMENT:-homologacao}
+      INTEGRATIONS_ENCRYPTION_KEY: ${INTEGRATIONS_ENCRYPTION_KEY:?Configure a chave privada fora do Git}
+      INTEGRATIONS_BASE_URL: https://api-varejo.aeropostale.joinnetwork.com.br
+      INTEGRATIONS_HOST: 0.0.0.0
+      INTEGRATIONS_PORT: 3200
+      INTEGRATIONS_ADMIN_ENABLED: ${INTEGRATIONS_ADMIN_ENABLED:-false}
+      INTEGRATIONS_TRUSTED_PROXIES: ${INTEGRATIONS_TRUSTED_PROXIES:-}
+    ports:
+      - "127.0.0.1:3200:3200"
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3200/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    logging: &integration_logging
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+  integracoes-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.integracoes
+    command: [node, scripts/integracoes-worker.mjs]
+    restart: unless-stopped
+    init: true
+    cpus: 0.5
+    mem_limit: 256m
+    pids_limit: 80
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      <<: *integracoes_env
+      INTEGRATIONS_ADMIN_ENABLED: "false"
+      INTEGRATIONS_DATABASE_URL: ""
+      INTEGRATIONS_CONTROL_DATABASE_URL: ""
+      INTEGRATIONS_WORKER_ENABLED: ${INTEGRATIONS_WORKER_ENABLED:-false}
+      INTEGRATIONS_DELIVERIES_ENABLED: ${INTEGRATIONS_DELIVERIES_ENABLED:-false}
+      INTEGRATIONS_WORKER_DATABASE_URL: ${INTEGRATIONS_WORKER_DATABASE_URL:?Configure o LOGIN restrito do worker}
+    logging: *integration_logging

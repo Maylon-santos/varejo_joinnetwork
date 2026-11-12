@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Join Network · API de Integrações Varejo",
-    "version": "0.1.0-proposta",
-    "description": "CONTRATO PROPOSTO, NÃO IMPLEMENTADO. Documentação de desenho de 11/11/2026. Domínio confirmado por Maylon; DNS, TLS, OAuth, cursores, revisões externas, log e webhooks dependem de implementação/homologação. Dados dos exemplos são fictícios. A API interna /api/v1 do painel não implementa este contrato."
+    "version": "0.1.0",
+    "description": "IMPLEMENTADO E TESTADO EM AMBIENTE ISOLADO EM 11/11/2026; NÃO PUBLICADO. OAuth, consultas, cursores, revisões, log e webhooks possuem implementação própria em backend/src/integracoes. Ativação do domínio e homologação com consumidor continuam pendentes. Dados de exemplo fictícios. /api/v1 continua sendo a API interna do painel."
   },
   "servers": [
     {
@@ -11,7 +11,7 @@
       "description": "Domínio confirmado; serviço externo ainda não publicado"
     }
   ],
-  "x-status": "proposta-nao-implementada",
+  "x-status": "implementado-nao-publicado",
   "x-source-revision": "c1c1eb2",
   "tags": [
     {
@@ -245,7 +245,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto",
+        "x-implementation-status": "implementado-testado-isoladamente",
         "requestBody": {
           "required": true,
           "content": {
@@ -948,7 +948,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/vendas/{venda_id}": {
@@ -1574,7 +1574,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/vendas/{venda_id}/itens": {
@@ -2225,7 +2225,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/vendas/{venda_id}/pagamentos": {
@@ -2876,7 +2876,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/filiais": {
@@ -3499,7 +3499,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/filiais/{filial_id}": {
@@ -4109,7 +4109,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/produtos": {
@@ -4771,7 +4771,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/produtos/{produto_id}": {
@@ -5391,7 +5391,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/produtos/{produto_id}/variacoes": {
@@ -6033,7 +6033,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/estoques": {
@@ -6712,7 +6712,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/filiais/{filial_id}/estoques/{sku}": {
@@ -7332,7 +7332,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/alteracoes": {
@@ -8007,7 +8007,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/webhooks": {
@@ -8631,7 +8631,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       },
       "post": {
         "summary": "Criar inscrição desativada",
@@ -9241,7 +9241,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto",
+        "x-implementation-status": "implementado-testado-isoladamente",
         "requestBody": {
           "required": true,
           "content": {
@@ -9867,7 +9867,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       },
       "put": {
         "summary": "Substituir configuração da inscrição",
@@ -10495,7 +10495,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto",
+        "x-implementation-status": "implementado-testado-isoladamente",
         "requestBody": {
           "required": true,
           "content": {
@@ -11126,7 +11126,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/webhooks/{webhook_id}/rotacionar-segredo": {
@@ -11756,7 +11756,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/webhooks/{webhook_id}/entregas": {
@@ -12389,7 +12389,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     },
     "/v1/webhooks/{webhook_id}/entregas/{entrega_id}/reenviar": {
@@ -13019,7 +13019,7 @@
             }
           }
         },
-        "x-implementation-status": "proposto"
+        "x-implementation-status": "implementado-testado-isoladamente"
       }
     }
   },
@@ -13094,7 +13094,7 @@
       },
       "MetaConsulta": {
         "type": "object",
-        "description": "Metadados do contrato externo; ainda precisam ser implementados.",
+        "description": "Metadados da camada externa implementada.",
         "properties": {
           "request_id": {
             "type": "string",
@@ -13592,13 +13592,13 @@
           },
           "versao": {
             "type": "string",
-            "description": "Revisão monotônica do recurso externo, a implementar; não é trans_id do ERP.",
+            "description": "Revisão monotônica do recurso externo, não é trans_id do ERP.",
             "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "atualizado_em": {
             "type": "string",
-            "description": "Instante de publicação desta revisão externa, a implementar. Não reutilizar cada reimportação como alteração comercial.",
+            "description": "Instante de publicação desta revisão externa. Não reutilizar cada reimportação como alteração comercial.",
             "x-origem": "novo",
             "format": "date-time"
           }
@@ -13703,13 +13703,13 @@
           },
           "versao": {
             "type": "string",
-            "description": "Revisão monotônica do recurso externo, a implementar; não é trans_id do ERP.",
+            "description": "Revisão monotônica do recurso externo, não é trans_id do ERP.",
             "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "atualizado_em": {
             "type": "string",
-            "description": "Instante de publicação desta revisão externa, a implementar. Não reutilizar cada reimportação como alteração comercial.",
+            "description": "Instante de publicação desta revisão externa. Não reutilizar cada reimportação como alteração comercial.",
             "x-origem": "novo",
             "format": "date-time"
           },
@@ -14074,13 +14074,13 @@
           },
           "versao": {
             "type": "string",
-            "description": "Revisão da projeção externa, a implementar.",
+            "description": "Revisão da projeção externa.",
             "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "atualizado_em": {
             "type": "string",
-            "description": "Instante desta revisão externa, a implementar.",
+            "description": "Instante desta revisão externa.",
             "x-origem": "novo",
             "format": "date-time"
           }
@@ -14225,13 +14225,13 @@
           },
           "versao": {
             "type": "string",
-            "description": "Revisão externa a implementar.",
+            "description": "Revisão da camada externa.",
             "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "atualizado_em": {
             "type": "string",
-            "description": "Instante da revisão externa a implementar.",
+            "description": "Instante da revisão externa.",
             "x-origem": "novo",
             "format": "date-time"
           }
@@ -14433,13 +14433,13 @@
           },
           "versao": {
             "type": "string",
-            "description": "Revisão externa do par filial/SKU, a implementar.",
+            "description": "Revisão externa do par filial/SKU.",
             "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "atualizado_em": {
             "type": "string",
-            "description": "Instante da revisão externa, a implementar.",
+            "description": "Instante da revisão externa.",
             "x-origem": "novo",
             "format": "date-time"
           }

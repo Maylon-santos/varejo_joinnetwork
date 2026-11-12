@@ -1,6 +1,6 @@
 # Consultas REST e interpretação dos dados
 
-> Todas as rotas deste capítulo pertencem ao contrato externo proposto. Não são aliases já disponíveis da API interna do painel.
+> Rotas externas implementadas e testadas em ambiente isolado. A publicação no domínio ainda está pendente; `/api/v1` continua sendo a API interna. Veja [operação](operacao.md).
 
 ## Endereço e envelope
 
@@ -28,7 +28,7 @@ As listas usam `data`, `paginacao` e `meta`. A lista vazia é 200 com `data: []`
 }
 ```
 
-Campos de metadados e revisões são novos componentes da proposta. Os timestamps de exemplo não devem ser usados como relógio para autenticação real.
+Campos de metadados e revisões são componentes da camada externa. Os timestamps de exemplo não devem ser usados como relógio para autenticação real.
 
 ## Catálogo de rotas
 
@@ -75,7 +75,7 @@ curl --get "$BASE/v1/vendas" \
   --data-urlencode 'limite=100'
 ```
 
-A identidade de uma venda é o conjunto **tenant + filial + tipo de operação + código de operação**. O ID externo proposto `vnd_1001_S_900001` codifica os três últimos componentes, mas não substitui autorização. O consumidor deve manter o namespace do tenant/credencial: o mesmo texto de ID em outro tenant não identifica a mesma venda.
+A identidade de uma venda é o conjunto **tenant + filial + tipo de operação + código de operação**. O ID externo `vnd_1001_S_900001` codifica os três últimos componentes, mas não substitui autorização. O consumidor deve manter o namespace do tenant/credencial: o mesmo texto de ID em outro tenant não identifica a mesma venda.
 
 Não usar número de nota, código de barras, nome de cliente ou código da operação isolado como chave única. A nota pode não estar preenchida e uma operação pode existir em filiais/tipos diferentes.
 
@@ -99,7 +99,7 @@ O detalhe fornece `versao`, `itens_url` e `pagamentos_url`. Para abrir as coleç
 
 Dentro do snapshot de filhos, as páginas ficam congeladas na revisão indicada por `meta.recurso_versao` por 30 minutos. A autorização continua sendo revalidada a cada página. `ordem` é uma posição nesta revisão, não identidade permanente do item. O consumidor deve substituir a coleção da revisão de maneira atômica após terminar todas as páginas.
 
-Se itens/pagamentos estiverem pendentes de importação, não devolver uma lista vazia que pareça definitiva: a proposta prevê 409 `RESOURCE_NOT_READY`, orientando consultar `cobertura` e tentar mais tarde com backoff. Coleção conhecida e vazia é 200 com `data: []`. Um campo ausente na origem não deve ser inventado para permitir conferência.
+Se itens/pagamentos estiverem pendentes de importação, não devolver uma lista vazia que pareça definitiva: a implementação retorna 409 `RESOURCE_NOT_READY`, orientando consultar `cobertura` e tentar mais tarde com backoff. Coleção conhecida e vazia é 200 com `data: []`. Um campo ausente na origem não deve ser inventado para permitir conferência.
 
 Veja [venda completa](exemplos/venda.json), [itens](exemplos/itens.json) e [pagamentos](exemplos/pagamentos.json).
 

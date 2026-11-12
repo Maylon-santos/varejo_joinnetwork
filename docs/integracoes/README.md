@@ -1,10 +1,12 @@
 # Join Network · API para desenvolvedores
 
-> Versão 0.1.0 • desenho técnico de 11/11/2026 • contrato proposto, ainda não implementado.
+> Versão 0.1.0 • implementação e testes isolados em 11/11/2026 • publicação externa pendente.
 
-Integre vendas, filiais, produtos e estoque com consultas autenticadas e notificações de vendas. Este material estabelece a base para implementar a API externa, cadastrar integrações e homologar consumidores. Os exemplos são inteiramente fictícios.
+Integre vendas, filiais, produtos e estoque com consultas autenticadas e notificações de vendas. Este material documenta a implementação da API externa e orienta o cadastro e a homologação de consumidores. Os exemplos são inteiramente fictícios.
 
 **Domínio confirmado por Maylon:** `api-varejo.aeropostale.joinnetwork.com.br`. A confirmação do nome não representa criação de DNS, certificado, credenciais ou serviço. As rotas deste guia não estão publicadas.
+
+[Operação da implementação](operacao.md): serviços, console com MFA, configuração, GitHub/CI, ativação e limites conhecidos. O deploy continua via SSH; o push no GitHub executa validação automática, sem publicar a aplicação.
 
 ## Escolha como integrar
 
@@ -28,18 +30,18 @@ Neste guia, **passiva** significa que a plataforma responde às suas consultas; 
 
 Abra também o [portal visual](index.html), o [contrato OpenAPI 3.1](../../apis/integracoes.openapi.json) e os [exemplos JSON](exemplos/manifesto.json). O contrato pode ser importado em ferramentas que suportem OpenAPI 3.1; a autenticação por prova JWT pode exigir configuração adicional da ferramenta.
 
-## O que existe hoje e o que está sendo desenhado
+## O que está implementado e o que depende de ativação
 
 | Capacidade | Situação em 11/11/2026 |
 | --- | --- |
 | Dados de vendas, itens, pagamentos, nota fiscal, filiais e catálogo no banco local | Implementados, com cobertura parcial e ressalvas descritas neste guia |
 | API interna `/api/v1` do painel e autorização por usuário/filial | Implementadas para o painel |
 | Autenticação da API interna | Login de usuário, sessão Bearer opaca de oito horas; não é Client Credentials |
-| API externa `/v1` neste domínio | Proposta; não implementada |
-| OAuth de integrações, cadastro de clientes e escopos externos | Propostos; não implementados |
-| Revisões externas, cursores estáveis e log incremental | Propostos; não implementados |
-| Webhooks, outbox, assinaturas e painel de entregas | Propostos; não implementados |
-| Limites quantitativos deste guia | Política inicial proposta; precisa de teste de carga antes de liberar produção |
+| API externa `/v1` neste domínio | Implementada e testada isoladamente; domínio ainda não ativado |
+| OAuth de integrações, cadastro de clientes e escopos externos | Implementados; nenhum cliente real provisionado |
+| Revisões externas, cursores estáveis e log incremental | Implementados com projeções, snapshots cifrados e captura transacional |
+| Webhooks, outbox, assinaturas e painel de entregas | Implementados; testes com consumidor simulado, sem disparos reais |
+| Limites quantitativos deste guia | Aplicados pela implementação; carga/capacidade real pendentes antes de liberar produção |
 
 Não compartilhe login Admin, token do painel ou credenciais do ERP com um integrador. A documentação externa descreve uma camada própria de acesso, sem conceder permissões administrativas do painel.
 
@@ -53,7 +55,7 @@ Não compartilhe login Admin, token do painel ou credenciais do ERP com um integ
 6. Salve um checkpoint do log antes da carga inicial. Importe as janelas e depois consuma as alterações desde o checkpoint.
 7. Se precisar de notificações, cadastre um destino de webhook, valide o teste assinado e então ative-o.
 
-Exemplos de autenticação e polling: [prova JWT em Python](exemplos/gerar_assertion.py), [primeiras consultas em cURL](exemplos/consultas.sh) e [polling incremental em Node.js](exemplos/consumir-alteracoes.mjs). Eles são referências de implementação, não SDKs oficiais ou clientes para a API atual.
+Exemplos de autenticação e polling: [prova JWT em Python](exemplos/gerar_assertion.py), [primeiras consultas em cURL](exemplos/consultas.sh) e [polling incremental em Node.js](exemplos/consumir-alteracoes.mjs). Eles são referências de implementação, não SDKs oficiais; a liberação de um cliente real depende da homologação.
 
 ## Convenções que evitam erros de integração
 
@@ -81,7 +83,7 @@ Vendas por hora, valores bruto/líquido homologados, devoluções classificadas 
 
 | Artefato | Uso |
 | --- | --- |
-| [OpenAPI](../../apis/integracoes.openapi.json) | Contrato de rotas, segurança e schemas propostos |
+| [OpenAPI](../../apis/integracoes.openapi.json) | Contrato de rotas, segurança e schemas implementados |
 | [Venda detalhada](exemplos/venda.json) | Cabeçalho, nota fiscal, condições e cobertura |
 | [Itens](exemplos/itens.json) | Preços, quantidade e desconto informado |
 | [Pagamentos](exemplos/pagamentos.json) | Parcelas sem assumir liquidação |

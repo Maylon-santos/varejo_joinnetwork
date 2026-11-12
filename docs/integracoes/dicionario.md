@@ -1,6 +1,6 @@
 # Dicionário de campos
 
-> Contrato proposto • versão 0.1.0 • não implementado. Campos mapeados existem na base; envelopes, revisões e segurança externos dependem de desenvolvimento.
+> Contrato 0.1.0 implementado e testado em ambiente isolado. Ainda não publicado. Confira operacao.md para ativação e limites conhecidos.
 
 Todos os exemplos são fictícios. Obrigatório significa presença da chave no contrato; uma chave obrigatória pode aceitar null. Campos pessoais opcionais são omitidos quando não autorizados. Clientes devem tolerar propriedades novas em respostas.
 
@@ -17,7 +17,7 @@ Página de um snapshot estável; não calcula total global.
 
 ## MetaConsulta
 
-Metadados do contrato externo; ainda precisam ser implementados.
+Metadados da camada externa implementada.
 
 | Campo | Tipo | Presença | Origem / disponibilidade | Descrição e restrições |
 | --- | --- | --- | --- | --- |
@@ -132,8 +132,8 @@ Cabeçalho retornado na lista e na referência de eventos.
 | `vendedor` | Vendedor | obrigatória | operacoes.vendedor_codigo/vendedor_nome | Identificação disponível; nome exige permissão específica. |
 | `evento_codigo` | string / null | obrigatória | operacoes.evento_codigo | Código do evento ERP; não determina sozinho o sinal financeiro. |
 | `conferencia` | Conferencia | obrigatória | novo: camada externa | Conferência, não homologação de faturamento. |
-| `versao` | string | obrigatória | novo | Revisão monotônica do recurso externo, a implementar; não é trans_id do ERP. pattern="^\\d{1,30}$". |
-| `atualizado_em` | string | obrigatória | novo | Instante de publicação desta revisão externa, a implementar. Não reutilizar cada reimportação como alteração comercial. format="date-time". |
+| `versao` | string | obrigatória | novo | Revisão monotônica do recurso externo, não é trans_id do ERP. pattern="^\\d{1,30}$". |
+| `atualizado_em` | string | obrigatória | novo | Instante de publicação desta revisão externa. Não reutilizar cada reimportação como alteração comercial. format="date-time". |
 
 ## Venda
 
@@ -153,8 +153,8 @@ Detalhe sem arrays volumosos; itens/pagamentos possuem endpoints paginados.
 | `vendedor` | Vendedor | obrigatória | operacoes.vendedor_codigo/vendedor_nome | Identificação disponível; nome exige permissão específica. |
 | `evento_codigo` | string / null | obrigatória | operacoes.evento_codigo | Código do evento ERP; não determina sozinho o sinal financeiro. |
 | `conferencia` | Conferencia | obrigatória | novo: camada externa | Conferência, não homologação de faturamento. |
-| `versao` | string | obrigatória | novo | Revisão monotônica do recurso externo, a implementar; não é trans_id do ERP. pattern="^\\d{1,30}$". |
-| `atualizado_em` | string | obrigatória | novo | Instante de publicação desta revisão externa, a implementar. Não reutilizar cada reimportação como alteração comercial. format="date-time". |
+| `versao` | string | obrigatória | novo | Revisão monotônica do recurso externo, não é trans_id do ERP. pattern="^\\d{1,30}$". |
+| `atualizado_em` | string | obrigatória | novo | Instante de publicação desta revisão externa. Não reutilizar cada reimportação como alteração comercial. format="date-time". |
 | `ajuste_centavos` | string / null | obrigatória | operacoes.ajuste_centavos | Ajuste monetário da operação; null é ausência, não zero. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float. pattern="^-?\\d+$". |
 | `subtotal_itens_centavos` | string / null | obrigatória | operacoes.subtotal_itens_centavos | Soma dos preços recebidos × quantidades. Não reaplica desconto. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float. pattern="^-?\\d+$". |
 | `frete_centavos` | string / null | obrigatória | complementos.frete_centavos | Frete recebido; null não deve ser presumido zero. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float. pattern="^-?\\d+$". |
@@ -212,8 +212,8 @@ Cadastro mínimo disponível; lista limitada às filiais concedidas ao cliente.
 | `codigo` | string / null | obrigatória | cadastro_filiais.cod_filial | Código de exibição, por exemplo LOJA-DEMO. |
 | `fantasia` | string / null | obrigatória | cadastro_filiais.fantasia | Nome fantasia importado. |
 | `trans_id_origem` | string / null | obrigatória | cadastro_filiais.trans_id | Cursor cadastral recebido. Não serve como cursor externo. pattern="^\\d{1,30}$". |
-| `versao` | string | obrigatória | novo | Revisão da projeção externa, a implementar. pattern="^\\d{1,30}$". |
-| `atualizado_em` | string | obrigatória | novo | Instante desta revisão externa, a implementar. format="date-time". |
+| `versao` | string | obrigatória | novo | Revisão da projeção externa. pattern="^\\d{1,30}$". |
+| `atualizado_em` | string | obrigatória | novo | Instante desta revisão externa. format="date-time". |
 
 ## ClassificacaoItem
 
@@ -251,8 +251,8 @@ Produto básico; visível somente se vinculado à filial autorizada solicitada.
 | `trans_id_origem` | string / null | obrigatória | cadastro_produtos.trans_id | Transação cadastral recebida, não cursor externo. pattern="^\\d{1,30}$". |
 | `cadastro_consultado_em` | string / null | obrigatória | cadastro_produtos.enriquecido_em | Último enriquecimento cadastral bem-sucedido. format="date-time". |
 | `cadastro_disponivel` | boolean | obrigatória | derivado de cadastro_produtos.enriquecido_em | Existe cadastro enriquecido; false não equivale a produto inexistente. |
-| `versao` | string | obrigatória | novo | Revisão externa a implementar. pattern="^\\d{1,30}$". |
-| `atualizado_em` | string | obrigatória | novo | Instante da revisão externa a implementar. format="date-time". |
+| `versao` | string | obrigatória | novo | Revisão da camada externa. pattern="^\\d{1,30}$". |
+| `atualizado_em` | string | obrigatória | novo | Instante da revisão externa. format="date-time". |
 
 ## Variacao
 
@@ -288,8 +288,8 @@ Posição atual; não representa abertura/movimentos históricos.
 | `saldo_disponivel` | string / null | obrigatória | estoque_atual.saldo | Decimal exato, pode ser negativo ou null. Já desconta reservas. Ausência na carga completa deve retornar null. pattern="^-?\\d{1,14}(\\.\\d{1,6})?$". |
 | `reservas_ja_descontadas` | boolean | obrigatória | regra confirmada do saldo | Regra confirmada para esta origem; não subtrair reservas outra vez. const=true. |
 | `sincronizacao` | Sincronizacao | obrigatória | novo: camada externa | Frescor da posição e da coleta por filial. |
-| `versao` | string | obrigatória | novo | Revisão externa do par filial/SKU, a implementar. pattern="^\\d{1,30}$". |
-| `atualizado_em` | string | obrigatória | novo | Instante da revisão externa, a implementar. format="date-time". |
+| `versao` | string | obrigatória | novo | Revisão externa do par filial/SKU. pattern="^\\d{1,30}$". |
+| `atualizado_em` | string | obrigatória | novo | Instante da revisão externa. format="date-time". |
 
 ## Alteracao
 

@@ -1,6 +1,6 @@
 # Webhooks de vendas
 
-> Funcionalidade proposta. Esta documentação não cadastra destinos nem dispara mensagens ou vendas reais.
+> Outbox, entrega e controles implementados e testados com consumidor simulado. Nenhum destino real cadastrado ou venda enviada. Ver [ativação e limites](operacao.md).
 
 ## Eventos e conteúdo
 

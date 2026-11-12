@@ -1,0 +1,73 @@
+{
+  "verificadoEm": "2026-11-11T23:58:42.343014+00:00",
+  "escopo": "Consultas operacionais somente leitura via SSH; nenhum serviço, schema, arquivo, certificado ou firewall de produção alterado.",
+  "dominio": "api-varejo.aeropostale.joinnetwork.com.br",
+  "dns": {
+    "origem": "resolvedor do servidor de produção",
+    "ipv4ApontaParaServidor": true
+  },
+  "tls": {
+    "certificadoEspecificoPresente": false
+  },
+  "capacidade": {
+    "discoRaizTotalExibido": "19G",
+    "discoRaizLivreExibido": "1.6G",
+    "discoRaizUsoPercentual": 92,
+    "memoriaTotalMiB": 3908,
+    "memoriaDisponivelMiB": 2594,
+    "swapUsadaMiB": 510,
+    "bancoTenantExibido": "126 MB",
+    "operacoes": 31226,
+    "posicoesEstoque": 43143,
+    "conexoesObservadas": 8,
+    "maxConnections": 100,
+    "reservaParaProjecoesRetencaoSnapshotsBackupsECargaValidada": false
+  },
+  "servicos": {
+    "painelHealth": "ok",
+    "apiSaudavel": true,
+    "postgresSaudavel": true,
+    "coletorRemotoAtivo": true,
+    "workerLocalDesativado": true,
+    "migration019Aplicada": false,
+    "timerBackupAgendado": true,
+    "timerRelatoriosAgendado": true
+  },
+  "egress": {
+    "ufwAtivo": false,
+    "restricaoEspecificaWorkerVerificada": false,
+    "nota": "UFW inativo não comprova ausência de outras regras de firewall. Restrição de saída ainda deve ser preparada e validada."
+  },
+  "decisaoMaylon": {
+    "armazenamento": "Ampliar o disco e preservar as imagens de retorno",
+    "limpezaAutorizada": false
+  },
+  "producaoAlterada": false,
+  "segredosReaisProvisionados": false,
+  "webhookRealAtivado": false,
+  "pendencias": [
+    "Ampliar armazenamento e validar reserva para crescimento e recuperação.",
+    "Medir carga e tempo de projeção com volume compatível com o piloto.",
+    "Emitir certificado HTTPS específico e instalar apenas o novo vhost.",
+    "Preparar e validar restrição de egress do worker sem afetar os demais serviços.",
+    "Provisionar operador/MFA, cliente, chave pública e destino com responsáveis definidos.",
+    "Homologar consultas, cobertura e webhook com o consumidor real."
+  ],
+  "armazenamento": {
+    "filesystem": "ext4",
+    "volumeRaiz": "ubuntu/root",
+    "volumeRaizBytes": 19855835136,
+    "discosBytes": [
+      10737418240,
+      10737418240
+    ],
+    "grupoLVM": "ubuntu",
+    "volumesFisicos": [
+      "/dev/xvda3",
+      "/dev/xvdb"
+    ],
+    "espacoLivreGrupoLVMBytes": 0,
+    "expansaoSomentePeloSistemaOperacionalPossivel": false,
+    "dependencia": "Ampliar disco ou anexar volume no painel da hospedagem antes de estender o LVM/filesystem. Nenhuma operação de armazenamento executada."
+  }
+}

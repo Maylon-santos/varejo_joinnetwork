@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gera somente documentação/contrato proposto. Não cria rotas ou credenciais."""
+"""Gera documentação e contrato. Não provisiona serviços ou credenciais."""
 from pathlib import Path
 import copy
 import json
@@ -49,7 +49,7 @@ obj('Paginacao','Página de um snapshot estável; não calcula total global.',{
  'quantidade':field('integer','Registros efetivamente retornados nesta página.',minimum=0,maximum=200),
  'tem_mais':field('boolean','Há outra página no mesmo snapshot.'),
  'cursor_proximo':text('Cursor opaco, assinado e vinculado ao cliente, permissões, filtros e snapshot. Null ao terminar.',nullable=True,maxLength=4096)})
-obj('MetaConsulta','Metadados do contrato externo; ainda precisam ser implementados.',{
+obj('MetaConsulta','Metadados da camada externa implementada.',{
  'request_id':text('Identificador para suporte e correlação, sem credenciais.',format='uuid'),
  'gerado_em':timestamp('Instante de produção da resposta, não da venda.'),
  'snapshot_id':text('Identificador da projeção estável nas listas. Null em leitura pontual.',nullable=True),
@@ -107,8 +107,8 @@ sale_fields={
  'vendedor':ref('Vendedor','Identificação disponível; nome exige permissão específica.',origin='operacoes.vendedor_codigo/vendedor_nome'),
  'evento_codigo':text('Código do evento ERP; não determina sozinho o sinal financeiro.','operacoes.evento_codigo',True),
  'conferencia':ref('Conferencia','Conferência, não homologação de faturamento.'),
- 'versao':ident('Revisão monotônica do recurso externo, a implementar; não é trans_id do ERP.'),
- 'atualizado_em':timestamp('Instante de publicação desta revisão externa, a implementar. Não reutilizar cada reimportação como alteração comercial.')}
+ 'versao':ident('Revisão monotônica do recurso externo, não é trans_id do ERP.'),
+ 'atualizado_em':timestamp('Instante de publicação desta revisão externa. Não reutilizar cada reimportação como alteração comercial.')}
 obj('VendaResumo','Cabeçalho retornado na lista e na referência de eventos.',sale_fields)
 obj('Venda','Detalhe sem arrays volumosos; itens/pagamentos possuem endpoints paginados.',{
  **copy.deepcopy(sale_fields),
@@ -151,8 +151,8 @@ obj('Filial','Cadastro mínimo disponível; lista limitada às filiais concedida
  'codigo':text('Código de exibição, por exemplo LOJA-DEMO.','cadastro_filiais.cod_filial',True),
  'fantasia':text('Nome fantasia importado.','cadastro_filiais.fantasia',True),
  'trans_id_origem':ident('Cursor cadastral recebido. Não serve como cursor externo.','cadastro_filiais.trans_id',True),
- 'versao':ident('Revisão da projeção externa, a implementar.'),
- 'atualizado_em':timestamp('Instante desta revisão externa, a implementar.')})
+ 'versao':ident('Revisão da projeção externa.'),
+ 'atualizado_em':timestamp('Instante desta revisão externa.')})
 obj('ClassificacaoItem','Dimensão cadastral: código e descrição podem estar ausentes.',{
  'codigo':text('Código textual da dimensão.','cadastro_produtos.classificacao.<dimensao>.codigo',True),
  'descricao':text('Descrição textual da dimensão.','cadastro_produtos.classificacao.<dimensao>.descricao',True)})
@@ -168,8 +168,8 @@ obj('Produto','Produto básico; visível somente se vinculado à filial autoriza
  'trans_id_origem':ident('Transação cadastral recebida, não cursor externo.','cadastro_produtos.trans_id',True),
  'cadastro_consultado_em':timestamp('Último enriquecimento cadastral bem-sucedido.','cadastro_produtos.enriquecido_em',True),
  'cadastro_disponivel':field('boolean','Existe cadastro enriquecido; false não equivale a produto inexistente.','derivado de cadastro_produtos.enriquecido_em'),
- 'versao':ident('Revisão externa a implementar.'),
- 'atualizado_em':timestamp('Instante da revisão externa a implementar.')})
+ 'versao':ident('Revisão da camada externa.'),
+ 'atualizado_em':timestamp('Instante da revisão externa.')})
 obj('Variacao','Identidade por filial e SKU; não agrupar tamanhos/cores ao integrar estoque.',{
  'filial_id':ident('Filial da variação autorizada.','estoque_atual.filial'),
  'produto_id':ident('ID interno do produto básico.','estoque_atual.produto'),
@@ -185,8 +185,8 @@ obj('Estoque','Posição atual; não representa abertura/movimentos históricos.
  'saldo_disponivel':text('Decimal exato, pode ser negativo ou null. Já desconta reservas. Ausência na carga completa deve retornar null.','estoque_atual.saldo',True,pattern=r'^-?\d{1,14}(\.\d{1,6})?$'),
  'reservas_ja_descontadas':field('boolean','Regra confirmada para esta origem; não subtrair reservas outra vez.','regra confirmada do saldo',const=True),
  'sincronizacao':ref('Sincronizacao','Frescor da posição e da coleta por filial.'),
- 'versao':ident('Revisão externa do par filial/SKU, a implementar.'),
- 'atualizado_em':timestamp('Instante da revisão externa, a implementar.')})
+ 'versao':ident('Revisão externa do par filial/SKU.'),
+ 'atualizado_em':timestamp('Instante da revisão externa.')})
 obj('Alteracao','Registro durável e ordenado por publicação confirmada; sem dados pessoais.',{
  'id':text('ID do evento, usado também no webhook quando aplicável.',format='uuid'),
  'recurso':text('Recurso alterado.',enum=['vendas','filiais','produtos','estoques']),
@@ -304,10 +304,10 @@ SCOPES={
  'estoques:ler':'Posições de saldo das filiais concedidas.',
  'webhooks:ler':'Consultar inscrições e entregas do próprio cliente; exige vendas:ler.',
  'webhooks:gerenciar':'Criar/testar/alterar/rotacionar/reencaminhar inscrições próprias; exige vendas:ler.'}
-spec={'openapi':'3.1.0','info':{'title':'Join Network · API de Integrações Varejo','version':'0.1.0-proposta',
- 'description':'CONTRATO PROPOSTO, NÃO IMPLEMENTADO. Documentação de desenho de 11/11/2026. Domínio confirmado por Maylon; DNS, TLS, OAuth, cursores, revisões externas, log e webhooks dependem de implementação/homologação. Dados dos exemplos são fictícios. A API interna /api/v1 do painel não implementa este contrato.'},
+spec={'openapi':'3.1.0','info':{'title':'Join Network · API de Integrações Varejo','version':'0.1.0',
+ 'description':'IMPLEMENTADO E TESTADO EM AMBIENTE ISOLADO EM 11/11/2026; NÃO PUBLICADO. OAuth, consultas, cursores, revisões, log e webhooks possuem implementação própria em backend/src/integracoes. Ativação do domínio e homologação com consumidor continuam pendentes. Dados de exemplo fictícios. /api/v1 continua sendo a API interna do painel.'},
  'servers':[{'url':BASE,'description':'Domínio confirmado; serviço externo ainda não publicado'}],
- 'x-status':'proposta-nao-implementada','x-source-revision':'c1c1eb2','tags':[{'name':n} for n in ['Autenticacao','Vendas','Filiais','Produtos','Estoques','Alteracoes','Webhooks']],
+ 'x-status':'implementado-nao-publicado','x-source-revision':'c1c1eb2','tags':[{'name':n} for n in ['Autenticacao','Vendas','Filiais','Produtos','Estoques','Alteracoes','Webhooks']],
  'security':[{'IntegracaoOAuth':[]}], 'paths':{}, 'components':{'securitySchemes':{
  'IntegracaoOAuth':{'type':'oauth2','description':'Client Credentials + private_key_jwt RS256 no token endpoint. O access token é opaco. Filiais e tenant vêm do cadastro, nunca do corpo livre.','flows':{'clientCredentials':{'tokenUrl':BASE+'/oauth/token','scopes':SCOPES}}},
  'WebhookSignature':{'type':'apiKey','in':'header','name':'webhook-signature','description':'HMAC-SHA256 Standard Webhooks: v1,BASE64; exige também webhook-id e webhook-timestamp. Não usa Bearer do destinatário.'}},'schemas':SCHEMAS}}
@@ -331,7 +331,7 @@ def operation(path, method, summary, tag, scopes, schema, params=(), body=None, 
     responses['429']['headers']['Retry-After']={'schema':{'type':'integer','minimum':1},'description':'Segundos antes de tentar novamente.'}
     responses['503']['headers']['Retry-After']={'schema':{'type':'integer','minimum':1}}
     o={'summary':summary,'description':'PROPOSTO, NÃO IMPLEMENTADO. '+description,'operationId':method+'_'+path.replace('/','_').replace('{','').replace('}','').replace('-','_'),'tags':[tag],
-       'security':[{'IntegracaoOAuth':scopes}],'parameters':list(params),'responses':responses,'x-implementation-status':'proposto'}
+       'security':[{'IntegracaoOAuth':scopes}],'parameters':list(params),'responses':responses,'x-implementation-status':'implementado-testado-isoladamente'}
     if body:o['requestBody']={'required':True,'content':{'application/json':{'schema':ref(body)}}}
     spec['paths'].setdefault(path,{})[method]=o
     return o
@@ -405,7 +405,7 @@ def typename(v):
     if v.get('items'):t+=' de '+typename(v['items'])
     return t
 
-lines=['# Dicionário de campos','', '> Contrato proposto • versão 0.1.0 • não implementado. Campos mapeados existem na base; envelopes, revisões e segurança externos dependem de desenvolvimento.','',
+lines=['# Dicionário de campos','', '> Contrato 0.1.0 implementado e testado em ambiente isolado. Ainda não publicado. Confira operacao.md para ativação e limites conhecidos.','',
  'Todos os exemplos são fictícios. Obrigatório significa presença da chave no contrato; uma chave obrigatória pode aceitar null. Campos pessoais opcionais são omitidos quando não autorizados. Clientes devem tolerar propriedades novas em respostas.','']
 count=0
 for name,schema in SCHEMAS.items():

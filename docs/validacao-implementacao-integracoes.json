@@ -1,0 +1,93 @@
+{
+  "verificadoEm": "2026-11-11T20:19:20.329560+00:00",
+  "escopo": "implementação isolada com dados sintéticos; não representa publicação/homologação de consumidor",
+  "unitarios": {
+    "total": 80,
+    "aprovados": 80
+  },
+  "integracao": {
+    "postgresql": "16 temporário e isolado",
+    "total": 92,
+    "aprovados": 92
+  },
+  "contrato": {
+    "operacoes": 21,
+    "schemas": 51,
+    "campos": 277,
+    "respostasReaisSinteticasValidadas": 19
+  },
+  "console": {
+    "data": "2026-11-11",
+    "ambiente": "PostgreSQL isolado com dados sintéticos",
+    "login_mfa": true,
+    "cadastro_concessao": true,
+    "cadastro_chave_publica": true,
+    "auditoria": true,
+    "texto_html_escapado": true,
+    "logout_revoga_sessao": true,
+    "viewports": [
+      {
+        "largura": 1440,
+        "sem_transbordamento": true
+      },
+      {
+        "largura": 390,
+        "sem_transbordamento": true
+      }
+    ],
+    "erros_js": [],
+    "producao_alterada": false
+  },
+  "cenarios": [
+    "RS256/claims e replay de jti",
+    "hash de tokens e revogação",
+    "cliente/tenant/filial/ambiente/escopo",
+    "snapshot estável e cursor vinculado/expirado",
+    "If-Match dos filhos",
+    "BigInt/nota fiscal textual/saldo negativo/tombstone",
+    "captura em rollback/concorrência sem perda de marca",
+    "publicação serializada e ausência de revisão em reimportação igual",
+    "webhook inativo até teste assinado",
+    "idempotência antes de ETag e rotação dupla",
+    "retry persistido e replay com evento/corpo preservados",
+    "URL alterada bloqueia entrega antiga",
+    "SSRF/IP público e resposta DNS mista",
+    "cotas atômicas e concorrência compartilhada",
+    "MFA/TOTP sem reutilizar passo e revogação de sessão",
+    "papéis SQL do tenant sem escrita comercial e grupo central sem alteração de usuários",
+    "auditoria sem tokens/payload comercial e duração monotônica",
+    "HTTP 413 em corpo chunked acima de 64 KiB",
+    "posição de estoque mantém timestamp correspondente enquanto nova posição aguarda projeção",
+    "replay conserva criação original e expira em 30 dias sem renovar retenção"
+  ],
+  "github": {
+    "workflow": ".github/workflows/ci.yml",
+    "postgresCI": 17,
+    "deployAutomatico": false,
+    "execucaoRemotaConfirmada": false
+  },
+  "apiExternaImplementada": true,
+  "migrationsProducaoAplicadas": false,
+  "clientesReaisProvisionados": false,
+  "webhookRealAtivado": false,
+  "producaoAlterada": false,
+  "workerLocalAtivado": false,
+  "pendencias": [
+    "homologação com consumidor real",
+    "publicação e DNS/TLS/egress",
+    "capacidade/carga/armazenamento e aprovação operacional",
+    "SuperAdmin global e exportação de auditoria"
+  ],
+  "revalidadoEm": "2026-11-11T23:58:42.343014+00:00",
+  "revalidacao": {
+    "unitarios": 80,
+    "integracaoPostgreSQL16Isolado": 92,
+    "respostasOpenAPI": 19,
+    "consoleComputadorCelular": true,
+    "portalOfflineComputadorCelular": true,
+    "sintaxeJavaScript": 18,
+    "sintaxePython": 4,
+    "workerLocalDesativado": true,
+    "preparacaoProducao": "docs/validacao-preparacao-integracoes.json"
+  }
+}

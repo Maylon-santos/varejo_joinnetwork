@@ -15,7 +15,10 @@
     "sync:worker": "node --env-file=.env scripts/sync-worker.mjs",
     "api": "node --env-file=.env scripts/api.mjs",
     "admin:create": "node --env-file=.env scripts/criar-admin.mjs",
-    "test:ui": "node --env-file=.env scripts/verificar-interface.mjs"
+    "test:ui": "node --env-file=.env scripts/verificar-interface.mjs",
+    "integracoes:api": "node --env-file=.env scripts/integracoes-api.mjs",
+    "integracoes:worker": "node --env-file=.env scripts/integracoes-worker.mjs",
+    "test:integracoes:ui": "node --env-file=.env scripts/verificar-integracoes-ui.mjs"
   },
   "dependencies": {
     "pg": "^8.23.0",

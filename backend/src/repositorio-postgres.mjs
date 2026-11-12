@@ -99,6 +99,7 @@ export class RepositorioPostgres {
           return atualizadas;
         },
         reprocessarVenda: async (id,op) => {
+          await client.query("SET LOCAL app.integration_origin='reprocessamento'");
           const key=[op.cod_operacao,op.tipo_operacao,filial];
           const job=(await client.query("SELECT 1 FROM reprocessamentos_venda WHERE id=$1 AND cod_operacao=$2 AND tipo_operacao=$3 AND filial=$4 AND estado='processando' FOR UPDATE",[id,...key])).rowCount;
           if(!job)throw Error('REPROCESSAMENTO_DESATUALIZADO');
@@ -108,6 +109,7 @@ export class RepositorioPostgres {
           await client.query('UPDATE operacoes SET erro_erp_confirmado_por=NULL,erro_erp_confirmado_em=NULL WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',key);
           const depois=await snapshot(),v=(await client.query('SELECT conciliacao,cancelada,quantidade,valor_final_centavos::text FROM operacoes WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',key)).rows[0];
           await client.query("UPDATE reprocessamentos_venda SET estado='concluido',finalizado_em=now(),antes=$2::jsonb,depois=$3::jsonb,resultado=$4::jsonb WHERE id=$1",[id,antes,depois,JSON.stringify({conciliacao:v.conciliacao,cancelada:v.cancelada,quantidade:v.quantidade,valor_final_centavos:String(v.valor_final_centavos)})]);
+          await client.query("SET LOCAL app.integration_origin='continua'");
         },
         salvarOperacoes: async operacoes => {
           for (const op of operacoes) {

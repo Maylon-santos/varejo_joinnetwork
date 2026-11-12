@@ -1,6 +1,6 @@
 # Carga inicial, alterações e consistência
 
-> Cursores, snapshots, revisões e log descritos aqui são requisitos de implementação da API externa. A base atual não oferece essas garantias somente com `atualizado_em`.
+> Cursores, snapshots, revisões, log e captura transacional implementados na camada externa. Ver [semântica e limites operacionais](operacao.md). A publicação/homologação real continua pendente.
 
 ## Arquitetura de leitura
 
@@ -22,7 +22,7 @@ Reprocessamentos, complementos fiscais/pagamentos e cancelamentos precisam passa
 
 ## Duas espécies de cursor
 
-| Cursor | Origem | Validade proposta | Ao expirar |
+| Cursor | Origem | Validade | Ao expirar |
 | --- | --- | --- | --- |
 | De listagem | Primeira consulta por filtros | Snapshot congelado por 30 minutos | 410 `CURSOR_EXPIRED`; reiniciar a janela e fazer upsert |
 | De alterações | Checkpoint inicial ou página do log | Posição ainda presente na retenção de 30 dias | 410; novo bootstrap e reconciliação |

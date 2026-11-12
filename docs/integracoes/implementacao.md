@@ -1,6 +1,6 @@
 # Base de implementação e critérios de aceite
 
-> Documento de arquitetura e planejamento. Não representa abertura da API externa ou ativação de webhooks.
+> Arquitetura do contrato e critérios de aceite. OAuth, consultas, projeções, log, outbox, entregas e console delegado foram implementados e testados isoladamente em 11/11/2026. Publicação/homologação real pendentes. [Escopo entregue e roteiro operacional](operacao.md).
 
 ## Evidência do código atual
 
@@ -38,7 +38,7 @@ O mapeamento baseia-se no código do commit `c1c1eb2` e nas atualizações de 11
 | URL pública estável de fotos | Referência atual depende de venda/autorização e hospedagem | URL bruta excluída; serviço externo de imagens em fase própria |
 | SLA de atualização em segundos | Coleta sequencial, filas e dependência ERP | Retornar frescor; sem SLA comercial nesta documentação |
 
-## Componentes novos necessários
+## Componentes da arquitetura
 
 1. **Borda externa:** DNS/TLS do domínio confirmado, reverse proxy restrito, identificação de IP confiável e exposição apenas das rotas externas.
 2. **Identidade de integração:** cadastro administrativo de clientes/filiais/escopos, chave pública, revogação, trilha de auditoria e separação de ambientes.
@@ -52,7 +52,7 @@ O mapeamento baseia-se no código do commit `c1c1eb2` e nas atualizações de 11
 10. **Console e auditoria:** gestão de integrações no SuperAdmin proposto, concessões/revogação e logs de quem acessou qual recurso, resultados e tempos de resposta. [Requisitos e campos administrativos](administracao.md).
 11. **Homologação e operação:** testes de isolamento/carga/falha, métricas, alertas, procedimentos de rotação, revogação e recuperação.
 
-O armazenamento proposto pode incluir entidades como `integration_clients`, `integration_client_keys`, `integration_tokens`, `integration_grants`, `integration_resource_versions`, `integration_changes`, `integration_snapshots`, `integration_outbox`, `integration_webhooks`, `integration_deliveries` e `integration_idempotency`. Os nomes são sugestões; migrations não foram criadas por esta entrega documental.
+O armazenamento proposto pode incluir entidades como `integration_clients`, `integration_client_keys`, `integration_tokens`, `integration_grants`, `integration_resource_versions`, `integration_changes`, `integration_snapshots`, `integration_outbox`, `integration_webhooks`, `integration_deliveries` e `integration_idempotency`. A implementação usa tabelas `integration_*` na migration tenant 019; consultar operacao.md para os nomes efetivos.
 
 ## Liberação em fases
 
@@ -82,7 +82,7 @@ Não marcar API externa ou webhook concluídos por existir este contrato ou por 
 | Capacidade | Sem consulta ERP em GET; SQL cancelado; cotas distribuídas; consumidor lento sem degradar painel/worker |
 | Auditoria | Nenhum token, chave, telefone, texto pessoal ou body comercial integral nos logs |
 
-Os exemplos de assinatura desta documentação possuem testes com dados sintéticos. Isso valida o exemplo criptográfico e a coerência documental, não substitui os testes dos serviços ainda não implementados.
+Os exemplos de assinatura e os serviços têm testes com dados sintéticos. A evidência docs/validacao-implementacao-integracoes.json registra os cenários executados; operação real, carga e consumidor homologado continuam etapas próprias.
 
 ## Critérios operacionais antes de liberar clientes
 

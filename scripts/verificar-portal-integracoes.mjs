@@ -13,7 +13,7 @@ try{
   await page.setViewportSize({width,height:1000});await page.goto(url);
   await page.getByRole('heading',{name:/Seus dados, conectados/}).waitFor();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
-  assert.equal(await page.locator('.doc-article').count(),8);
+  assert.equal(await page.locator('.doc-article').count(),9);
   await page.screenshot({path:`artifacts/documentacao-integracoes/portal-${width}.png`});
   await page.locator('.copy-code').first().click();assert.ok((await page.evaluate(()=>window.__copied)).includes('api-varejo.aeropostale.joinnetwork.com.br'));
   await page.locator('#search').fill('idnfe');await page.waitForTimeout(100);
@@ -29,6 +29,6 @@ try{
   await page.locator('#field-search').fill('');
  }
  assert.deepEqual(errors,[]);assert.ok(requests.every(r=>r.startsWith('file:')));
- await writeFile('docs/validacao-portal-integracoes.json',JSON.stringify({verificadoEm:new Date().toISOString(),portalOffline:true,capitulos:8,larguras:[1440,390],semOverflow:true,buscaGeral:true,filtroDicionario:true,copiarExemplosSemClipboardReal:true,semChamadasDeRede:true,errors},null,2)+'\n');
+ await writeFile('docs/validacao-portal-integracoes.json',JSON.stringify({verificadoEm:new Date().toISOString(),portalOffline:true,capitulos:9,larguras:[1440,390],semOverflow:true,buscaGeral:true,filtroDicionario:true,copiarExemplosSemClipboardReal:true,semChamadasDeRede:true,errors},null,2)+'\n');
  console.log('Portal: computador/celular, busca, dicionário, cópia e funcionamento offline aprovados.');
 }finally{await browser?.close();}

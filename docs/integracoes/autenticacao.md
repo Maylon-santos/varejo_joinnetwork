@@ -1,6 +1,6 @@
 # Autenticação, autorização e limites
 
-> Política proposta. Nenhum cliente externo, token OAuth ou limite deste capítulo foi provisionado por esta documentação.
+> Implementado e testado isoladamente. Nenhum cliente real foi provisionado. Consulte [operação e ativação](operacao.md).
 
 ## Identidade de máquina, separada do painel
 
@@ -8,7 +8,7 @@ Cada integração terá seu próprio `client_id`, um tenant fixo, filiais conced
 
 São dois objetos diferentes:
 
-| Objeto | Quem produz | Para que serve | Validade proposta |
+| Objeto | Quem produz | Para que serve | Validade |
 | --- | --- | --- | --- |
 | Prova `client_assertion` JWT | Seu sistema, com a chave privada | Autenticar a troca em `/oauth/token` | No máximo 60 segundos, uso único |
 | `access_token` opaco | Plataforma | Autorizar chamadas aos recursos | 900 segundos |
@@ -38,7 +38,7 @@ O token de acesso não deve ser decodificado como JWT. Não haverá refresh toke
 | Payload | `exp` | Maior que `iat`, no máximo `iat + 60` |
 | Payload | `jti` | UUID aleatório novo em toda tentativa |
 
-O servidor verificará assinatura, cliente ativo, chave válida, público pretendido, janela temporal e uso único de `jti`. A tolerância de relógio proposta é de 30 segundos; `jti` deve ficar bloqueado por pelo menos 120 segundos após o aceite. Renovar a prova em retentativas do token. Rejeitar reutilização mesmo quando o pedido anterior terminou sem o consumidor receber a resposta.
+O servidor verificará assinatura, cliente ativo, chave válida, público pretendido, janela temporal e uso único de `jti`. A tolerância de relógio aplicada é de 30 segundos; `jti` deve ficar bloqueado por pelo menos 120 segundos após o aceite. Renovar a prova em retentativas do token. Rejeitar reutilização mesmo quando o pedido anterior terminou sem o consumidor receber a resposta.
 
 O [RFC 7523](https://www.rfc-editor.org/rfc/rfc7523.html) define o uso do JWT na autenticação OAuth. Os tempos, algoritmo único e proteção obrigatória contra repetição acima são decisões deste contrato.
 
@@ -88,7 +88,7 @@ Filial explicitamente não concedida resulta em 403. Um objeto que não exista d
 
 ## Administração e trilha de acesso
 
-O [console proposto de SuperAdmin](administracao.md) concentrará clientes, concessões, chaves públicas, revogação, inscrições e auditoria de API/webhook. Identidade humana administrativa é separada do token de máquina; o desenho exige MFA e registro das mudanças sensíveis. O papel global e a instrumentação ainda não existem por esta documentação.
+O [console de integrações](administracao.md) implementa gestão delegada por tenant, clientes, concessões, chaves públicas, auditoria e métricas. O acesso humano exige habilitação explícita, senha e TOTP; é separado do OAuth de máquina. O papel global SuperAdmin continua evolução. Ver [operação](operacao.md).
 
 ## Tokens e revogação
 
@@ -102,7 +102,7 @@ Mutual TLS e tokens vinculados ao certificado podem ser acrescentados em uma fas
 
 Os valores abaixo formam uma configuração de partida, não um teste de capacidade do servidor. Todos os limites aplicáveis são cumulativos; atingir qualquer um bloqueia a operação. Homologação de carga deverá confirmar ou reduzir estes números antes de produção.
 
-| Dimensão | Limite proposto | Comportamento |
+| Dimensão | Limite aplicado | Comportamento |
 | --- | --- | --- |
 | Leituras por cliente | 60 por minuto, burst de 10 | Bucket compartilhado entre rotas e tokens do cliente |
 | Leituras por tenant | 120 por minuto | Um integrador não ocupa todo o tenant |

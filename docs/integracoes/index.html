@@ -3,16 +3,17 @@
 #dicionario table{min-width:1080px}#dicionario th:nth-child(1),#dicionario td:nth-child(1){min-width:150px}#dicionario th:nth-child(2),#dicionario td:nth-child(2){min-width:115px}#dicionario th:nth-child(3),#dicionario td:nth-child(3){min-width:110px}#dicionario th:nth-child(4),#dicionario td:nth-child(4){min-width:220px}#dicionario th:nth-child(5),#dicionario td:nth-child(5){min-width:390px}.field-search small{display:block;margin-top:10px;font-size:10px;font-weight:400}
 @media(min-width:1600px){main{padding-left:60px;padding-right:60px}.doc-article{padding:40px 44px}}@media(max-width:1100px){.sidebar{width:220px;padding:28px 16px}.page{margin-left:220px}.topbar{padding:0 24px}.breadcrumb{display:none}main{padding:28px 24px}.hero{padding:28px}.doc-article{padding:27px 24px}.search input{width:250px}.stats{gap:10px}.stat{padding:14px}}@media(max-width:760px){.sidebar{position:relative;width:100%;padding:19px 20px 14px;height:auto}.brand{font-size:21px}.sidebar .caption{margin:1px 0 13px;font-size:9px}.version{position:absolute;right:16px;top:20px;font-size:9px;padding:5px 8px;margin:0}nav{flex-direction:row;overflow:auto;gap:5px}.nav-link{white-space:nowrap;font-size:10px;padding:9px 10px}.nav-link span{display:none}.sidebar-foot{display:none}.page{margin:0}.topbar{height:63px;padding:0 16px}.tools{width:100%;gap:8px}.search{flex:1;min-width:0}.search input{width:100%;font-size:12px}.print{font-size:10px;padding:10px}main{padding:21px 15px 40px}.hero{padding:24px 22px;border-radius:11px}.hero h1{font-size:30px;letter-spacing:-1px}.hero p{font-size:12px}.hero .base{font-size:9px;line-height:1.7}.hero:after{font-size:95px;right:9px;top:16px}.hero-actions a{font-size:10px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat b{font-size:23px}.stat small{font-size:10px}.draft-banner{font-size:11px}.flow{padding:19px 15px}.flow-title{font-size:10px}.flow-title span{display:none}.flow-grid{grid-template-columns:1fr 14px 1fr;gap:5px}.flow-grid .extra{display:none}.flow-node{font-size:10px;padding:14px 7px}.flow-node small{font-size:9px}.flow-note{font-size:10px}.doc-article{padding:25px 19px;scroll-margin-top:80px}.doc-article h1{font-size:24px}.doc-article h2{font-size:18px}.doc-article p,.doc-article li{font-size:12px}.code-block pre{padding:15px;font-size:10px}.doc-section{margin-top:23px;padding-top:24px}.permalink{opacity:1;font-size:10px}.chapter{font-size:9px}table{font-size:10px;min-width:620px}td,th{padding:10px}.note{font-size:11px}.footer{font-size:10px}}@media(prefers-reduced-motion:reduce){:root{scroll-behavior:auto}}@media print{#dicionario table{min-width:0}#dicionario th,#dicionario td{min-width:0!important}.sidebar,.topbar,.hero-actions,.copy-code,.permalink,.field-search,.search-status,.empty-search{display:none!important}.page{margin:0}main{max-width:none;padding:0}.hero{break-inside:avoid;background:#f3f7f7;padding:22px}.hero:after{display:none}.doc-article{border:0;padding:20px 0;margin:0;box-shadow:none;break-before:page}.doc-section{break-inside:auto}body{background:white}.stats{break-inside:avoid}.table-wrap{overflow:visible;border-radius:0}table{min-width:0;font-size:8px}td,th{padding:7px;overflow-wrap:anywhere}.code-block{background:#f6f8fa!important}.code-head{background:#e9eef2;color:#233d55}.code-block pre{white-space:pre-wrap;overflow:visible;max-height:none;font-size:8px}.code-block code{white-space:pre-wrap;color:#20364d}.flow{display:none}.schema-hidden{display:block!important}[hidden].doc-article,[hidden].doc-section{display:block!important}a{color:#183f5a}.footer{margin-top:20px}}
 </style></head><body>
-<a class="skip" href="#content">Ir para o conteúdo</a><aside class="sidebar"><div class="brand">Join <b>Network</b></div><div class="caption">Developer Guide</div><div class="version"><i></i>Contrato proposto · v0.1</div><nav aria-label="Capítulos"><a class="nav-link" href="#visao-geral"><span>01</span>Visão geral</a><a class="nav-link" href="#autenticacao"><span>02</span>Acesso e segurança</a><a class="nav-link" href="#consultas"><span>03</span>Consultas REST</a><a class="nav-link" href="#sincronizacao"><span>04</span>Sincronização</a><a class="nav-link" href="#webhooks"><span>05</span>Webhooks</a><a class="nav-link" href="#administracao"><span>06</span>SuperAdmin e auditoria</a><a class="nav-link" href="#dicionario"><span>07</span>Dicionário de campos</a><a class="nav-link" href="#implementacao"><span>08</span>Implementação</a></nav><div class="sidebar-foot">API de integração · Varejo<a href="../../apis/integracoes.openapi.json" download>↗ Baixar OpenAPI 3.1</a><a href="README.md">↗ Guia em Markdown</a><p>Referência técnica<br>11 novembro 2026</p></div></aside>
+<a class="skip" href="#content">Ir para o conteúdo</a><aside class="sidebar"><div class="brand">Join <b>Network</b></div><div class="caption">Developer Guide</div><div class="version"><i></i>Implementação · v0.1</div><nav aria-label="Capítulos"><a class="nav-link" href="#visao-geral"><span>01</span>Visão geral</a><a class="nav-link" href="#autenticacao"><span>02</span>Acesso e segurança</a><a class="nav-link" href="#consultas"><span>03</span>Consultas REST</a><a class="nav-link" href="#sincronizacao"><span>04</span>Sincronização</a><a class="nav-link" href="#webhooks"><span>05</span>Webhooks</a><a class="nav-link" href="#administracao"><span>06</span>SuperAdmin e auditoria</a><a class="nav-link" href="#dicionario"><span>07</span>Dicionário de campos</a><a class="nav-link" href="#implementacao"><span>08</span>Arquitetura e aceite</a><a class="nav-link" href="#operacao"><span>09</span>Operação e ativação</a></nav><div class="sidebar-foot">API de integração · Varejo<a href="../../apis/integracoes.openapi.json" download>↗ Baixar OpenAPI 3.1</a><a href="README.md">↗ Guia em Markdown</a><p>Referência técnica<br>11 novembro 2026</p></div></aside>
 <div class="page"><header class="topbar"><div class="breadcrumb">Developers <span aria-hidden="true">/</span> <b>Integrações de varejo</b></div><div class="tools"><label class="search"><span class="sr-only" hidden>Buscar na documentação</span><input id="search" aria-label="Buscar na documentação" type="search" placeholder="Buscar na documentação…  /" autocomplete="off"></label><button id="print" class="print" type="button">Imprimir / PDF</button></div></header>
 <main id="content"><section class="hero"><div class="eyebrow">API + Webhooks · Integrações de varejo</div><h1>Seus dados, conectados<br>com segurança.</h1><p>Consulte vendas, filiais, produtos e estoque. Receba eventos de venda e mantenha sua integração consistente, mesmo com correções e cancelamentos.</p><div class="base">https://api-varejo.aeropostale.joinnetwork.com.br</div><div class="hero-actions"><a href="#autenticacao">Começar pelo acesso →</a><a class="secondary" href="../../apis/integracoes.openapi.json" download>Baixar OpenAPI</a><a class="secondary" href="#webhooks">Explorar webhooks</a></div></section>
-<div class="stats"><div class="stat"><b>21</b><small>operações propostas</small></div><div class="stat"><b>277</b><small>campos documentados</small></div><div class="stat"><b>4</b><small>recursos comerciais</small></div><div class="stat"><b>2</b><small>modelos de integração</small></div></div>
-<div class="draft-banner"><strong>Desenho técnico — ainda não implementado.</strong> O domínio foi confirmado; rotas externas, OAuth e webhooks dependem de desenvolvimento e homologação. Todos os dados de exemplo são fictícios.</div>
+<div class="stats"><div class="stat"><b>21</b><small>operações implementadas</small></div><div class="stat"><b>277</b><small>campos documentados</small></div><div class="stat"><b>4</b><small>recursos comerciais</small></div><div class="stat"><b>2</b><small>modelos de integração</small></div></div>
+<div class="draft-banner"><strong>Implementado e testado em ambiente isolado.</strong> A publicação do domínio e a homologação com um consumidor ainda estão pendentes. Todos os dados de exemplo são fictícios.</div>
 <section class="flow" aria-label="Fluxo: sistema integrador consulta API com GET e recebe notificações assinadas por webhook"><div class="flow-title"><b>Uma base de dados. Duas formas de conectar.</b><span>Consulta + notificação + reconciliação</span></div><div class="flow-grid"><div class="flow-node">Seu sistema<small>Token próprio · inbox durável</small></div><div class="arrow">⇄</div><div class="flow-node focus">API + Webhooks<small>GET protegido · POST assinado</small></div><div class="arrow extra">←</div><div class="flow-node extra">Projeção local<small>Dados importados · revisões</small></div></div><div class="flow-note">GET externo não consulta o ERP. Eventos podem repetir ou chegar fora de ordem: a revisão protege a consistência.</div></section>
 <div id="search-status" class="search-status" aria-live="polite"></div><div id="no-results" class="empty-search" hidden>Nenhum resultado. Tente “nota fiscal”, “saldo” ou “assinatura”.</div><article id="visao-geral" class="doc-article" data-title="Visão geral"><div class="chapter">CAPÍTULO 01</div><h1 id="visao-geral-join-network-api-para-desenvolvedores">Join Network · API para desenvolvedores<a class="permalink" href="#visao-geral-join-network-api-para-desenvolvedores" aria-label="Link para esta seção">#</a></h1>
-<aside class="note">Versão 0.1.0 • desenho técnico de 11/11/2026 • contrato proposto, ainda não implementado.</aside>
-<p>Integre vendas, filiais, produtos e estoque com consultas autenticadas e notificações de vendas. Este material estabelece a base para implementar a API externa, cadastrar integrações e homologar consumidores. Os exemplos são inteiramente fictícios.</p>
+<aside class="note">Versão 0.1.0 • implementação e testes isolados em 11/11/2026 • publicação externa pendente.</aside>
+<p>Integre vendas, filiais, produtos e estoque com consultas autenticadas e notificações de vendas. Este material documenta a implementação da API externa e orienta o cadastro e a homologação de consumidores. Os exemplos são inteiramente fictícios.</p>
 <p><strong>Domínio confirmado por Maylon:</strong> <code>api-varejo.aeropostale.joinnetwork.com.br</code>. A confirmação do nome não representa criação de DNS, certificado, credenciais ou serviço. As rotas deste guia não estão publicadas.</p>
+<p><a href="#operacao">Operação da implementação</a>: serviços, console com MFA, configuração, GitHub/CI, ativação e limites conhecidos. O deploy continua via SSH; o push no GitHub executa validação automática, sem publicar a aplicação.</p>
 <section class="doc-section" data-heading="Escolha como integrar">
 <h2 id="visao-geral-escolha-como-integrar">Escolha como integrar<a class="permalink" href="#visao-geral-escolha-como-integrar" aria-label="Link para esta seção">#</a></h2>
 <div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Modelo</th><th>Quem inicia</th><th>Quando usar</th><th>Como recuperar perdas</th></tr></thead><tbody>
@@ -35,17 +36,17 @@
 </ol>
 <p>Abra também o <a href="index.html">portal visual</a>, o <a href="../../apis/integracoes.openapi.json">contrato OpenAPI 3.1</a> e os <a href="exemplos/manifesto.json">exemplos JSON</a>. O contrato pode ser importado em ferramentas que suportem OpenAPI 3.1; a autenticação por prova JWT pode exigir configuração adicional da ferramenta.</p>
 </section>
-<section class="doc-section" data-heading="O que existe hoje e o que está sendo desenhado">
-<h2 id="visao-geral-o-que-existe-hoje-e-o-que-esta-sendo-desenhado">O que existe hoje e o que está sendo desenhado<a class="permalink" href="#visao-geral-o-que-existe-hoje-e-o-que-esta-sendo-desenhado" aria-label="Link para esta seção">#</a></h2>
+<section class="doc-section" data-heading="O que está implementado e o que depende de ativação">
+<h2 id="visao-geral-o-que-esta-implementado-e-o-que-depende-de-ativacao">O que está implementado e o que depende de ativação<a class="permalink" href="#visao-geral-o-que-esta-implementado-e-o-que-depende-de-ativacao" aria-label="Link para esta seção">#</a></h2>
 <div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Capacidade</th><th>Situação em 11/11/2026</th></tr></thead><tbody>
 <tr><td>Dados de vendas, itens, pagamentos, nota fiscal, filiais e catálogo no banco local</td><td>Implementados, com cobertura parcial e ressalvas descritas neste guia</td></tr>
 <tr><td>API interna <code>/api/v1</code> do painel e autorização por usuário/filial</td><td>Implementadas para o painel</td></tr>
 <tr><td>Autenticação da API interna</td><td>Login de usuário, sessão Bearer opaca de oito horas; não é Client Credentials</td></tr>
-<tr><td>API externa <code>/v1</code> neste domínio</td><td>Proposta; não implementada</td></tr>
-<tr><td>OAuth de integrações, cadastro de clientes e escopos externos</td><td>Propostos; não implementados</td></tr>
-<tr><td>Revisões externas, cursores estáveis e log incremental</td><td>Propostos; não implementados</td></tr>
-<tr><td>Webhooks, outbox, assinaturas e painel de entregas</td><td>Propostos; não implementados</td></tr>
-<tr><td>Limites quantitativos deste guia</td><td>Política inicial proposta; precisa de teste de carga antes de liberar produção</td></tr>
+<tr><td>API externa <code>/v1</code> neste domínio</td><td>Implementada e testada isoladamente; domínio ainda não ativado</td></tr>
+<tr><td>OAuth de integrações, cadastro de clientes e escopos externos</td><td>Implementados; nenhum cliente real provisionado</td></tr>
+<tr><td>Revisões externas, cursores estáveis e log incremental</td><td>Implementados com projeções, snapshots cifrados e captura transacional</td></tr>
+<tr><td>Webhooks, outbox, assinaturas e painel de entregas</td><td>Implementados; testes com consumidor simulado, sem disparos reais</td></tr>
+<tr><td>Limites quantitativos deste guia</td><td>Aplicados pela implementação; carga/capacidade real pendentes antes de liberar produção</td></tr>
 </tbody></table></div>
 <p>Não compartilhe login Admin, token do painel ou credenciais do ERP com um integrador. A documentação externa descreve uma camada própria de acesso, sem conceder permissões administrativas do painel.</p>
 </section>
@@ -60,7 +61,7 @@
 <li>Salve um checkpoint do log antes da carga inicial. Importe as janelas e depois consuma as alterações desde o checkpoint.</li>
 <li>Se precisar de notificações, cadastre um destino de webhook, valide o teste assinado e então ative-o.</li>
 </ol>
-<p>Exemplos de autenticação e polling: <a href="exemplos/gerar_assertion.py">prova JWT em Python</a>, <a href="exemplos/consultas.sh">primeiras consultas em cURL</a> e <a href="exemplos/consumir-alteracoes.mjs">polling incremental em Node.js</a>. Eles são referências de implementação, não SDKs oficiais ou clientes para a API atual.</p>
+<p>Exemplos de autenticação e polling: <a href="exemplos/gerar_assertion.py">prova JWT em Python</a>, <a href="exemplos/consultas.sh">primeiras consultas em cURL</a> e <a href="exemplos/consumir-alteracoes.mjs">polling incremental em Node.js</a>. Eles são referências de implementação, não SDKs oficiais; a liberação de um cliente real depende da homologação.</p>
 </section>
 <section class="doc-section" data-heading="Convenções que evitam erros de integração">
 <h2 id="visao-geral-convencoes-que-evitam-erros-de-integracao">Convenções que evitam erros de integração<a class="permalink" href="#visao-geral-convencoes-que-evitam-erros-de-integracao" aria-label="Link para esta seção">#</a></h2>
@@ -86,7 +87,7 @@
 <section class="doc-section" data-heading="Downloads e exemplos">
 <h2 id="visao-geral-downloads-e-exemplos">Downloads e exemplos<a class="permalink" href="#visao-geral-downloads-e-exemplos" aria-label="Link para esta seção">#</a></h2>
 <div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Artefato</th><th>Uso</th></tr></thead><tbody>
-<tr><td><a href="../../apis/integracoes.openapi.json">OpenAPI</a></td><td>Contrato de rotas, segurança e schemas propostos</td></tr>
+<tr><td><a href="../../apis/integracoes.openapi.json">OpenAPI</a></td><td>Contrato de rotas, segurança e schemas implementados</td></tr>
 <tr><td><a href="exemplos/venda.json">Venda detalhada</a></td><td>Cabeçalho, nota fiscal, condições e cobertura</td></tr>
 <tr><td><a href="exemplos/itens.json">Itens</a></td><td>Preços, quantidade e desconto informado</td></tr>
 <tr><td><a href="exemplos/pagamentos.json">Pagamentos</a></td><td>Parcelas sem assumir liquidação</td></tr>
@@ -99,12 +100,12 @@
 </tbody></table></div>
 </section></article>
 <article id="autenticacao" class="doc-article" data-title="Acesso e segurança"><div class="chapter">CAPÍTULO 02</div><h1 id="autenticacao-autenticacao-autorizacao-e-limites">Autenticação, autorização e limites<a class="permalink" href="#autenticacao-autenticacao-autorizacao-e-limites" aria-label="Link para esta seção">#</a></h1>
-<aside class="note">Política proposta. Nenhum cliente externo, token OAuth ou limite deste capítulo foi provisionado por esta documentação.</aside>
+<aside class="note">Implementado e testado isoladamente. Nenhum cliente real foi provisionado. Consulte <a href="#operacao">operação e ativação</a>.</aside>
 <section class="doc-section" data-heading="Identidade de máquina, separada do painel">
 <h2 id="autenticacao-identidade-de-maquina-separada-do-painel">Identidade de máquina, separada do painel<a class="permalink" href="#autenticacao-identidade-de-maquina-separada-do-painel" aria-label="Link para esta seção">#</a></h2>
 <p>Cada integração terá seu próprio <code>client_id</code>, um tenant fixo, filiais concedidas, escopos e estado ativo/revogado. O fluxo é OAuth 2.0 Client Credentials, destinado a sistemas capazes de proteger credenciais. A autenticação do cliente será <code>private_key_jwt</code>, com prova assimétrica RS256. Isso segue a preferência por autenticação assimétrica da <a href="https://www.rfc-editor.org/rfc/rfc9700.html#section-2.5" target="_blank" rel="noopener noreferrer">BCP de segurança OAuth</a>.</p>
 <p>São dois objetos diferentes:</p>
-<div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Objeto</th><th>Quem produz</th><th>Para que serve</th><th>Validade proposta</th></tr></thead><tbody>
+<div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Objeto</th><th>Quem produz</th><th>Para que serve</th><th>Validade</th></tr></thead><tbody>
 <tr><td>Prova <code>client_assertion</code> JWT</td><td>Seu sistema, com a chave privada</td><td>Autenticar a troca em <code>/oauth/token</code></td><td>No máximo 60 segundos, uso único</td></tr>
 <tr><td><code>access_token</code> opaco</td><td>Plataforma</td><td>Autorizar chamadas aos recursos</td><td>900 segundos</td></tr>
 </tbody></table></div>
@@ -134,7 +135,7 @@
 <tr><td>Payload</td><td><code>exp</code></td><td>Maior que <code>iat</code>, no máximo <code>iat + 60</code></td></tr>
 <tr><td>Payload</td><td><code>jti</code></td><td>UUID aleatório novo em toda tentativa</td></tr>
 </tbody></table></div>
-<p>O servidor verificará assinatura, cliente ativo, chave válida, público pretendido, janela temporal e uso único de <code>jti</code>. A tolerância de relógio proposta é de 30 segundos; <code>jti</code> deve ficar bloqueado por pelo menos 120 segundos após o aceite. Renovar a prova em retentativas do token. Rejeitar reutilização mesmo quando o pedido anterior terminou sem o consumidor receber a resposta.</p>
+<p>O servidor verificará assinatura, cliente ativo, chave válida, público pretendido, janela temporal e uso único de <code>jti</code>. A tolerância de relógio aplicada é de 30 segundos; <code>jti</code> deve ficar bloqueado por pelo menos 120 segundos após o aceite. Renovar a prova em retentativas do token. Rejeitar reutilização mesmo quando o pedido anterior terminou sem o consumidor receber a resposta.</p>
 <p>O <a href="https://www.rfc-editor.org/rfc/rfc7523.html" target="_blank" rel="noopener noreferrer">RFC 7523</a> define o uso do JWT na autenticação OAuth. Os tempos, algoritmo único e proteção obrigatória contra repetição acima são decisões deste contrato.</p>
 </section>
 <section class="doc-section" data-heading="Trocar a prova por token">
@@ -173,7 +174,7 @@
 </section>
 <section class="doc-section" data-heading="Administração e trilha de acesso">
 <h2 id="autenticacao-administracao-e-trilha-de-acesso">Administração e trilha de acesso<a class="permalink" href="#autenticacao-administracao-e-trilha-de-acesso" aria-label="Link para esta seção">#</a></h2>
-<p>O <a href="#administracao">console proposto de SuperAdmin</a> concentrará clientes, concessões, chaves públicas, revogação, inscrições e auditoria de API/webhook. Identidade humana administrativa é separada do token de máquina; o desenho exige MFA e registro das mudanças sensíveis. O papel global e a instrumentação ainda não existem por esta documentação.</p>
+<p>O <a href="#administracao">console de integrações</a> implementa gestão delegada por tenant, clientes, concessões, chaves públicas, auditoria e métricas. O acesso humano exige habilitação explícita, senha e TOTP; é separado do OAuth de máquina. O papel global SuperAdmin continua evolução. Ver <a href="#operacao">operação</a>.</p>
 </section>
 <section class="doc-section" data-heading="Tokens e revogação">
 <h2 id="autenticacao-tokens-e-revogacao">Tokens e revogação<a class="permalink" href="#autenticacao-tokens-e-revogacao" aria-label="Link para esta seção">#</a></h2>
@@ -184,7 +185,7 @@
 <section class="doc-section" data-heading="Política inicial de limites">
 <h2 id="autenticacao-politica-inicial-de-limites">Política inicial de limites<a class="permalink" href="#autenticacao-politica-inicial-de-limites" aria-label="Link para esta seção">#</a></h2>
 <p>Os valores abaixo formam uma configuração de partida, não um teste de capacidade do servidor. Todos os limites aplicáveis são cumulativos; atingir qualquer um bloqueia a operação. Homologação de carga deverá confirmar ou reduzir estes números antes de produção.</p>
-<div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Dimensão</th><th>Limite proposto</th><th>Comportamento</th></tr></thead><tbody>
+<div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Dimensão</th><th>Limite aplicado</th><th>Comportamento</th></tr></thead><tbody>
 <tr><td>Leituras por cliente</td><td>60 por minuto, burst de 10</td><td>Bucket compartilhado entre rotas e tokens do cliente</td></tr>
 <tr><td>Leituras por tenant</td><td>120 por minuto</td><td>Um integrador não ocupa todo o tenant</td></tr>
 <tr><td>Leituras por instância</td><td>240 por minuto</td><td>Proteção adicional da capacidade compartilhada</td></tr>
@@ -242,7 +243,7 @@ Cache-Control: no-store</code></pre></div>
 <p>Eventos pessoais, bodies, tokens e assinatura não devem ser registrados integralmente em observabilidade. Registrar identidade da integração, rota parametrizada, request_id, duração, status e decisão de autorização. A política de retenção dos metadados de auditoria deve ser aprovada antes da operação; 90 dias é uma proposta inicial, não declaração de conformidade legal.</p>
 </section></article>
 <article id="consultas" class="doc-article" data-title="Consultas REST"><div class="chapter">CAPÍTULO 03</div><h1 id="consultas-consultas-rest-e-interpretacao-dos-dados">Consultas REST e interpretação dos dados<a class="permalink" href="#consultas-consultas-rest-e-interpretacao-dos-dados" aria-label="Link para esta seção">#</a></h1>
-<aside class="note">Todas as rotas deste capítulo pertencem ao contrato externo proposto. Não são aliases já disponíveis da API interna do painel.</aside>
+<aside class="note">Rotas externas implementadas e testadas em ambiente isolado. A publicação no domínio ainda está pendente; <code>/api/v1</code> continua sendo a API interna. Veja <a href="#operacao">operação</a>.</aside>
 <section class="doc-section" data-heading="Endereço e envelope">
 <h2 id="consultas-endereco-e-envelope">Endereço e envelope<a class="permalink" href="#consultas-endereco-e-envelope" aria-label="Link para esta seção">#</a></h2>
 <div class="code-block"><div class="code-head"><span>text</span><button class="copy-code" type="button" aria-label="Copiar exemplo">Copiar</button></div><pre><code>Base: https://api-varejo.aeropostale.joinnetwork.com.br
@@ -262,7 +263,7 @@ Accept: application/json</code></pre></div>
     &quot;recurso_versao&quot;: null
   }
 }</code></pre></div>
-<p>Campos de metadados e revisões são novos componentes da proposta. Os timestamps de exemplo não devem ser usados como relógio para autenticação real.</p>
+<p>Campos de metadados e revisões são componentes da camada externa. Os timestamps de exemplo não devem ser usados como relógio para autenticação real.</p>
 </section>
 <section class="doc-section" data-heading="Catálogo de rotas">
 <h2 id="consultas-catalogo-de-rotas">Catálogo de rotas<a class="permalink" href="#consultas-catalogo-de-rotas" aria-label="Link para esta seção">#</a></h2>
@@ -304,7 +305,7 @@ Accept: application/json</code></pre></div>
   --data-urlencode &#x27;estado=todas&#x27; \
   --data-urlencode &#x27;tipo_operacao=S&#x27; \
   --data-urlencode &#x27;limite=100&#x27;</code></pre></div>
-<p>A identidade de uma venda é o conjunto <strong>tenant + filial + tipo de operação + código de operação</strong>. O ID externo proposto <code>vnd_1001_S_900001</code> codifica os três últimos componentes, mas não substitui autorização. O consumidor deve manter o namespace do tenant/credencial: o mesmo texto de ID em outro tenant não identifica a mesma venda.</p>
+<p>A identidade de uma venda é o conjunto <strong>tenant + filial + tipo de operação + código de operação</strong>. O ID externo <code>vnd_1001_S_900001</code> codifica os três últimos componentes, mas não substitui autorização. O consumidor deve manter o namespace do tenant/credencial: o mesmo texto de ID em outro tenant não identifica a mesma venda.</p>
 <p>Não usar número de nota, código de barras, nome de cliente ou código da operação isolado como chave única. A nota pode não estar preenchida e uma operação pode existir em filiais/tipos diferentes.</p>
 </section>
 <section class="doc-section" data-heading="Ler detalhe, itens e pagamentos sem misturar revisões">
@@ -319,7 +320,7 @@ Authorization: Bearer &lt;token&gt;
 If-Match: &quot;vnd_1001_S_900001:12&quot;</code></pre></div>
 <p>O detalhe fornece <code>versao</code>, <code>itens_url</code> e <code>pagamentos_url</code>. Para abrir as coleções, envie o ETag recebido em <code>If-Match</code>. Se a venda mudou antes de iniciar o snapshot dos filhos, o servidor responde 412. Reabra o detalhe e reinicie a coleção inteira, sem misturar itens de versões diferentes.</p>
 <p>Dentro do snapshot de filhos, as páginas ficam congeladas na revisão indicada por <code>meta.recurso_versao</code> por 30 minutos. A autorização continua sendo revalidada a cada página. <code>ordem</code> é uma posição nesta revisão, não identidade permanente do item. O consumidor deve substituir a coleção da revisão de maneira atômica após terminar todas as páginas.</p>
-<p>Se itens/pagamentos estiverem pendentes de importação, não devolver uma lista vazia que pareça definitiva: a proposta prevê 409 <code>RESOURCE_NOT_READY</code>, orientando consultar <code>cobertura</code> e tentar mais tarde com backoff. Coleção conhecida e vazia é 200 com <code>data: []</code>. Um campo ausente na origem não deve ser inventado para permitir conferência.</p>
+<p>Se itens/pagamentos estiverem pendentes de importação, não devolver uma lista vazia que pareça definitiva: a implementação retorna 409 <code>RESOURCE_NOT_READY</code>, orientando consultar <code>cobertura</code> e tentar mais tarde com backoff. Coleção conhecida e vazia é 200 com <code>data: []</code>. Um campo ausente na origem não deve ser inventado para permitir conferência.</p>
 <p>Veja <a href="exemplos/venda.json">venda completa</a>, <a href="exemplos/itens.json">itens</a> e <a href="exemplos/pagamentos.json">pagamentos</a>.</p>
 </section>
 <section class="doc-section" data-heading="Valores, desconto e conferência">
@@ -397,7 +398,7 @@ const esperado = venda.ajuste_centavos === null
 <p><code>data_atualizacao_erp</code>, <code>consultado_em</code> e <code>ultimo_sucesso_em</code> têm origens diferentes. Atraso na coleta deve ser mostrado como atraso, sem substituir saldo por zero. Histórico observado de estoque não equivale a todos os movimentos nem à posição de qualquer data arbitrária; essa consulta histórica está fora da primeira versão.</p>
 </section></article>
 <article id="sincronizacao" class="doc-article" data-title="Sincronização"><div class="chapter">CAPÍTULO 04</div><h1 id="sincronizacao-carga-inicial-alteracoes-e-consistencia">Carga inicial, alterações e consistência<a class="permalink" href="#sincronizacao-carga-inicial-alteracoes-e-consistencia" aria-label="Link para esta seção">#</a></h1>
-<aside class="note">Cursores, snapshots, revisões e log descritos aqui são requisitos de implementação da API externa. A base atual não oferece essas garantias somente com <code>atualizado_em</code>.</aside>
+<aside class="note">Cursores, snapshots, revisões, log e captura transacional implementados na camada externa. Ver <a href="#operacao">semântica e limites operacionais</a>. A publicação/homologação real continua pendente.</aside>
 <section class="doc-section" data-heading="Arquitetura de leitura">
 <h2 id="sincronizacao-arquitetura-de-leitura">Arquitetura de leitura<a class="permalink" href="#sincronizacao-arquitetura-de-leitura" aria-label="Link para esta seção">#</a></h2>
 <p>O integrador consulta dados locais já importados. Nenhum GET externo deverá iniciar consulta ao ERP, reprocessamento ou recarga de estoque. A coleta continua em seu worker; a API externa terá admissão e pool próprios para preservar painel e sincronização.</p>
@@ -414,7 +415,7 @@ const esperado = venda.ajuste_centavos === null
 </section>
 <section class="doc-section" data-heading="Duas espécies de cursor">
 <h2 id="sincronizacao-duas-especies-de-cursor">Duas espécies de cursor<a class="permalink" href="#sincronizacao-duas-especies-de-cursor" aria-label="Link para esta seção">#</a></h2>
-<div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Cursor</th><th>Origem</th><th>Validade proposta</th><th>Ao expirar</th></tr></thead><tbody>
+<div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Cursor</th><th>Origem</th><th>Validade</th><th>Ao expirar</th></tr></thead><tbody>
 <tr><td>De listagem</td><td>Primeira consulta por filtros</td><td>Snapshot congelado por 30 minutos</td><td>410 <code>CURSOR_EXPIRED</code>; reiniciar a janela e fazer upsert</td></tr>
 <tr><td>De alterações</td><td>Checkpoint inicial ou página do log</td><td>Posição ainda presente na retenção de 30 dias</td><td>410; novo bootstrap e reconciliação</td></tr>
 </tbody></table></div>
@@ -481,7 +482,7 @@ A consulta já devolve versão 14 → aplicar a versão 14, não regredir para 1
 <p>Programar uma reconciliação periódica de janelas recentes e de estoque completo, dentro das cotas, ajuda a detectar falhas do próprio consumidor. Ela não substitui homologação com o ERP nem permite ultrapassar a retenção prometida sem novo bootstrap.</p>
 </section></article>
 <article id="webhooks" class="doc-article" data-title="Webhooks"><div class="chapter">CAPÍTULO 05</div><h1 id="webhooks-webhooks-de-vendas">Webhooks de vendas<a class="permalink" href="#webhooks-webhooks-de-vendas" aria-label="Link para esta seção">#</a></h1>
-<aside class="note">Funcionalidade proposta. Esta documentação não cadastra destinos nem dispara mensagens ou vendas reais.</aside>
+<aside class="note">Outbox, entrega e controles implementados e testados com consumidor simulado. Nenhum destino real cadastrado ou venda enviada. Ver <a href="#operacao">ativação e limites</a>.</aside>
 <section class="doc-section" data-heading="Eventos e conteúdo">
 <h2 id="webhooks-eventos-e-conteudo">Eventos e conteúdo<a class="permalink" href="#webhooks-eventos-e-conteudo" aria-label="Link para esta seção">#</a></h2>
 <div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Tipo</th><th>Gatilho local confirmado</th><th>O que não significa</th></tr></thead><tbody>
@@ -603,7 +604,7 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <p>Não aceitar headers de autenticação arbitrários por inscrição nem reutilizar o access token de API no POST de webhook. O segredo de assinatura é distinto das credenciais OAuth. O corpo da resposta do destinatário não será exibido em logs de suporte, pois pode conter segredos.</p>
 </section></article>
 <article id="administracao" class="doc-article" data-title="SuperAdmin e auditoria"><div class="chapter">CAPÍTULO 06</div><h1 id="administracao-console-de-superadmin-e-auditoria">Console de SuperAdmin e auditoria<a class="permalink" href="#administracao-console-de-superadmin-e-auditoria" aria-label="Link para esta seção">#</a></h1>
-<aside class="note">Requisito de produto acrescentado ao rascunho por Maylon. Console, papel SuperAdmin, permissões administrativas e instrumentação abaixo são propostas; não foram implementados por esta documentação. O Admin atual do painel não deve ser tratado automaticamente como administrador global de todos os tenants.</aside>
+<aside class="note">Requisitos de produto de Maylon. Gestão delegada de um tenant com MFA, clientes/chaves, logs/métricas e ações de webhook está implementada. SuperAdmin global, exportação de logs e campos administrativos adicionais continuam evoluções. A tabela de requisitos abaixo inclui essas evoluções; o escopo entregue está em <a href="#operacao">operação</a>.</aside>
 <section class="doc-section" data-heading="O que o console precisa responder">
 <h2 id="administracao-o-que-o-console-precisa-responder">O que o console precisa responder<a class="permalink" href="#administracao-o-que-o-console-precisa-responder" aria-label="Link para esta seção">#</a></h2>
 <p>O SuperAdmin deverá conseguir identificar <strong>qual integração acessou</strong>, <strong>qual recurso/filial consultou</strong>, <strong>quando acessou</strong>, <strong>qual foi o resultado</strong> e <strong>quanto tempo a aplicação levou para responder</strong>. Para webhook, deve identificar o cliente proprietário, o destino autorizado, o evento, cada tentativa e seu resultado.</p>
@@ -631,7 +632,7 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td>Leitura de auditoria</td><td>Responsável técnico/segurança autorizado</td><td>Sem alteração de concessões ou acesso a segredos</td></tr>
 <tr><td>Métricas operacionais</td><td>Equipe de operação autorizada</td><td>Preferir agregados; detalhes de acesso exigem concessão própria</td></tr>
 </tbody></table></div>
-<p>Exigir MFA para administração humana e nova confirmação forte em concessões, revogação de chave, rotação de segredo e exportação de logs. Este é um requisito futuro; o login atual por senha do painel não implementa MFA ou um papel global SuperAdmin.</p>
+<p>Exigir MFA para administração humana e nova confirmação forte em concessões, revogação de chave, rotação de segredo e exportação de logs. O console delegado implementa TOTP e step-up de cinco minutos, sem alterar o login comum do painel. Não existe papel global SuperAdmin.</p>
 <p>Registrar o ator humano e o tenant alvo em cada ação. A ampliação de acesso não pode ser aprovada apenas pela própria credencial de integração. Evitar ações globais por padrão; acesso excepcional deve ter motivo e trilha específica. Redução/revogação precisa impedir novas chamadas, cursores e entregas que perderam autorização.</p>
 </section>
 <section class="doc-section" data-heading="Cadastro da integração">
@@ -735,7 +736,7 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 </ol>
 </section></article>
 <article id="dicionario" class="doc-article" data-title="Dicionário de campos"><div class="chapter">CAPÍTULO 07</div><h1 id="dicionario-dicionario-de-campos">Dicionário de campos<a class="permalink" href="#dicionario-dicionario-de-campos" aria-label="Link para esta seção">#</a></h1>
-<aside class="note">Contrato proposto • versão 0.1.0 • não implementado. Campos mapeados existem na base; envelopes, revisões e segurança externos dependem de desenvolvimento.</aside>
+<aside class="note">Contrato 0.1.0 implementado e testado em ambiente isolado. Ainda não publicado. Confira operacao.md para ativação e limites conhecidos.</aside>
 <p>Todos os exemplos são fictícios. Obrigatório significa presença da chave no contrato; uma chave obrigatória pode aceitar null. Campos pessoais opcionais são omitidos quando não autorizados. Clientes devem tolerar propriedades novas em respostas.</p>
 <label class="field-search">Buscar campo ou objeto <input id="field-search" type="search" placeholder="Ex.: idnfe, saldo, NotaFiscal…" autocomplete="off"><small>As tabelas rolam horizontalmente para mostrar a origem e a descrição completa dos campos.</small></label><section class="doc-section" data-heading="Paginacao">
 <h2 id="dicionario-paginacao">Paginacao<a class="permalink" href="#dicionario-paginacao" aria-label="Link para esta seção">#</a></h2>
@@ -749,7 +750,7 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 </section>
 <section class="doc-section" data-heading="MetaConsulta">
 <h2 id="dicionario-metaconsulta">MetaConsulta<a class="permalink" href="#dicionario-metaconsulta" aria-label="Link para esta seção">#</a></h2>
-<p>Metadados do contrato externo; ainda precisam ser implementados.</p>
+<p>Metadados da camada externa implementada.</p>
 <div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Presença</th><th>Origem / disponibilidade</th><th>Descrição e restrições</th></tr></thead><tbody>
 <tr><td><code>request_id</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Identificador para suporte e correlação, sem credenciais. format=&quot;uuid&quot;.</td></tr>
 <tr><td><code>gerado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante de produção da resposta, não da venda. format=&quot;date-time&quot;.</td></tr>
@@ -853,8 +854,8 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td><code>vendedor</code></td><td>Vendedor</td><td>obrigatória</td><td>operacoes.vendedor_codigo/vendedor_nome</td><td>Identificação disponível; nome exige permissão específica.</td></tr>
 <tr><td><code>evento_codigo</code></td><td>string / null</td><td>obrigatória</td><td>operacoes.evento_codigo</td><td>Código do evento ERP; não determina sozinho o sinal financeiro.</td></tr>
 <tr><td><code>conferencia</code></td><td>Conferencia</td><td>obrigatória</td><td>novo: camada externa</td><td>Conferência, não homologação de faturamento.</td></tr>
-<tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Revisão monotônica do recurso externo, a implementar; não é trans_id do ERP. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
-<tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante de publicação desta revisão externa, a implementar. Não reutilizar cada reimportação como alteração comercial. format=&quot;date-time&quot;.</td></tr>
+<tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Revisão monotônica do recurso externo, não é trans_id do ERP. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
+<tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante de publicação desta revisão externa. Não reutilizar cada reimportação como alteração comercial. format=&quot;date-time&quot;.</td></tr>
 </tbody></table></div>
 </section>
 <section class="doc-section" data-heading="Venda">
@@ -873,8 +874,8 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td><code>vendedor</code></td><td>Vendedor</td><td>obrigatória</td><td>operacoes.vendedor_codigo/vendedor_nome</td><td>Identificação disponível; nome exige permissão específica.</td></tr>
 <tr><td><code>evento_codigo</code></td><td>string / null</td><td>obrigatória</td><td>operacoes.evento_codigo</td><td>Código do evento ERP; não determina sozinho o sinal financeiro.</td></tr>
 <tr><td><code>conferencia</code></td><td>Conferencia</td><td>obrigatória</td><td>novo: camada externa</td><td>Conferência, não homologação de faturamento.</td></tr>
-<tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Revisão monotônica do recurso externo, a implementar; não é trans_id do ERP. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
-<tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante de publicação desta revisão externa, a implementar. Não reutilizar cada reimportação como alteração comercial. format=&quot;date-time&quot;.</td></tr>
+<tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Revisão monotônica do recurso externo, não é trans_id do ERP. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
+<tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante de publicação desta revisão externa. Não reutilizar cada reimportação como alteração comercial. format=&quot;date-time&quot;.</td></tr>
 <tr><td><code>ajuste_centavos</code></td><td>string / null</td><td>obrigatória</td><td>operacoes.ajuste_centavos</td><td>Ajuste monetário da operação; null é ausência, não zero. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float. pattern=&quot;^-?\\d+$&quot;.</td></tr>
 <tr><td><code>subtotal_itens_centavos</code></td><td>string / null</td><td>obrigatória</td><td>operacoes.subtotal_itens_centavos</td><td>Soma dos preços recebidos × quantidades. Não reaplica desconto. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float. pattern=&quot;^-?\\d+$&quot;.</td></tr>
 <tr><td><code>frete_centavos</code></td><td>string / null</td><td>obrigatória</td><td>complementos.frete_centavos</td><td>Frete recebido; null não deve ser presumido zero. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float. pattern=&quot;^-?\\d+$&quot;.</td></tr>
@@ -929,8 +930,8 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td><code>codigo</code></td><td>string / null</td><td>obrigatória</td><td>cadastro_filiais.cod_filial</td><td>Código de exibição, por exemplo LOJA-DEMO.</td></tr>
 <tr><td><code>fantasia</code></td><td>string / null</td><td>obrigatória</td><td>cadastro_filiais.fantasia</td><td>Nome fantasia importado.</td></tr>
 <tr><td><code>trans_id_origem</code></td><td>string / null</td><td>obrigatória</td><td>cadastro_filiais.trans_id</td><td>Cursor cadastral recebido. Não serve como cursor externo. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
-<tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Revisão da projeção externa, a implementar. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
-<tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante desta revisão externa, a implementar. format=&quot;date-time&quot;.</td></tr>
+<tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Revisão da projeção externa. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
+<tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante desta revisão externa. format=&quot;date-time&quot;.</td></tr>
 </tbody></table></div>
 </section>
 <section class="doc-section" data-heading="ClassificacaoItem">
@@ -965,8 +966,8 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td><code>trans_id_origem</code></td><td>string / null</td><td>obrigatória</td><td>cadastro_produtos.trans_id</td><td>Transação cadastral recebida, não cursor externo. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
 <tr><td><code>cadastro_consultado_em</code></td><td>string / null</td><td>obrigatória</td><td>cadastro_produtos.enriquecido_em</td><td>Último enriquecimento cadastral bem-sucedido. format=&quot;date-time&quot;.</td></tr>
 <tr><td><code>cadastro_disponivel</code></td><td>boolean</td><td>obrigatória</td><td>derivado de cadastro_produtos.enriquecido_em</td><td>Existe cadastro enriquecido; false não equivale a produto inexistente.</td></tr>
-<tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Revisão externa a implementar. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
-<tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante da revisão externa a implementar. format=&quot;date-time&quot;.</td></tr>
+<tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Revisão da camada externa. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
+<tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante da revisão externa. format=&quot;date-time&quot;.</td></tr>
 </tbody></table></div>
 </section>
 <section class="doc-section" data-heading="Variacao">
@@ -1000,8 +1001,8 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td><code>saldo_disponivel</code></td><td>string / null</td><td>obrigatória</td><td>estoque_atual.saldo</td><td>Decimal exato, pode ser negativo ou null. Já desconta reservas. Ausência na carga completa deve retornar null. pattern=&quot;^-?\\d{1,14}(\\.\\d{1,6})?$&quot;.</td></tr>
 <tr><td><code>reservas_ja_descontadas</code></td><td>boolean</td><td>obrigatória</td><td>regra confirmada do saldo</td><td>Regra confirmada para esta origem; não subtrair reservas outra vez. const=true.</td></tr>
 <tr><td><code>sincronizacao</code></td><td>Sincronizacao</td><td>obrigatória</td><td>novo: camada externa</td><td>Frescor da posição e da coleta por filial.</td></tr>
-<tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Revisão externa do par filial/SKU, a implementar. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
-<tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante da revisão externa, a implementar. format=&quot;date-time&quot;.</td></tr>
+<tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Revisão externa do par filial/SKU. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
+<tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>novo</td><td>Instante da revisão externa. format=&quot;date-time&quot;.</td></tr>
 </tbody></table></div>
 </section>
 <section class="doc-section" data-heading="Alteracao">
@@ -1320,8 +1321,8 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td><code>meta</code></td><td>MetaAlteracoes</td><td>obrigatória</td><td>novo: camada externa</td><td>Objeto referenciado; consultar seção correspondente.</td></tr>
 </tbody></table></div>
 </section></article>
-<article id="implementacao" class="doc-article" data-title="Implementação"><div class="chapter">CAPÍTULO 08</div><h1 id="implementacao-base-de-implementacao-e-criterios-de-aceite">Base de implementação e critérios de aceite<a class="permalink" href="#implementacao-base-de-implementacao-e-criterios-de-aceite" aria-label="Link para esta seção">#</a></h1>
-<aside class="note">Documento de arquitetura e planejamento. Não representa abertura da API externa ou ativação de webhooks.</aside>
+<article id="implementacao" class="doc-article" data-title="Arquitetura e aceite"><div class="chapter">CAPÍTULO 08</div><h1 id="implementacao-base-de-implementacao-e-criterios-de-aceite">Base de implementação e critérios de aceite<a class="permalink" href="#implementacao-base-de-implementacao-e-criterios-de-aceite" aria-label="Link para esta seção">#</a></h1>
+<aside class="note">Arquitetura do contrato e critérios de aceite. OAuth, consultas, projeções, log, outbox, entregas e console delegado foram implementados e testados isoladamente em 11/11/2026. Publicação/homologação real pendentes. <a href="#operacao">Escopo entregue e roteiro operacional</a>.</aside>
 <section class="doc-section" data-heading="Evidência do código atual">
 <h2 id="implementacao-evidencia-do-codigo-atual">Evidência do código atual<a class="permalink" href="#implementacao-evidencia-do-codigo-atual" aria-label="Link para esta seção">#</a></h2>
 <div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Informação</th><th>Fonte no repositório</th><th>O que está confirmado</th></tr></thead><tbody>
@@ -1357,8 +1358,8 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td>SLA de atualização em segundos</td><td>Coleta sequencial, filas e dependência ERP</td><td>Retornar frescor; sem SLA comercial nesta documentação</td></tr>
 </tbody></table></div>
 </section>
-<section class="doc-section" data-heading="Componentes novos necessários">
-<h2 id="implementacao-componentes-novos-necessarios">Componentes novos necessários<a class="permalink" href="#implementacao-componentes-novos-necessarios" aria-label="Link para esta seção">#</a></h2>
+<section class="doc-section" data-heading="Componentes da arquitetura">
+<h2 id="implementacao-componentes-da-arquitetura">Componentes da arquitetura<a class="permalink" href="#implementacao-componentes-da-arquitetura" aria-label="Link para esta seção">#</a></h2>
 <ol>
 <li><strong>Borda externa:</strong> DNS/TLS do domínio confirmado, reverse proxy restrito, identificação de IP confiável e exposição apenas das rotas externas.</li>
 <li><strong>Identidade de integração:</strong> cadastro administrativo de clientes/filiais/escopos, chave pública, revogação, trilha de auditoria e separação de ambientes.</li>
@@ -1372,7 +1373,7 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <li><strong>Console e auditoria:</strong> gestão de integrações no SuperAdmin proposto, concessões/revogação e logs de quem acessou qual recurso, resultados e tempos de resposta. <a href="#administracao">Requisitos e campos administrativos</a>.</li>
 <li><strong>Homologação e operação:</strong> testes de isolamento/carga/falha, métricas, alertas, procedimentos de rotação, revogação e recuperação.</li>
 </ol>
-<p>O armazenamento proposto pode incluir entidades como <code>integration_clients</code>, <code>integration_client_keys</code>, <code>integration_tokens</code>, <code>integration_grants</code>, <code>integration_resource_versions</code>, <code>integration_changes</code>, <code>integration_snapshots</code>, <code>integration_outbox</code>, <code>integration_webhooks</code>, <code>integration_deliveries</code> e <code>integration_idempotency</code>. Os nomes são sugestões; migrations não foram criadas por esta entrega documental.</p>
+<p>O armazenamento proposto pode incluir entidades como <code>integration_clients</code>, <code>integration_client_keys</code>, <code>integration_tokens</code>, <code>integration_grants</code>, <code>integration_resource_versions</code>, <code>integration_changes</code>, <code>integration_snapshots</code>, <code>integration_outbox</code>, <code>integration_webhooks</code>, <code>integration_deliveries</code> e <code>integration_idempotency</code>. A implementação usa tabelas <code>integration_*</code> na migration tenant 019; consultar operacao.md para os nomes efetivos.</p>
 </section>
 <section class="doc-section" data-heading="Liberação em fases">
 <h2 id="implementacao-liberacao-em-fases">Liberação em fases<a class="permalink" href="#implementacao-liberacao-em-fases" aria-label="Link para esta seção">#</a></h2>
@@ -1400,7 +1401,7 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td>Capacidade</td><td>Sem consulta ERP em GET; SQL cancelado; cotas distribuídas; consumidor lento sem degradar painel/worker</td></tr>
 <tr><td>Auditoria</td><td>Nenhum token, chave, telefone, texto pessoal ou body comercial integral nos logs</td></tr>
 </tbody></table></div>
-<p>Os exemplos de assinatura desta documentação possuem testes com dados sintéticos. Isso valida o exemplo criptográfico e a coerência documental, não substitui os testes dos serviços ainda não implementados.</p>
+<p>Os exemplos de assinatura e os serviços têm testes com dados sintéticos. A evidência docs/validacao-implementacao-integracoes.json registra os cenários executados; operação real, carga e consumidor homologado continuam etapas próprias.</p>
 </section>
 <section class="doc-section" data-heading="Critérios operacionais antes de liberar clientes">
 <h2 id="implementacao-criterios-operacionais-antes-de-liberar-clientes">Critérios operacionais antes de liberar clientes<a class="permalink" href="#implementacao-criterios-operacionais-antes-de-liberar-clientes" aria-label="Link para esta seção">#</a></h2>
@@ -1436,7 +1437,94 @@ artifacts/documentacao-integracoes/.venv/bin/python scripts/validar-docs-integra
 node scripts/verificar-portal-integracoes.mjs</code></pre></div>
 <p>Os geradores usam a biblioteca padrão de Python 3.10 ou superior. O validador completo usa dependências isoladas de documentação: <code>openapi-spec-validator</code> e <code>jsonschema</code>; instalar conforme <code>exemplos/requirements-validacao.txt</code>. Nenhuma dependência ou serviço de produção é alterado.</p>
 </section></article>
-<footer class="footer">Join Network · Documentação de arquitetura para desenvolvedores · Contrato 0.1.0<br>OpenAPI, dicionário e exemplos compartilham o mesmo modelo. Este arquivo funciona offline e não faz chamadas à API.<br><a href="implementacao.md">Fontes, limites conhecidos e plano de implementação</a></footer></main></div><script>
+<article id="operacao" class="doc-article" data-title="Operação e ativação"><div class="chapter">CAPÍTULO 09</div><h1 id="operacao-operacao-da-implementacao-0-1-0">Operação da implementação 0.1.0<a class="permalink" href="#operacao-operacao-da-implementacao-0-1-0" aria-label="Link para esta seção">#</a></h1>
+<p>Implementada em 11/11/2026 e validada com dados sintéticos em PostgreSQL isolado. <strong>A API externa não foi ativada na produção.</strong> Código enviado ao GitHub não inicia serviços, publica DNS ou cria credenciais.</p>
+<section class="doc-section" data-heading="Serviços e GitHub">
+<h2 id="operacao-servicos-e-github">Serviços e GitHub<a class="permalink" href="#operacao-servicos-e-github" aria-label="Link para esta seção">#</a></h2>
+<p>O remoto do projeto é <code>Maylon-santos/varejo_joinnetwork</code>, branch <code>main</code>. O workflow <code>.github/workflows/ci.yml</code> executa testes unitários, integração em PostgreSQL 17 descartável, console no Chromium e validação do contrato. Não tem credenciais de produção ou etapa de deploy. A publicação do piloto continua via SSH conforme <code>deploy/README.md</code>.</p>
+<div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Componente</th><th>Entrada</th><th>Responsabilidade</th></tr></thead><tbody>
+<tr><td>API externa</td><td><code>scripts/integracoes-api.mjs</code>, porta 3200 em loopback</td><td><code>/oauth/token</code>, consultas <code>/v1</code>, administração humana opcional</td></tr>
+<tr><td>Publicador/entregador</td><td><code>scripts/integracoes-worker.mjs</code></td><td>Projeções, log, distribuição, entregas e expurgo</td></tr>
+<tr><td>Provisionamento humano</td><td><code>scripts/integracoes-operador.mjs</code></td><td>Habilitação explícita de operador do tenant, com MFA</td></tr>
+<tr><td>Banco</td><td>Migration tenant 019</td><td>Tabelas <code>integration_*</code> e captura transacional por trigger</td></tr>
+<tr><td>Console</td><td><code>/admin/integracoes/console</code></td><td>Concessões, chaves, logs, métricas, testes/ativação/pausa/replay</td></tr>
+</tbody></table></div>
+<p>A nova API usa pool próprio de quatro conexões. O worker de integração não consulta o ERP e é separado do coletor existente. Todos os flags novos começam em <code>false</code>; <code>SYNC_ENABLED</code> local continua desativado.</p>
+</section>
+<section class="doc-section" data-heading="Implementado e limites desta entrega">
+<h2 id="operacao-implementado-e-limites-desta-entrega">Implementado e limites desta entrega<a class="permalink" href="#operacao-implementado-e-limites-desta-entrega" aria-label="Link para esta seção">#</a></h2>
+<div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Área</th><th>Comportamento implementado</th></tr></thead><tbody>
+<tr><td>OAuth</td><td>Client Credentials/private_key_jwt RS256, RSA 2048–8192, validação de claims, jti atômico por 120 s, token opaco 900 s armazenado por hash; cliente/chave/escopos/filiais revalidados</td></tr>
+<tr><td>Isolamento</td><td>Tenant fixado pelo serviço/banco, ambiente fixado por <code>INTEGRATIONS_ENVIRONMENT</code>, filiais explícitas, IDs externos e cursores vinculados ao cliente/concessão</td></tr>
+<tr><td>Consultas</td><td>21 operações do OpenAPI, DTOs por allowlist, centavos/IDs textuais, saldo decimal/null, fiscal e pessoas condicionais</td></tr>
+<tr><td>Consistência</td><td>Projeções cifradas, revisões por conteúdo, filhos com If-Match, snapshots cifrados de 30 minutos e log de 30 dias; GET não consulta ERP</td></tr>
+<tr><td>Publicação</td><td>Captura no mesmo commit da origem; publicadores serializados até COMMIT. Escrita concorrente aguarda a marca de captura e deixa nova pendência, evitando perda durante projeção</td></tr>
+<tr><td>Outbox</td><td>Revisão, evento mínimo e posição do log no mesmo commit; checkpoint de distribuição e entregas idempotentes</td></tr>
+<tr><td>Webhook</td><td>Cadastro inicialmente inativo, host aprovado, teste assinado antes da ativação, segredo AES-GCM, HMAC, sobreposição de 24 h, idempotência cifrada 24 h, dez tentativas/72 h, circuito e replay</td></tr>
+<tr><td>SSRF</td><td>HTTPS/443, sem IP literal/credencial/query/fragmento, todas as respostas DNS validadas a cada tentativa, IP público fixado no socket, SNI/TLS preservados, sem redirects; DNS até 3 s dentro do limite total de 10 s</td></tr>
+<tr><td>Auditoria</td><td>Cliente autenticado, rota parametrizada, filial autorizada, status, bytes e duração monotônica até finish/close; abortos 499; IP em hash e somente família conhecida de User-Agent</td></tr>
+<tr><td>Console</td><td>Operador humano explicitamente habilitado, senha do painel + TOTP, step-up de cinco minutos vinculado à sessão humana. Admin não ganha acesso automaticamente. Mudanças e consultas de auditoria registradas</td></tr>
+<tr><td>Retenção</td><td>Snapshots 30 min, idempotência 24 h, log/payload/replay 30 dias, acesso/auditoria 90 dias. Expurgo de metadados gera recibo de política, sem edição individual pelo console</td></tr>
+</tbody></table></div>
+<p>O console implementa <strong>gestão delegada de um tenant</strong>. SuperAdmin global, seleção de bancos de outros tenants, exportação assíncrona de logs, cadastro de contatos técnicos, revisão periódica com alertas e gráficos de tendência continuam evoluções. p50/p95/p99 são calculados sobre tempos realmente medidos; sem amostras os percentis são null. Tempos separados de banco/fila de admissão ainda não são instrumentados. Tentativas de webhook medem duração e espera de fila. A reserva grava a tentativa antes da rede; uma interrupção conserva status/duração desconhecidos como null e a retomada identifica <code>WORKER_INTERRUPTED</code>, sem inventar aceite HTTP.</p>
+<p>Limites adicionais de proteção: até 64 conexões HTTP, vinte snapshots ativos por cliente, dez mil registros/32 MiB por snapshot, 64 MiB de snapshots por cliente e 256 MiB no banco. Ao exceder, 422 exige janela/filtro menor ou 429 exige aguardar. Resposta de página permanece limitada a 2 MiB. Cotas são token buckets transacionais em PostgreSQL: cliente 60/min com burst 10, tenant 120/min, serviço 240/min, IP 120/min; token 6/min/cliente e 30/min/IP. A pré-autenticação também tem teto global. O campo Remaining reflete admissão imediata, incluindo burst, e não garante uma chamada sob outras cotas. Não há espera ilimitada nem liberação sem estado de admissão.</p>
+<p><code>origem_carga=historica</code> identifica a carga inicial da projeção dos registros existentes na migration; a captura posterior usa <code>continua</code>, e reprocessamento administrativo usa <code>reprocessamento</code>. O campo descreve o fluxo local, sem presumir hora real da venda. Alterações intermediárias dentro do mesmo lote podem ser consolidadas no estado final antes da publicação; o log serve para sincronizar estado, sem representar cada movimento contábil do ERP. Exclusões físicas de cabeçalhos/cadastros não fazem parte do fluxo de origem suportado; ausência de estoque usa <code>presente_ultima_carga=false</code>.</p>
+<p>Idempotência de webhook é conferida antes do ETag e só retorna uma criação/rotação durante suas 24 h. Não guarde essa resposta em logs. Mudança da URL invalida verificação e entregas previamente enfileiradas para a URL anterior não são enviadas à nova. Rotação/ativação mantêm a mesma URL. 401/403 pausam, 410 desativa e 3xx exige reverificação.</p>
+<p>Logs de acesso são gravados após finish/close; falha de persistência emite apenas <code>integration_audit_failed</code> e request_id, exigindo alerta operacional. A fila assíncrona de auditoria de acesso é limitada a 32 gravações; saturação gera <code>integration_audit_backpressure</code> com contagem e request_id, sem criar fila ilimitada. Ações administrativas de concessão e webhook usam auditoria na mesma transação e falham junto dela. No estoque, <code>consultado_em</code>/<code>data_atualizacao_erp</code> correspondem à posição projetada e não são substituídos pelos timestamps de uma alteração ainda aguardando publicação. O último sucesso da coleta é informado separadamente. O coletor e os dados comerciais permanecem a fonte; a API reflete o progresso do publicador. Antes de liberar um cliente, aguardar o esvaziamento de <code>integration_dirty</code> e homologar a cobertura.</p>
+</section>
+<section class="doc-section" data-heading="Preparar ambiente isolado">
+<h2 id="operacao-preparar-ambiente-isolado">Preparar ambiente isolado<a class="permalink" href="#operacao-preparar-ambiente-isolado" aria-label="Link para esta seção">#</a></h2>
+<ol>
+<li>Usar dois bancos de homologação e dados fictícios. Aplicar <code>node --env-file=.env scripts/migrar.mjs</code>. A migration 019 é aditiva e não altera valores comerciais/checkpoints.</li>
+<li>Gerar uma chave aleatória de 32 bytes, gravar como 64 caracteres hexadecimais em <code>INTEGRATIONS_ENCRYPTION_KEY</code>, somente no arquivo privado. <strong>Guardar cópia protegida fora do servidor e do Git</strong>: sem essa chave não é possível recuperar segredos/payloads cifrados de backups. A versão inicial suporta uma chave de armazenamento; trocá-la exige migração/recriptação planejada, não substituição direta.</li>
+<li>Configurar <code>INTEGRATIONS_ENABLED=true</code>, ambiente <code>homologacao</code> e base HTTPS exata. A audience será <code>${BASE}/oauth/token</code>; o token de homologação não autentica um serviço configurado para produção.</li>
+<li>Iniciar a API. Habilitar o worker de projeção com <code>INTEGRATIONS_WORKER_ENABLED=true</code>; deixar <code>INTEGRATIONS_DELIVERIES_ENABLED=false</code> até ter consumidor aprovado. <code>--once</code> processa um lote.</li>
+<li>Habilitar o console somente por acesso operacional privado, com <code>INTEGRATIONS_ADMIN_ENABLED=true</code>. O vhost externo bloqueia integralmente <code>/admin/</code>.</li>
+</ol>
+<div class="code-block"><div class="code-head"><span>sh</span><button class="copy-code" type="button" aria-label="Copiar exemplo">Copiar</button></div><pre><code>npm run integracoes:api
+# Em outro processo, exclusivamente contra o mesmo banco de homologação:
+npm run integracoes:worker</code></pre></div>
+<p>Nunca ligar o coletor ERP local para esse teste. Os testes automatizados usam schemas exclusivos e removem seus dados ao terminar.</p>
+</section>
+<section class="doc-section" data-heading="Habilitar o primeiro operador">
+<h2 id="operacao-habilitar-o-primeiro-operador">Habilitar o primeiro operador<a class="permalink" href="#operacao-habilitar-o-primeiro-operador" aria-label="Link para esta seção">#</a></h2>
+<p>O usuário humano deve existir e ser Admin <strong>do tenant configurado</strong>. Descobrir seu UUID pela sessão autenticada existente, sem copiar a senha para arquivos versionados. Preparar arquivo privado em uma pasta ignorada:</p>
+<div class="code-block"><div class="code-head"><span>sh</span><button class="copy-code" type="button" aria-label="Copiar exemplo">Copiar</button></div><pre><code>mkdir -p artifacts/integracoes-operador
+node scripts/integracoes-operador.mjs --preparar UUID_DO_USUARIO artifacts/integracoes-operador/operador.json</code></pre></div>
+<p>O arquivo é criado com modo 0600, sem sobrescrever outro, e contém o segredo e a URI <code>otpauth_uri</code>. Importá-la em autenticador confiável por canal local; não enviar a URI a um gerador de QR remoto. Preencher <code>codigo</code> com o TOTP atual e executar:</p>
+<div class="code-block"><div class="code-head"><span>sh</span><button class="copy-code" type="button" aria-label="Copiar exemplo">Copiar</button></div><pre><code>node --env-file=.env scripts/integracoes-operador.mjs artifacts/integracoes-operador/operador.json</code></pre></div>
+<p>O script confirma usuário/tenant, exige a prova do autenticador e grava concessão cifrada e auditoria atomicamente. O código usado não pode ser reutilizado: aguardar o próximo período de 30 s para entrar no console. Depois da configuração, guardar/remover o arquivo privado conforme política de segredos.</p>
+<p>Para recuperar acesso em perda de MFA, um operador com acesso SSH controlado pode preparar nova matrícula. Para bloquear o operador sem possuir o autenticador, arquivo 0600 com <code>usuario_id</code>, <code>ativo=false</code> e <code>motivo</code> revoga concessão/sessões com auditoria. Isso não concede permissões globais ao Admin.</p>
+<p>O console usa credenciais somente em memória da aba. O logout revoga a sessão do painel criada para esse acesso e o step-up; não grava tokens em localStorage. Endereço operacional: túnel SSH para <code>127.0.0.1:3200</code> e <code>/admin/integracoes/console</code>. No console, cadastrar cliente, escolher ambiente/escopos/filiais/hosts e registrar somente sua chave pública PEM/kid. Segredo privado RSA permanece no consumidor. Chave revogada não pode ser reativada; usar novo kid.</p>
+</section>
+<section class="doc-section" data-heading="Publicação controlada">
+<h2 id="operacao-publicacao-controlada">Publicação controlada<a class="permalink" href="#operacao-publicacao-controlada" aria-label="Link para esta seção">#</a></h2>
+<p>Ler <code>deploy/README.md</code>. A entrega inclui <code>Dockerfile.integracoes</code>, override <code>deploy/integracoes.compose.yaml</code>, grupos PostgreSQL em <code>deploy/integracoes-permissoes.sql</code> e vhost adicional <code>deploy/nginx-integracoes.conf</code>. Não substituir o vhost do painel.</p>
+<p><strong>Preparação conferida em 11/11/2026:</strong> o resolvedor do servidor já retorna seu IP para o domínio da API; o certificado específico ainda está ausente. A raiz está em 92% de uso, com 1,6 GB livres. Maylon escolheu ampliar o disco e preservar as imagens de retorno. Não executar limpeza de imagens, volumes ou backups para abrir espaço. Antes de ativar, conferir a expansão e reservar espaço para projeções, retenção, snapshots, novos backups e recuperação. Memória disponível na consulta: 2.594 MiB; isso não substitui ensaio de carga. Painel/PostgreSQL saudáveis, coletor remoto ativo, timers de backup/relatórios agendados e migration 019 ainda ausente. As consultas foram somente leitura. Evidência: <code>docs/validacao-preparacao-integracoes.json</code>.</p>
+<ol>
+<li>Medir disco/memória/conexões do servidor compartilhado; reservar orçamento para projeções, retenção e snapshots. A consulta de <code>lsblk</code>, <code>pvs</code>, <code>vgs</code> e <code>lvs</code> encontrou dois discos de 10 GiB e nenhum espaço livre no grupo LVM <code>ubuntu</code>: primeiro ampliar ou anexar armazenamento na hospedagem; depois conferir o novo dispositivo e preparar a extensão do volume/filesystem. Não executar comandos de expansão sobre nomes de dispositivos presumidos. Os testes funcionais não substituem carga com volume real. Aprovar responsáveis e retenção antes de liberar consumidores.</li>
+<li>Fazer backup completo e preservar imagens/fontes anteriores. Pausar coletor remoto para migration 019. Conferir hashes comerciais antes/depois e preservar os demais serviços. Migration captura o histórico sem expô-lo automaticamente.</li>
+<li>Criar LOGINs privados separados para API/worker e atribuir os grupos do SQL de permissões. Gravar URLs <code>INTEGRATIONS_DATABASE_URL</code> e <code>INTEGRATIONS_WORKER_DATABASE_URL</code> fora do Git, com host <code>postgres</code> dentro dos containers. Os grupos não podem atualizar tabelas comerciais; o LOGIN do worker não deve ser owner. Para o console, aplicar também <code>deploy/integracoes-controle-permissoes.sql</code> no banco central e criar LOGIN próprio com esse grupo, gravando a URL em <code>INTEGRATIONS_CONTROL_DATABASE_URL</code>. O grupo permite ler identidades/perfis/vínculos e gerenciar sessões, sem alterar usuários/permissões. Os containers novos não recebem as URLs dos owners. Nunca entregar URLs de banco ao integrador.</li>
+<li>Construir/subir os serviços adicionais com o override. Preparar a imagem do coletor remoto com a pequena instrumentação de origem do reprocessamento em <code>repositorio-postgres.mjs</code> antes de retomá-lo; as regras e valores comerciais permanecem iguais. API e worker possuem limites de CPU/memória e nenhuma porta pública direta. Retomar o coletor remoto após conferir saúde/hashes; local permanece desativado.</li>
+<li>Criar/conferir DNS do domínio confirmado, emitir certificado exato, instalar o vhost adicional, testar <code>nginx -t</code> e recarregar preservando outros vhosts. Definir apenas IPs exatos do proxy em <code>INTEGRATIONS_TRUSTED_PROXIES</code>; não confiar no header arbitrário do cliente. No Docker, conferir o IP do gateway que realmente aparece no socket.</li>
+<li>Restringir egress do worker na infraestrutura a DNS confiável e HTTPS público. A validação/pinning na aplicação já está implementada; o firewall/egress de produção ainda precisa ser aplicado na infraestrutura. Não liberar entregas antes de conferir essa camada.</li>
+<li>Habilitar operador, cliente <strong>de produção</strong> e chave pública explicitamente aprovados. Aguardar projeções e testar consulta, revogação e cobertura. Autorizar um destino, habilitar entregas, confirmar teste assinado e ativar inscrição. Não cadastrar um endpoint de terceiro sem responsável/consentimento.</li>
+<li>Conferir cotas/carga, frescor, p95/p99, fila, erros, disco, logs e backup/recuperação com a chave cifradora guardada. Só então registrar publicação/homologação; não marcar R11/R22/R29/SaaS concluídos por essa entrega.</li>
+</ol>
+<div class="code-block"><div class="code-head"><span>sh</span><button class="copy-code" type="button" aria-label="Copiar exemplo">Copiar</button></div><pre><code>docker compose -f compose.yaml -f deploy/integracoes.compose.yaml build integracoes-api integracoes-worker
+docker compose -f compose.yaml -f deploy/integracoes.compose.yaml up -d --wait integracoes-api
+docker compose -f compose.yaml -f deploy/integracoes.compose.yaml up -d integracoes-worker</code></pre></div>
+<p>Não usar <code>docker compose config</code> em logs compartilhados, pois pode expandir segredos. Os prazos de retenção da API referem-se ao banco ativo; backups seguem a política própria documentada do piloto. Reenvios preservam a data original do evento e não renovam seus 30 dias de payload/replay; metadados de tentativa permanecem até 90 dias. O backup agora exclui dados de tokens externos, step-ups, leases, cotas e snapshots; demais tabelas/segredos cifrados são preservados. Após restauração, exigir novo login/token e recriar carga inicial do consumidor. Preservar a chave de armazenamento separadamente. Retorno: parar os dois serviços adicionais e remover somente seu vhost; a migration é compatível com o painel anterior, mas manter/expurgar as marcas de captura conforme plano de retomada.</p>
+</section>
+<section class="doc-section" data-heading="Verificar sem produção">
+<h2 id="operacao-verificar-sem-producao">Verificar sem produção<a class="permalink" href="#operacao-verificar-sem-producao" aria-label="Link para esta seção">#</a></h2>
+<div class="code-block"><div class="code-head"><span>sh</span><button class="copy-code" type="button" aria-label="Copiar exemplo">Copiar</button></div><pre><code>npm test
+npm run test:integration
+npm run test:integracoes:ui
+artifacts/documentacao-integracoes/.venv/bin/python scripts/validar-respostas-integracoes.py</code></pre></div>
+<p><code>test:integration</code> exige URLs de bancos <strong>descartáveis</strong>, pois cria/remove schemas; não executar com URLs de produção. O teste de contrato consome apenas respostas sintéticas geradas pela suíte. O CI configura bancos temporários próprios. Verificação local: PostgreSQL 16 nativo; CI preparado para PostgreSQL 17. A execução do workflow no GitHub só pode ser confirmada após o push.</p>
+</section></article>
+<footer class="footer">Join Network · Documentação técnica para desenvolvedores · Contrato 0.1.0<br>OpenAPI, dicionário e exemplos compartilham o mesmo modelo. Este arquivo funciona offline e não faz chamadas à API.<br><a href="implementacao.md">Fontes, limites conhecidos e plano de implementação</a></footer></main></div><script>
 const normalize=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 const search=document.getElementById('search'),fieldSearch=document.getElementById('field-search'),status=document.getElementById('search-status');
 function filter(){

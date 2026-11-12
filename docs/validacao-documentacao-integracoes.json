@@ -1,5 +1,5 @@
 {
-  "verificadoEm": "2026-11-11T14:05:02.261367+00:00",
+  "verificadoEm": "2026-11-12T00:01:32.899586+00:00",
   "escopo": "documentação e exemplos sintéticos, sem implementar serviço",
   "openapiValido": true,
   "schemas": 51,
@@ -25,7 +25,7 @@
     "renovacaoUnica401": true,
     "cursorExpirado": true
   },
-  "apiExternaImplementada": false,
+  "validaImplementacaoRuntime": false,
   "webhookAtivado": false,
   "producaoAlterada": false
 }
