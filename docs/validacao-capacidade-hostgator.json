@@ -1,0 +1,64 @@
+{
+  "verificadoEm": "2026-11-13T02:54:52.198656+00:00",
+  "horarioSaoPaulo": "2026-11-12T23:54:52-03:00",
+  "escopo": "Análise de capacidade da VPS HostGator por SSH e consultas locais ao inventário anterior do piloto. Nenhuma implantação, restauração de banco, alteração de DNS, credencial, firewall ou reinicialização.",
+  "sistema": {
+    "distribuicao": "Ubuntu 22.04.5 LTS",
+    "arquitetura": "x86_64",
+    "vcpus": 4,
+    "docker": "29.6.1",
+    "dockerCompose": "5.3.0",
+    "nginxSintaxeValida": true
+  },
+  "capacidade": {
+    "discoRaizTotalBytes": 210136461312,
+    "discoRaizDisponivelBytes": 166487101440,
+    "discoRaizUsoPercentualExibido": 18,
+    "inodesUsoPercentualExibido": 7,
+    "memoriaTotalBytes": 8326332416,
+    "memoriaDisponivelBytes": 6529204224,
+    "swapTotalBytes": 0,
+    "cargaMedia": [
+      0.05,
+      0.13,
+      0.1
+    ]
+  },
+  "coexistencia": {
+    "containersTotais": 14,
+    "containersEmExecucao": 13,
+    "containersParados": 1,
+    "portas3100E55432LivresNaConsulta": true,
+    "diretorioOptAeropostaleVarejoExistente": false,
+    "volumeAeropostaleVarejoPostgresDataExistente": false,
+    "nginxExistenteAtivo": true,
+    "preservarServicosExistentes": true
+  },
+  "referenciaPiloto": {
+    "origem": "Medições anteriores à falha na Locaweb; não são teste de carga na HostGator.",
+    "medicaoContainersUTC": "2026-11-12T13:15:13.593770+00:00",
+    "memoriaAPIWorkerPostgresMiBAproximada": 310,
+    "bancoTenantExibido": "126 MB",
+    "imagensApiWorkerCompartilhamCamadas": true,
+    "postgresImagemExibida": "454 MB",
+    "memoriaDePicoECargaSustentadaValidadas": false
+  },
+  "conclusao": {
+    "capacidadeParaRestaurarPiloto": true,
+    "ampliacaoDoPlanoNecessariaParaCapacidadeObservada": false,
+    "reservaPlanejadaDiscoGiB": 20,
+    "reservaPlanejadaMemoriaGiB": 2,
+    "reservasSaoMargensDePlanejamentoNaoConsumoMedido": true,
+    "estimativasDeCargaBaseadasEmAmostraCurta": true,
+    "nenhumaLimpezaDeDockerNecessariaParaEssaReserva": true
+  },
+  "proximosPassosAntesDaMigracao": [
+    "Restaurar e verificar o backup escolhido em PostgreSQL 17 isolado, preservando os bancos e volumes já hospedados.",
+    "Preparar o projeto Compose aeropostale-varejo, as credenciais privadas e um vhost dedicado sem alterar os portais existentes.",
+    "Validar API, login, dados restaurados, HTTPS e backup externo antes da troca de DNS.",
+    "Planejar a retomada da sincronização e impedir workers ativos em origens/bancos separados; worker local permanece desativado.",
+    "Manter a ativação de R31, migration 019 e homologações comerciais pendentes de validação própria."
+  ],
+  "publicacaoExecutada": false,
+  "evidenciaPrivada": "artifacts/infra-hostgator/inspecao-hostgator.json e inspecao-hostgator-complemento.json; ignorados pelo Git, sem conteúdo do .env."
+}

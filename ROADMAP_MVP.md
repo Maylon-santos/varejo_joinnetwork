@@ -1,5 +1,12 @@
 # Roadmap — Aeropostale Varejo
 
+## Capacidade da HostGator para recuperar o piloto — 12/11/2026
+
+- [x] Análise somente leitura concluída: 4 vCPUs, 7,8 GiB de RAM (6,1 GiB disponíveis), aproximadamente 155 GiB livres em disco e carga média baixa na amostra. Docker/Compose e Nginx presentes; 13 containers ativos preservados, portas 3100/55432 livres e diretório/volume do Aeropostale Varejo ainda ausentes.
+- [x] Capacidade considerada suficiente para restaurar o piloto, com margens propostas de 20 GiB em disco e 2 GiB de RAM. O consumo anterior de cerca de 310 MiB nos três containers não representa pico nem carga sustentada. Evidência: `docs/validacao-capacidade-hostgator.json`.
+- [ ] Migração não executada: recuperar backup em PostgreSQL 17 isolado, preparar serviços/credenciais/vhost próprios, verificar dados/HTTPS/backups e coordenar DNS e worker sem afetar os portais existentes. Worker local continua desativado. R31, migration 019 e homologações não são concluídas por esta análise.
+- [ ] Locaweb sem recuperação confirmada no último diagnóstico; nenhuma restauração do snapshot, reparo ou cópia integral dos discos executados. MacBook Home com 95 backups do Aeropostale e checksums dos quatro mais recentes aprovados; cobertura dos outros serviços e dos dois discos pelo snapshot continua não confirmada. Novas orientações de capacidade acima prevalecem sobre os registros históricos abaixo.
+
 ## Backup e reinicialização da VPS — 11/11/2026
 
 - [x] Backup atualizado dos dois bancos, `backup-20261112T004339Z-u1FTI2`, com leitura estrutural aprovada, checksums no servidor e cópia privada fora da VPS conferida. Dumps e capturas permanecem fora do Git; não foi feita nova restauração integral deste backup.

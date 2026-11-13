@@ -1,4 +1,11 @@
-# Comece aqui — estado atual em 11/11/2026
+# Comece aqui — estado atual em 12/11/2026
+
+## Capacidade da HostGator para recuperar o piloto — 12/11/2026
+
+- [x] A pedido de Maylon, interrompida a tentativa de recuperação pela Locaweb e analisada a HostGator somente por leitura: Ubuntu 22.04, 4 vCPUs, 7,8 GiB de RAM (6,1 GiB disponíveis) e raiz de 196 GiB com aproximadamente 155 GiB livres. Os 13 containers ativos e o Nginx existentes foram preservados; Docker/Compose disponíveis, configuração atual do Nginx válida e portas 3100/55432 livres na consulta.
+- [x] **Há capacidade para receber o Aeropostale Varejo**, sem ampliar o plano na condição observada. Referência anterior: cerca de 310 MiB de RAM nos três containers e banco tenant de 126 MB. Reservas propostas de 20 GiB em disco e 2 GiB de RAM são margens de planejamento, não consumo medido nem teste de carga. Evidência: `docs/validacao-capacidade-hostgator.json`.
+- [ ] **Migração ainda não executada:** restaurar e verificar o backup em PostgreSQL 17 isolado, preparar projeto/credenciais/vhost próprios e validar dados, API, HTTPS e backup externo antes da troca de DNS. Preservar os portais já existentes, manter worker local desativado e impedir sincronizações simultâneas em bancos separados. R31/migration 019 e homologações comerciais continuam pendentes.
+- [ ] **Incidente anterior permanece sem recuperação confirmada:** último diagnóstico da Locaweb encontrou LVM ativo, mas raiz sem sistema de arquivos identificado e montagem somente leitura malsucedida; montagem do Rescue pelo painel retornou erro 500 em duas tentativas. Snapshot anterior disponível, sem confirmação de abrangência dos dois discos; nenhuma restauração ou reparo foi executado. MacBook Home acessível, com 873 GiB livres e 95 backups do Aeropostale; quatro mais recentes com checksums válidos, incluindo `backup-20261112T033238Z-S86XWx`. Imagens completas dos discos ainda não copiadas. Estes backups são dos dois bancos do Aeropostale, não dos outros serviços da VPS.
 
 ## Backup e reinicialização da VPS — 11/11/2026
 
