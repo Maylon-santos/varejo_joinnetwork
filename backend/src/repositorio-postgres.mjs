@@ -18,6 +18,40 @@ export class RepositorioPostgres {
       // Mesmo lock para importação de operações e cancelamentos desta filial.
       await client.query("SELECT pg_advisory_xact_lock(hashtextextended(current_schema() || ':' || $1,0))", [String(filial)]);
       const tx = {
+        salvarHistorico: async (operacoes,eventos,{inicio,fim}) => {
+          validarDia(inicio);validarDia(fim);
+          if(inicio>fim||!Array.isArray(operacoes)||!Array.isArray(eventos))throw Error('HISTORICO_JANELA_INVALIDA');
+          for(const op of operacoes)if(String(op.filial)!==String(filial)||op.data_operacao<inicio||op.data_operacao>fim)throw Error('HISTORICO_FORA_DA_JANELA');
+          const keys=operacoes.map(o=>({codigo:String(o.cod_operacao),tipo:o.tipo_operacao,dia:o.data_operacao}));
+          const conflito=await client.query(`SELECT 1 FROM jsonb_to_recordset($2::jsonb) x(codigo text,tipo text,dia date)
+            JOIN operacoes o ON o.filial=$1 AND o.cod_operacao=x.codigo::bigint AND o.tipo_operacao=x.tipo
+            WHERE o.data_operacao<>x.dia LIMIT 1`,[filial,JSON.stringify(keys)]);
+          if(conflito.rowCount)throw Error('HISTORICO_IDENTIDADE_CONFLITANTE');
+          const cancelamentos=[...aplicarCancelamentos(new Map(),eventos,filial).values()].map(e=>{
+            const ms=Number(/^\/Date\((-?\d+)/.exec(e.data_cancelou)[1]);
+            const dia=new Date(ms).toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'});
+            if(dia<inicio||dia>fim)throw Error('HISTORICO_FORA_DA_JANELA');
+            return {codigo:e.cod_operacao,tipo:e.tipo_operacao,dia};
+          });
+          const datas=new Map(keys.map(k=>[k.codigo+':'+k.tipo,k.dia]));
+          if(cancelamentos.some(c=>(datas.get(c.codigo+':'+c.tipo)??'')>c.dia))throw Error('HISTORICO_CANCELAMENTO_CONFLITANTE');
+          const futuro=await client.query(`SELECT 1 FROM jsonb_to_recordset($2::jsonb) x(codigo text,tipo text,dia date)
+            JOIN operacoes o ON o.filial=$1 AND o.cod_operacao=x.codigo::bigint AND o.tipo_operacao=x.tipo
+            WHERE o.data_operacao>x.dia LIMIT 1`,[filial,JSON.stringify(cancelamentos)]);
+          if(futuro.rowCount)throw Error('HISTORICO_CANCELAMENTO_CONFLITANTE');
+          const historicas=[];
+          for(const op of operacoes){
+            let preservar=op;
+            if(op.pagamentos_pendencia){
+              const anterior=(await client.query("SELECT complementos->'lancamentos' pagamentos FROM operacoes WHERE filial=$1 AND cod_operacao=$2 AND tipo_operacao=$3",[filial,op.cod_operacao,op.tipo_operacao])).rows[0]?.pagamentos;
+              if(Array.isArray(anterior))preservar={...op,complementos:{...op.complementos,lancamentos:anterior}};
+            }
+            historicas.push(preservar);
+          }
+          await client.query("SET LOCAL app.integration_origin='historica'");
+          await tx.salvarOperacoes(historicas);
+          await tx.salvarCancelamentos(eventos);
+        },
         lerCheckpoint: async (recurso = 'cancelamentos') => {
           const r = await client.query("SELECT ate::text FROM sync_checkpoints WHERE filial=$1 AND recurso=$2", [filial, recurso]);
           return r.rows[0]?.ate ?? null;

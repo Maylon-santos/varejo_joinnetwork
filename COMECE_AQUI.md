@@ -1,5 +1,13 @@
 # Comece aqui — estado atual em 13/11/2026
 
+## Histórico desde 2023 em carga sequencial — 13/11/2026
+
+- [x] Rotina complementar publicada na HostGator para 01/01/2023–31/12/2025, começando por ITUPEVA e seguindo a ordem cadastrada, uma filial inteira por vez. O coletor regular continua cobrindo 2026 até o dia atual; checkpoints atuais preservados. Janelas diárias, retomada persistente, proteção contra identidade em outra data e cancelamento anterior à operação, origem `historica` e espera pela fila de projeções.
+- [x] Backup prévio `backup-20261113T213043Z-NEJ5qh` completo e com checksums conferidos no servidor. Serviço isolado de 512 MiB/0,5 CPU; outros 19 containers preservados. 84 testes unitários e 13 testes de integração PostgreSQL 16 aprovados. Cadastro de cliente e parcelas inválidos na origem ficam pendentes somente na carga histórica, sem criar identidade, arredondar parcelas ou dispensar validações de cabeçalho/itens; comportamento regular preservado.
+- [ ] **Carga em andamento, não concluída:** 2023 de ITUPEVA carregado e 2024 em processamento na conferência de 13/11 às 19h57 de São Paulo; pendências de cliente e parcelas registradas separadamente. Demais filiais aguardam a conclusão de ITUPEVA. Conferir o estado privado e os erros antes de afirmar cobertura integral; identidade de clientes, conciliação, R11/R22/R29 e homologação das demais filiais permanecem separados. Worker local desativado; webhooks e console continuam desativados.
+
+Operação: [carga histórica](docs/CARGA_HISTORICA_VENDAS.md). Evidência inicial: [validação da carga](docs/validacao-carga-historica-2023.json).
+
 ## Manual interno para integrações — 13/11/2026
 
 - [x] Aba **Manual** no console administrativo de integrações, com dez etapas: identidades, preparação, cadastro, escopos/filiais, chave pública, OAuth, criação de webhook pela API, teste/ativação, manutenção e diagnóstico. Índice por etapa, tabelas e exemplos copiáveis; conteúdo alinhado aos formulários e ações existentes.

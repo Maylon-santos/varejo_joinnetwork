@@ -3,6 +3,10 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Carga complementar de vendas desde 2023
+
+O serviço `carga-historica`, definido em `deploy/historico.compose.yaml`, processa 2023–2025 por filial na HostGator. O coletor regular permanece ativo cobrindo 2026 até hoje. Não resetar checkpoints nem ativar o worker local. Estado e erros ficam em `artifacts/carga-historica-2023/estado.json`, fora do Git. Rotina iniciada em 13/11/2026, ainda em andamento; consultar [procedimento, sequência, pendências e comandos de retomada](../docs/CARGA_HISTORICA_VENDAS.md). Não incluir este guia operacional na documentação pública.
+
 ## Manual interno das integrações
 
 A aba **Manual** do console apresenta o procedimento de cadastro de credencial de máquina e preparação de API/webhooks. O conteúdo está em `backend/src/integracoes/manual.mjs`, entregue somente após autorização do operador e MFA, em `GET /admin/integracoes/manual`. O Nginx público continua bloqueando `/admin/` e o console continua dependente de habilitação operacional privada. Não incluir o manual no manifesto de documentação pública.

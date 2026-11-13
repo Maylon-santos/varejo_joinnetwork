@@ -1,0 +1,30 @@
+# Carga complementar 2023–2025. O worker existente mantém 2026 atualizado.
+services:
+  carga-historica:
+    image: aeropostale-varejo-sync-worker:integracoes-b8d8448
+    command: [node, scripts/carregar-historico.mjs, --inicio=2023-01-01, --fim=2025-12-31, --cobertura-desde=2026-01-01, --estado=/var/lib/historico/estado.json]
+    restart: on-failure
+    init: true
+    cpus: 0.5
+    mem_limit: 512m
+    pids_limit: 60
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    environment:
+      NODE_ENV: production
+      TZ: America/Sao_Paulo
+      TENANT_KEY: ${TENANT_KEY:?}
+      TENANT_DATABASE_URL: postgresql://varejo_aeropostale:${TENANT_DB_PASSWORD}@postgres:5432/varejo_aeropostale
+      MILLENNIUM_BASE_URL: ${MILLENNIUM_BASE_URL:?}
+      MILLENNIUM_BASIC_TOKEN: ${MILLENNIUM_BASIC_TOKEN:?}
+      SYNC_ENABLED: "false"
+    volumes:
+      - ./scripts/carregar-historico.mjs:/app/scripts/carregar-historico.mjs:ro
+      - ./backend/src/carga-historica.mjs:/app/backend/src/carga-historica.mjs:ro
+      - ./backend/src/vendas.mjs:/app/backend/src/vendas.mjs:ro
+      - ./backend/src/repositorio-postgres.mjs:/app/backend/src/repositorio-postgres.mjs:ro
+      - ./artifacts/carga-historica-2023:/var/lib/historico
+    logging:
+      driver: json-file
+      options: {max-size: "5m", max-file: "2"}
