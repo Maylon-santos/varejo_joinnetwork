@@ -2,6 +2,8 @@
 
 > Versão 0.1.0 • implementação e testes isolados em 11/11/2026 • publicação externa pendente.
 
+**Situação em 13/11/2026:** o painel e seu coletor ERP foram recuperados na HostGator. A API interna do painel está ativa; a API externa e os webhooks deste guia ainda aguardam implantação e homologação. Código, contrato OpenAPI, exemplos e portal foram preservados no GitHub. O DNS público do domínio reservado já retorna `143.95.219.212`; ainda é necessário configurar e validar o serviço e seu certificado específico. Consulte a [operação atual do piloto](../../deploy/README.md) e as [etapas de ativação](operacao.md#publicação-controlada).
+
 Integre vendas, filiais, produtos e estoque com consultas autenticadas e notificações de vendas. Este material documenta a implementação da API externa e orienta o cadastro e a homologação de consumidores. Os exemplos são inteiramente fictícios.
 
 **Domínio confirmado por Maylon:** `api-varejo.aeropostale.joinnetwork.com.br`. A confirmação do nome não representa criação de DNS, certificado, credenciais ou serviço. As rotas deste guia não estão publicadas.

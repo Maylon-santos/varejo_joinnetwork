@@ -9,6 +9,8 @@
 
 Evidência: `docs/validacao-migracao-hostgator.json`. Este estado prevalece sobre os registros históricos abaixo.
 
+Documentação R31 revisada em 13/11 para a HostGator, com portal regenerado e contrato/exemplos preservados. DNS da API externa já retorna o destino novo; implantação, TLS específico, credenciais e homologação permanecem pendentes em `docs/integracoes/operacao.md`.
+
 ## Histórico: capacidade da HostGator para recuperar o piloto — 12/11/2026
 
 - [x] Análise somente leitura concluída: 4 vCPUs, 7,8 GiB de RAM (6,1 GiB disponíveis), aproximadamente 155 GiB livres em disco e carga média baixa na amostra. Docker/Compose e Nginx presentes; 13 containers ativos preservados, portas 3100/55432 livres e diretório/volume do Aeropostale Varejo ainda ausentes.

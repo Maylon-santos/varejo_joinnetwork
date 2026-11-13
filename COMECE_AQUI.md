@@ -11,6 +11,8 @@
 
 Evidência: [validação da migração](docs/validacao-migracao-hostgator.json). Operação atual: [deploy/README.md](deploy/README.md). Este estado prevalece sobre os registros históricos abaixo.
 
+Documentação da API externa alinhada à HostGator em 13/11: [guia e portal](docs/integracoes/README.md), OpenAPI e exemplos preservados; etapas de ativação atualizadas para o destino novo. DNS do subdomínio já aponta à HostGator, mas R31/019, TLS específico, credenciais e homologação continuam pendentes.
+
 ## Histórico: capacidade da HostGator para recuperar o piloto — 12/11/2026
 
 - [x] A pedido de Maylon, interrompida a tentativa de recuperação pela Locaweb e analisada a HostGator somente por leitura: Ubuntu 22.04, 4 vCPUs, 7,8 GiB de RAM (6,1 GiB disponíveis) e raiz de 196 GiB com aproximadamente 155 GiB livres. Os 13 containers ativos e o Nginx existentes foram preservados; Docker/Compose disponíveis, configuração atual do Nginx válida e portas 3100/55432 livres na consulta.
