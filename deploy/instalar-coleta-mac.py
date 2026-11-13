@@ -3,17 +3,21 @@
 import argparse
 import os
 from pathlib import Path
+import re
 import shlex
 import subprocess
 import tempfile
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--teste', action='store_true', help='Agenda temporariamente a cada minuto para verificar a execução; reinstalar sem esta opção após o teste.')
+parser.add_argument('--known-hosts', default='locaweb-known-hosts', help='Nome do arquivo de identidade SSH dentro da pasta de automação.')
 args = parser.parse_args()
 os.umask(0o077)
 root = Path.home() / 'Backups/JoinNetwork/Aeropostale/automacao'
 script = root / 'receber-backups-mac.py'
-if not script.is_file() or not (root / 'locaweb-known-hosts').is_file():
+if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', args.known_hosts):
+    raise SystemExit('Nome de arquivo known_hosts inválido')
+if not script.is_file() or not (root / args.known_hosts).is_file():
     raise SystemExit('Instale o coletor e o known_hosts antes do agendamento')
 result = subprocess.run(['/usr/bin/crontab', '-l'], capture_output=True, text=True)
 if result.returncode and 'no crontab for' not in result.stderr:

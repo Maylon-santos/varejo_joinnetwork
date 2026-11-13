@@ -1,6 +1,17 @@
-# Comece aqui — estado atual em 12/11/2026
+# Comece aqui — estado atual em 13/11/2026
 
-## Capacidade da HostGator para recuperar o piloto — 12/11/2026
+## Piloto recuperado na HostGator — 13/11/2026
+
+- [x] **Produção em https://aeropostale.joinnetwork.com.br**, agora na HostGator (`Hostgator`, `143.95.219.212:22022`, `/opt/aeropostale-varejo`). Maylon alterou o registro A e confirmou o desligamento da VPS antiga pelo console. Worker remoto ativo; local continua com `SYNC_ENABLED=false`.
+- [x] Restaurado o backup externo `backup-20261112T033238Z-S86XWx` (12/11 às 00h32 de São Paulo), primeiro em PostgreSQL 17 descartável e depois no volume próprio do projeto. Contagens iguais: 8 usuários, 31.260 operações, 72.745 itens, 1.149 cancelamentos e 30 checkpoints. Hashes comerciais/checkpoints preservados antes de retomar a sincronização. Recuperação limitada ao conteúdo desse backup; alterações manuais posteriores não estão garantidas.
+- [x] Versão estável `c1c1eb2`, com nota fiscal e migrations até 018. HTTPS, login, 15 filiais, indicadores, ranking, vendas, detalhe, bloqueios 401/403 e encerramento de sessão aprovados pelo DNS público. Certbot passou por renovação simulada e real e usa webroot com timer ativo. **R31/migration 019 não foram publicadas.**
+- [x] API e PostgreSQL saudáveis, worker sem reinícios. Primeira rodada de vendas/cancelamentos concluída nas 15 filiais, sem erro nesses recursos. Estoque teve esperas excedidas e duas consultas concluídas na amostra; complementos/identidade mantêm pendências de validação, sem forçar conciliação. Os 14 containers existentes da HostGator foram preservados (13 ativos e um parado); quatro portais existentes responderam HTTP 200. Cerca de 154 GiB livres em disco e 5,9 GiB de memória disponível na conferência final, sem constituir teste de carga.
+- [x] Backup diário na HostGator e coleta horária no MacBook Home retomados, com chave restrita sem shell, identidade SSH conferida e cron anterior preservado. Novo backup `backup-20261113T035422Z-4TFW7A` copiado e validado no Mac. Retenção: 5 dias na origem após confirmação externa e 90 dias no Mac.
+- [ ] **Envio diário de relatórios (R30) pausado:** configuração privada e recibos por arquivo não fazem parte dos dumps dos bancos; recuperar/conferir esses arquivos antes de reativar o timer. Nenhum relatório foi enviado na migração. R11/R22/R29, demais homologações e SaaS permanecem separados. Locaweb, discos e snapshots preservados; nenhum reparo/restauração do snapshot executado.
+
+Evidência: [validação da migração](docs/validacao-migracao-hostgator.json). Operação atual: [deploy/README.md](deploy/README.md). Este estado prevalece sobre os registros históricos abaixo.
+
+## Histórico: capacidade da HostGator para recuperar o piloto — 12/11/2026
 
 - [x] A pedido de Maylon, interrompida a tentativa de recuperação pela Locaweb e analisada a HostGator somente por leitura: Ubuntu 22.04, 4 vCPUs, 7,8 GiB de RAM (6,1 GiB disponíveis) e raiz de 196 GiB com aproximadamente 155 GiB livres. Os 13 containers ativos e o Nginx existentes foram preservados; Docker/Compose disponíveis, configuração atual do Nginx válida e portas 3100/55432 livres na consulta.
 - [x] **Há capacidade para receber o Aeropostale Varejo**, sem ampliar o plano na condição observada. Referência anterior: cerca de 310 MiB de RAM nos três containers e banco tenant de 126 MB. Reservas propostas de 20 GiB em disco e 2 GiB de RAM são margens de planejamento, não consumo medido nem teste de carga. Evidência: `docs/validacao-capacidade-hostgator.json`.

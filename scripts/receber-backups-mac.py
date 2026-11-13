@@ -16,6 +16,28 @@ import tempfile
 from backup_retencao import validar, reter
 
 
+def origem_ssh(config):
+    """Origem configurável sem alterar a chave restrita ou a verificação do host."""
+    origem = {'host': 'root@191.252.1.241', 'port': 22, 'known_hosts': 'locaweb-known-hosts', 'nome': 'locaweb'}
+    path = config / 'origem.json'
+    if path.exists():
+        if path.is_symlink():
+            raise ValueError('Configuração de origem não pode ser um link')
+        supplied = json.loads(path.read_text())
+        if not isinstance(supplied, dict) or set(supplied) - set(origem):
+            raise ValueError('Configuração de origem inválida')
+        origem.update(supplied)
+    if not isinstance(origem['host'], str) or not re.fullmatch(r'root@[A-Za-z0-9][A-Za-z0-9.-]*', origem['host']):
+        raise ValueError('Host de backup inválido')
+    if type(origem['port']) is not int or not 1 <= origem['port'] <= 65535:
+        raise ValueError('Porta de backup inválida')
+    if not isinstance(origem['known_hosts'], str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*', origem['known_hosts']):
+        raise ValueError('Arquivo known_hosts inválido')
+    if not isinstance(origem['nome'], str) or not re.fullmatch(r'[a-z][a-z0-9_-]*', origem['nome']):
+        raise ValueError('Nome de origem inválido')
+    return origem
+
+
 def importar(archive_path, root, staging):
     required = {'control.dump', 'tenant.dump', 'SHA256SUMS', 'COMPLETE'}
     names = set()
@@ -52,6 +74,7 @@ def main():
     root = Path.home() / 'Backups/JoinNetwork/Aeropostale'
     config = root / 'automacao'
     config.mkdir(parents=True, exist_ok=True)
+    origem = origem_ssh(config)
     with (config / 'receber.lock').open('w') as lock:
         try:
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
@@ -61,7 +84,7 @@ def main():
             with tempfile.TemporaryDirectory(prefix='.recebendo-', dir=root) as temp:
                 staging = Path(temp)
                 archive = staging / 'transferencia.tar.gz'
-                command = ['/usr/bin/ssh', '-T', '-o', 'BatchMode=yes', '-o', 'IdentitiesOnly=yes', '-o', 'StrictHostKeyChecking=yes', '-o', 'ConnectTimeout=15', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3', '-o', 'UserKnownHostsFile=' + str(config / 'locaweb-known-hosts'), '-i', str(Path.home() / '.ssh/aeropostale_backup_ed25519'), 'root@191.252.1.241', 'exportar-backups']
+                command = ['/usr/bin/ssh', '-T', '-o', 'BatchMode=yes', '-o', 'IdentitiesOnly=yes', '-o', 'StrictHostKeyChecking=yes', '-o', 'ConnectTimeout=15', '-o', 'ServerAliveInterval=30', '-o', 'ServerAliveCountMax=3', '-o', 'UserKnownHostsFile=' + str(config / origem['known_hosts']), '-i', str(Path.home() / '.ssh/aeropostale_backup_ed25519'), '-p', str(origem['port']), origem['host'], 'exportar-backups']
                 with archive.open('wb') as output:
                     result = subprocess.run(command, stdout=output, stderr=subprocess.PIPE, timeout=600)
                 if result.returncode:
@@ -71,7 +94,8 @@ def main():
                 confirmation = subprocess.run(command, input=json.dumps(report.pop('confirmacoes')).encode(), stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=600)
                 if confirmation.returncode:
                     raise RuntimeError('Cópias recebidas, mas confirmação remota falhou; retenção local não executada')
-                report['locaweb'] = json.loads(confirmation.stdout)
+                report[origem['nome']] = json.loads(confirmation.stdout)
+                report['servidorOrigem'] = {'host': origem['host'], 'port': origem['port']}
                 report['exclusoesLocais'] = reter(root, 90)
             report.update(verificadoEm=datetime.now(timezone.utc).isoformat(), status='ok', retencaoLocalDias=90)
             target = config / 'ultima-copia.json'

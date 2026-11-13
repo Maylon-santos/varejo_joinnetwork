@@ -2,6 +2,7 @@ import hashlib
 import importlib.util
 from pathlib import Path
 import io
+import json
 import tarfile
 import tempfile
 import unittest
@@ -10,6 +11,23 @@ receiver = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(receiver)
 
 class Recebimento(unittest.TestCase):
+    def test_origem_anterior_preservada_sem_configuracao(self):
+        with tempfile.TemporaryDirectory() as temp:
+            origem = receiver.origem_ssh(Path(temp))
+            self.assertEqual((origem['host'], origem['port'], origem['known_hosts']), ('root@191.252.1.241', 22, 'locaweb-known-hosts'))
+    def test_origem_hostgator_com_porta_e_identidade_proprias(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            config = {'host': 'root@143.95.219.212', 'port': 22022, 'known_hosts': 'hostgator-known-hosts', 'nome': 'hostgator'}
+            (root / 'origem.json').write_text(json.dumps(config))
+            self.assertEqual(receiver.origem_ssh(root), config)
+    def test_origem_rejeita_opcoes_caminhos_e_porta_invalidos(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            for config in [{'host': '-oProxyCommand=malicioso'}, {'known_hosts': '../outro'}, {'port': True}, {'port': 0}, {'port': 65536}, {'StrictHostKeyChecking': 'no'}]:
+                with self.subTest(config=config):
+                    (root / 'origem.json').write_text(json.dumps(config))
+                    with self.assertRaises(ValueError): receiver.origem_ssh(root)
     def test_lote_validado_e_reexecucao(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp); staging = root / 'staging'; staging.mkdir()

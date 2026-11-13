@@ -1,9 +1,23 @@
 # Operação do piloto publicado
 
 URL: https://aeropostale.joinnetwork.com.br
-Servidor: alias SSH `localweb`. Diretório: `/opt/aeropostale-varejo`.
+Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
-## Backup e reinicialização — 11/11/2026
+## Recuperação na HostGator — 13/11/2026
+
+O DNS foi alterado por Maylon e verificado nos resolvedores públicos. A VPS antiga da Locaweb foi desligada pelo console, conforme confirmação de Maylon; preservar discos e snapshots. O alias `localweb` identifica a origem antiga e não deve ser usado para implantar o piloto atual.
+
+Recuperado o backup `backup-20261112T033238Z-S86XWx`, de 12/11 às 00h32 de São Paulo: teste em PostgreSQL 17 descartável, restauração em bancos/volume próprios, contagens e hashes comerciais/checkpoints iguais antes da ativação do worker. Logins e 15 filiais validados. Dados manuais posteriores ao backup não têm recuperação garantida; o ERP volta a ser consultado pelos checkpoints restaurados. Os dumps cobrem os dois bancos deste projeto, não a máquina inteira nem outros serviços.
+
+O código em produção é a versão estável `c1c1eb26201aaac9d2e0f333baffd7ea14dad8ab`, com migrations até 018; o HEAD do repositório inclui R31 ainda não publicada. Não copiar o HEAD nem aplicar 019 como parte de manutenção desta recuperação. O projeto Compose `aeropostale-varejo` usa PostgreSQL em `127.0.0.1:55432` e API em `127.0.0.1:3100`, sem exposição direta desses serviços. `compose.override.yaml` no servidor limita PostgreSQL a 1 GiB/1 CPU, API a 512 MiB/1 CPU e worker a 512 MiB/0,5 CPU.
+
+Os três serviços retomaram sem reinícios; API/banco saudáveis. Vendas e cancelamentos concluíram a primeira rodada nas 15 filiais; estoque apresentou timeouts e consultas concluídas. Validações de complementos/identidade ainda rejeitam retornos divergentes do ERP. Não remover essas validações nem presumir histórico completo. Os 14 containers existentes (13 ativos/um parado), suas montagens/imagens e os vhosts anteriores foram preservados; os quatro portais existentes responderam 200.
+
+**Relatórios diários R30 permanecem pausados:** recuperar/conferir `.env.relatorios` e recibos do diretório de exportações antes de instalar/ativar o timer na HostGator. Esses arquivos não estão nos dumps dos bancos. Nenhum envio foi executado nesta migração. R31, demais filiais/cargos e homologações comerciais não estão concluídos por esta publicação.
+
+Evidência agregada: `docs/validacao-migracao-hostgator.json`. Dumps, inventários detalhados, configurações privadas e logs ficam em `artifacts/migracao-hostgator`, ignorado pelo Git.
+
+## Histórico Locaweb: backup e reinicialização — 11/11/2026
 
 Manutenção autorizada para verificar o upgrade de disco: backup `backup-20261112T004339Z-u1FTI2` dos dois bancos, leitura estrutural aprovada e cópia privada externa com checksums conferidos. Snapshot `pre-upgrade-disco-20261111` disponível no painel, com o anterior preservado. Não foi realizada nova restauração integral deste backup.
 
@@ -28,7 +42,7 @@ Não habilitar workers locais e remotos simultaneamente com bancos separados. O 
 
 `bash deploy/backup.sh` gera dumps customizados de ambos os bancos, checksums SHA-256 e marcador COMPLETE. O diretório usa permissões privadas. Sessões Admin são excluídas dos dados do backup, exigindo novo login após restauração; usuários e hashes de senha são preservados.
 
-O timer `aeropostale-backup.timer` executa diariamente às 03:30 UTC (00:30 de São Paulo), com até cinco minutos de variação. Verificar com `systemctl list-timers aeropostale-backup.timer` e `journalctl -u aeropostale-backup.service`. Os backups diários ficam em `/opt/aeropostale-varejo/backups`. Retenção ativa: 5 dias na Locaweb após confirmação externa e 90 dias no mabookhome, preservando sempre a última cópia completa. Há uma cópia inicial fora do servidor em `artifacts/deploy/backups` no computador de origem, ignorada pelo Git.
+O timer `aeropostale-backup.timer` executa diariamente às 03:30 UTC (00:30 de São Paulo), com até cinco minutos de variação. Verificar com `systemctl list-timers aeropostale-backup.timer` e `journalctl -u aeropostale-backup.service`. Os backups diários ficam em `/opt/aeropostale-varejo/backups`. Retenção ativa: 5 dias na HostGator após confirmação externa e 90 dias no mabookhome, preservando sempre a última cópia completa. O backup após a retomada, `backup-20261113T035422Z-4TFW7A`, foi copiado para o Mac e teve seus checksums conferidos. Cópias privadas no computador de origem também permanecem ignoradas pelo Git.
 
 Os dumps são consistentes individualmente; não são um snapshot simultâneo entre os dois bancos. Para uma migração coordenada, pausar escritas/sincronização antes da cópia. O backup inicial foi restaurado nos bancos novos antes da publicação e conferido contra contagens, totais, hashes de operações/itens/cancelamentos, tenant e checkpoints da origem.
 
@@ -51,7 +65,7 @@ Se uma atualização falhar, manter o worker pausado e retornar a imagem anterio
 
 ## HTTPS e verificação
 
-Certificado emitido para o hostname exato, com vencimento inicial em 11/12/2026. Certbot usa webroot em `/var/www/letsencrypt`. O hook `aeropostale-nginx` valida e recarrega Nginx após renovação.
+Certificado emitido para o hostname exato na HostGator e renovado em 13/11, com vencimento em 11/02/2027 às 02h56 UTC. Certbot usa webroot em `/var/www/letsencrypt` e desafio HTTP; renovação simulada e real aprovadas. `certbot.timer` ativo, com deploy hook `/opt/aeropostale-varejo/deploy/renovar-nginx.sh`, que valida e recarrega o Nginx. O TXT criado para a emissão inicial não é necessário para as próximas renovações. Propagação depende dos caches de cada resolvedor; a validação externa usou DNS público e TLS estrito, sem ignorar certificado.
 
 Verificação externa autenticada: `node --env-file=.env scripts/verificar-producao.mjs`, no computador que possui as credenciais Admin. Nunca imprimir token/senha. Opcionalmente `DEPLOY_VERIFY_IP` permite testar um IP preservando a verificação TLS do hostname.
 
@@ -96,13 +110,19 @@ A restauração do backup de 14/09 às 11h56 UTC foi validada. Destino e políti
 
 Pasta no Mac: `/Users/maylonsantos/Backups/JoinNetwork/Aeropostale`. No Finder, usar ⌘⇧G e colar esse caminho. Cada backup contém `control.dump`, `tenant.dump`, `SHA256SUMS` e `COMPLETE`; os dumps são arquivos PostgreSQL para restauração.
 
-O Mac busca os backups pela conexão SSH ao endereço público da Locaweb. Acesso ao Mac pelo alias `mabookhome` já funciona via rede Tailscale; não foi necessário instalar Tailscale no servidor. A chave privada exclusiva `~/.ssh/aeropostale_backup_ed25519` fica somente no Mac. O known_hosts dedicado foi copiado da conexão confiável existente; o coletor exige verificação estrita da identidade do servidor.
+O Mac busca os backups pela conexão SSH à HostGator em `143.95.219.212:22022`. Acesso ao Mac pelo alias `mabookhome` já funciona via rede Tailscale; não foi necessário instalar Tailscale no servidor. A chave privada exclusiva `~/.ssh/aeropostale_backup_ed25519` fica somente no Mac. O known_hosts dedicado foi copiado da conexão confiável existente; o coletor exige verificação estrita da identidade do servidor.
 
-Na Locaweb, a chave pública tem `restrict` e comando forçado `/usr/bin/python3 /opt/aeropostale-varejo/deploy/exportar-backups.py`. O comando permite apenas `exportar-backups` e `confirmar-copias`; não libera shell, terminal ou encaminhamento de portas. O helper usa `scripts/backup_retencao.py`, valida os backups completos e limita a confirmação aos nomes e hashes existentes. O acesso deve continuar restrito ao reinstalar; nunca autorizar essa chave como login geral.
+Na HostGator, a chave pública tem `restrict` e comando forçado `/usr/bin/python3 /opt/aeropostale-varejo/deploy/exportar-backups.py`. O comando permite apenas `exportar-backups` e `confirmar-copias`; não libera shell, terminal ou encaminhamento de portas. O helper usa `scripts/backup_retencao.py`, valida os backups completos e limita a confirmação aos nomes e hashes existentes. O acesso deve continuar restrito ao reinstalar; nunca autorizar essa chave como login geral. Uma tentativa de comando não permitido foi rejeitada na validação da migração.
 
-No Mac, `scripts/receber-backups-mac.py` e `scripts/backup_retencao.py` ficam em `Backups/JoinNetwork/Aeropostale/automacao/`, junto de `locaweb-known-hosts`. O coletor transfere os backups completos, aceita somente os quatro arquivos esperados, rejeita links e caminhos externos, confere o lote antes de publicar cópias novas e preserva cópias existentes diferentes para análise. Um lock impede execuções concorrentes. Não há exclusão por espelhamento. A transferência atual envia todos os backups completos ainda retidos na origem; somente as cópias novas são adicionadas ao destino.
+No Mac, `scripts/receber-backups-mac.py` e `scripts/backup_retencao.py` ficam em `Backups/JoinNetwork/Aeropostale/automacao/`, junto de `hostgator-known-hosts` e `origem.json`. A configuração atual é:
 
-`deploy/instalar-coleta-mac.py`, executado no Mac como o usuário do backup, mantém um bloco próprio no crontab, preservando as demais tarefas. Frequência definitiva: `17 * * * *`. O teste temporário por minuto foi removido após execuções automáticas confirmadas. Não exige sudo nem sessão gráfica. Quando o computador estiver desligado, dormindo ou sem internet, a tentativa ocorrerá no próximo horário em que puder executar; a rotina não acorda o Mac. Não houve alteração das configurações de energia.
+```json
+{"host":"root@143.95.219.212","port":22022,"known_hosts":"hostgator-known-hosts","nome":"hostgator"}
+```
+
+Sem `origem.json`, o coletor mantém o padrão legado da Locaweb para compatibilidade; uma instalação nova na HostGator precisa desse arquivo. Host, porta e nomes são validados antes da conexão. O coletor transfere os backups completos, aceita somente os quatro arquivos esperados, rejeita links e caminhos externos, confere o lote antes de publicar cópias novas e preserva cópias existentes diferentes para análise. Um lock impede execuções concorrentes. Não há exclusão por espelhamento. A transferência atual envia todos os backups completos ainda retidos na origem; somente as cópias novas são adicionadas ao destino. Arquivos anteriores de automação/identidade foram preservados com sufixo `.antes-hostgator-20261113`.
+
+`deploy/instalar-coleta-mac.py --known-hosts hostgator-known-hosts`, executado no Mac como o usuário do backup após instalar os arquivos e a configuração acima, mantém um bloco próprio no crontab, preservando as demais tarefas. Frequência definitiva: `17 * * * *`. O cron existente foi preservado byte a byte na migração, sem reinstalação. Não exige sudo nem sessão gráfica. Quando o computador estiver desligado, dormindo ou sem internet, a tentativa ocorrerá no próximo horário em que puder executar; a rotina não acorda o Mac. Não houve alteração das configurações de energia.
 
 Após conferir os hashes no destino, o Mac envia confirmação por SSH. O servidor então remove somente backups completos confirmados com mais de **5 dias**. Depois do sucesso remoto, o Mac remove cópias completas com mais de **90 dias**. Em ambos os lados, a última cópia completa é preservada. Idade calculada pelo timestamp UTC do nome do backup; cópias incompletas, diretórios inesperados, links e diretórios com arquivos adicionais não são apagados. Dados corrompidos interrompem a limpeza. Se a cópia/confirmacão externa falhar, a retenção remota não avança; o disco pode conservar backups além dos cinco dias até a conexão voltar.
 

@@ -1,6 +1,15 @@
 # Roadmap — Aeropostale Varejo
 
-## Capacidade da HostGator para recuperar o piloto — 12/11/2026
+## Piloto recuperado na HostGator — 13/11/2026
+
+- [x] Migração autorizada concluída para `143.95.219.212`, mantendo https://aeropostale.joinnetwork.com.br. Restaurado o backup externo de 12/11 às 00h32 de São Paulo em PostgreSQL 17 isolado antes da publicação; contagens e hashes comerciais/checkpoints conferidos. Versão estável `c1c1eb2`, migrations até 018; R31/019 não ativadas.
+- [x] Maylon alterou o DNS e confirmou desligamento da origem pelo console. API/banco saudáveis, worker remoto ativo e local desativado. Vendas/cancelamentos das 15 filiais sincronizados sem erro na primeira rodada; estoque teve timeouts e duas consultas concluídas, complementos/identidade seguem as validações existentes.
+- [x] HTTPS, login, dados, 401/403/logout aprovados pelo DNS público. Renovação automática webroot testada. Backup diário e coleta horária no Mac retomados; `backup-20261113T035422Z-4TFW7A` copiado com checksums conferidos. Retenção 5/90 dias e chave restrita preservadas. 14 containers e quatro portais anteriores da HostGator preservados.
+- [ ] Reativar envio diário R30 somente após recuperar/conferir configuração privada e recibos anteriores; dumps dos bancos não cobrem esses arquivos. Nenhum envio realizado nesta migração. Homologações, pendências ERP e R31 continuam separadas. Dados manuais posteriores ao backup não têm recuperação garantida. Locaweb/snapshots preservados, sem reparo ou restauração.
+
+Evidência: `docs/validacao-migracao-hostgator.json`. Este estado prevalece sobre os registros históricos abaixo.
+
+## Histórico: capacidade da HostGator para recuperar o piloto — 12/11/2026
 
 - [x] Análise somente leitura concluída: 4 vCPUs, 7,8 GiB de RAM (6,1 GiB disponíveis), aproximadamente 155 GiB livres em disco e carga média baixa na amostra. Docker/Compose e Nginx presentes; 13 containers ativos preservados, portas 3100/55432 livres e diretório/volume do Aeropostale Varejo ainda ausentes.
 - [x] Capacidade considerada suficiente para restaurar o piloto, com margens propostas de 20 GiB em disco e 2 GiB de RAM. O consumo anterior de cerca de 310 MiB nos três containers não representa pico nem carga sustentada. Evidência: `docs/validacao-capacidade-hostgator.json`.

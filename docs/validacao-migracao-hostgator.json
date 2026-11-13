@@ -1,0 +1,256 @@
+{
+  "verificadoEm": "2026-11-13T03:57:46.292495+00:00",
+  "status": "piloto_recuperado_com_pendencias_operacionais_identificadas",
+  "escopo": "Somente Aeropostale Varejo; não é recuperação integral da VPS antiga.",
+  "destino": {
+    "provedor": "HostGator",
+    "aliasSSH": "Hostgator",
+    "ip": "143.95.219.212",
+    "portaSSH": 22022,
+    "diretorio": "/opt/aeropostale-varejo",
+    "projetoCompose": "aeropostale-varejo",
+    "url": "https://aeropostale.joinnetwork.com.br",
+    "sourceCommit": "c1c1eb26201aaac9d2e0f333baffd7ea14dad8ab",
+    "volumeProprio": true,
+    "apiLoopback": 3100,
+    "postgresLoopback": 55432
+  },
+  "origem": {
+    "provedor": "Locaweb",
+    "ip": "191.252.1.241",
+    "desligamento": "Maylon confirmou desligamento por poweroff -f no console initramfs antes da ativação do worker novo.",
+    "snapshotPreservado": "pre-upgrade-disco-20261111",
+    "restauracaoSnapshotExecutada": false,
+    "reparoDiscosExecutado": false,
+    "outrosServicosRecuperados": false
+  },
+  "recuperacao": {
+    "backup": "backup-20261112T033238Z-S86XWx",
+    "dataHoraSaoPaulo": "2026-11-12T00:32:38-03:00",
+    "origemCopia": "MacBook Home",
+    "checksumsAprovados": true,
+    "testePostgres17DescartavelSemRede": true,
+    "restauracaoControlTenantAprovada": true,
+    "contagensIguaisAoTesteIsolado": true,
+    "control": {
+      "usuarios": 8,
+      "admins_ativos": 1,
+      "perfis": 5,
+      "vinculos": 67,
+      "sessoes": 0,
+      "registro_ok": true
+    },
+    "tenant": {
+      "operacoes": 31260,
+      "itens": 72745,
+      "cancelamentos": 1149,
+      "cadastros_filiais": 15,
+      "checkpoints": 30,
+      "clientes_importados": 31260,
+      "identidade_ok": true
+    },
+    "hashesAntesWorker": {
+      "operacoes_hash": "b561f39476a341ad2d363aeba9c26e1f",
+      "itens_hash": "0710fbcb22f986a865f27009c924202a",
+      "cancelamentos_hash": "7290a45d89dce8594078e50230b4eaef",
+      "checkpoints_hash": "f85e9570594f7ad4cfdc231da85feb91"
+    },
+    "hashesIguaisDurantePreparacaoAPI": true,
+    "migrationsTenant": [
+      "001_operacoes.sql",
+      "002_vendas.sql",
+      "003_imagens.sql",
+      "004_validacao_erp.sql",
+      "005_clientes.sql",
+      "006_cadastro_filiais.sql",
+      "007_complementos_venda.sql",
+      "008_identidade_clientes.sql",
+      "009_fila_atendimento.sql",
+      "010_fila_relatorios_intenso.sql",
+      "011_produtos_estoque.sql",
+      "012_fantasia_filiais.sql",
+      "013_fotos_vendedores.sql",
+      "014_tipo_produto_estoque.sql",
+      "015_reprocessar_vendas.sql",
+      "016_tolerancia_conciliacao.sql",
+      "017_metas_filiais.sql",
+      "018_tipo_cadastro_produtos.sql"
+    ],
+    "migration019Aplicada": false,
+    "limite": "Dados recuperados conforme backup; alterações manuais posteriores não são garantidas. ERP retomado a partir dos checkpoints restaurados. Dumps não abrangem arquivos privados de relatórios nem outros serviços da VPS."
+  },
+  "validacaoPublica": {
+    "verificadoEm": "2026-11-13T03:53:22.870Z",
+    "dominio": "aeropostale.joinnetwork.com.br",
+    "tlsValidado": true,
+    "login": 200,
+    "indicadores": 200,
+    "ranking": 200,
+    "vendas": 200,
+    "detalhe": 200,
+    "anonimo": 401,
+    "filialNaoAutorizada": 403,
+    "logout": 200,
+    "sessaoRevogada": 401,
+    "contagemConsistente": true,
+    "filiaisAutorizadas": 15,
+    "cadastroFiliaisPersistido": true,
+    "resolvedoresDNS": [
+      "1.1.1.1",
+      "8.8.8.8"
+    ],
+    "ipDestino": [
+      "143.95.219.212"
+    ]
+  },
+  "dns": {
+    "registroAAlteradoPor": "Maylon",
+    "ipNovo": "143.95.219.212",
+    "resolvedoresPublicosConferidos": [
+      "1.1.1.1",
+      "8.8.8.8"
+    ],
+    "cacheLocalMacAindaAntigoNaPrimeiraConsulta": true,
+    "observacao": "Validação autenticada usou resolução DNS pública e TLS estrito; propagação no resolvedor local pode ocorrer depois."
+  },
+  "https": {
+    "renovacaoWebrootPersistida": true,
+    "dryRunAprovado": true,
+    "renovacaoRealAprovada": true,
+    "timerCertbot": "active",
+    "httpsPeloDNSPublico": 200,
+    "certificado": "notBefore=Nov 13 02:56:01 2026 GMT\nnotAfter=Feb 11 02:56:00 2027 GMT",
+    "TXTNaoMaisNecessarioParaRenovar": true
+  },
+  "servicos": {
+    "novos": [
+      {
+        "servico": "postgres",
+        "ativo": true,
+        "health": "healthy",
+        "reinicios": 0,
+        "memoriaLimiteBytes": 1073741824
+      },
+      {
+        "servico": "api",
+        "ativo": true,
+        "health": "healthy",
+        "reinicios": 0,
+        "memoriaLimiteBytes": 536870912
+      },
+      {
+        "servico": "sync-worker",
+        "ativo": true,
+        "health": null,
+        "reinicios": 0,
+        "memoriaLimiteBytes": 536870912
+      }
+    ],
+    "containersExistentesPreservados": 14,
+    "estadosAnteriores": {
+      "ativos": 13,
+      "parados": 1
+    },
+    "mesmosIdsImagensMontagensReiniciosEHealthchecks": true,
+    "nginxExistentePreservado": true,
+    "portaisExistentes": {
+      "ragabesh.joinnetwork.com.br": 200,
+      "app.aeropostale.joinnetwork.com.br": 200,
+      "homolog-app.aeropostale.joinnetwork.com.br": 200,
+      "sublicenciados.joinnetwork.com.br": 200
+    },
+    "memoriaBytes": {
+      "MemTotal": 8326332416,
+      "MemAvailable": 6354472960
+    },
+    "discoBytes": {
+      "total": 210136461312,
+      "livre": 165082984448
+    },
+    "testeCargaRealizado": false
+  },
+  "sincronizacao": {
+    "worker": {
+      "workerAtivo": true,
+      "syncHabilitado": true,
+      "inicio": "2026-11-13T03:49:36.85450275Z",
+      "reinicios": 0,
+      "limiteMemoriaBytes": 536870912,
+      "origemAntigaDesligada": "confirmado por Maylon pelo console",
+      "workerLocalDesativado": true
+    },
+    "amostra": {
+      "ativo": true,
+      "reinicios": 0,
+      "eventos": {
+        "worker_iniciado": 1,
+        "cadastro_filiais_sincronizado": 1,
+        "progresso": 60,
+        "ciclo_concluido": 30,
+        "cadastro_produtos_atualizado": 3,
+        "estoque_sincronizado": 2,
+        "estoque_falhou": 4,
+        "complementos_falharam": 9,
+        "identidade_clientes_falhou": 3
+      },
+      "codigosErros": {
+        "23": 4,
+        "FALHA_VALIDACAO_OU_EXECUCAO": 2,
+        "COMPLEMENTOS_ITENS_DIVERGENTES": 5,
+        "CLIENTE_CODIGO_INVALIDO": 4,
+        "CHAVE_DUPLICADA_CONFLITANTE": 1
+      },
+      "sincronizacao": {
+        "sucessosDesdeAtivacao": 48,
+        "ultimoSucesso": "2026-11-13T03:51:22.511569+00:00",
+        "vendasCancelamentosAtualizados": 30,
+        "errosAtuaisVendasCancelamentos": 0,
+        "checkpoints": 30
+      }
+    },
+    "observacao": "Vendas/cancelamentos: 30 recursos concluídos nas 15 filiais, sem erro atual. Estoque: quatro timeouts e duas consultas concluídas na amostra. Complementos/identidade: pendências rejeitadas pelas validações existentes; retentativas/backoff preservados, sem forçar gravações. O retorno inicial não significa preenchimento completo do histórico."
+  },
+  "backupExterno": {
+    "aposRetomada": {
+      "ultimoBackup": "backup-20261113T035422Z-4TFW7A",
+      "checksumsConferidos": true,
+      "servico": true
+    },
+    "mac": {
+      "status": "ok",
+      "ultimoBackup": "backup-20261113T035422Z-4TFW7A",
+      "checksumsConferidos": true,
+      "copiasVerificadas": 3,
+      "copiasNovas": 1,
+      "cronPreservado": true,
+      "origem": {
+        "host": "root@143.95.219.212",
+        "port": 22022
+      },
+      "retencaoLocalDias": 90
+    },
+    "chaveRestritaSemShellConfirmada": true,
+    "cronPreservado": true,
+    "agendaMac": "17 * * * *",
+    "agendaServidor": "03:30 UTC diariamente, atraso aleatório de até 300 segundos",
+    "timerServidor": "active",
+    "retencaoOrigemDiasAposConfirmacaoExterna": 5,
+    "retencaoMacDias": 90,
+    "ultimaCopiaSemprePreservada": true,
+    "destinoMac": "/Users/maylonsantos/Backups/JoinNetwork/Aeropostale",
+    "observacao": "Dumps consistentes individualmente; não constituem snapshot simultâneo entre os dois bancos. O backup após retomada teve checksums e cópia externa verificados, sem novo teste integral de restauração."
+  },
+  "validacaoCodigoColeta": {
+    "testesRecebimento": 6,
+    "testesRetencao": 6,
+    "resultado": "aprovados",
+    "sintaxePython": "aprovada"
+  },
+  "pendencias": [
+    "R30: recuperar/conferir configuração privada e recibos antes de reativar envio diário de relatórios. Timer não instalado/ativado nesta migração; nenhum envio executado.",
+    "R31/API externa/webhooks e migration 019 não publicados.",
+    "Timeouts de estoque e pendências de validação de complementos/identidade seguem em retentativa; não presumir histórico completo.",
+    "Homologações comerciais R11/R22, horários R29, cargos/filiais adicionais e SaaS permanecem separados.",
+    "VPS antiga e snapshots preservados, sem cópia integral dos discos nem recuperação dos demais serviços."
+  ]
+}
