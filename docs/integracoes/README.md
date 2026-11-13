@@ -1,12 +1,12 @@
 # Join Network · API para desenvolvedores
 
-> Versão 0.1.0 • implementação e testes isolados em 11/11/2026 • publicação externa pendente.
+> Versão 0.1.0 • infraestrutura publicada em 13/11/2026 • aguardando definição do primeiro consumidor.
 
-**Situação em 13/11/2026:** o painel e seu coletor ERP foram recuperados na HostGator. A API interna do painel está ativa; a API externa e os webhooks deste guia ainda aguardam implantação e homologação. Código, contrato OpenAPI, exemplos e portal foram preservados no GitHub. O DNS público do domínio reservado já retorna `143.95.219.212`; ainda é necessário configurar e validar o serviço e seu certificado específico. Consulte a [operação atual do piloto](../../deploy/README.md) e as [etapas de ativação](operacao.md#publicação-controlada).
+**Situação em 13/11/2026:** API externa, OAuth e worker de projeções ativos na HostGator, com migration 019, HTTPS e documentação pública. Consultas e controles de acesso foram verificados com uma credencial temporária revogada ao concluir. Maylon optou por deixar a infraestrutura pronta para o futuro: **nenhum consumidor real está habilitado, entregas de webhooks e console administrativo estão desativados**. Código, OpenAPI e exemplos permanecem no GitHub. Consulte a [operação atual do piloto](../../deploy/README.md) e o [provisionamento futuro](operacao.md#publicação-controlada).
 
 Integre vendas, filiais, produtos e estoque com consultas autenticadas e notificações de vendas. Este material documenta a implementação da API externa e orienta o cadastro e a homologação de consumidores. Os exemplos são inteiramente fictícios.
 
-**Domínio confirmado por Maylon:** `api-varejo.aeropostale.joinnetwork.com.br`. A confirmação do nome não representa criação de DNS, certificado, credenciais ou serviço. As rotas deste guia não estão publicadas.
+**Endereço publicado:** `https://api-varejo.aeropostale.joinnetwork.com.br`. [Abrir documentação online](https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/). As rotas exigem credenciais próprias de integração; login do painel não concede acesso à API externa.
 
 [Operação da implementação](operacao.md): serviços, console com MFA, configuração, GitHub/CI, ativação e limites conhecidos. O deploy continua via SSH; o push no GitHub executa validação automática, sem publicar a aplicação.
 
@@ -34,16 +34,16 @@ Abra também o [portal visual](index.html), o [contrato OpenAPI 3.1](../../apis/
 
 ## O que está implementado e o que depende de ativação
 
-| Capacidade | Situação em 11/11/2026 |
+| Capacidade | Situação em 13/11/2026 |
 | --- | --- |
 | Dados de vendas, itens, pagamentos, nota fiscal, filiais e catálogo no banco local | Implementados, com cobertura parcial e ressalvas descritas neste guia |
 | API interna `/api/v1` do painel e autorização por usuário/filial | Implementadas para o painel |
 | Autenticação da API interna | Login de usuário, sessão Bearer opaca de oito horas; não é Client Credentials |
-| API externa `/v1` neste domínio | Implementada e testada isoladamente; domínio ainda não ativado |
+| API externa `/v1` neste domínio | Publicada com HTTPS; acesso depende de consumidor provisionado |
 | OAuth de integrações, cadastro de clientes e escopos externos | Implementados; nenhum cliente real provisionado |
 | Revisões externas, cursores estáveis e log incremental | Implementados com projeções, snapshots cifrados e captura transacional |
-| Webhooks, outbox, assinaturas e painel de entregas | Implementados; testes com consumidor simulado, sem disparos reais |
-| Limites quantitativos deste guia | Aplicados pela implementação; carga/capacidade real pendentes antes de liberar produção |
+| Webhooks, outbox, assinaturas e painel de entregas | Implementados; entregas e console desativados, sem inscrições ou disparos reais |
+| Limites quantitativos deste guia | Aplicados; dimensionamento e carga do primeiro consumidor continuam pendentes |
 
 Não compartilhe login Admin, token do painel ou credenciais do ERP com um integrador. A documentação externa descreve uma camada própria de acesso, sem conceder permissões administrativas do painel.
 

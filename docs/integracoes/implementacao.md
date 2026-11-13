@@ -1,6 +1,6 @@
 # Base de implementação e critérios de aceite
 
-> Arquitetura do contrato e critérios de aceite. OAuth, consultas, projeções, log, outbox, entregas e console delegado foram implementados e testados isoladamente em 11/11/2026. Publicação/homologação real pendentes. [Escopo entregue e roteiro operacional](operacao.md).
+> Arquitetura do contrato e critérios de aceite. Implementação e testes isolados em 11/11/2026; infraestrutura, OAuth, consultas e projeções publicados na HostGator em 13/11. Entregas de webhooks e console desativados; primeiro consumidor e sua homologação pendentes. [Escopo entregue e roteiro operacional](operacao.md).
 
 ## Evidência do código atual
 

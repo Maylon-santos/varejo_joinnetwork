@@ -1,0 +1,6 @@
+{
+  "rede": "aeropostale-varejo_default",
+  "api_ipv4": "172.22.254.20",
+  "worker_ipv4": "172.22.254.21",
+  "permitir_https_publico": false
+}

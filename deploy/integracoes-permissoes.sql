@@ -4,6 +4,10 @@ DO $$ BEGIN
  IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='varejo_integracoes_api') THEN CREATE ROLE varejo_integracoes_api NOLOGIN; END IF;
  IF NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname='varejo_integracoes_worker') THEN CREATE ROLE varejo_integracoes_worker NOLOGIN; END IF;
 END $$;
+-- Os bancos do piloto revogam CONNECT de PUBLIC na criação.
+DO $$ BEGIN
+ EXECUTE format('GRANT CONNECT ON DATABASE %I TO varejo_integracoes_api,varejo_integracoes_worker',current_database());
+END $$;
 GRANT USAGE ON SCHEMA public TO varejo_integracoes_api,varejo_integracoes_worker;
 GRANT SELECT ON tenant_identity,operacoes,operacao_itens,cancelamentos,cadastro_filiais,cadastro_produtos,estoque_atual,sync_estoques TO varejo_integracoes_worker;
 GRANT SELECT ON tenant_identity,estoque_atual,sync_estoques TO varejo_integracoes_api;

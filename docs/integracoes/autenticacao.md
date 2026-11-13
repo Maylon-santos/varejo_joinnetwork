@@ -1,6 +1,6 @@
 # Autenticação, autorização e limites
 
-> Implementado e testado isoladamente. Nenhum cliente real foi provisionado. Consulte [operação e ativação](operacao.md).
+> OAuth publicado com HTTPS e validado em 13/11/2026. Nenhum cliente real provisionado; a credencial temporária de verificação foi revogada. Consulte [operação e ativação](operacao.md).
 
 ## Identidade de máquina, separada do painel
 

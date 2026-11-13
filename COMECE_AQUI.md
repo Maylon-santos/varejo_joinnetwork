@@ -1,5 +1,15 @@
 # Comece aqui — estado atual em 13/11/2026
 
+## API externa publicada para uso futuro — 13/11/2026
+
+- [x] **API/OAuth e documentação publicados na HostGator:** https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/ . Migration 019 aplicada após backup, preservando por hash vendas, itens, cancelamentos e checkpoints. Worker de projeções ativo; carga inicial de **94.829 recursos** concluída (31.307 vendas, 15 filiais, 19.968 vínculos de produtos e 43.539 estoques).
+- [x] HTTPS específico, renovação simulada, login do painel e suas 15 filiais, OAuth/consultas/permissões e revogação verificados. Credenciais temporárias de validação revogadas; **zero consumidores reais ativos, tokens, inscrições e entregas** na conferência final. Painel/coletor atualizados; PostgreSQL e outros 14 containers da HostGator preservados. Quatro portais anteriores e o piloto responderam 200.
+- [x] LOGINs de menor privilégio e CONNECT somente no banco correspondente. API/worker não alteram dados comerciais; rede permite apenas PostgreSQL enquanto não há consumidor. Política persistente, limites de 256 MiB/0,5 CPU por serviço adicional e chave cifradora com cópia protegida externa. Sharp atualizado para 0.35.5; 80 unitários, 92 integração em PostgreSQL 17 descartável e contrato/documentação aprovados.
+- [x] Backup `backup-20261113T100337Z-WiY71c` restaurado em PostgreSQL 17 sem rede, incluindo migration 019 e decifragem de uma projeção com a chave preservada, sem exibir dados. Cópia no MacBook Home com checksums conferidos; timers de backup/renovação ativos, retenção anterior preservada.
+- [ ] **Por decisão de Maylon, sistema consumidor ainda não definido.** Console e entregas de webhooks desativados. Quando houver sistema: aprovar responsável, finalidade, escopos/filiais e chave pública; matricular operador com MFA, configurar destino/egress se houver webhook e homologar consulta/carga/revogação/entrega. R31 continua em andamento até esse aceite; não conclui R11/R22/R29/SaaS. R30 permanece pausada separadamente.
+
+Evidência: [publicação das integrações](docs/validacao-publicacao-integracoes-hostgator.json). [Operação e provisionamento](docs/integracoes/operacao.md). Este estado prevalece sobre a recuperação inicial e os históricos abaixo.
+
 ## Piloto recuperado na HostGator — 13/11/2026
 
 - [x] **Produção em https://aeropostale.joinnetwork.com.br**, agora na HostGator (`Hostgator`, `143.95.219.212:22022`, `/opt/aeropostale-varejo`). Maylon alterou o registro A e confirmou o desligamento da VPS antiga pelo console. Worker remoto ativo; local continua com `SYNC_ENABLED=false`.
@@ -11,7 +21,7 @@
 
 Evidência: [validação da migração](docs/validacao-migracao-hostgator.json). Operação atual: [deploy/README.md](deploy/README.md). Este estado prevalece sobre os registros históricos abaixo.
 
-Documentação da API externa alinhada à HostGator em 13/11: [guia e portal](docs/integracoes/README.md), OpenAPI e exemplos preservados; etapas de ativação atualizadas para o destino novo. DNS do subdomínio já aponta à HostGator, mas R31/019, TLS específico, credenciais e homologação continuam pendentes.
+Na etapa inicial da recuperação, a API externa ainda não estava publicada. A publicação posterior, seu escopo e as pendências estão registrados acima.
 
 ## Histórico: capacidade da HostGator para recuperar o piloto — 12/11/2026
 

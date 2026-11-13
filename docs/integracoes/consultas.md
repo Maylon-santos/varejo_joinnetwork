@@ -1,6 +1,6 @@
 # Consultas REST e interpretação dos dados
 
-> Rotas externas implementadas e testadas em ambiente isolado. A publicação no domínio ainda está pendente; `/api/v1` continua sendo a API interna. Veja [operação](operacao.md).
+> Rotas externas publicadas com HTTPS em 13/11/2026 e verificadas com credencial temporária revogada ao concluir. Nenhum consumidor real habilitado; `/api/v1` continua sendo a API interna. Veja [operação](operacao.md).
 
 ## Endereço e envelope
 

@@ -1,0 +1,339 @@
+{
+  "verificadoEm": "2026-11-13T10:14:17.862162+00:00",
+  "status": "infraestrutura_publicada_sem_consumidores_reais",
+  "autorizacao": "Maylon autorizou prosseguir e definiu deixar pronto para uso futuro, sem sistema consumidor definido.",
+  "urlAPI": "https://api-varejo.aeropostale.joinnetwork.com.br",
+  "urlDocumentacao": "https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/",
+  "urlOpenAPI": "https://api-varejo.aeropostale.joinnetwork.com.br/apis/integracoes.openapi.json",
+  "destino": {
+    "aliasSSH": "Hostgator",
+    "ip": "143.95.219.212",
+    "portaSSH": 22022,
+    "diretorio": "/opt/aeropostale-varejo",
+    "fonteBase": "b8d844819f24477c10b312fa36c177ccb8955424",
+    "ajustes": [
+      "sharp 0.35.5 e lockfile",
+      "CONNECT explícito nos grupos da API, worker e autenticação central",
+      "vhost com portal e contrato públicos",
+      "egress específico e persistente",
+      "documentação e evidências da publicação"
+    ]
+  },
+  "migration": {
+    "backupAntes": "backup-20261113T052035Z-5y2T3N",
+    "migration019Aplicada": true,
+    "hashesComerciaisECheckpointsPreservados": true,
+    "hashes": {
+      "operacoes_hash": "34b85b97f46f2a8fba29e31e033fba6b",
+      "itens_hash": "71814ebc749dbff29240494a5279611c",
+      "cancelamentos_hash": "6d1f1db13a30a0faffa977164a7a8d77",
+      "checkpoints_hash": "1cc24250ff5c819864c2fcdc3f5d91f5"
+    },
+    "loginsRestritos": 3,
+    "dirtyInicial": 94829,
+    "workerERPPausadoParaTroca": true
+  },
+  "conexoesRestritas": {
+    "apiTenant": true,
+    "workerTenant": true,
+    "authCentral": true,
+    "apiSemCentral": true,
+    "workerSemCentral": true,
+    "authSemTenant": true
+  },
+  "servicosEEstadoFinal": {
+    "servicos": [
+      {
+        "servico": "postgres",
+        "ativo": true,
+        "health": "healthy",
+        "reinicios": 0,
+        "imagem": "sha256:846a7ddaa67a4b354ae1d21087b683901aa6113a4ed626d3787cfbf6c85e3e07",
+        "limiteMemoria": 1073741824,
+        "flags": {}
+      },
+      {
+        "servico": "api",
+        "ativo": true,
+        "health": "healthy",
+        "reinicios": 0,
+        "imagem": "sha256:bea367dbdd50832f084fbe078882463330bd448b07ba2a5083f01c410e03fa17",
+        "limiteMemoria": 536870912,
+        "flags": {}
+      },
+      {
+        "servico": "sync-worker",
+        "ativo": true,
+        "health": null,
+        "reinicios": 0,
+        "imagem": "sha256:5a6085788efbd65c8c474010c7127cae454d60334a6d22c33ce05892d5938858",
+        "limiteMemoria": 536870912,
+        "flags": {
+          "SYNC_ENABLED": "true"
+        }
+      },
+      {
+        "servico": "integracoes-api",
+        "ativo": true,
+        "health": "healthy",
+        "reinicios": 0,
+        "imagem": "sha256:db6afc774b78dd2d286dbf0293ab8b0d9dcdd5bdef45f7fbfcb1514038cb31ed",
+        "limiteMemoria": 268435456,
+        "flags": {
+          "INTEGRATIONS_ADMIN_ENABLED": "false",
+          "INTEGRATIONS_ENABLED": "true"
+        }
+      },
+      {
+        "servico": "integracoes-worker",
+        "ativo": true,
+        "health": null,
+        "reinicios": 0,
+        "imagem": "sha256:db6afc774b78dd2d286dbf0293ab8b0d9dcdd5bdef45f7fbfcb1514038cb31ed",
+        "limiteMemoria": 268435456,
+        "flags": {
+          "INTEGRATIONS_ADMIN_ENABLED": "false",
+          "INTEGRATIONS_WORKER_ENABLED": "true",
+          "INTEGRATIONS_DELIVERIES_ENABLED": "false",
+          "INTEGRATIONS_ENABLED": "true"
+        }
+      }
+    ],
+    "dados": {
+      "pendentes": 0,
+      "recursos": {
+        "produtos": 19968,
+        "vendas": 31307,
+        "filiais": 15,
+        "estoques": 43539
+      },
+      "clientesAtivos": 0,
+      "webhooks": 0,
+      "entregas": 0,
+      "tokens": 0,
+      "errosHTTP500": 0,
+      "amostrasHTTP": 40,
+      "p95ms": 704.3499999999993,
+      "bancoBytes": 361666227
+    },
+    "timers": {
+      "aeropostale-backup.timer": "active",
+      "certbot.timer": "active",
+      "aeropostale-integracoes-egress.service": "active"
+    },
+    "memoriaBytes": {
+      "MemTotal": 8326332416,
+      "MemAvailable": 6173618176
+    },
+    "discoLivreBytes": 164235636736,
+    "egressAtual": {
+      "origens": [
+        "172.22.254.20",
+        "172.22.254.21"
+      ],
+      "postgres": "172.22.0.2",
+      "portaPostgres": 5432,
+      "httpsPublicoWorker": false,
+      "outrosServicosPreservados": true
+    },
+    "testeCargaConsumidorReal": false
+  },
+  "preservacaoEIsolamento": {
+    "containersAnterioresPreservados": 15,
+    "postgresPreservado": true,
+    "vhostsAnterioresPreservados": true,
+    "portais": {
+      "aeropostale.joinnetwork.com.br": 200,
+      "ragabesh.joinnetwork.com.br": 200,
+      "app.aeropostale.joinnetwork.com.br": 200,
+      "homolog-app.aeropostale.joinnetwork.com.br": 200,
+      "sublicenciados.joinnetwork.com.br": 200
+    },
+    "loginPainel": 200,
+    "filiaisPainel": 15,
+    "indicadoresPainel": 200,
+    "isolamento": [
+      {
+        "servico": "integracoes-api",
+        "banco": true,
+        "altera": false,
+        "apaga": false,
+        "httpsPublico": false,
+        "hostPrivado": false,
+        "outroServico": false
+      },
+      {
+        "servico": "integracoes-worker",
+        "banco": true,
+        "altera": false,
+        "apaga": false,
+        "httpsPublico": false,
+        "hostPrivado": false,
+        "outroServico": false
+      }
+    ]
+  },
+  "certificado": {
+    "dominio": "api-varejo.aeropostale.joinnetwork.com.br",
+    "certificado": "notBefore=Nov 13 04:18:38 2026 GMT\nnotAfter=Feb 11 04:18:37 2027 GMT\nX509v3 Subject Alternative Name: \n    DNS:api-varejo.aeropostale.joinnetwork.com.br",
+    "renovacaoSimulada": true,
+    "portal": "https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/",
+    "vhostSeparado": true,
+    "adminBloqueadoPublicamente": true
+  },
+  "validacaoRESTPublica": {
+    "verificadoEm": "2026-11-13T10:00:27.412Z",
+    "dominio": "api-varejo.aeropostale.joinnetwork.com.br",
+    "tlsEstrito": true,
+    "resolucaoDNSPublica": true,
+    "checks": {
+      "oauth": 200,
+      "jwtReutilizado401": 401,
+      "filiais": 200,
+      "vendas": 200,
+      "detalhe": 200,
+      "itens": 200,
+      "pagamentos": 200,
+      "produtos": 200,
+      "estoques": 200,
+      "filialNaoAutorizada403": 403,
+      "pessoasSemEscopo403": 403,
+      "webhooksSemEscopo403": 403,
+      "anonimo401": 401,
+      "consolePublico404": 404,
+      "envInacessivel404": 404,
+      "documentacao": 200,
+      "openapi": 200
+    },
+    "filiais": 15,
+    "pessoasOmitidasSemEscopo": true
+  },
+  "revogacao": {
+    "revogado": true,
+    "clientesAtivos": 0
+  },
+  "tokenRevogadoPeloHTTPS": {
+    "verificadoEm": "2026-11-13T10:00:46.915Z",
+    "dominio": "api-varejo.aeropostale.joinnetwork.com.br",
+    "tlsEstrito": true,
+    "resolucaoDNSPublica": true,
+    "checks": {
+      "tokenRevogado401": 401
+    }
+  },
+  "keyRecovery": {
+    "chavePreservadaForaDoServidor": true,
+    "copiaLocalPrivada": true,
+    "copiaMacBookHomeConferida": true,
+    "segredoExibido": false
+  },
+  "backupRestaurado": {
+    "verificadoEm": "2026-11-13T10:03:56.784426+00:00",
+    "backup": "backup-20261113T100337Z-WiY71c",
+    "checksumsValidos": true,
+    "restauracaoPostgresql17": true,
+    "containerSemRede": true,
+    "producaoAlterada": false,
+    "control": {
+      "usuarios": 8,
+      "admins_ativos": 1,
+      "perfis": 5,
+      "vinculos": 67,
+      "sessoes": 0,
+      "registro_ok": true
+    },
+    "tenant": {
+      "operacoes": 31307,
+      "itens": 72865,
+      "cancelamentos": 1153,
+      "cadastros_filiais": 15,
+      "checkpoints": 30,
+      "clientes_importados": 31307,
+      "identidade_ok": true
+    },
+    "limite": "Valida recuperação do backup indicado; não compara com a produção em alteração nem comprova cópia externa recorrente.",
+    "migration019Restaurada": true,
+    "projecaoRestauradaEDecifrada": true,
+    "payloadPrivadoExibido": false,
+    "integracoesSemSessoesOuClientesAtivos": {
+      "tokens": 0,
+      "snapshots": 0,
+      "stepups": 0,
+      "clientesAtivos": 0
+    },
+    "containerDescartado": true
+  },
+  "backupMac": {
+    "status": "ok",
+    "ultimoBackup": "backup-20261113T100337Z-WiY71c",
+    "checksumsConferidos": true,
+    "copiasVerificadas": 5,
+    "copiasNovas": 1,
+    "cronPreservado": true,
+    "origem": {
+      "host": "root@143.95.219.212",
+      "port": 22022
+    },
+    "retencaoLocalDias": 90
+  },
+  "testes": {
+    "unitarios": {
+      "pass": 80,
+      "fail": 0
+    },
+    "integracao": {
+      "postgres": 17,
+      "bancosDescartaveis": true,
+      "semPortasPublicadas": true,
+      "redeIsolada": true,
+      "tests": 92,
+      "pass": 92,
+      "fail": 0
+    },
+    "contrato": {
+      "openapiValido": true,
+      "schemas": 51,
+      "campos": 277,
+      "operacoes": 21,
+      "exemplosJSON": 11,
+      "schemasSegurancaEEventosPreservadosNaRevisaoEditorial": true
+    },
+    "isolamentoRedeEBancoVerificadoNaInstanciaReal": true,
+    "testeCargaConsumidorReal": false,
+    "correcaoSeguranca": {
+      "pacote": "sharp",
+      "versao": "0.35.5",
+      "advisory": "https://github.com/lovell/sharp/security/advisories/GHSA-wq5f-xc86-pv6w",
+      "npmAuditAposAtualizacao": "zero vulnerabilidades reportadas na instalação"
+    }
+  },
+  "limites": [
+    "Nenhum consumidor real definido ou habilitado; credenciais temporárias de validação revogadas.",
+    "Console e entregas de webhooks desativados; egress atualmente bloqueia internet, host e outros serviços para os dois containers adicionais.",
+    "Provisionamento de operador/MFA e de consumidor/chave pública/escopos/filiais, destino e egress se houver webhook, carga e homologação dependem de definição futura.",
+    "As amostras de latência são verificações funcionais e não SLA ou teste de carga de consumidor.",
+    "Coletor ERP local permanece desativado; VPS antiga da Locaweb continua desligada conforme confirmação anterior de Maylon.",
+    "Relatórios R30 pausados separadamente; homologações R11/R22/R29 e SaaS não concluídas."
+  ],
+  "privacidade": {
+    "segredosOuPayloadsPrivadosIncluidos": false,
+    "artefatosPrivadosForaDoGit": true,
+    "envsIgnorados": true
+  },
+  "documentacaoPublicada": {
+    "arquivosVersionaveisSincronizados": 46,
+    "fontesIguaisAoConteudoHTTPS": true,
+    "documentos": {
+      "docs/integracoes/index.html": {
+        "http": 200,
+        "sha256": "ba2b452c0a21a62248bd6fd74d492a07897413ba4d6738cc993d69121fe63c20"
+      },
+      "apis/integracoes.openapi.json": {
+        "http": 200,
+        "sha256": "a487770f580047014ae96e4b9fa26b56227d2caedd3deeb837caa785962bddde"
+      }
+    },
+    "statusContrato": "publicado-sem-consumidores",
+    "segredosPublicados": false
+  }
+}

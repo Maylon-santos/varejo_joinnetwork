@@ -3,13 +3,23 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## API externa preparada para uso futuro — 13/11/2026
+
+Publicados https://api-varejo.aeropostale.joinnetwork.com.br e seu [portal de documentação](https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/). API/OAuth e worker de projeções ativos, migration 019 aplicada com hashes comerciais/checkpoints preservados. Projeção inicial de 94.829 recursos concluída. Consultas autenticadas, permissões, omissão de dados pessoais sem escopo, JWT reutilizado e revogação verificados pelo HTTPS público; credencial temporária revogada. Nenhum consumidor real, inscrição ou entrega de webhook criado. Console e entregas permanecem desativados por decisão de Maylon; homologação de um consumidor continua pendente.
+
+Fonte base `b8d8448`, com ajustes de publicação: sharp 0.35.5, CONNECT explícito dos grupos restritos, vhost/documentação e política de egress. API do painel e coletor atualizados; PostgreSQL e os outros serviços/vhosts preservados. Ver [operação das integrações](../docs/integracoes/operacao.md). Usar `bash deploy/integracoes-hostgator.sh` para operar os serviços adicionais; ele lê `.env.integracoes` privado e o override próprio. As tags identificam as imagens operacionais verificadas; os hashes das imagens ficam na evidência de publicação. Não limpar as imagens/fontes anteriores.
+
+Os novos serviços recebem apenas LOGINs de menor privilégio, sem permissão de alterar tabelas comerciais. Egress atual permite somente PostgreSQL, com regras exclusivas dos IPs fixos e persistência no systemd. A chave de armazenamento tem cópia protegida conferida fora do servidor; não trocá-la em manutenção. Backups pós-migration devem ser restaurados com essa chave para recuperar as projeções cifradas. Relatórios diários R30 continuam pausados separadamente.
+
+Backup pós-publicação `backup-20261113T100337Z-WiY71c` restaurado em PostgreSQL 17 descartável, sem rede; migration 019 e decifragem de uma projeção conferidas sem exibir seu conteúdo. Tokens/snapshots/step-ups ausentes na recuperação, nenhum cliente ativo. Cópia no MacBook Home com checksums conferidos. Evidência: `docs/validacao-publicacao-integracoes-hostgator.json`.
+
 ## Recuperação na HostGator — 13/11/2026
 
 O DNS foi alterado por Maylon e verificado nos resolvedores públicos. A VPS antiga da Locaweb foi desligada pelo console, conforme confirmação de Maylon; preservar discos e snapshots. O alias `localweb` identifica a origem antiga e não deve ser usado para implantar o piloto atual.
 
 Recuperado o backup `backup-20261112T033238Z-S86XWx`, de 12/11 às 00h32 de São Paulo: teste em PostgreSQL 17 descartável, restauração em bancos/volume próprios, contagens e hashes comerciais/checkpoints iguais antes da ativação do worker. Logins e 15 filiais validados. Dados manuais posteriores ao backup não têm recuperação garantida; o ERP volta a ser consultado pelos checkpoints restaurados. Os dumps cobrem os dois bancos deste projeto, não a máquina inteira nem outros serviços.
 
-O código em produção é a versão estável `c1c1eb26201aaac9d2e0f333baffd7ea14dad8ab`, com migrations até 018; o HEAD do repositório inclui R31 ainda não publicada. Não copiar o HEAD nem aplicar 019 como parte de manutenção desta recuperação. O projeto Compose `aeropostale-varejo` usa PostgreSQL em `127.0.0.1:55432` e API em `127.0.0.1:3100`, sem exposição direta desses serviços. `compose.override.yaml` no servidor limita PostgreSQL a 1 GiB/1 CPU, API a 512 MiB/1 CPU e worker a 512 MiB/0,5 CPU.
+A recuperação inicial usou a versão estável `c1c1eb26201aaac9d2e0f333baffd7ea14dad8ab`, com migrations até 018. A publicação posterior da API externa está registrada acima e inclui a migration 019; este parágrafo descreve a recuperação inicial. O projeto Compose `aeropostale-varejo` usa PostgreSQL em `127.0.0.1:55432` e API em `127.0.0.1:3100`, sem exposição direta desses serviços. `compose.override.yaml` no servidor limita PostgreSQL a 1 GiB/1 CPU, API a 512 MiB/1 CPU e worker a 512 MiB/0,5 CPU.
 
 Os três serviços retomaram sem reinícios; API/banco saudáveis. Vendas e cancelamentos concluíram a primeira rodada nas 15 filiais; estoque apresentou timeouts e consultas concluídas. Validações de complementos/identidade ainda rejeitam retornos divergentes do ERP. Não remover essas validações nem presumir histórico completo. Os 14 containers existentes (13 ativos/um parado), suas montagens/imagens e os vhosts anteriores foram preservados; os quatro portais existentes responderam 200.
 
@@ -296,7 +306,7 @@ Publicado e validado em **11/11/2026**, backup `backup-20261111T122541Z-Gpm2lu` 
 Conferência posterior: **358 de 31.192 operações** com grupo fiscal, 30.834 ainda aguardando. O worker segue ativo sem reinícios; há retentativas por validação de cliente e divergência de itens, além de outros códigos sem diagnóstico nesta entrega. Não forçar preenchimento de operações divergentes.
 
 
-## API externa e webhooks — preparação em 11/11/2026
+## Histórico: API externa e webhooks — preparação em 11/11/2026
 
 Implementação 0.1.0 e validação isolada concluídas; serviços externos ainda não publicados. Consulte [operação de integrações](../docs/integracoes/operacao.md) antes de ativar. Migration tenant 019 é aditiva e captura mudanças para a nova projeção. Os serviços adicionais são opt-in via `deploy/integracoes.compose.yaml`, com papéis/URLs próprios, limite de recursos e vhost separado para `api-varejo.aeropostale.joinnetwork.com.br`. Não habilitar sem reserva de capacidade, cópia protegida da chave cifradora, DNS/TLS, egress e consumidor aprovado.
 

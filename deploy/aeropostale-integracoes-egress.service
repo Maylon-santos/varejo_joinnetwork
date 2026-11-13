@@ -1,0 +1,14 @@
+[Unit]
+Description=Egress restrito das integracoes Aeropostale
+Requires=docker.service
+After=docker.service
+PartOf=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStartPre=/sbin/modprobe br_netfilter
+ExecStart=/usr/bin/python3 /opt/aeropostale-varejo/deploy/restringir-egress-integracoes.py
+
+[Install]
+WantedBy=multi-user.target

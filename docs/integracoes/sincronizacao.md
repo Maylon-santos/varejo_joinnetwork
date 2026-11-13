@@ -1,6 +1,6 @@
 # Carga inicial, alterações e consistência
 
-> Cursores, snapshots, revisões, log e captura transacional implementados na camada externa. Ver [semântica e limites operacionais](operacao.md). A publicação/homologação real continua pendente.
+> Cursores, snapshots, revisões, log e captura transacional ativos na camada externa publicada em 13/11/2026. Ver [semântica e limites operacionais](operacao.md). A homologação com o primeiro consumidor continua pendente.
 
 ## Arquitetura de leitura
 

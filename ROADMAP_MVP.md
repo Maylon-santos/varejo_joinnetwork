@@ -1,5 +1,13 @@
 # Roadmap — Aeropostale Varejo
 
+## API externa preparada para o futuro — 13/11/2026
+
+- [x] API/OAuth, documentação HTTPS e worker de projeções publicados na HostGator. Migration 019 após backup e comparação de hashes comerciais/checkpoints; 94.829 projeções iniciais concluídas. Credencial temporária de verificação revogada; zero consumidores reais, tokens, inscrições e entregas ativos na conferência.
+- [x] 80 unitários, 92 integração PostgreSQL 17 descartável, contrato/documentação e verificação pública aprovados. LOGINs e conexões restritos, DML comercial negado e egress limitado ao banco. Painel/ERP e portais preservados; sharp 0.35.5 nas imagens novas. Backup pós-publicação restaurado, projeção decifrada sem exibir conteúdo e cópia no Mac verificada.
+- [ ] **R31 permanece em andamento:** Maylon definiu deixar pronto para o futuro, sem sistema consumidor por enquanto. Console e entregas desativados. Provisionamento, MFA, chave pública/escopos/filiais, eventual destino/egress e homologação do consumidor dependem dessa definição. Nenhum envio real realizado; R30 segue pausada, R11/R22/R29/SaaS separados.
+
+Evidência: `docs/validacao-publicacao-integracoes-hostgator.json`. Guia online: https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/ . Este estado prevalece sobre a recuperação inicial abaixo.
+
 ## Piloto recuperado na HostGator — 13/11/2026
 
 - [x] Migração autorizada concluída para `143.95.219.212`, mantendo https://aeropostale.joinnetwork.com.br. Restaurado o backup externo de 12/11 às 00h32 de São Paulo em PostgreSQL 17 isolado antes da publicação; contagens e hashes comerciais/checkpoints conferidos. Versão estável `c1c1eb2`, migrations até 018; R31/019 não ativadas.
@@ -9,7 +17,7 @@
 
 Evidência: `docs/validacao-migracao-hostgator.json`. Este estado prevalece sobre os registros históricos abaixo.
 
-Documentação R31 revisada em 13/11 para a HostGator, com portal regenerado e contrato/exemplos preservados. DNS da API externa já retorna o destino novo; implantação, TLS específico, credenciais e homologação permanecem pendentes em `docs/integracoes/operacao.md`.
+Na recuperação inicial, a documentação foi alinhada à HostGator antes da publicação. O estado posterior de R31 está registrado acima e em `docs/integracoes/operacao.md`.
 
 ## Histórico: capacidade da HostGator para recuperar o piloto — 12/11/2026
 

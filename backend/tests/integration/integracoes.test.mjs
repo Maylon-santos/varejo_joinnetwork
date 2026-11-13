@@ -159,6 +159,7 @@ test('API externa: autenticação, isolamento, snapshots, log, outbox, webhook e
    const schema=(await a.pool.query('SELECT current_schema() s')).rows[0].s;assert.match(schema,/^fila_[a-f0-9]+$/);
    const sql=await readFile(new URL('../../../deploy/integracoes-permissoes.sql',import.meta.url),'utf8');await a.pool.query(sql.replaceAll("schemaname='public'",`schemaname='${schema}'`).replaceAll('SCHEMA public',`SCHEMA ${schema}`).replaceAll('TABLE public.',`TABLE ${schema}.`));
    for(const role of ['varejo_integracoes_api','varejo_integracoes_worker']){
+    const acesso=await a.pool.query("SELECT EXISTS(SELECT 1 FROM pg_database d CROSS JOIN LATERAL aclexplode(d.datacl) acl WHERE d.datname=current_database() AND acl.grantee=(SELECT oid FROM pg_roles WHERE rolname=$1) AND acl.privilege_type='CONNECT') ok",[role]);assert.equal(acesso.rows[0].ok,true,'CONNECT deve ser explícito, sem depender de PUBLIC');
     const rp=criarPool(process.env.TENANT_DATABASE_URL,{options:a.pool.options.options+` -c role=${role}`});
     try{
      await assert.rejects(()=>rp.query('UPDATE operacoes SET quantidade=0'),e=>e.code==='42501');
@@ -167,6 +168,7 @@ test('API externa: autenticação, isolamento, snapshots, log, outbox, webhook e
     }finally{await rp.end();}
    }
    const controlSql=await readFile(new URL('../../../deploy/integracoes-controle-permissoes.sql',import.meta.url),'utf8');await a.control.query(controlSql.replaceAll('SCHEMA public',`SCHEMA ${schema}`));
+   assert.equal((await a.control.query("SELECT EXISTS(SELECT 1 FROM pg_database d CROSS JOIN LATERAL aclexplode(d.datacl) acl WHERE d.datname=current_database() AND acl.grantee=(SELECT oid FROM pg_roles WHERE rolname='varejo_integracoes_auth') AND acl.privilege_type='CONNECT') ok")).rows[0].ok,true);
    const cp=criarPool(process.env.CONTROL_DATABASE_URL,{options:a.control.options.options+' -c role=varejo_integracoes_auth'});
    try{await assert.rejects(()=>cp.query('UPDATE admin_users SET active=false'),e=>e.code==='42501');const restrictedAuth=await criarAuth(cp,tenant),s=await restrictedAuth.login('admin@fila.local',a.senha);assert.ok(await restrictedAuth.autenticar(s.token));await restrictedAuth.logout(s.token);assert.equal(await restrictedAuth.autenticar(s.token),null);}finally{await cp.end();}
   });

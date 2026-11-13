@@ -3,15 +3,15 @@
   "info": {
     "title": "Join Network · API de Integrações Varejo",
     "version": "0.1.0",
-    "description": "IMPLEMENTADO E TESTADO EM AMBIENTE ISOLADO EM 11/11/2026; NÃO PUBLICADO. OAuth, consultas, cursores, revisões, log e webhooks possuem implementação própria em backend/src/integracoes. Ativação do domínio e homologação com consumidor continuam pendentes. Dados de exemplo fictícios. /api/v1 continua sendo a API interna do painel."
+    "description": "INFRAESTRUTURA PUBLICADA NA HOSTGATOR EM 13/11/2026. OAuth, consultas, cursores, revisões, log e projeções ativos e verificados; nenhum consumidor real habilitado. Entregas de webhooks e console administrativo permanecem desativados até provisionamento e homologação. Dados de exemplo fictícios. /api/v1 continua sendo a API interna do painel."
   },
   "servers": [
     {
       "url": "https://api-varejo.aeropostale.joinnetwork.com.br",
-      "description": "Domínio confirmado; serviço externo ainda não publicado"
+      "description": "API publicada; exige consumidor e chave pública provisionados"
     }
   ],
-  "x-status": "implementado-nao-publicado",
+  "x-status": "publicado-sem-consumidores",
   "x-source-revision": "c1c1eb2",
   "tags": [
     {
@@ -45,7 +45,7 @@
     "/oauth/token": {
       "post": {
         "summary": "Obter token de integração",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. Prova JWT obrigatória no formulário; security vazio NÃO significa endpoint anônimo.",
+        "description": "Implementado. Prova JWT obrigatória no formulário; security vazio NÃO significa endpoint anônimo.",
         "operationId": "post__oauth_token",
         "tags": [
           "Autenticacao"
@@ -63,7 +63,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -98,7 +98,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -138,7 +138,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -178,7 +178,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -213,7 +213,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -245,7 +245,7 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente",
+        "x-implementation-status": "implementado-publicado",
         "requestBody": {
           "required": true,
           "content": {
@@ -261,7 +261,7 @@
     "/v1/vendas": {
       "get": {
         "summary": "Listar vendas e movimentações",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. Ordenação estável por data_operacao, cod_operacao e tipo_operacao crescentes no snapshot. Sem expansão de itens.",
+        "description": "Implementado. Ordenação estável por data_operacao, cod_operacao e tipo_operacao crescentes no snapshot. Sem expansão de itens.",
         "operationId": "get__v1_vendas",
         "tags": [
           "Vendas"
@@ -378,7 +378,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -413,7 +413,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -448,7 +448,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -489,7 +489,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -524,7 +524,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -559,7 +559,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -594,7 +594,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -629,7 +629,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -664,7 +664,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -699,7 +699,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -734,7 +734,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -769,7 +769,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -804,7 +804,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -839,7 +839,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -881,7 +881,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -916,7 +916,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -948,13 +948,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/vendas/{venda_id}": {
       "get": {
         "summary": "Consultar detalhe da venda",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "get__v1_vendas_venda_id",
         "tags": [
           "Vendas"
@@ -998,7 +998,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1039,7 +1039,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1074,7 +1074,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1115,7 +1115,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1150,7 +1150,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1185,7 +1185,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1220,7 +1220,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1255,7 +1255,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1290,7 +1290,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1325,7 +1325,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1360,7 +1360,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1395,7 +1395,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1430,7 +1430,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1465,7 +1465,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1507,7 +1507,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1542,7 +1542,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1574,13 +1574,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/vendas/{venda_id}/itens": {
       "get": {
         "summary": "Consultar itens da venda",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. Header da venda e filhos devem pertencer à mesma revisão. If-Match validado ao iniciar snapshot; cursor mantém essa revisão por 30 minutos.",
+        "description": "Implementado. Header da venda e filhos devem pertencer à mesma revisão. If-Match validado ao iniciar snapshot; cursor mantém essa revisão por 30 minutos.",
         "operationId": "get__v1_vendas_venda_id_itens",
         "tags": [
           "Vendas"
@@ -1655,7 +1655,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1690,7 +1690,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1725,7 +1725,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1766,7 +1766,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1801,7 +1801,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1836,7 +1836,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1871,7 +1871,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1906,7 +1906,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1941,7 +1941,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -1976,7 +1976,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2011,7 +2011,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2046,7 +2046,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2081,7 +2081,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2116,7 +2116,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2158,7 +2158,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2193,7 +2193,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2225,13 +2225,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/vendas/{venda_id}/pagamentos": {
       "get": {
         "summary": "Consultar pagamentos da venda",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. Header da venda e filhos devem pertencer à mesma revisão. If-Match validado ao iniciar snapshot; cursor mantém essa revisão por 30 minutos.",
+        "description": "Implementado. Header da venda e filhos devem pertencer à mesma revisão. If-Match validado ao iniciar snapshot; cursor mantém essa revisão por 30 minutos.",
         "operationId": "get__v1_vendas_venda_id_pagamentos",
         "tags": [
           "Vendas"
@@ -2306,7 +2306,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2341,7 +2341,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2376,7 +2376,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2417,7 +2417,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2452,7 +2452,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2487,7 +2487,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2522,7 +2522,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2557,7 +2557,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2592,7 +2592,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2627,7 +2627,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2662,7 +2662,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2697,7 +2697,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2732,7 +2732,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2767,7 +2767,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2809,7 +2809,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2844,7 +2844,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2876,13 +2876,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/filiais": {
       "get": {
         "summary": "Listar filiais concedidas",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "get__v1_filiais",
         "tags": [
           "Filiais"
@@ -2929,7 +2929,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2964,7 +2964,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -2999,7 +2999,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3040,7 +3040,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3075,7 +3075,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3110,7 +3110,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3145,7 +3145,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3180,7 +3180,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3215,7 +3215,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3250,7 +3250,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3285,7 +3285,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3320,7 +3320,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3355,7 +3355,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3390,7 +3390,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3432,7 +3432,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3467,7 +3467,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3499,13 +3499,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/filiais/{filial_id}": {
       "get": {
         "summary": "Consultar filial",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "get__v1_filiais_filial_id",
         "tags": [
           "Filiais"
@@ -3539,7 +3539,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3574,7 +3574,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3609,7 +3609,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3650,7 +3650,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3685,7 +3685,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3720,7 +3720,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3755,7 +3755,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3790,7 +3790,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3825,7 +3825,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3860,7 +3860,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3895,7 +3895,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3930,7 +3930,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -3965,7 +3965,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4000,7 +4000,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4042,7 +4042,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4077,7 +4077,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4109,13 +4109,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/produtos": {
       "get": {
         "summary": "Listar produtos da filial",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "get__v1_produtos",
         "tags": [
           "Produtos"
@@ -4201,7 +4201,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4236,7 +4236,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4271,7 +4271,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4312,7 +4312,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4347,7 +4347,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4382,7 +4382,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4417,7 +4417,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4452,7 +4452,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4487,7 +4487,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4522,7 +4522,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4557,7 +4557,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4592,7 +4592,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4627,7 +4627,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4662,7 +4662,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4704,7 +4704,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4739,7 +4739,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4771,13 +4771,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/produtos/{produto_id}": {
       "get": {
         "summary": "Consultar produto cadastral",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "get__v1_produtos_produto_id",
         "tags": [
           "Produtos"
@@ -4821,7 +4821,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4856,7 +4856,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4891,7 +4891,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4932,7 +4932,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -4967,7 +4967,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5002,7 +5002,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5037,7 +5037,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5072,7 +5072,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5107,7 +5107,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5142,7 +5142,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5177,7 +5177,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5212,7 +5212,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5247,7 +5247,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5282,7 +5282,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5324,7 +5324,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5359,7 +5359,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5391,13 +5391,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/produtos/{produto_id}/variacoes": {
       "get": {
         "summary": "Listar SKUs do produto na filial",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "get__v1_produtos_produto_id_variacoes",
         "tags": [
           "Produtos"
@@ -5463,7 +5463,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5498,7 +5498,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5533,7 +5533,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5574,7 +5574,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5609,7 +5609,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5644,7 +5644,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5679,7 +5679,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5714,7 +5714,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5749,7 +5749,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5784,7 +5784,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5819,7 +5819,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5854,7 +5854,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5889,7 +5889,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5924,7 +5924,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -5966,7 +5966,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6001,7 +6001,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6033,13 +6033,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/estoques": {
       "get": {
         "summary": "Consultar posição atual por SKU",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "get__v1_estoques",
         "tags": [
           "Estoques"
@@ -6142,7 +6142,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6177,7 +6177,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6212,7 +6212,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6253,7 +6253,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6288,7 +6288,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6323,7 +6323,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6358,7 +6358,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6393,7 +6393,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6428,7 +6428,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6463,7 +6463,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6498,7 +6498,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6533,7 +6533,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6568,7 +6568,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6603,7 +6603,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6645,7 +6645,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6680,7 +6680,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6712,13 +6712,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/filiais/{filial_id}/estoques/{sku}": {
       "get": {
         "summary": "Consultar um SKU na filial",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. SKU ausente na carga completa pode retornar tombstone presente_ultima_carga=false, saldo_disponivel=null. Nunca inventar zero.",
+        "description": "Implementado. SKU ausente na carga completa pode retornar tombstone presente_ultima_carga=false, saldo_disponivel=null. Nunca inventar zero.",
         "operationId": "get__v1_filiais_filial_id_estoques_sku",
         "tags": [
           "Estoques"
@@ -6762,7 +6762,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6797,7 +6797,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6832,7 +6832,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6873,7 +6873,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6908,7 +6908,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6943,7 +6943,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -6978,7 +6978,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7013,7 +7013,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7048,7 +7048,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7083,7 +7083,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7118,7 +7118,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7153,7 +7153,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7188,7 +7188,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7223,7 +7223,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7265,7 +7265,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7300,7 +7300,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7332,13 +7332,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/alteracoes": {
       "get": {
         "summary": "Consumir log incremental",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. Requer vendas:ler, filiais:ler, produtos:ler ou estoques:ler conforme recurso. Após bootstrap, cursor é obrigatório. Cursor com retenção de 30 dias; 410 exige nova carga. Não usa updated_at como posição confiável.",
+        "description": "Implementado. Requer vendas:ler, filiais:ler, produtos:ler ou estoques:ler conforme recurso. Após bootstrap, cursor é obrigatório. Cursor com retenção de 30 dias; 410 exige nova carga. Não usa updated_at como posição confiável.",
         "operationId": "get__v1_alteracoes",
         "tags": [
           "Alteracoes"
@@ -7437,7 +7437,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7472,7 +7472,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7507,7 +7507,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7548,7 +7548,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7583,7 +7583,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7618,7 +7618,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7653,7 +7653,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7688,7 +7688,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7723,7 +7723,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7758,7 +7758,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7793,7 +7793,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7828,7 +7828,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7863,7 +7863,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7898,7 +7898,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7940,7 +7940,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -7975,7 +7975,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8007,13 +8007,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/webhooks": {
       "get": {
         "summary": "Listar inscrições do cliente",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "get__v1_webhooks",
         "tags": [
           "Webhooks"
@@ -8061,7 +8061,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8096,7 +8096,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8131,7 +8131,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8172,7 +8172,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8207,7 +8207,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8242,7 +8242,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8277,7 +8277,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8312,7 +8312,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8347,7 +8347,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8382,7 +8382,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8417,7 +8417,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8452,7 +8452,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8487,7 +8487,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8522,7 +8522,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8564,7 +8564,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8599,7 +8599,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8631,11 +8631,11 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       },
       "post": {
         "summary": "Criar inscrição desativada",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. Máximo de 3 inscrições por cliente; ativo deve ser false. Segredo não é retornado em GET. Idempotência pode reproduzir a resposta cifrada por 24h.",
+        "description": "Implementado. Máximo de 3 inscrições por cliente; ativo deve ser false. Segredo não é retornado em GET. Idempotência pode reproduzir a resposta cifrada por 24h.",
         "operationId": "post__v1_webhooks",
         "tags": [
           "Webhooks"
@@ -8671,7 +8671,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8706,7 +8706,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8741,7 +8741,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8782,7 +8782,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8817,7 +8817,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8852,7 +8852,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8887,7 +8887,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8922,7 +8922,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8957,7 +8957,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -8992,7 +8992,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9027,7 +9027,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9062,7 +9062,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9097,7 +9097,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9132,7 +9132,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9174,7 +9174,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9209,7 +9209,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9241,7 +9241,7 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente",
+        "x-implementation-status": "implementado-publicado",
         "requestBody": {
           "required": true,
           "content": {
@@ -9257,7 +9257,7 @@
     "/v1/webhooks/{webhook_id}": {
       "get": {
         "summary": "Consultar inscrição própria",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "get__v1_webhooks_webhook_id",
         "tags": [
           "Webhooks"
@@ -9292,7 +9292,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9332,7 +9332,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9367,7 +9367,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9408,7 +9408,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9443,7 +9443,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9478,7 +9478,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9513,7 +9513,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9548,7 +9548,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9583,7 +9583,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9618,7 +9618,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9653,7 +9653,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9688,7 +9688,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9723,7 +9723,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9758,7 +9758,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9800,7 +9800,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9835,7 +9835,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9867,11 +9867,11 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       },
       "put": {
         "summary": "Substituir configuração da inscrição",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. Alterar destino exige novo teste, aprovação do hostname e estado pendente_verificacao. Não segue redirects.",
+        "description": "Implementado. Alterar destino exige novo teste, aprovação do hostname e estado pendente_verificacao. Não segue redirects.",
         "operationId": "put__v1_webhooks_webhook_id",
         "tags": [
           "Webhooks"
@@ -9925,7 +9925,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9960,7 +9960,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -9995,7 +9995,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10036,7 +10036,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10071,7 +10071,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10106,7 +10106,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10141,7 +10141,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10176,7 +10176,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10211,7 +10211,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10246,7 +10246,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10281,7 +10281,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10316,7 +10316,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10351,7 +10351,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10386,7 +10386,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10428,7 +10428,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10463,7 +10463,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10495,7 +10495,7 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente",
+        "x-implementation-status": "implementado-publicado",
         "requestBody": {
           "required": true,
           "content": {
@@ -10511,7 +10511,7 @@
     "/v1/webhooks/{webhook_id}/testes": {
       "post": {
         "summary": "Enfileirar teste assinado",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "post__v1_webhooks_webhook_id_testes",
         "tags": [
           "Webhooks"
@@ -10556,7 +10556,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10591,7 +10591,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10626,7 +10626,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10667,7 +10667,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10702,7 +10702,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10737,7 +10737,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10772,7 +10772,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10807,7 +10807,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10842,7 +10842,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10877,7 +10877,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10912,7 +10912,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10947,7 +10947,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -10982,7 +10982,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11017,7 +11017,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11059,7 +11059,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11094,7 +11094,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11126,13 +11126,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/webhooks/{webhook_id}/rotacionar-segredo": {
       "post": {
         "summary": "Rotacionar segredo de assinatura",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. Sobreposição proposta de 24h; o emissor assina com ambas as chaves durante a transição.",
+        "description": "Implementado. Sobreposição proposta de 24h; o emissor assina com ambas as chaves durante a transição.",
         "operationId": "post__v1_webhooks_webhook_id_rotacionar_segredo",
         "tags": [
           "Webhooks"
@@ -11186,7 +11186,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11221,7 +11221,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11256,7 +11256,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11297,7 +11297,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11332,7 +11332,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11367,7 +11367,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11402,7 +11402,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11437,7 +11437,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11472,7 +11472,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11507,7 +11507,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11542,7 +11542,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11577,7 +11577,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11612,7 +11612,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11647,7 +11647,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11689,7 +11689,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11724,7 +11724,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11756,13 +11756,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/webhooks/{webhook_id}/entregas": {
       "get": {
         "summary": "Consultar entregas da inscrição",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. ",
+        "description": "Implementado. ",
         "operationId": "get__v1_webhooks_webhook_id_entregas",
         "tags": [
           "Webhooks"
@@ -11819,7 +11819,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11854,7 +11854,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11889,7 +11889,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11930,7 +11930,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -11965,7 +11965,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12000,7 +12000,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12035,7 +12035,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12070,7 +12070,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12105,7 +12105,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12140,7 +12140,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12175,7 +12175,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12210,7 +12210,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12245,7 +12245,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12280,7 +12280,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12322,7 +12322,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12357,7 +12357,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12389,13 +12389,13 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     },
     "/v1/webhooks/{webhook_id}/entregas/{entrega_id}/reenviar": {
       "post": {
         "summary": "Enfileirar reenvio autorizado",
-        "description": "PROPOSTO, NÃO IMPLEMENTADO. Mantém evento/payload; nova assinatura e timestamp. Revalida permissões e destino. Até 30 dias de retenção; 410 depois disso.",
+        "description": "Implementado. Mantém evento/payload; nova assinatura e timestamp. Revalida permissões e destino. Até 30 dias de retenção; 410 depois disso.",
         "operationId": "post__v1_webhooks_webhook_id_entregas_entrega_id_reenviar",
         "tags": [
           "Webhooks"
@@ -12449,7 +12449,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12484,7 +12484,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12519,7 +12519,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12560,7 +12560,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12595,7 +12595,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12630,7 +12630,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12665,7 +12665,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12700,7 +12700,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12735,7 +12735,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12770,7 +12770,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12805,7 +12805,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12840,7 +12840,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12875,7 +12875,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12910,7 +12910,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12952,7 +12952,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -12987,7 +12987,7 @@
                 }
               },
               "X-RateLimit-Limit": {
-                "description": "Limite aplicável de requisições por minuto. Política proposta.",
+                "description": "Limite aplicável de requisições por minuto.",
                 "schema": {
                   "type": "integer"
                 }
@@ -13019,7 +13019,7 @@
             }
           }
         },
-        "x-implementation-status": "implementado-testado-isoladamente"
+        "x-implementation-status": "implementado-publicado"
       }
     }
   },

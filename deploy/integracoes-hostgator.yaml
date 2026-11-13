@@ -1,0 +1,17 @@
+# Imagens verificadas na publicação de 13/11/2026, incluindo sharp 0.35.5.
+# Confirmar o subnet provisionado antes de reutilizar estes IPs em outra máquina.
+services:
+  api:
+    image: aeropostale-varejo-api:integracoes-b8d8448
+  sync-worker:
+    image: aeropostale-varejo-sync-worker:integracoes-b8d8448
+  integracoes-api:
+    image: aeropostale-varejo-integracoes:b8d8448
+    networks:
+      default:
+        ipv4_address: 172.22.254.20
+  integracoes-worker:
+    image: aeropostale-varejo-integracoes:b8d8448
+    networks:
+      default:
+        ipv4_address: 172.22.254.21

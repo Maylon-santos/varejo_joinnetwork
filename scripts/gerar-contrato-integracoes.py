@@ -305,9 +305,9 @@ SCOPES={
  'webhooks:ler':'Consultar inscrições e entregas do próprio cliente; exige vendas:ler.',
  'webhooks:gerenciar':'Criar/testar/alterar/rotacionar/reencaminhar inscrições próprias; exige vendas:ler.'}
 spec={'openapi':'3.1.0','info':{'title':'Join Network · API de Integrações Varejo','version':'0.1.0',
- 'description':'IMPLEMENTADO E TESTADO EM AMBIENTE ISOLADO EM 11/11/2026; NÃO PUBLICADO. OAuth, consultas, cursores, revisões, log e webhooks possuem implementação própria em backend/src/integracoes. Ativação do domínio e homologação com consumidor continuam pendentes. Dados de exemplo fictícios. /api/v1 continua sendo a API interna do painel.'},
- 'servers':[{'url':BASE,'description':'Domínio confirmado; serviço externo ainda não publicado'}],
- 'x-status':'implementado-nao-publicado','x-source-revision':'c1c1eb2','tags':[{'name':n} for n in ['Autenticacao','Vendas','Filiais','Produtos','Estoques','Alteracoes','Webhooks']],
+ 'description':'INFRAESTRUTURA PUBLICADA NA HOSTGATOR EM 13/11/2026. OAuth, consultas, cursores, revisões, log e projeções ativos e verificados; nenhum consumidor real habilitado. Entregas de webhooks e console administrativo permanecem desativados até provisionamento e homologação. Dados de exemplo fictícios. /api/v1 continua sendo a API interna do painel.'},
+ 'servers':[{'url':BASE,'description':'API publicada; exige consumidor e chave pública provisionados'}],
+ 'x-status':'publicado-sem-consumidores','x-source-revision':'c1c1eb2','tags':[{'name':n} for n in ['Autenticacao','Vendas','Filiais','Produtos','Estoques','Alteracoes','Webhooks']],
  'security':[{'IntegracaoOAuth':[]}], 'paths':{}, 'components':{'securitySchemes':{
  'IntegracaoOAuth':{'type':'oauth2','description':'Client Credentials + private_key_jwt RS256 no token endpoint. O access token é opaco. Filiais e tenant vêm do cadastro, nunca do corpo livre.','flows':{'clientCredentials':{'tokenUrl':BASE+'/oauth/token','scopes':SCOPES}}},
  'WebhookSignature':{'type':'apiKey','in':'header','name':'webhook-signature','description':'HMAC-SHA256 Standard Webhooks: v1,BASE64; exige também webhook-id e webhook-timestamp. Não usa Bearer do destinatário.'}},'schemas':SCHEMAS}}
@@ -321,7 +321,7 @@ def persons():return param('incluir_pessoas','Exige vendas:pessoas:ler; false po
 def header_match():return param('If-Match','ETag do detalhe para iniciar leitura de filhos ou alterar configuração. 412 em versão divergente.',required=True,location='header')
 def idem():return param('Idempotency-Key','UUID obrigatório. Mesma operação/corpo retorna resultado anterior por 24h; corpo divergente resulta 409.',{'type':'string','format':'uuid'},True,'header')
 def response(schema, description='Sucesso', media='application/json'):
-    return {'description':description,'headers':{'X-Request-Id':{'schema':{'type':'string','format':'uuid'}},'X-RateLimit-Limit':{'description':'Limite aplicável de requisições por minuto. Política proposta.','schema':{'type':'integer'}},'X-RateLimit-Remaining':{'schema':{'type':'integer'}},'X-RateLimit-Reset':{'description':'Unix timestamp em segundos.','schema':{'type':'integer'}}},'content':{media:{'schema':ref(schema)}}}
+    return {'description':description,'headers':{'X-Request-Id':{'schema':{'type':'string','format':'uuid'}},'X-RateLimit-Limit':{'description':'Limite aplicável de requisições por minuto.','schema':{'type':'integer'}},'X-RateLimit-Remaining':{'schema':{'type':'integer'}},'X-RateLimit-Reset':{'description':'Unix timestamp em segundos.','schema':{'type':'integer'}}},'content':{media:{'schema':ref(schema)}}}
 def operation(path, method, summary, tag, scopes, schema, params=(), body=None, status='200', description=''):
     errors=['400','401','403','404','405','406','409','410','412','413','415','422','429','500','503']
     responses={status:response(schema)}
@@ -330,8 +330,8 @@ def operation(path, method, summary, tag, scopes, schema, params=(), body=None, 
     responses['401']['headers']['WWW-Authenticate']={'schema':{'type':'string'},'description':'Bearer challenge conforme a falha.'}
     responses['429']['headers']['Retry-After']={'schema':{'type':'integer','minimum':1},'description':'Segundos antes de tentar novamente.'}
     responses['503']['headers']['Retry-After']={'schema':{'type':'integer','minimum':1}}
-    o={'summary':summary,'description':'PROPOSTO, NÃO IMPLEMENTADO. '+description,'operationId':method+'_'+path.replace('/','_').replace('{','').replace('}','').replace('-','_'),'tags':[tag],
-       'security':[{'IntegracaoOAuth':scopes}],'parameters':list(params),'responses':responses,'x-implementation-status':'implementado-testado-isoladamente'}
+    o={'summary':summary,'description':'Implementado. '+description,'operationId':method+'_'+path.replace('/','_').replace('{','').replace('}','').replace('-','_'),'tags':[tag],
+       'security':[{'IntegracaoOAuth':scopes}],'parameters':list(params),'responses':responses,'x-implementation-status':'implementado-publicado'}
     if body:o['requestBody']={'required':True,'content':{'application/json':{'schema':ref(body)}}}
     spec['paths'].setdefault(path,{})[method]=o
     return o
@@ -405,7 +405,7 @@ def typename(v):
     if v.get('items'):t+=' de '+typename(v['items'])
     return t
 
-lines=['# Dicionário de campos','', '> Contrato 0.1.0 implementado e testado em ambiente isolado. Ainda não publicado. Confira operacao.md para ativação e limites conhecidos.','',
+lines=['# Dicionário de campos','', '> Contrato 0.1.0 com infraestrutura publicada em 13/11/2026. Nenhum consumidor real habilitado; entregas de webhooks desativadas. Confira operacao.md para provisionamento e limites conhecidos.','',
  'Todos os exemplos são fictícios. Obrigatório significa presença da chave no contrato; uma chave obrigatória pode aceitar null. Campos pessoais opcionais são omitidos quando não autorizados. Clientes devem tolerar propriedades novas em respostas.','']
 count=0
 for name,schema in SCHEMAS.items():

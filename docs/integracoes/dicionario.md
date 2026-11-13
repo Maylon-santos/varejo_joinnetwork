@@ -1,6 +1,6 @@
 # Dicionário de campos
 
-> Contrato 0.1.0 implementado e testado em ambiente isolado. Ainda não publicado. Confira operacao.md para ativação e limites conhecidos.
+> Contrato 0.1.0 com infraestrutura publicada em 13/11/2026. Nenhum consumidor real habilitado; entregas de webhooks desativadas. Confira operacao.md para provisionamento e limites conhecidos.
 
 Todos os exemplos são fictícios. Obrigatório significa presença da chave no contrato; uma chave obrigatória pode aceitar null. Campos pessoais opcionais são omitidos quando não autorizados. Clientes devem tolerar propriedades novas em respostas.
 
