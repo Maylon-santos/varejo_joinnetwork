@@ -3,16 +3,14 @@
   "info": {
     "title": "Join Network · API de Integrações Varejo",
     "version": "0.1.0",
-    "description": "INFRAESTRUTURA PUBLICADA NA HOSTGATOR EM 13/11/2026. OAuth, consultas, cursores, revisões, log e projeções ativos e verificados; nenhum consumidor real habilitado. Entregas de webhooks e console administrativo permanecem desativados até provisionamento e homologação. Dados de exemplo fictícios. /api/v1 continua sendo a API interna do painel."
+    "description": "Consultas de vendas, filiais, produtos e estoque, sincronização incremental e webhooks assinados. Autenticação OAuth 2.0 com private_key_jwt. Exemplos com dados fictícios. A disponibilidade de webhooks depende da habilitação da integração e da verificação do destino."
   },
   "servers": [
     {
       "url": "https://api-varejo.aeropostale.joinnetwork.com.br",
-      "description": "API publicada; exige consumidor e chave pública provisionados"
+      "description": "API de Integrações"
     }
   ],
-  "x-status": "publicado-sem-consumidores",
-  "x-source-revision": "c1c1eb2",
   "tags": [
     {
       "name": "Autenticacao"
@@ -45,7 +43,7 @@
     "/oauth/token": {
       "post": {
         "summary": "Obter token de integração",
-        "description": "Implementado. Prova JWT obrigatória no formulário; security vazio NÃO significa endpoint anônimo.",
+        "description": "Autentica a integração por private_key_jwt e emite um token de acesso opaco.",
         "operationId": "post__oauth_token",
         "tags": [
           "Autenticacao"
@@ -245,7 +243,6 @@
             }
           }
         },
-        "x-implementation-status": "implementado-publicado",
         "requestBody": {
           "required": true,
           "content": {
@@ -261,7 +258,7 @@
     "/v1/vendas": {
       "get": {
         "summary": "Listar vendas e movimentações",
-        "description": "Implementado. Ordenação estável por data_operacao, cod_operacao e tipo_operacao crescentes no snapshot. Sem expansão de itens.",
+        "description": "Ordenação estável por data_operacao, cod_operacao e tipo_operacao crescentes no snapshot. Sem expansão de itens.",
         "operationId": "get__v1_vendas",
         "tags": [
           "Vendas"
@@ -308,7 +305,7 @@
             "name": "estado",
             "in": "query",
             "required": false,
-            "description": "TODA a situação por padrão para não perder cancelamentos.",
+            "description": "Situação da venda; inclui ativas e canceladas por padrão.",
             "schema": {
               "type": "string",
               "enum": [
@@ -947,14 +944,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/vendas/{venda_id}": {
       "get": {
         "summary": "Consultar detalhe da venda",
-        "description": "Implementado. ",
+        "description": "Consultar detalhe da venda",
         "operationId": "get__v1_vendas_venda_id",
         "tags": [
           "Vendas"
@@ -1573,14 +1569,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/vendas/{venda_id}/itens": {
       "get": {
         "summary": "Consultar itens da venda",
-        "description": "Implementado. Header da venda e filhos devem pertencer à mesma revisão. If-Match validado ao iniciar snapshot; cursor mantém essa revisão por 30 minutos.",
+        "description": "Header da venda e filhos devem pertencer à mesma revisão. If-Match validado ao iniciar snapshot; cursor mantém essa revisão por 30 minutos.",
         "operationId": "get__v1_vendas_venda_id_itens",
         "tags": [
           "Vendas"
@@ -2224,14 +2219,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/vendas/{venda_id}/pagamentos": {
       "get": {
         "summary": "Consultar pagamentos da venda",
-        "description": "Implementado. Header da venda e filhos devem pertencer à mesma revisão. If-Match validado ao iniciar snapshot; cursor mantém essa revisão por 30 minutos.",
+        "description": "Header da venda e filhos devem pertencer à mesma revisão. If-Match validado ao iniciar snapshot; cursor mantém essa revisão por 30 minutos.",
         "operationId": "get__v1_vendas_venda_id_pagamentos",
         "tags": [
           "Vendas"
@@ -2875,14 +2869,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/filiais": {
       "get": {
         "summary": "Listar filiais concedidas",
-        "description": "Implementado. ",
+        "description": "Listar filiais concedidas",
         "operationId": "get__v1_filiais",
         "tags": [
           "Filiais"
@@ -3498,14 +3491,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/filiais/{filial_id}": {
       "get": {
         "summary": "Consultar filial",
-        "description": "Implementado. ",
+        "description": "Consultar filial",
         "operationId": "get__v1_filiais_filial_id",
         "tags": [
           "Filiais"
@@ -4108,14 +4100,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/produtos": {
       "get": {
         "summary": "Listar produtos da filial",
-        "description": "Implementado. ",
+        "description": "Listar produtos da filial",
         "operationId": "get__v1_produtos",
         "tags": [
           "Produtos"
@@ -4770,14 +4761,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/produtos/{produto_id}": {
       "get": {
         "summary": "Consultar produto cadastral",
-        "description": "Implementado. ",
+        "description": "Consultar produto cadastral",
         "operationId": "get__v1_produtos_produto_id",
         "tags": [
           "Produtos"
@@ -5390,14 +5380,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/produtos/{produto_id}/variacoes": {
       "get": {
         "summary": "Listar SKUs do produto na filial",
-        "description": "Implementado. ",
+        "description": "Listar SKUs do produto na filial",
         "operationId": "get__v1_produtos_produto_id_variacoes",
         "tags": [
           "Produtos"
@@ -6032,14 +6021,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/estoques": {
       "get": {
         "summary": "Consultar posição atual por SKU",
-        "description": "Implementado. ",
+        "description": "Consultar posição atual por SKU",
         "operationId": "get__v1_estoques",
         "tags": [
           "Estoques"
@@ -6711,14 +6699,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/filiais/{filial_id}/estoques/{sku}": {
       "get": {
         "summary": "Consultar um SKU na filial",
-        "description": "Implementado. SKU ausente na carga completa pode retornar tombstone presente_ultima_carga=false, saldo_disponivel=null. Nunca inventar zero.",
+        "description": "SKU ausente na carga completa pode retornar tombstone presente_ultima_carga=false, saldo_disponivel=null. Nunca inventar zero.",
         "operationId": "get__v1_filiais_filial_id_estoques_sku",
         "tags": [
           "Estoques"
@@ -7331,14 +7318,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/alteracoes": {
       "get": {
         "summary": "Consumir log incremental",
-        "description": "Implementado. Requer vendas:ler, filiais:ler, produtos:ler ou estoques:ler conforme recurso. Após bootstrap, cursor é obrigatório. Cursor com retenção de 30 dias; 410 exige nova carga. Não usa updated_at como posição confiável.",
+        "description": "Requer vendas:ler, filiais:ler, produtos:ler ou estoques:ler conforme recurso. Após bootstrap, cursor é obrigatório. Cursor com retenção de 30 dias; 410 exige nova carga. Não usa updated_at como posição confiável.",
         "operationId": "get__v1_alteracoes",
         "tags": [
           "Alteracoes"
@@ -8006,14 +7992,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/webhooks": {
       "get": {
         "summary": "Listar inscrições do cliente",
-        "description": "Implementado. ",
+        "description": "Listar inscrições do cliente",
         "operationId": "get__v1_webhooks",
         "tags": [
           "Webhooks"
@@ -8630,12 +8615,11 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       },
       "post": {
         "summary": "Criar inscrição desativada",
-        "description": "Implementado. Máximo de 3 inscrições por cliente; ativo deve ser false. Segredo não é retornado em GET. Idempotência pode reproduzir a resposta cifrada por 24h.",
+        "description": "Máximo de 3 inscrições por cliente; ativo deve ser false. Segredo não é retornado em GET. Uma repetição idempotente pode reproduzir a resposta por até 24h.",
         "operationId": "post__v1_webhooks",
         "tags": [
           "Webhooks"
@@ -9241,7 +9225,6 @@
             }
           }
         },
-        "x-implementation-status": "implementado-publicado",
         "requestBody": {
           "required": true,
           "content": {
@@ -9257,7 +9240,7 @@
     "/v1/webhooks/{webhook_id}": {
       "get": {
         "summary": "Consultar inscrição própria",
-        "description": "Implementado. ",
+        "description": "Consultar inscrição própria",
         "operationId": "get__v1_webhooks_webhook_id",
         "tags": [
           "Webhooks"
@@ -9866,12 +9849,11 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       },
       "put": {
         "summary": "Substituir configuração da inscrição",
-        "description": "Implementado. Alterar destino exige novo teste, aprovação do hostname e estado pendente_verificacao. Não segue redirects.",
+        "description": "Alterar destino exige novo teste, aprovação do hostname e estado pendente_verificacao. Não segue redirects.",
         "operationId": "put__v1_webhooks_webhook_id",
         "tags": [
           "Webhooks"
@@ -10495,7 +10477,6 @@
             }
           }
         },
-        "x-implementation-status": "implementado-publicado",
         "requestBody": {
           "required": true,
           "content": {
@@ -10511,7 +10492,7 @@
     "/v1/webhooks/{webhook_id}/testes": {
       "post": {
         "summary": "Enfileirar teste assinado",
-        "description": "Implementado. ",
+        "description": "Enfileirar teste assinado",
         "operationId": "post__v1_webhooks_webhook_id_testes",
         "tags": [
           "Webhooks"
@@ -11125,14 +11106,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/webhooks/{webhook_id}/rotacionar-segredo": {
       "post": {
         "summary": "Rotacionar segredo de assinatura",
-        "description": "Implementado. Sobreposição proposta de 24h; o emissor assina com ambas as chaves durante a transição.",
+        "description": "Sobreposição de 24h; o emissor assina com ambas as chaves durante a transição.",
         "operationId": "post__v1_webhooks_webhook_id_rotacionar_segredo",
         "tags": [
           "Webhooks"
@@ -11755,14 +11735,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/webhooks/{webhook_id}/entregas": {
       "get": {
         "summary": "Consultar entregas da inscrição",
-        "description": "Implementado. ",
+        "description": "Consultar entregas da inscrição",
         "operationId": "get__v1_webhooks_webhook_id_entregas",
         "tags": [
           "Webhooks"
@@ -12388,14 +12367,13 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     },
     "/v1/webhooks/{webhook_id}/entregas/{entrega_id}/reenviar": {
       "post": {
         "summary": "Enfileirar reenvio autorizado",
-        "description": "Implementado. Mantém evento/payload; nova assinatura e timestamp. Revalida permissões e destino. Até 30 dias de retenção; 410 depois disso.",
+        "description": "Mantém evento/payload; nova assinatura e timestamp. Revalida permissões e destino. Até 30 dias de retenção; 410 depois disso.",
         "operationId": "post__v1_webhooks_webhook_id_entregas_entrega_id_reenviar",
         "tags": [
           "Webhooks"
@@ -13018,8 +12996,7 @@
               }
             }
           }
-        },
-        "x-implementation-status": "implementado-publicado"
+        }
       }
     }
   },
@@ -13027,7 +13004,7 @@
     "securitySchemes": {
       "IntegracaoOAuth": {
         "type": "oauth2",
-        "description": "Client Credentials + private_key_jwt RS256 no token endpoint. O access token é opaco. Filiais e tenant vêm do cadastro, nunca do corpo livre.",
+        "description": "Client Credentials + private_key_jwt RS256 no token endpoint. O access token é opaco. O acesso é limitado à organização, às filiais e aos escopos da credencial.",
         "flows": {
           "clientCredentials": {
             "tokenUrl": "https://api-varejo.aeropostale.joinnetwork.com.br/oauth/token",
@@ -13058,21 +13035,18 @@
           "limite": {
             "type": "integer",
             "description": "Máximo solicitado; padrão 100, teto 200.",
-            "x-origem": "novo",
             "minimum": 1,
             "maximum": 200
           },
           "quantidade": {
             "type": "integer",
             "description": "Registros efetivamente retornados nesta página.",
-            "x-origem": "novo",
             "minimum": 0,
             "maximum": 200
           },
           "tem_mais": {
             "type": "boolean",
-            "description": "Há outra página no mesmo snapshot.",
-            "x-origem": "novo"
+            "description": "Há outra página no mesmo snapshot."
           },
           "cursor_proximo": {
             "type": [
@@ -13080,7 +13054,6 @@
               "null"
             ],
             "description": "Cursor opaco, assinado e vinculado ao cliente, permissões, filtros e snapshot. Null ao terminar.",
-            "x-origem": "novo",
             "maxLength": 4096
           }
         },
@@ -13094,18 +13067,16 @@
       },
       "MetaConsulta": {
         "type": "object",
-        "description": "Metadados da camada externa implementada.",
+        "description": "Metadados de identificação e consistência da resposta.",
         "properties": {
           "request_id": {
             "type": "string",
             "description": "Identificador para suporte e correlação, sem credenciais.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "gerado_em": {
             "type": "string",
             "description": "Instante de produção da resposta, não da venda.",
-            "x-origem": "novo",
             "format": "date-time"
           },
           "snapshot_id": {
@@ -13113,8 +13084,7 @@
               "string",
               "null"
             ],
-            "description": "Identificador da projeção estável nas listas. Null em leitura pontual.",
-            "x-origem": "novo"
+            "description": "Identificador da projeção estável nas listas. Null em leitura pontual."
           },
           "snapshot_expira_em": {
             "type": [
@@ -13122,7 +13092,6 @@
               "null"
             ],
             "description": "Validade de 30 minutos do snapshot das listas; null em leitura pontual.",
-            "x-origem": "novo",
             "format": "date-time"
           },
           "recurso_versao": {
@@ -13131,7 +13100,6 @@
               "null"
             ],
             "description": "Revisão da venda nas listas de itens/pagamentos. Null nas demais consultas.",
-            "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           }
         },
@@ -13146,12 +13114,11 @@
       },
       "Cobertura": {
         "type": "object",
-        "description": "Disponibilidade de partes de uma venda; não é homologação comercial.",
+        "description": "Disponibilidade das seções do detalhe da venda.",
         "properties": {
           "itens": {
             "type": "string",
             "description": "Estado do detalhamento dos itens.",
-            "x-origem": "novo",
             "enum": [
               "disponivel",
               "pendente"
@@ -13160,7 +13127,6 @@
           "pagamentos": {
             "type": "string",
             "description": "Estado dos complementos de pagamento.",
-            "x-origem": "novo",
             "enum": [
               "disponivel",
               "pendente"
@@ -13169,7 +13135,6 @@
           "nota_fiscal": {
             "type": "string",
             "description": "Grupo importado pode conter campos nulos.",
-            "x-origem": "novo",
             "enum": [
               "disponivel",
               "pendente"
@@ -13178,7 +13143,6 @@
           "pessoas": {
             "type": "string",
             "description": "Distingue restrição de permissão, pendência e resposta disponível.",
-            "x-origem": "novo",
             "enum": [
               "restrito",
               "pendente",
@@ -13191,7 +13155,6 @@
               "null"
             ],
             "description": "Última importação dos complementos. Null se ausente.",
-            "x-origem": "operacoes.complementos_importados_em",
             "format": "date-time"
           }
         },
@@ -13206,7 +13169,7 @@
       },
       "Sincronizacao": {
         "type": "object",
-        "description": "Frescor da origem local. Indicadores propostos sobre dados já armazenados.",
+        "description": "Indicadores de atualização dos dados.",
         "properties": {
           "ultimo_sucesso_em": {
             "type": [
@@ -13214,7 +13177,6 @@
               "null"
             ],
             "description": "Última consulta bem-sucedida do recurso/filial.",
-            "x-origem": "sync_status.ultimo_sucesso ou sync_estoques.ultimo_sucesso",
             "format": "date-time"
           },
           "consultado_em": {
@@ -13222,8 +13184,7 @@
               "string",
               "null"
             ],
-            "description": "Instante em que esta posição foi observada pelo coletor.",
-            "x-origem": "estoque_atual.consultado_em",
+            "description": "Instante de observação desta posição.",
             "format": "date-time"
           },
           "data_atualizacao_erp": {
@@ -13231,8 +13192,7 @@
               "string",
               "null"
             ],
-            "description": "Atualização informada pelo ERP; não é hora da venda.",
-            "x-origem": "estoque_atual.data_atualizacao_erp",
+            "description": "Instante de atualização informado pela origem.",
             "format": "date-time"
           },
           "ultima_carga_completa_em": {
@@ -13241,18 +13201,15 @@
               "null"
             ],
             "description": "Última carga completa de estoque.",
-            "x-origem": "sync_estoques.ultima_carga_completa",
             "format": "date-time"
           },
           "desatualizado": {
             "type": "boolean",
-            "description": "Sem sucesso há mais de 30 minutos ou sem sucesso conhecido; limiar proposto.",
-            "x-origem": "novo"
+            "description": "Indica uma posição desatualizada ou sem atualização bem-sucedida conhecida."
           },
           "estado": {
             "type": "string",
-            "description": "Não expõe mensagens internas do ERP.",
-            "x-origem": "novo",
+            "description": "Situação da atualização dos dados.",
             "enum": [
               "ok",
               "atrasado",
@@ -13278,7 +13235,6 @@
           "tipo": {
             "type": "string",
             "description": "Tipo informado na normalização.",
-            "x-origem": "clientes[].contatos[].tipo",
             "enum": [
               "Celular",
               "WhatsApp",
@@ -13288,13 +13244,11 @@
           "ddd": {
             "type": "string",
             "description": "DDD como recebido; não presume país.",
-            "x-origem": "clientes[].contatos[].ddd",
             "maxLength": 200
           },
           "telefone": {
             "type": "string",
             "description": "Número textual; não usar como identidade do cliente.",
-            "x-origem": "clientes[].contatos[].telefone",
             "maxLength": 200
           }
         },
@@ -13314,14 +13268,12 @@
               "string",
               "null"
             ],
-            "description": "Código ERP; null se não informado. Não gerar código por nome/telefone.",
-            "x-origem": "operacoes.clientes[].cliente_codigo",
+            "description": "Código de referência do cliente; null quando indisponível.",
             "pattern": "^\\d{1,30}$"
           },
           "nome": {
             "type": "string",
             "description": "Nome na resposta importada; pode conter texto de ausência.",
-            "x-origem": "operacoes.clientes[].nome",
             "maxLength": 200
           },
           "aniversario_mm_dd": {
@@ -13330,13 +13282,11 @@
               "null"
             ],
             "description": "Somente mês/dia. Não contém ano de nascimento.",
-            "x-origem": "operacoes.clientes[].aniversario_mm_dd",
             "pattern": "^\\d{2}-\\d{2}$"
           },
           "contatos": {
             "type": "array",
             "description": "Contatos disponíveis no snapshot.",
-            "x-origem": "operacoes.clientes[].contatos",
             "items": {
               "$ref": "#/components/schemas/Contato"
             }
@@ -13359,16 +13309,14 @@
               "string",
               "null"
             ],
-            "description": "Código textual do vendedor único identificado; null quando ausente/ambíguo.",
-            "x-origem": "operacoes.vendedor_codigo"
+            "description": "Código textual do vendedor único identificado; null quando ausente/ambíguo."
           },
           "nome": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Omitido sem vendas:pessoas:ler e incluir_pessoas=true; null se autorizado mas sem dado.",
-            "x-origem": "operacoes.vendedor_nome"
+            "description": "Omitido sem vendas:pessoas:ler e incluir_pessoas=true; null se autorizado mas sem dado."
           }
         },
         "required": [
@@ -13386,7 +13334,6 @@
               "null"
             ],
             "description": "Número preservado como texto, inclusive zeros recebidos.",
-            "x-origem": "complementos.nota_fiscal.numero_nota",
             "maxLength": 500
           },
           "modelo": {
@@ -13395,7 +13342,6 @@
               "null"
             ],
             "description": "Modelo textual; não traduz automaticamente para NF-e/NFC-e.",
-            "x-origem": "complementos.nota_fiscal.modelo",
             "maxLength": 500
           },
           "idnfe": {
@@ -13404,7 +13350,6 @@
               "null"
             ],
             "description": "Identificador fiscal como recebido. Não assumir que todo valor seja chave de acesso de 44 dígitos.",
-            "x-origem": "complementos.nota_fiscal.idnfe",
             "maxLength": 500
           },
           "status": {
@@ -13412,8 +13357,7 @@
               "string",
               "null"
             ],
-            "description": "Código/estado original do ERP; null não significa autorizado.",
-            "x-origem": "complementos.nota_fiscal.status",
+            "description": "Status fiscal informado; null quando indisponível.",
             "maxLength": 500
           }
         },
@@ -13435,7 +13379,6 @@
               "null"
             ],
             "description": "Identificador recebido.",
-            "x-origem": "complementos.condicoes_pgto",
             "maxLength": 500
           },
           "codigo": {
@@ -13444,7 +13387,6 @@
               "null"
             ],
             "description": "Código da condição.",
-            "x-origem": "complementos.codigo_condicaopgto",
             "maxLength": 500
           },
           "descricao": {
@@ -13453,7 +13395,6 @@
               "null"
             ],
             "description": "Descrição recebida.",
-            "x-origem": "complementos.desc_condicoes_pgto",
             "maxLength": 500
           }
         },
@@ -13466,12 +13407,11 @@
       },
       "Conferencia": {
         "type": "object",
-        "description": "Comparação aritmética limitada às regras confirmadas no projeto.",
+        "description": "Indicadores de consistência dos valores e quantidades da operação.",
         "properties": {
           "situacao": {
             "type": "string",
-            "description": "Classificação efetiva; erro_erp_confirmado mantém valores originais.",
-            "x-origem": "operacoes.conciliacao + marcação de erro ERP",
+            "description": "Classificação de consistência da operação.",
             "enum": [
               "pendente",
               "conciliada",
@@ -13485,20 +13425,17 @@
           },
           "tolerancia_centavos": {
             "type": "string",
-            "description": "Tolerância inclusiva de dois centavos em ambos os sentidos. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "regra atual de conciliação",
+            "description": "Tolerância de comparação, expressa em centavos. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
             "pattern": "^-?\\d+$",
             "const": "2"
           },
           "erro_erp_confirmado": {
             "type": "boolean",
-            "description": "Marcação administrativa existente; não revela usuário responsável.",
-            "x-origem": "operacoes.erro_erp_confirmado_por IS NOT NULL"
+            "description": "Indica uma divergência validada na origem, sem alterar os valores retornados."
           },
           "homologacao_comercial": {
             "type": "string",
-            "description": "A conferência aritmética não representa homologação mensal/anual.",
-            "x-origem": "R11/R22",
+            "description": "Estado de validação comercial. Nesta versão retorna nao_declarada.",
             "const": "nao_declarada"
           }
         },
@@ -13516,26 +13453,22 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Identidade estável no tenant: vnd_{filial_id}_{tipo_operacao}_{cod_operacao}. Não é segredo.",
-            "x-origem": "novo",
+            "description": "Identidade estável no tenant: vnd_{filial_id}_{tipo_operacao}_{cod_operacao}. ",
             "pattern": "^vnd_\\d+_[A-Z]+_\\d+$"
           },
           "filial_id": {
             "type": "string",
             "description": "ID interno da filial, não seu código de exibição.",
-            "x-origem": "operacoes.filial",
             "pattern": "^\\d{1,30}$"
           },
           "cod_operacao": {
             "type": "string",
-            "description": "Código ERP. A unicidade exige filial + tipo + código.",
-            "x-origem": "operacoes.cod_operacao",
+            "description": "Código da operação; considerar também a filial e o tipo para identificar o registro.",
             "pattern": "^\\d{1,30}$"
           },
           "tipo_operacao": {
             "type": "string",
             "description": "S=saída/venda; E=entrada. Entrada não é devolução automaticamente.",
-            "x-origem": "operacoes.tipo_operacao",
             "enum": [
               "S",
               "E"
@@ -13543,8 +13476,7 @@
           },
           "data_operacao": {
             "type": "string",
-            "description": "Dia civil da operação em America/Sao_Paulo; a fonte não confirma hora real.",
-            "x-origem": "operacoes.data_operacao",
+            "description": "Data civil da operação no fuso America/Sao_Paulo.",
             "format": "date"
           },
           "hora_venda": {
@@ -13552,54 +13484,46 @@
               "string",
               "null"
             ],
-            "description": "Reservado para origem homologada; no estado atual deve ser null. Nunca derivar da importação.",
-            "x-origem": "não disponível: R29",
+            "description": "Campo reservado; retorna null nesta versão.",
             "const": null
           },
           "quantidade": {
             "type": "integer",
             "description": "Peças do cabeçalho. Pode divergir da soma dos itens.",
-            "x-origem": "operacoes.quantidade",
             "minimum": 0
           },
           "valor_final_centavos": {
             "type": "string",
-            "description": "Valor final do cabeçalho, preservado. Não chamar de líquido homologado. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "operacoes.valor_final_centavos",
+            "description": "Valor total informado para a operação. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
             "pattern": "^-?\\d+$"
           },
           "cancelada": {
             "type": "boolean",
-            "description": "Cancelamento efetivo: cabeçalho ou evento de cancelamento ativo.",
-            "x-origem": "operacoes.cancelada OR EXISTS cancelamentos"
+            "description": "Indica se a venda está cancelada."
           },
           "vendedor": {
             "$ref": "#/components/schemas/Vendedor",
-            "description": "Identificação disponível; nome exige permissão específica.",
-            "x-origem": "operacoes.vendedor_codigo/vendedor_nome"
+            "description": "Identificação disponível; nome exige permissão específica."
           },
           "evento_codigo": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Código do evento ERP; não determina sozinho o sinal financeiro.",
-            "x-origem": "operacoes.evento_codigo"
+            "description": "Código de classificação da operação na origem."
           },
           "conferencia": {
             "$ref": "#/components/schemas/Conferencia",
-            "description": "Conferência, não homologação de faturamento."
+            "description": "Indicadores de consistência da operação."
           },
           "versao": {
             "type": "string",
-            "description": "Revisão monotônica do recurso externo, não é trans_id do ERP.",
-            "x-origem": "novo",
+            "description": "Versão monotônica do recurso na API.",
             "pattern": "^\\d{1,30}$"
           },
           "atualizado_em": {
             "type": "string",
-            "description": "Instante de publicação desta revisão externa. Não reutilizar cada reimportação como alteração comercial.",
-            "x-origem": "novo",
+            "description": "Instante de disponibilização desta versão do recurso.",
             "format": "date-time"
           }
         },
@@ -13627,26 +13551,22 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Identidade estável no tenant: vnd_{filial_id}_{tipo_operacao}_{cod_operacao}. Não é segredo.",
-            "x-origem": "novo",
+            "description": "Identidade estável no tenant: vnd_{filial_id}_{tipo_operacao}_{cod_operacao}. ",
             "pattern": "^vnd_\\d+_[A-Z]+_\\d+$"
           },
           "filial_id": {
             "type": "string",
             "description": "ID interno da filial, não seu código de exibição.",
-            "x-origem": "operacoes.filial",
             "pattern": "^\\d{1,30}$"
           },
           "cod_operacao": {
             "type": "string",
-            "description": "Código ERP. A unicidade exige filial + tipo + código.",
-            "x-origem": "operacoes.cod_operacao",
+            "description": "Código da operação; considerar também a filial e o tipo para identificar o registro.",
             "pattern": "^\\d{1,30}$"
           },
           "tipo_operacao": {
             "type": "string",
             "description": "S=saída/venda; E=entrada. Entrada não é devolução automaticamente.",
-            "x-origem": "operacoes.tipo_operacao",
             "enum": [
               "S",
               "E"
@@ -13654,8 +13574,7 @@
           },
           "data_operacao": {
             "type": "string",
-            "description": "Dia civil da operação em America/Sao_Paulo; a fonte não confirma hora real.",
-            "x-origem": "operacoes.data_operacao",
+            "description": "Data civil da operação no fuso America/Sao_Paulo.",
             "format": "date"
           },
           "hora_venda": {
@@ -13663,54 +13582,46 @@
               "string",
               "null"
             ],
-            "description": "Reservado para origem homologada; no estado atual deve ser null. Nunca derivar da importação.",
-            "x-origem": "não disponível: R29",
+            "description": "Campo reservado; retorna null nesta versão.",
             "const": null
           },
           "quantidade": {
             "type": "integer",
             "description": "Peças do cabeçalho. Pode divergir da soma dos itens.",
-            "x-origem": "operacoes.quantidade",
             "minimum": 0
           },
           "valor_final_centavos": {
             "type": "string",
-            "description": "Valor final do cabeçalho, preservado. Não chamar de líquido homologado. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "operacoes.valor_final_centavos",
+            "description": "Valor total informado para a operação. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
             "pattern": "^-?\\d+$"
           },
           "cancelada": {
             "type": "boolean",
-            "description": "Cancelamento efetivo: cabeçalho ou evento de cancelamento ativo.",
-            "x-origem": "operacoes.cancelada OR EXISTS cancelamentos"
+            "description": "Indica se a venda está cancelada."
           },
           "vendedor": {
             "$ref": "#/components/schemas/Vendedor",
-            "description": "Identificação disponível; nome exige permissão específica.",
-            "x-origem": "operacoes.vendedor_codigo/vendedor_nome"
+            "description": "Identificação disponível; nome exige permissão específica."
           },
           "evento_codigo": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Código do evento ERP; não determina sozinho o sinal financeiro.",
-            "x-origem": "operacoes.evento_codigo"
+            "description": "Código de classificação da operação na origem."
           },
           "conferencia": {
             "$ref": "#/components/schemas/Conferencia",
-            "description": "Conferência, não homologação de faturamento."
+            "description": "Indicadores de consistência da operação."
           },
           "versao": {
             "type": "string",
-            "description": "Revisão monotônica do recurso externo, não é trans_id do ERP.",
-            "x-origem": "novo",
+            "description": "Versão monotônica do recurso na API.",
             "pattern": "^\\d{1,30}$"
           },
           "atualizado_em": {
             "type": "string",
-            "description": "Instante de publicação desta revisão externa. Não reutilizar cada reimportação como alteração comercial.",
-            "x-origem": "novo",
+            "description": "Instante de disponibilização desta versão do recurso.",
             "format": "date-time"
           },
           "ajuste_centavos": {
@@ -13719,7 +13630,6 @@
               "null"
             ],
             "description": "Ajuste monetário da operação; null é ausência, não zero. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "operacoes.ajuste_centavos",
             "pattern": "^-?\\d+$"
           },
           "subtotal_itens_centavos": {
@@ -13728,7 +13638,6 @@
               "null"
             ],
             "description": "Soma dos preços recebidos × quantidades. Não reaplica desconto. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "operacoes.subtotal_itens_centavos",
             "pattern": "^-?\\d+$"
           },
           "frete_centavos": {
@@ -13737,12 +13646,10 @@
               "null"
             ],
             "description": "Frete recebido; null não deve ser presumido zero. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "complementos.frete_centavos",
             "pattern": "^-?\\d+$"
           },
           "cortesia_informada": {
-            "description": "Valor original, sem presumir unidade monetária. Zero numérico/textual foi confirmado como ausência de cortesia; demais composições pendentes.",
-            "x-origem": "complementos.cortesia_informada",
+            "description": "Informação de cortesia no formato recebido. Não possui unidade monetária definida neste contrato.",
             "type": [
               "string",
               "number",
@@ -13759,8 +13666,7 @@
                 "type": "null"
               }
             ],
-            "description": "Null enquanto o grupo não foi importado; objeto com nulos quando importado sem valores.",
-            "x-origem": "complementos.nota_fiscal"
+            "description": "Null enquanto o grupo não foi importado; objeto com nulos quando importado sem valores."
           },
           "condicao_pagamento": {
             "anyOf": [
@@ -13771,8 +13677,7 @@
                 "type": "null"
               }
             ],
-            "description": "Null quando complementos ausentes.",
-            "x-origem": "complementos"
+            "description": "Null quando complementos ausentes."
           },
           "cobertura": {
             "$ref": "#/components/schemas/Cobertura",
@@ -13784,7 +13689,6 @@
               "null"
             ],
             "description": "Data/hora do evento de cancelamento, quando existente.",
-            "x-origem": "cancelamentos.data_cancelou",
             "format": "date-time"
           },
           "clientes": {
@@ -13793,7 +13697,6 @@
               "null"
             ],
             "description": "Omitido sem permissão e opt-in. Null=pending; []=fonte sem cliente.",
-            "x-origem": "operacoes.clientes",
             "items": {
               "$ref": "#/components/schemas/ClienteVenda"
             }
@@ -13801,13 +13704,11 @@
           "itens_url": {
             "type": "string",
             "description": "Rota relativa paginada; usar ETag em If-Match.",
-            "x-origem": "novo",
             "format": "uri-reference"
           },
           "pagamentos_url": {
             "type": "string",
             "description": "Rota relativa paginada; usar ETag em If-Match.",
-            "x-origem": "novo",
             "format": "uri-reference"
           }
         },
@@ -13846,7 +13747,6 @@
           "ordem": {
             "type": "integer",
             "description": "Posição importada, baseada em zero. Pode mudar no reprocessamento; atualizar coleção inteira da revisão.",
-            "x-origem": "operacao_itens.ordem",
             "minimum": 0
           },
           "sku": {
@@ -13854,35 +13754,30 @@
               "string",
               "null"
             ],
-            "description": "SKU textual; null se a fonte não informou.",
-            "x-origem": "operacao_itens.sku"
+            "description": "SKU textual; null se a fonte não informou."
           },
           "cod_produto": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Código comercial, não necessariamente o ID interno produto.",
-            "x-origem": "operacao_itens.cod_produto"
+            "description": "Código comercial, não necessariamente o ID interno produto."
           },
           "descricao": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Descrição no momento importado.",
-            "x-origem": "operacao_itens.descricao"
+            "description": "Descrição no momento importado."
           },
           "quantidade": {
             "type": "integer",
             "description": "Quantidade inteira positiva.",
-            "x-origem": "operacao_itens.quantidade",
             "minimum": 1
           },
           "preco_centavos": {
             "type": "string",
             "description": "Preço unitário recebido usado no subtotal. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "operacao_itens.preco_centavos",
             "pattern": "^-?\\d+$"
           },
           "preco_tabela_centavos": {
@@ -13891,7 +13786,6 @@
               "null"
             ],
             "description": "Preço de tabela informado nesse item. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "operacao_itens.preco_tabela_centavos",
             "pattern": "^-?\\d+$"
           },
           "preco_aplicado_centavos": {
@@ -13900,7 +13794,6 @@
               "null"
             ],
             "description": "Preço aplicado informado nesse item; não substituir automaticamente preco_centavos. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "operacao_itens.preco_aplicado_centavos",
             "pattern": "^-?\\d+$"
           },
           "desconto_percentual_informado": {
@@ -13909,19 +13802,16 @@
               "null"
             ],
             "description": "Percentual textual: 20 significa 20%. Informativo; não reaplicar.",
-            "x-origem": "operacao_itens.desconto_informado",
             "pattern": "^-?\\d+(\\.\\d+)?$"
           },
           "subtotal_centavos": {
             "type": "string",
             "description": "Quantidade × preco_centavos, calculado exatamente. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "derivado de operacao_itens",
             "pattern": "^-?\\d+$"
           },
           "imagem_disponivel": {
             "type": "boolean",
-            "description": "Existe referência de imagem autorizada. URL bruta não será publicada nesta versão.",
-            "x-origem": "derivado de operacao_itens.imagem_url"
+            "description": "Existe referência de imagem autorizada. URL bruta não será publicada nesta versão."
           }
         },
         "required": [
@@ -13946,7 +13836,6 @@
           "ordem": {
             "type": "integer",
             "description": "Posição baseada em zero nesta revisão; não é identificador financeiro durável.",
-            "x-origem": "novo",
             "minimum": 0
           },
           "origem": {
@@ -13954,16 +13843,14 @@
               "string",
               "null"
             ],
-            "description": "Origem recebida.",
-            "x-origem": "complementos.lancamentos[].origem"
+            "description": "Origem recebida."
           },
           "n_documento": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Documento/parcela como recebido.",
-            "x-origem": "complementos.lancamentos[].n_documento"
+            "description": "Documento/parcela como recebido."
           },
           "data_emissao": {
             "type": [
@@ -13971,7 +13858,6 @@
               "null"
             ],
             "description": "Dia de emissão normalizado em São Paulo.",
-            "x-origem": "complementos.lancamentos[].data_emissao",
             "format": "date"
           },
           "data_vencimento": {
@@ -13980,7 +13866,6 @@
               "null"
             ],
             "description": "Dia de vencimento; não comprova pagamento.",
-            "x-origem": "complementos.lancamentos[].data_vencimento",
             "format": "date"
           },
           "desc_tipopgto": {
@@ -13988,16 +13873,14 @@
               "string",
               "null"
             ],
-            "description": "Descrição da modalidade.",
-            "x-origem": "complementos.lancamentos[].desc_tipopgto"
+            "description": "Descrição da modalidade."
           },
           "nsu": {
             "type": [
               "string",
               "null"
             ],
-            "description": "NSU textual; não é número de cartão.",
-            "x-origem": "complementos.lancamentos[].nsu"
+            "description": "NSU textual; não é número de cartão."
           },
           "valor_inicial_centavos": {
             "type": [
@@ -14005,7 +13888,6 @@
               "null"
             ],
             "description": "Valor inicial recebido; parcelas não devem duplicar o total da venda. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "complementos.lancamentos[].valor_inicial_centavos",
             "pattern": "^-?\\d+$"
           },
           "desc_gerador": {
@@ -14013,16 +13895,14 @@
               "string",
               "null"
             ],
-            "description": "Omitido sem permissão de pessoas e opt-in.",
-            "x-origem": "complementos.lancamentos[].desc_gerador"
+            "description": "Omitido sem permissão de pessoas e opt-in."
           },
           "historico": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Texto livre potencialmente pessoal; omitido sem permissão de pessoas e opt-in.",
-            "x-origem": "complementos.lancamentos[].historico"
+            "description": "Texto livre potencialmente pessoal; omitido sem permissão de pessoas e opt-in."
           }
         },
         "required": [
@@ -14044,7 +13924,6 @@
           "id": {
             "type": "string",
             "description": "ID interno da filial.",
-            "x-origem": "cadastro_filiais.filial",
             "pattern": "^\\d{1,30}$"
           },
           "codigo": {
@@ -14052,16 +13931,14 @@
               "string",
               "null"
             ],
-            "description": "Código de exibição, por exemplo LOJA-DEMO.",
-            "x-origem": "cadastro_filiais.cod_filial"
+            "description": "Código de exibição, por exemplo LOJA-DEMO."
           },
           "fantasia": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Nome fantasia importado.",
-            "x-origem": "cadastro_filiais.fantasia"
+            "description": "Nome fantasia importado."
           },
           "trans_id_origem": {
             "type": [
@@ -14069,19 +13946,16 @@
               "null"
             ],
             "description": "Cursor cadastral recebido. Não serve como cursor externo.",
-            "x-origem": "cadastro_filiais.trans_id",
             "pattern": "^\\d{1,30}$"
           },
           "versao": {
             "type": "string",
             "description": "Revisão da projeção externa.",
-            "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "atualizado_em": {
             "type": "string",
             "description": "Instante desta revisão externa.",
-            "x-origem": "novo",
             "format": "date-time"
           }
         },
@@ -14104,16 +13978,14 @@
               "string",
               "null"
             ],
-            "description": "Código textual da dimensão.",
-            "x-origem": "cadastro_produtos.classificacao.<dimensao>.codigo"
+            "description": "Código textual da dimensão."
           },
           "descricao": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Descrição textual da dimensão.",
-            "x-origem": "cadastro_produtos.classificacao.<dimensao>.descricao"
+            "description": "Descrição textual da dimensão."
           }
         },
         "required": [
@@ -14124,37 +13996,31 @@
       },
       "ClassificacaoProduto": {
         "type": "object",
-        "description": "Seis dimensões efetivamente persistidas pelo importador.",
+        "description": "Classificações cadastrais do produto.",
         "properties": {
           "colecao": {
             "$ref": "#/components/schemas/ClassificacaoItem",
-            "description": "Classificação de colecao.",
-            "x-origem": "cadastro_produtos.classificacao.colecao"
+            "description": "Classificação de colecao."
           },
           "departamento": {
             "$ref": "#/components/schemas/ClassificacaoItem",
-            "description": "Classificação de departamento.",
-            "x-origem": "cadastro_produtos.classificacao.departamento"
+            "description": "Classificação de departamento."
           },
           "grupo": {
             "$ref": "#/components/schemas/ClassificacaoItem",
-            "description": "Classificação de grupo.",
-            "x-origem": "cadastro_produtos.classificacao.grupo"
+            "description": "Classificação de grupo."
           },
           "categoria": {
             "$ref": "#/components/schemas/ClassificacaoItem",
-            "description": "Classificação de categoria.",
-            "x-origem": "cadastro_produtos.classificacao.categoria"
+            "description": "Classificação de categoria."
           },
           "grade": {
             "$ref": "#/components/schemas/ClassificacaoItem",
-            "description": "Classificação de grade.",
-            "x-origem": "cadastro_produtos.classificacao.grade"
+            "description": "Classificação de grade."
           },
           "marca": {
             "$ref": "#/components/schemas/ClassificacaoItem",
-            "description": "Classificação de marca.",
-            "x-origem": "cadastro_produtos.classificacao.marca"
+            "description": "Classificação de marca."
           }
         },
         "required": [
@@ -14174,26 +14040,22 @@
           "id": {
             "type": "string",
             "description": "ID interno do produto. Não confundir com código comercial.",
-            "x-origem": "cadastro_produtos.produto",
             "pattern": "^\\d{1,30}$"
           },
           "codigo": {
             "type": "string",
-            "description": "Código comercial.",
-            "x-origem": "cadastro_produtos.cod_produto"
+            "description": "Código comercial."
           },
           "descricao": {
             "type": "string",
-            "description": "Descrição cadastral.",
-            "x-origem": "cadastro_produtos.descricao"
+            "description": "Descrição cadastral."
           },
           "tipo_prod": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Tipo cadastral principal: AC/SE/MP/MC ou outro código recebido. Null=ausente. O fallback por estoque pertence à variação.",
-            "x-origem": "cadastro_produtos.tipo_prod",
+            "description": "Código de tipo cadastral do produto; null quando indisponível.",
             "maxLength": 20
           },
           "classificacao": {
@@ -14206,7 +14068,6 @@
               "null"
             ],
             "description": "Transação cadastral recebida, não cursor externo.",
-            "x-origem": "cadastro_produtos.trans_id",
             "pattern": "^\\d{1,30}$"
           },
           "cadastro_consultado_em": {
@@ -14215,24 +14076,20 @@
               "null"
             ],
             "description": "Último enriquecimento cadastral bem-sucedido.",
-            "x-origem": "cadastro_produtos.enriquecido_em",
             "format": "date-time"
           },
           "cadastro_disponivel": {
             "type": "boolean",
-            "description": "Existe cadastro enriquecido; false não equivale a produto inexistente.",
-            "x-origem": "derivado de cadastro_produtos.enriquecido_em"
+            "description": "Existe cadastro enriquecido; false não equivale a produto inexistente."
           },
           "versao": {
             "type": "string",
             "description": "Revisão da camada externa.",
-            "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "atualizado_em": {
             "type": "string",
             "description": "Instante da revisão externa.",
-            "x-origem": "novo",
             "format": "date-time"
           }
         },
@@ -14257,19 +14114,16 @@
           "filial_id": {
             "type": "string",
             "description": "Filial da variação autorizada.",
-            "x-origem": "estoque_atual.filial",
             "pattern": "^\\d{1,30}$"
           },
           "produto_id": {
             "type": "string",
             "description": "ID interno do produto básico.",
-            "x-origem": "estoque_atual.produto",
             "pattern": "^\\d{1,30}$"
           },
           "sku": {
             "type": "string",
             "description": "SKU exato, preservando caixa e caracteres. Codificar com percent-encoding em path.",
-            "x-origem": "estoque_atual.sku",
             "minLength": 1,
             "maxLength": 200
           },
@@ -14278,32 +14132,28 @@
               "string",
               "null"
             ],
-            "description": "Cor textual.",
-            "x-origem": "estoque_atual.cor"
+            "description": "Cor textual."
           },
           "tamanho": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Tamanho textual.",
-            "x-origem": "estoque_atual.tamanho"
+            "description": "Tamanho textual."
           },
           "codigo_barras": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Código de barras textual; preservar zeros à esquerda.",
-            "x-origem": "estoque_atual.barra"
+            "description": "Código de barras textual; preservar zeros à esquerda."
           },
           "tipo_prod": {
             "type": [
               "string",
               "null"
             ],
-            "description": "COALESCE(tipo cadastral, tipo retornado no saldo).",
-            "x-origem": "cadastro_produtos.tipo_prod / estoque_atual.tipo_prod",
+            "description": "Código de tipo da variação.",
             "maxLength": 20
           },
           "tipo_prod_origem": {
@@ -14311,8 +14161,7 @@
               "string",
               "null"
             ],
-            "description": "Origem da classificação efetiva; null quando desconhecida.",
-            "x-origem": "derivado da prioridade cadastral",
+            "description": "Referência da classificação da variação; null quando desconhecida.",
             "enum": [
               "cadastro",
               "estoque",
@@ -14321,8 +14170,7 @@
           },
           "presente_ultima_carga": {
             "type": "boolean",
-            "description": "False é ausência na última carga completa, não estoque zero.",
-            "x-origem": "estoque_atual.presente_ultima_carga"
+            "description": "False é ausência na última carga completa, não estoque zero."
           }
         },
         "required": [
@@ -14345,19 +14193,16 @@
           "filial_id": {
             "type": "string",
             "description": "Filial da variação autorizada.",
-            "x-origem": "estoque_atual.filial",
             "pattern": "^\\d{1,30}$"
           },
           "produto_id": {
             "type": "string",
             "description": "ID interno do produto básico.",
-            "x-origem": "estoque_atual.produto",
             "pattern": "^\\d{1,30}$"
           },
           "sku": {
             "type": "string",
             "description": "SKU exato, preservando caixa e caracteres. Codificar com percent-encoding em path.",
-            "x-origem": "estoque_atual.sku",
             "minLength": 1,
             "maxLength": 200
           },
@@ -14366,32 +14211,28 @@
               "string",
               "null"
             ],
-            "description": "Cor textual.",
-            "x-origem": "estoque_atual.cor"
+            "description": "Cor textual."
           },
           "tamanho": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Tamanho textual.",
-            "x-origem": "estoque_atual.tamanho"
+            "description": "Tamanho textual."
           },
           "codigo_barras": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Código de barras textual; preservar zeros à esquerda.",
-            "x-origem": "estoque_atual.barra"
+            "description": "Código de barras textual; preservar zeros à esquerda."
           },
           "tipo_prod": {
             "type": [
               "string",
               "null"
             ],
-            "description": "COALESCE(tipo cadastral, tipo retornado no saldo).",
-            "x-origem": "cadastro_produtos.tipo_prod / estoque_atual.tipo_prod",
+            "description": "Código de tipo da variação.",
             "maxLength": 20
           },
           "tipo_prod_origem": {
@@ -14399,8 +14240,7 @@
               "string",
               "null"
             ],
-            "description": "Origem da classificação efetiva; null quando desconhecida.",
-            "x-origem": "derivado da prioridade cadastral",
+            "description": "Referência da classificação da variação; null quando desconhecida.",
             "enum": [
               "cadastro",
               "estoque",
@@ -14409,8 +14249,7 @@
           },
           "presente_ultima_carga": {
             "type": "boolean",
-            "description": "False é ausência na última carga completa, não estoque zero.",
-            "x-origem": "estoque_atual.presente_ultima_carga"
+            "description": "False é ausência na última carga completa, não estoque zero."
           },
           "saldo_disponivel": {
             "type": [
@@ -14418,29 +14257,25 @@
               "null"
             ],
             "description": "Decimal exato, pode ser negativo ou null. Já desconta reservas. Ausência na carga completa deve retornar null.",
-            "x-origem": "estoque_atual.saldo",
             "pattern": "^-?\\d{1,14}(\\.\\d{1,6})?$"
           },
           "reservas_ja_descontadas": {
             "type": "boolean",
-            "description": "Regra confirmada para esta origem; não subtrair reservas outra vez.",
-            "x-origem": "regra confirmada do saldo",
+            "description": "Indica que o saldo disponível já considera as reservas.",
             "const": true
           },
           "sincronizacao": {
             "$ref": "#/components/schemas/Sincronizacao",
-            "description": "Frescor da posição e da coleta por filial."
+            "description": "Indicadores de atualização da posição por filial."
           },
           "versao": {
             "type": "string",
             "description": "Revisão externa do par filial/SKU.",
-            "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "atualizado_em": {
             "type": "string",
             "description": "Instante da revisão externa.",
-            "x-origem": "novo",
             "format": "date-time"
           }
         },
@@ -14469,13 +14304,11 @@
           "id": {
             "type": "string",
             "description": "ID do evento, usado também no webhook quando aplicável.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "recurso": {
             "type": "string",
             "description": "Recurso alterado.",
-            "x-origem": "novo",
             "enum": [
               "vendas",
               "filiais",
@@ -14485,19 +14318,16 @@
           },
           "recurso_id": {
             "type": "string",
-            "description": "Identidade do recurso dentro do tenant. Em estoque é ID opaco estável do par filial/SKU.",
-            "x-origem": "novo"
+            "description": "Identidade do recurso dentro do tenant. Em estoque é ID opaco estável do par filial/SKU."
           },
           "filial_id": {
             "type": "string",
             "description": "Filial autorizada desta projeção.",
-            "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "acao": {
             "type": "string",
             "description": "Ausente é tombstone de estoque; não é zeragem.",
-            "x-origem": "novo",
             "enum": [
               "upsert",
               "cancelada",
@@ -14507,19 +14337,16 @@
           "versao": {
             "type": "string",
             "description": "Versão monotônica do recurso. Aplicar somente se maior que a versão local.",
-            "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "registrado_em": {
             "type": "string",
-            "description": "Instante de publicação local, não data/hora da venda ERP.",
-            "x-origem": "novo",
+            "description": "Instante de disponibilização da alteração.",
             "format": "date-time"
           },
           "consulta_url": {
             "type": "string",
             "description": "Rota relativa para consultar a versão atual; pode estar mais recente que o evento.",
-            "x-origem": "novo",
             "format": "uri-reference"
           }
         },
@@ -14542,26 +14369,22 @@
           "limite": {
             "type": "integer",
             "description": "Limite de eventos nesta página.",
-            "x-origem": "novo",
             "minimum": 1,
             "maximum": 200
           },
           "quantidade": {
             "type": "integer",
             "description": "Quantidade efetiva.",
-            "x-origem": "novo",
             "minimum": 0,
             "maximum": 200
           },
           "tem_mais": {
             "type": "boolean",
-            "description": "Há eventos já publicados a continuar lendo.",
-            "x-origem": "novo"
+            "description": "Há eventos já publicados a continuar lendo."
           },
           "cursor_proximo": {
             "type": "string",
             "description": "Salvar somente após persistir a página. Continua válido para polling sem novidades.",
-            "x-origem": "novo",
             "maxLength": 4096
           }
         },
@@ -14580,19 +14403,16 @@
           "request_id": {
             "type": "string",
             "description": "Correlação.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "gerado_em": {
             "type": "string",
             "description": "Instante da resposta.",
-            "x-origem": "novo",
             "format": "date-time"
           },
           "retencao_dias": {
             "type": "integer",
-            "description": "Retenção proposta do log de alterações.",
-            "x-origem": "novo",
+            "description": "Retenção do log de alterações em dias.",
             "const": 30
           }
         },
@@ -14605,52 +14425,44 @@
       },
       "Problem": {
         "type": "object",
-        "description": "Erro RFC 9457; sem SQL, stack traces, segredos ou IDs de outros tenants.",
+        "description": "Erro estruturado conforme RFC 9457.",
         "properties": {
           "type": {
             "type": "string",
             "description": "URN estável que identifica a classe de problema.",
-            "x-origem": "novo",
             "format": "uri"
           },
           "title": {
             "type": "string",
-            "description": "Descrição curta.",
-            "x-origem": "novo"
+            "description": "Descrição curta."
           },
           "status": {
             "type": "integer",
             "description": "Código HTTP igual ao status da resposta.",
-            "x-origem": "novo",
             "minimum": 400,
             "maximum": 599
           },
           "detail": {
             "type": "string",
-            "description": "Orientação segura para corrigir a requisição.",
-            "x-origem": "novo"
+            "description": "Orientação segura para corrigir a requisição."
           },
           "instance": {
             "type": "string",
             "description": "Identificador desta ocorrência.",
-            "x-origem": "novo",
             "format": "uri"
           },
           "code": {
             "type": "string",
-            "description": "Código estável para automação, por exemplo CURSOR_EXPIRED.",
-            "x-origem": "novo"
+            "description": "Código estável para automação, por exemplo CURSOR_EXPIRED."
           },
           "request_id": {
             "type": "string",
             "description": "Mesmo valor do header X-Request-Id.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "campos": {
             "type": "array",
             "description": "Erros pontuais opcionais; valores sensíveis não aparecem.",
-            "x-origem": "novo",
             "items": {
               "type": "object",
               "properties": {
@@ -14692,38 +14504,33 @@
       },
       "TokenRequest": {
         "type": "object",
-        "description": "Client Credentials com autenticação private_key_jwt; não usa senha de usuário.",
+        "description": "Requisição de token com autenticação private_key_jwt.",
         "properties": {
           "grant_type": {
             "type": "string",
             "description": "Fluxo servidor a servidor.",
-            "x-origem": "novo",
             "const": "client_credentials"
           },
           "client_id": {
             "type": "string",
             "description": "Identidade da integração cadastrada.",
-            "x-origem": "novo",
             "minLength": 1,
             "maxLength": 128
           },
           "scope": {
             "type": "string",
             "description": "Escopos separados por espaço; somente subconjunto concedido.",
-            "x-origem": "novo",
             "minLength": 1,
             "maxLength": 512
           },
           "client_assertion_type": {
             "type": "string",
             "description": "Tipo da prova assinada.",
-            "x-origem": "novo",
             "const": "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
           },
           "client_assertion": {
             "type": "string",
             "description": "JWT assinado RS256 com kid registrado, iss=sub=client_id, aud exato do token endpoint, iat/exp e jti único.",
-            "x-origem": "novo",
             "minLength": 32,
             "maxLength": 8192
           }
@@ -14743,25 +14550,21 @@
         "properties": {
           "access_token": {
             "type": "string",
-            "description": "Segredo transitório de ao menos 256 bits; valor demonstrativo nos exemplos.",
-            "x-origem": "novo"
+            "description": "Segredo transitório de ao menos 256 bits; valor demonstrativo nos exemplos."
           },
           "token_type": {
             "type": "string",
             "description": "Tipo de apresentação.",
-            "x-origem": "novo",
             "const": "Bearer"
           },
           "expires_in": {
             "type": "integer",
             "description": "Validade em segundos.",
-            "x-origem": "novo",
             "const": 900
           },
           "scope": {
             "type": "string",
-            "description": "Escopos efetivamente concedidos.",
-            "x-origem": "novo"
+            "description": "Escopos efetivamente concedidos."
           }
         },
         "required": [
@@ -14779,7 +14582,6 @@
           "error": {
             "type": "string",
             "description": "Código OAuth.",
-            "x-origem": "novo",
             "enum": [
               "invalid_request",
               "invalid_client",
@@ -14790,8 +14592,7 @@
           },
           "error_description": {
             "type": "string",
-            "description": "Descrição segura; não revela existência de chave/cliente.",
-            "x-origem": "novo"
+            "description": "Descrição segura; não revela existência de chave/cliente."
           }
         },
         "required": [
@@ -14807,21 +14608,18 @@
           "nome": {
             "type": "string",
             "description": "Nome operacional, sem credenciais.",
-            "x-origem": "novo",
             "minLength": 1,
             "maxLength": 120
           },
           "url": {
             "type": "string",
             "description": "HTTPS, porta 443, hostname previamente autorizado; sem userinfo, query ou fragmento.",
-            "x-origem": "novo",
             "format": "uri",
             "maxLength": 2048
           },
           "eventos": {
             "type": "array",
             "description": "Tipos de venda a receber.",
-            "x-origem": "novo",
             "items": {
               "type": "string",
               "enum": [
@@ -14837,7 +14635,6 @@
           "filiais": {
             "type": "array",
             "description": "IDs concedidos ao cliente. Ampliação exige nova aprovação.",
-            "x-origem": "novo",
             "items": {
               "type": "string",
               "pattern": "^\\d{1,30}$"
@@ -14849,7 +14646,6 @@
           "ativo": {
             "type": "boolean",
             "description": "Só permite ativação após teste assinado confirmado. Na criação deve ser false.",
-            "x-origem": "novo",
             "default": false
           }
         },
@@ -14869,21 +14665,18 @@
           "nome": {
             "type": "string",
             "description": "Nome operacional, sem credenciais.",
-            "x-origem": "novo",
             "minLength": 1,
             "maxLength": 120
           },
           "url": {
             "type": "string",
             "description": "HTTPS, porta 443, hostname previamente autorizado; sem userinfo, query ou fragmento.",
-            "x-origem": "novo",
             "format": "uri",
             "maxLength": 2048
           },
           "eventos": {
             "type": "array",
             "description": "Tipos de venda a receber.",
-            "x-origem": "novo",
             "items": {
               "type": "string",
               "enum": [
@@ -14899,7 +14692,6 @@
           "filiais": {
             "type": "array",
             "description": "IDs concedidos ao cliente. Ampliação exige nova aprovação.",
-            "x-origem": "novo",
             "items": {
               "type": "string",
               "pattern": "^\\d{1,30}$"
@@ -14911,7 +14703,6 @@
           "ativo": {
             "type": "boolean",
             "description": "Obrigatoriamente false na criação.",
-            "x-origem": "novo",
             "const": false
           }
         },
@@ -14931,27 +14722,23 @@
           "id": {
             "type": "string",
             "description": "Identificador da inscrição.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "nome": {
             "type": "string",
             "description": "Nome operacional, sem credenciais.",
-            "x-origem": "novo",
             "minLength": 1,
             "maxLength": 120
           },
           "url": {
             "type": "string",
             "description": "HTTPS, porta 443, hostname previamente autorizado; sem userinfo, query ou fragmento.",
-            "x-origem": "novo",
             "format": "uri",
             "maxLength": 2048
           },
           "eventos": {
             "type": "array",
             "description": "Tipos de venda a receber.",
-            "x-origem": "novo",
             "items": {
               "type": "string",
               "enum": [
@@ -14967,7 +14754,6 @@
           "filiais": {
             "type": "array",
             "description": "IDs concedidos ao cliente. Ampliação exige nova aprovação.",
-            "x-origem": "novo",
             "items": {
               "type": "string",
               "pattern": "^\\d{1,30}$"
@@ -14979,13 +14765,11 @@
           "ativo": {
             "type": "boolean",
             "description": "Só permite ativação após teste assinado confirmado. Na criação deve ser false.",
-            "x-origem": "novo",
             "default": false
           },
           "estado": {
             "type": "string",
             "description": "Estado operacional.",
-            "x-origem": "novo",
             "enum": [
               "pendente_verificacao",
               "ativo",
@@ -14999,25 +14783,21 @@
               "null"
             ],
             "description": "Último teste do destino confirmado.",
-            "x-origem": "novo",
             "format": "date-time"
           },
           "criado_em": {
             "type": "string",
             "description": "Cadastro da inscrição.",
-            "x-origem": "novo",
             "format": "date-time"
           },
           "atualizado_em": {
             "type": "string",
             "description": "Última configuração.",
-            "x-origem": "novo",
             "format": "date-time"
           },
           "versao": {
             "type": "string",
             "description": "Versão da configuração para controle de concorrência.",
-            "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           }
         },
@@ -15047,7 +14827,6 @@
           "signing_secret": {
             "type": "string",
             "description": "whsec_ + base64 padrão de 32 bytes aleatórios. Nunca confundir com access_token.",
-            "x-origem": "novo",
             "pattern": "^whsec_[A-Za-z0-9+/]{43}=$"
           },
           "chave_anterior_valida_ate": {
@@ -15056,7 +14835,6 @@
               "null"
             ],
             "description": "Sobreposição de 24h na rotação; null na criação.",
-            "x-origem": "novo",
             "format": "date-time"
           }
         },
@@ -15073,49 +14851,41 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Identidade estável no tenant: vnd_{filial_id}_{tipo_operacao}_{cod_operacao}. Não é segredo.",
-            "x-origem": "novo",
+            "description": "Identidade estável no tenant: vnd_{filial_id}_{tipo_operacao}_{cod_operacao}. ",
             "pattern": "^vnd_\\d+_[A-Z]+_\\d+$"
           },
           "filial_id": {
             "type": "string",
             "description": "ID interno da filial, não seu código de exibição.",
-            "x-origem": "operacoes.filial",
             "pattern": "^\\d{1,30}$"
           },
           "cod_operacao": {
             "type": "string",
-            "description": "Código ERP. A unicidade exige filial + tipo + código.",
-            "x-origem": "operacoes.cod_operacao",
+            "description": "Código da operação; considerar também a filial e o tipo para identificar o registro.",
             "pattern": "^\\d{1,30}$"
           },
           "tipo_operacao": {
             "type": "string",
             "description": "Webhooks da primeira versão notificam somente S.",
-            "x-origem": "operacoes.tipo_operacao",
             "const": "S"
           },
           "cancelada": {
             "type": "boolean",
-            "description": "Cancelamento efetivo: cabeçalho ou evento de cancelamento ativo.",
-            "x-origem": "operacoes.cancelada OR EXISTS cancelamentos"
+            "description": "Indica se a venda está cancelada."
           },
           "quantidade": {
             "type": "integer",
             "description": "Peças do cabeçalho. Pode divergir da soma dos itens.",
-            "x-origem": "operacoes.quantidade",
             "minimum": 0
           },
           "valor_final_centavos": {
             "type": "string",
-            "description": "Valor final do cabeçalho, preservado. Não chamar de líquido homologado. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
-            "x-origem": "operacoes.valor_final_centavos",
+            "description": "Valor total informado para a operação. Inteiro decimal em centavos de BRL; usar BigInt/Decimal, nunca float.",
             "pattern": "^-?\\d+$"
           },
           "consulta_url": {
             "type": "string",
             "description": "GET protegido; retorna estado atual, possivelmente mais recente.",
-            "x-origem": "novo",
             "format": "uri-reference"
           }
         },
@@ -15138,13 +14908,11 @@
           "id": {
             "type": "string",
             "description": "UUID imutável, igual a webhook-id.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "tipo": {
             "type": "string",
-            "description": "Importação local, atualização relevante ou cancelamento efetivo.",
-            "x-origem": "novo",
+            "description": "Tipo de notificação da venda.",
             "enum": [
               "venda.importada",
               "venda.atualizada",
@@ -15154,25 +14922,21 @@
           "schema_version": {
             "type": "string",
             "description": "Versão do payload de webhook, separada da revisão do recurso.",
-            "x-origem": "novo",
             "const": "1.0"
           },
           "criado_em": {
             "type": "string",
-            "description": "Publicação local após confirmação da transação; não hora ERP.",
-            "x-origem": "novo",
+            "description": "Instante de disponibilização do evento.",
             "format": "date-time"
           },
           "recurso_versao": {
             "type": "string",
             "description": "Revisão da venda do snapshot mínimo.",
-            "x-origem": "novo",
             "pattern": "^\\d{1,30}$"
           },
           "origem_carga": {
             "type": "string",
             "description": "Distingue importação inicial e rotina contínua.",
-            "x-origem": "novo",
             "enum": [
               "historica",
               "continua",
@@ -15182,7 +14946,6 @@
           "campos_alterados": {
             "type": "array",
             "description": "Caminhos públicos alterados; nenhum valor pessoal.",
-            "x-origem": "novo",
             "items": {
               "type": "string"
             },
@@ -15235,31 +14998,26 @@
           "id": {
             "type": "string",
             "description": "Mesmo webhook-id.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "tipo": {
             "type": "string",
             "description": "Evento de verificação.",
-            "x-origem": "novo",
             "const": "webhook.teste"
           },
           "schema_version": {
             "type": "string",
             "description": "Versão do payload.",
-            "x-origem": "novo",
             "const": "1.0"
           },
           "criado_em": {
             "type": "string",
             "description": "Instante do teste.",
-            "x-origem": "novo",
             "format": "date-time"
           },
           "data": {
             "type": "object",
             "description": "Somente confirmação do teste.",
-            "x-origem": "novo",
             "properties": {
               "mensagem": {
                 "type": "string",
@@ -15298,25 +15056,21 @@
           "id": {
             "type": "string",
             "description": "Identificador do ciclo de entrega para esta inscrição.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "webhook_id": {
             "type": "string",
             "description": "Inscrição proprietária.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "evento_id": {
             "type": "string",
             "description": "Evento imutável; permanece no reenvio.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "estado": {
             "type": "string",
             "description": "Estado de entrega, não processamento comercial do consumidor.",
-            "x-origem": "novo",
             "enum": [
               "na_fila",
               "enviando",
@@ -15329,7 +15083,6 @@
           "tentativas": {
             "type": "integer",
             "description": "Tentativas deste ciclo automático.",
-            "x-origem": "novo",
             "minimum": 0,
             "maximum": 10
           },
@@ -15339,7 +15092,6 @@
               "null"
             ],
             "description": "Status HTTP ou null em erro de transporte.",
-            "x-origem": "novo",
             "minimum": 100,
             "maximum": 599
           },
@@ -15349,13 +15101,11 @@
               "null"
             ],
             "description": "Programação ou null se finalizado.",
-            "x-origem": "novo",
             "format": "date-time"
           },
           "criado_em": {
             "type": "string",
             "description": "Primeira inclusão na fila.",
-            "x-origem": "novo",
             "format": "date-time"
           },
           "finalizado_em": {
@@ -15364,7 +15114,6 @@
               "null"
             ],
             "description": "Fim do ciclo, se houve.",
-            "x-origem": "novo",
             "format": "date-time"
           }
         },
@@ -15388,13 +15137,11 @@
           "id": {
             "type": "string",
             "description": "Identificador da solicitação.",
-            "x-origem": "novo",
             "format": "uuid"
           },
           "estado": {
             "type": "string",
             "description": "Estado inicial.",
-            "x-origem": "novo",
             "const": "na_fila"
           }
         },
@@ -15411,7 +15158,6 @@
           "data": {
             "type": "array",
             "description": "Itens desta página.",
-            "x-origem": "novo",
             "items": {
               "$ref": "#/components/schemas/Filial"
             }
@@ -15464,7 +15210,6 @@
           "data": {
             "type": "array",
             "description": "Itens desta página.",
-            "x-origem": "novo",
             "items": {
               "$ref": "#/components/schemas/Produto"
             }
@@ -15546,7 +15291,6 @@
           "data": {
             "type": "array",
             "description": "Itens desta página.",
-            "x-origem": "novo",
             "items": {
               "$ref": "#/components/schemas/Variacao"
             }
@@ -15572,7 +15316,6 @@
           "data": {
             "type": "array",
             "description": "Itens desta página.",
-            "x-origem": "novo",
             "items": {
               "$ref": "#/components/schemas/Estoque"
             }
@@ -15598,7 +15341,6 @@
           "data": {
             "type": "array",
             "description": "Itens desta página.",
-            "x-origem": "novo",
             "items": {
               "$ref": "#/components/schemas/VendaResumo"
             }
@@ -15666,7 +15408,6 @@
           "data": {
             "type": "array",
             "description": "Itens desta página.",
-            "x-origem": "novo",
             "items": {
               "$ref": "#/components/schemas/ItemVenda"
             }
@@ -15724,7 +15465,6 @@
           "data": {
             "type": "array",
             "description": "Itens desta página.",
-            "x-origem": "novo",
             "items": {
               "$ref": "#/components/schemas/Pagamento"
             }
@@ -15789,7 +15529,6 @@
           "data": {
             "type": "array",
             "description": "Itens desta página.",
-            "x-origem": "novo",
             "items": {
               "$ref": "#/components/schemas/Webhook"
             }
@@ -15815,7 +15554,6 @@
           "data": {
             "type": "array",
             "description": "Itens desta página.",
-            "x-origem": "novo",
             "items": {
               "$ref": "#/components/schemas/Entrega"
             }
@@ -16019,7 +15757,6 @@
           "data": {
             "type": "array",
             "description": "Eventos ordenados por publicação confirmada.",
-            "x-origem": "novo",
             "items": {
               "$ref": "#/components/schemas/Alteracao"
             }
@@ -16075,7 +15812,7 @@
         "tags": [
           "Webhooks"
         ],
-        "description": "PROPOSTO. Handler do consumidor, não uma rota de entrada da plataforma. HTTPS + HMAC sobre bytes originais. Persistir antes de confirmar 2xx.",
+        "description": "Endpoint implementado pelo integrador para receber notificações HTTPS. Verifique a assinatura HMAC sobre os bytes originais e persista o evento antes de responder com sucesso.",
         "security": [
           {
             "WebhookSignature": []

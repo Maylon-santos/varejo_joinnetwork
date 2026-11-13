@@ -3,6 +3,16 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Publicação da documentação pública
+
+Este arquivo e os guias `administracao.md`, `implementacao.md` e `operacao.md` são documentos internos, fora da publicação HTTP. O contrato público e seus exemplos são definidos por `config/documentacao-integracoes-publica.json`.
+
+Após editar o conteúdo, execute `python3 scripts/gerar-contrato-integracoes.py`, `python3 scripts/gerar-portal-integracoes.py` e `python3 scripts/preparar-docs-integracoes.py`. O último comando prepara exclusivamente os 25 arquivos autorizados em `artifacts/documentacao-integracoes/publico` e gera `deploy/nginx-integracoes-publico.conf`. Valide com `scripts/validar-docs-integracoes.py` e `node scripts/verificar-portal-integracoes.mjs`.
+
+Na HostGator, os arquivos públicos ficam em uma revisão própria de `/var/www/aeropostale-integracoes-releases`, apontada pelo symlink `/var/www/aeropostale-integracoes-publico`. Instale o snippet gerado em `/etc/nginx/snippets/aeropostale-integracoes-publico.conf` e o vhost `deploy/nginx-integracoes.conf` como `/etc/nginx/sites-available/varejo-integracoes`. Valide com `nginx -t` antes de recarregar. Preserve a revisão/configuração anterior para retorno. Não copie integralmente `docs/`, `deploy/` ou o diretório de autoria para uma raiz pública.
+
+O Nginx permite somente os caminhos exatos do manifesto. Verifique HTTP 200 e igualdade de hashes dos arquivos públicos, HTTP 404 nos guias internos e relatórios operacionais, HTTP 401 na consulta sem token e a disponibilidade dos outros portais. Esta atualização de documentação não exige reconstrução de imagens, migrations ou reinício dos containers.
+
 ## API externa preparada para uso futuro — 13/11/2026
 
 Publicados https://api-varejo.aeropostale.joinnetwork.com.br e seu [portal de documentação](https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/). API/OAuth e worker de projeções ativos, migration 019 aplicada com hashes comerciais/checkpoints preservados. Projeção inicial de 94.829 recursos concluída. Consultas autenticadas, permissões, omissão de dados pessoais sem escopo, JWT reutilizado e revogação verificados pelo HTTPS público; credencial temporária revogada. Nenhum consumidor real, inscrição ou entrega de webhook criado. Console e entregas permanecem desativados por decisão de Maylon; homologação de um consumidor continua pendente.

@@ -41,9 +41,23 @@ class Portal(HTMLParser):
 portal=Portal();portal.feed((DOC/'index.html').read_text())
 assert not portal.duplicate,portal.duplicate
 assert not portal.external_assets
+public_files=set(json.loads((ROOT/'config/documentacao-integracoes-publica.json').read_text())['arquivos'])
+assert not {'administracao','implementacao','operacao'} & portal.ids
+blocked=re.compile(r'\b(?:Maylon|super_?admin|ERP|HostGator|Locaweb|outbox|R\d{2})\b|x-origem|/opt/aeropostale|\.env\b|não implementada|CONTRATO PROPOSTO',re.I)
+locations=(ROOT/'deploy/nginx-integracoes-publico.conf').read_text()
+assert set(re.findall(r'^location = /(\S+) \{',locations,re.M))==public_files|{'docs/integracoes/'}
+assert 'location ^~ /docs/integracoes/' not in (ROOT/'deploy/nginx-integracoes.conf').read_text()
+for name in public_files:
+    content=(ROOT/name).read_text()
+    assert not blocked.search(content),name
+    if name.endswith('.md'):
+        for target in re.findall(r'\[[^\]]+\]\(([^)]+)\)',content):
+            if not target.startswith(('#','https:','http:')):
+                resolved=((ROOT/name).parent/target.split('#')[0]).resolve().relative_to(ROOT).as_posix()
+                assert resolved in public_files,(name,target)
 for href in portal.links:
     if href.startswith('#'):assert href[1:] in portal.ids,href
-    elif not re.match(r'^[a-z]+:',href):assert (DOC/href.split('#')[0]).exists(),href
+    elif not re.match(r'^[a-z]+:',href):assert (DOC/href.split('#')[0]).resolve().relative_to(ROOT).as_posix() in public_files,href
 for path in DOC.glob('*.md'):
     assert path.read_text().count('```')%2==0,path.name
     for target in re.findall(r'\[[^\]]+\]\(([^)]+)\)',path.read_text()):
@@ -88,6 +102,7 @@ subprocess.run(['node','--input-type=module','-e',js],cwd=ROOT,input=json.dumps(
 report={'verificadoEm':datetime.datetime.now(datetime.timezone.utc).isoformat(),'escopo':'documentação e exemplos sintéticos, sem implementar serviço',
  'openapiValido':True,'schemas':len(spec['components']['schemas']),'camposDocumentados':sum(len(x.get('properties',{})) for x in spec['components']['schemas'].values()),
  'operacoes':sum(len(x) for x in spec['paths'].values()),'exemplosJSONValidados':len(manifest),'linksLocaisEAncorasValidos':True,'portalSemDependenciasRemotas':True,
+ 'arquivosPublicos':len(public_files),'conteudoPublicoSemIdentidadesOuProcedimentosInternos':True,'rotasEstaticasLimitadasAoManifesto':True,
  'assinaturaPython':True,'provaJWTAssinadaEVerificada':True,'jtiUnico':True,'interoperabilidadePythonNode':True,'node':node,'validaImplementacaoRuntime':False,'webhookAtivado':False,'producaoAlterada':False}
 (ROOT/'docs/validacao-documentacao-integracoes.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
 print(json.dumps(report,ensure_ascii=False))

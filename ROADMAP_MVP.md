@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## Referência pública da API revisada — 13/11/2026
+
+- [x] Documentação profissional para integradores, sem identidades pessoais, regras administrativas ou lógica interna do ERP. Seis capítulos, OpenAPI e dicionário com o contrato de acesso/consulta/eventos; estrutura das 21 operações e 277 campos preservada.
+- [x] Manifesto de 25 arquivos e caminhos exatos no Nginx separam a publicação das fontes operacionais. Guias internos e relatórios retornam 404; exemplos, links, assinatura/JWT e portal computador/celular validados. Publicado com igualdade de hashes HTTPS; 19 containers, outros vhosts e cinco portais preservados. Evidência: `docs/validacao-revisao-api-publica.json`.
+- [ ] Consumidor e destino reais continuam indefinidos. Esta revisão não ativa webhooks/console nem conclui a homologação da R31 ou as homologações comerciais.
+
 ## API externa preparada para o futuro — 13/11/2026
 
 - [x] API/OAuth, documentação HTTPS e worker de projeções publicados na HostGator. Migration 019 após backup e comparação de hashes comerciais/checkpoints; 94.829 projeções iniciais concluídas. Credencial temporária de verificação revogada; zero consumidores reais, tokens, inscrições e entregas ativos na conferência.

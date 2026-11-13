@@ -1,3 +1,7 @@
+# Documento interno de administração
+
+> Acesso restrito à manutenção do projeto. Este arquivo não integra a documentação pública nem é servido pelo portal.
+
 # Console de SuperAdmin e auditoria
 
 > Requisitos de produto de Maylon. Gestão delegada de um tenant com MFA, clientes/chaves, logs/métricas e ações de webhook está implementada. SuperAdmin global, exportação de logs e campos administrativos adicionais continuam evoluções. A tabela de requisitos abaixo inclui essas evoluções; o escopo entregue está em [operação](operacao.md).

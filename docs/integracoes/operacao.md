@@ -1,5 +1,7 @@
 # Operação da implementação 0.1.0
 
+> Documento interno. Não integra o manifesto da documentação pública e não deve ser servido por HTTP. Para publicar o guia dos integradores, siga a seção de documentação pública em `deploy/README.md`.
+
 Implementada em 11/11/2026 e publicada na HostGator em 13/11/2026, após testes isolados e verificação autenticada pelo HTTPS público. **Infraestrutura pronta para o futuro, conforme decisão de Maylon: nenhum consumidor real habilitado, entregas de webhooks e console administrativo desativados.** A credencial temporária de validação foi revogada. Código enviado ao GitHub continua sem publicar serviços automaticamente.
 
 Documentação pública: https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/ . Contrato: https://api-varejo.aeropostale.joinnetwork.com.br/apis/integracoes.openapi.json . Endpoints de dados exigem OAuth; `/admin/` não é exposto pelo Nginx.

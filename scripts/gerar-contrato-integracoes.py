@@ -49,31 +49,31 @@ obj('Paginacao','Página de um snapshot estável; não calcula total global.',{
  'quantidade':field('integer','Registros efetivamente retornados nesta página.',minimum=0,maximum=200),
  'tem_mais':field('boolean','Há outra página no mesmo snapshot.'),
  'cursor_proximo':text('Cursor opaco, assinado e vinculado ao cliente, permissões, filtros e snapshot. Null ao terminar.',nullable=True,maxLength=4096)})
-obj('MetaConsulta','Metadados da camada externa implementada.',{
+obj('MetaConsulta','Metadados de identificação e consistência da resposta.',{
  'request_id':text('Identificador para suporte e correlação, sem credenciais.',format='uuid'),
  'gerado_em':timestamp('Instante de produção da resposta, não da venda.'),
  'snapshot_id':text('Identificador da projeção estável nas listas. Null em leitura pontual.',nullable=True),
  'snapshot_expira_em':timestamp('Validade de 30 minutos do snapshot das listas; null em leitura pontual.',nullable=True),
  'recurso_versao':ident('Revisão da venda nas listas de itens/pagamentos. Null nas demais consultas.',nullable=True)})
-obj('Cobertura','Disponibilidade de partes de uma venda; não é homologação comercial.',{
+obj('Cobertura','Disponibilidade das seções do detalhe da venda.',{
  'itens':text('Estado do detalhamento dos itens.',enum=['disponivel','pendente']),
  'pagamentos':text('Estado dos complementos de pagamento.',enum=['disponivel','pendente']),
  'nota_fiscal':text('Grupo importado pode conter campos nulos.',enum=['disponivel','pendente']),
  'pessoas':text('Distingue restrição de permissão, pendência e resposta disponível.',enum=['restrito','pendente','disponivel']),
  'complementos_importados_em':timestamp('Última importação dos complementos. Null se ausente.','operacoes.complementos_importados_em',True)})
-obj('Sincronizacao','Frescor da origem local. Indicadores propostos sobre dados já armazenados.',{
+obj('Sincronizacao','Indicadores de atualização dos dados.',{
  'ultimo_sucesso_em':timestamp('Última consulta bem-sucedida do recurso/filial.','sync_status.ultimo_sucesso ou sync_estoques.ultimo_sucesso',True),
- 'consultado_em':timestamp('Instante em que esta posição foi observada pelo coletor.','estoque_atual.consultado_em',True),
- 'data_atualizacao_erp':timestamp('Atualização informada pelo ERP; não é hora da venda.','estoque_atual.data_atualizacao_erp',True),
+ 'consultado_em':timestamp('Instante de observação desta posição.','estoque_atual.consultado_em',True),
+ 'data_atualizacao_erp':timestamp('Instante de atualização informado pela origem.','estoque_atual.data_atualizacao_erp',True),
  'ultima_carga_completa_em':timestamp('Última carga completa de estoque.','sync_estoques.ultima_carga_completa',True),
- 'desatualizado':field('boolean','Sem sucesso há mais de 30 minutos ou sem sucesso conhecido; limiar proposto.'),
- 'estado':text('Não expõe mensagens internas do ERP.',enum=['ok','atrasado','erro','sem_carga'])})
+ 'desatualizado':field('boolean','Indica uma posição desatualizada ou sem atualização bem-sucedida conhecida.'),
+ 'estado':text('Situação da atualização dos dados.',enum=['ok','atrasado','erro','sem_carga'])})
 obj('Contato','Disponível somente com vendas:pessoas:ler e incluir_pessoas=true.',{
  'tipo':text('Tipo informado na normalização.','clientes[].contatos[].tipo',enum=['Celular','WhatsApp','Telefone']),
  'ddd':text('DDD como recebido; não presume país.','clientes[].contatos[].ddd',maxLength=200),
  'telefone':text('Número textual; não usar como identidade do cliente.','clientes[].contatos[].telefone',maxLength=200)})
 obj('ClienteVenda','Snapshot do cliente da operação, não um cadastro mestre.',{
- 'cliente_codigo':ident('Código ERP; null se não informado. Não gerar código por nome/telefone.','operacoes.clientes[].cliente_codigo',True),
+ 'cliente_codigo':ident('Código de referência do cliente; null quando indisponível.','operacoes.clientes[].cliente_codigo',True),
  'nome':text('Nome na resposta importada; pode conter texto de ausência.','operacoes.clientes[].nome',maxLength=200),
  'aniversario_mm_dd':text('Somente mês/dia. Não contém ano de nascimento.','operacoes.clientes[].aniversario_mm_dd',True,pattern=r'^\d{2}-\d{2}$'),
  'contatos':array('Contato','Contatos disponíveis no snapshot.','operacoes.clientes[].contatos')})
@@ -84,38 +84,38 @@ obj('NotaFiscal','Estado fiscal recebido, sem tradução de códigos ou validaç
  'numero_nota':text('Número preservado como texto, inclusive zeros recebidos.','complementos.nota_fiscal.numero_nota',True,maxLength=500),
  'modelo':text('Modelo textual; não traduz automaticamente para NF-e/NFC-e.','complementos.nota_fiscal.modelo',True,maxLength=500),
  'idnfe':text('Identificador fiscal como recebido. Não assumir que todo valor seja chave de acesso de 44 dígitos.','complementos.nota_fiscal.idnfe',True,maxLength=500),
- 'status':text('Código/estado original do ERP; null não significa autorizado.','complementos.nota_fiscal.status',True,maxLength=500)})
+ 'status':text('Status fiscal informado; null quando indisponível.','complementos.nota_fiscal.status',True,maxLength=500)})
 obj('CondicaoPagamento','Condição comercial; não comprova recebimento ou liquidação.',{
  'id':text('Identificador recebido.','complementos.condicoes_pgto',True,maxLength=500),
  'codigo':text('Código da condição.','complementos.codigo_condicaopgto',True,maxLength=500),
  'descricao':text('Descrição recebida.','complementos.desc_condicoes_pgto',True,maxLength=500)})
-obj('Conferencia','Comparação aritmética limitada às regras confirmadas no projeto.',{
- 'situacao':text('Classificação efetiva; erro_erp_confirmado mantém valores originais.','operacoes.conciliacao + marcação de erro ERP',enum=['pendente','conciliada','quantidade_divergente','divergente','contrato_incompleto','regra_pendente','nao_elegivel','erro_erp_confirmado']),
- 'tolerancia_centavos':money('Tolerância inclusiva de dois centavos em ambos os sentidos.','regra atual de conciliação',const='2'),
- 'erro_erp_confirmado':field('boolean','Marcação administrativa existente; não revela usuário responsável.','operacoes.erro_erp_confirmado_por IS NOT NULL'),
- 'homologacao_comercial':text('A conferência aritmética não representa homologação mensal/anual.','R11/R22',const='nao_declarada')})
+obj('Conferencia','Indicadores de consistência dos valores e quantidades da operação.',{
+ 'situacao':text('Classificação de consistência da operação.','operacoes.conciliacao + marcação de erro ERP',enum=['pendente','conciliada','quantidade_divergente','divergente','contrato_incompleto','regra_pendente','nao_elegivel','erro_erp_confirmado']),
+ 'tolerancia_centavos':money('Tolerância de comparação, expressa em centavos.','regra atual de conciliação',const='2'),
+ 'erro_erp_confirmado':field('boolean','Indica uma divergência validada na origem, sem alterar os valores retornados.','operacoes.erro_erp_confirmado_por IS NOT NULL'),
+ 'homologacao_comercial':text('Estado de validação comercial. Nesta versão retorna nao_declarada.','R11/R22',const='nao_declarada')})
 sale_fields={
- 'id':text('Identidade estável no tenant: vnd_{filial_id}_{tipo_operacao}_{cod_operacao}. Não é segredo.',pattern=r'^vnd_\d+_[A-Z]+_\d+$'),
+ 'id':text('Identidade estável no tenant: vnd_{filial_id}_{tipo_operacao}_{cod_operacao}. ',pattern=r'^vnd_\d+_[A-Z]+_\d+$'),
  'filial_id':ident('ID interno da filial, não seu código de exibição.','operacoes.filial'),
- 'cod_operacao':ident('Código ERP. A unicidade exige filial + tipo + código.','operacoes.cod_operacao'),
+ 'cod_operacao':ident('Código da operação; considerar também a filial e o tipo para identificar o registro.','operacoes.cod_operacao'),
  'tipo_operacao':text('S=saída/venda; E=entrada. Entrada não é devolução automaticamente.','operacoes.tipo_operacao',enum=['S','E']),
- 'data_operacao':date('Dia civil da operação em America/Sao_Paulo; a fonte não confirma hora real.','operacoes.data_operacao'),
- 'hora_venda':text('Reservado para origem homologada; no estado atual deve ser null. Nunca derivar da importação.','não disponível: R29',True,const=None),
+ 'data_operacao':date('Data civil da operação no fuso America/Sao_Paulo.','operacoes.data_operacao'),
+ 'hora_venda':text('Campo reservado; retorna null nesta versão.','não disponível: R29',True,const=None),
  'quantidade':field('integer','Peças do cabeçalho. Pode divergir da soma dos itens.','operacoes.quantidade',minimum=0),
- 'valor_final_centavos':money('Valor final do cabeçalho, preservado. Não chamar de líquido homologado.','operacoes.valor_final_centavos'),
- 'cancelada':field('boolean','Cancelamento efetivo: cabeçalho ou evento de cancelamento ativo.','operacoes.cancelada OR EXISTS cancelamentos'),
+ 'valor_final_centavos':money('Valor total informado para a operação.','operacoes.valor_final_centavos'),
+ 'cancelada':field('boolean','Indica se a venda está cancelada.','operacoes.cancelada OR EXISTS cancelamentos'),
  'vendedor':ref('Vendedor','Identificação disponível; nome exige permissão específica.',origin='operacoes.vendedor_codigo/vendedor_nome'),
- 'evento_codigo':text('Código do evento ERP; não determina sozinho o sinal financeiro.','operacoes.evento_codigo',True),
- 'conferencia':ref('Conferencia','Conferência, não homologação de faturamento.'),
- 'versao':ident('Revisão monotônica do recurso externo, não é trans_id do ERP.'),
- 'atualizado_em':timestamp('Instante de publicação desta revisão externa. Não reutilizar cada reimportação como alteração comercial.')}
+ 'evento_codigo':text('Código de classificação da operação na origem.','operacoes.evento_codigo',True),
+ 'conferencia':ref('Conferencia','Indicadores de consistência da operação.'),
+ 'versao':ident('Versão monotônica do recurso na API.'),
+ 'atualizado_em':timestamp('Instante de disponibilização desta versão do recurso.')}
 obj('VendaResumo','Cabeçalho retornado na lista e na referência de eventos.',sale_fields)
 obj('Venda','Detalhe sem arrays volumosos; itens/pagamentos possuem endpoints paginados.',{
  **copy.deepcopy(sale_fields),
  'ajuste_centavos':money('Ajuste monetário da operação; null é ausência, não zero.','operacoes.ajuste_centavos',True),
  'subtotal_itens_centavos':money('Soma dos preços recebidos × quantidades. Não reaplica desconto.','operacoes.subtotal_itens_centavos',True),
  'frete_centavos':money('Frete recebido; null não deve ser presumido zero.','complementos.frete_centavos',True),
- 'cortesia_informada':{'description':'Valor original, sem presumir unidade monetária. Zero numérico/textual foi confirmado como ausência de cortesia; demais composições pendentes.','x-origem':'complementos.cortesia_informada','type':['string','number','boolean','null']},
+ 'cortesia_informada':{'description':'Informação de cortesia no formato recebido. Não possui unidade monetária definida neste contrato.','x-origem':'complementos.cortesia_informada','type':['string','number','boolean','null']},
  'nota_fiscal':ref('NotaFiscal','Null enquanto o grupo não foi importado; objeto com nulos quando importado sem valores.',True,'complementos.nota_fiscal'),
  'condicao_pagamento':ref('CondicaoPagamento','Null quando complementos ausentes.',True,'complementos'),
  'cobertura':ref('Cobertura','Cobertura de cada parte da operação.'),
@@ -156,14 +156,14 @@ obj('Filial','Cadastro mínimo disponível; lista limitada às filiais concedida
 obj('ClassificacaoItem','Dimensão cadastral: código e descrição podem estar ausentes.',{
  'codigo':text('Código textual da dimensão.','cadastro_produtos.classificacao.<dimensao>.codigo',True),
  'descricao':text('Descrição textual da dimensão.','cadastro_produtos.classificacao.<dimensao>.descricao',True)})
-obj('ClassificacaoProduto','Seis dimensões efetivamente persistidas pelo importador.',{
+obj('ClassificacaoProduto','Classificações cadastrais do produto.',{
  k:ref('ClassificacaoItem','Classificação de '+k+'.',origin='cadastro_produtos.classificacao.'+k)
  for k in ['colecao','departamento','grupo','categoria','grade','marca']})
 obj('Produto','Produto básico; visível somente se vinculado à filial autorizada solicitada.',{
  'id':ident('ID interno do produto. Não confundir com código comercial.','cadastro_produtos.produto'),
  'codigo':text('Código comercial.','cadastro_produtos.cod_produto'),
  'descricao':text('Descrição cadastral.','cadastro_produtos.descricao'),
- 'tipo_prod':text('Tipo cadastral principal: AC/SE/MP/MC ou outro código recebido. Null=ausente. O fallback por estoque pertence à variação.','cadastro_produtos.tipo_prod',True,maxLength=20),
+ 'tipo_prod':text('Código de tipo cadastral do produto; null quando indisponível.','cadastro_produtos.tipo_prod',True,maxLength=20),
  'classificacao':ref('ClassificacaoProduto','Coleção, departamento, grupo, categoria, grade e marca.'),
  'trans_id_origem':ident('Transação cadastral recebida, não cursor externo.','cadastro_produtos.trans_id',True),
  'cadastro_consultado_em':timestamp('Último enriquecimento cadastral bem-sucedido.','cadastro_produtos.enriquecido_em',True),
@@ -177,14 +177,14 @@ obj('Variacao','Identidade por filial e SKU; não agrupar tamanhos/cores ao inte
  'cor':text('Cor textual.','estoque_atual.cor',True),
  'tamanho':text('Tamanho textual.','estoque_atual.tamanho',True),
  'codigo_barras':text('Código de barras textual; preservar zeros à esquerda.','estoque_atual.barra',True),
- 'tipo_prod':text('COALESCE(tipo cadastral, tipo retornado no saldo).','cadastro_produtos.tipo_prod / estoque_atual.tipo_prod',True,maxLength=20),
- 'tipo_prod_origem':text('Origem da classificação efetiva; null quando desconhecida.','derivado da prioridade cadastral',True,enum=['cadastro','estoque',None]),
+ 'tipo_prod':text('Código de tipo da variação.','cadastro_produtos.tipo_prod / estoque_atual.tipo_prod',True,maxLength=20),
+ 'tipo_prod_origem':text('Referência da classificação da variação; null quando desconhecida.','derivado da prioridade cadastral',True,enum=['cadastro','estoque',None]),
  'presente_ultima_carga':field('boolean','False é ausência na última carga completa, não estoque zero.','estoque_atual.presente_ultima_carga')})
 obj('Estoque','Posição atual; não representa abertura/movimentos históricos.',{
  **copy.deepcopy(SCHEMAS['Variacao']['properties']),
  'saldo_disponivel':text('Decimal exato, pode ser negativo ou null. Já desconta reservas. Ausência na carga completa deve retornar null.','estoque_atual.saldo',True,pattern=r'^-?\d{1,14}(\.\d{1,6})?$'),
- 'reservas_ja_descontadas':field('boolean','Regra confirmada para esta origem; não subtrair reservas outra vez.','regra confirmada do saldo',const=True),
- 'sincronizacao':ref('Sincronizacao','Frescor da posição e da coleta por filial.'),
+ 'reservas_ja_descontadas':field('boolean','Indica que o saldo disponível já considera as reservas.','regra confirmada do saldo',const=True),
+ 'sincronizacao':ref('Sincronizacao','Indicadores de atualização da posição por filial.'),
  'versao':ident('Revisão externa do par filial/SKU.'),
  'atualizado_em':timestamp('Instante da revisão externa.')})
 obj('Alteracao','Registro durável e ordenado por publicação confirmada; sem dados pessoais.',{
@@ -194,7 +194,7 @@ obj('Alteracao','Registro durável e ordenado por publicação confirmada; sem d
  'filial_id':ident('Filial autorizada desta projeção.'),
  'acao':text('Ausente é tombstone de estoque; não é zeragem.',enum=['upsert','cancelada','ausente']),
  'versao':ident('Versão monotônica do recurso. Aplicar somente se maior que a versão local.'),
- 'registrado_em':timestamp('Instante de publicação local, não data/hora da venda ERP.'),
+ 'registrado_em':timestamp('Instante de disponibilização da alteração.'),
  'consulta_url':text('Rota relativa para consultar a versão atual; pode estar mais recente que o evento.',format='uri-reference')})
 obj('PaginaAlteracoes','Continuação do log; cursor retorna mesmo em página vazia.',{
  'limite':field('integer','Limite de eventos nesta página.',minimum=1,maximum=200),
@@ -204,8 +204,8 @@ obj('PaginaAlteracoes','Continuação do log; cursor retorna mesmo em página va
 obj('MetaAlteracoes','Não utiliza snapshot de listagem com TTL de 30 minutos.',{
  'request_id':text('Correlação.',format='uuid'),
  'gerado_em':timestamp('Instante da resposta.'),
- 'retencao_dias':field('integer','Retenção proposta do log de alterações.',const=30)})
-obj('Problem','Erro RFC 9457; sem SQL, stack traces, segredos ou IDs de outros tenants.',{
+ 'retencao_dias':field('integer','Retenção do log de alterações em dias.',const=30)})
+obj('Problem','Erro estruturado conforme RFC 9457.',{
  'type':text('URN estável que identifica a classe de problema.',format='uri'),
  'title':text('Descrição curta.'),
  'status':field('integer','Código HTTP igual ao status da resposta.',minimum=400,maximum=599),
@@ -214,7 +214,7 @@ obj('Problem','Erro RFC 9457; sem SQL, stack traces, segredos ou IDs de outros t
  'code':text('Código estável para automação, por exemplo CURSOR_EXPIRED.'),
  'request_id':text('Mesmo valor do header X-Request-Id.',format='uuid'),
  'campos':field('array','Erros pontuais opcionais; valores sensíveis não aparecem.',items={'type':'object','properties':{'campo':{'type':'string'},'motivo':{'type':'string'}},'required':['campo','motivo']})},optional=['campos'])
-obj('TokenRequest','Client Credentials com autenticação private_key_jwt; não usa senha de usuário.',{
+obj('TokenRequest','Requisição de token com autenticação private_key_jwt.',{
  'grant_type':text('Fluxo servidor a servidor.',const='client_credentials'),
  'client_id':text('Identidade da integração cadastrada.',minLength=1,maxLength=128),
  'scope':text('Escopos separados por espaço; somente subconjunto concedido.',minLength=1,maxLength=512),
@@ -261,9 +261,9 @@ obj('ReferenciaVenda','Snapshot mínimo capturado na revisão do evento; sem cli
  'consulta_url':text('GET protegido; retorna estado atual, possivelmente mais recente.',format='uri-reference')})
 obj('EventoVenda','Notificação assinada. Os arrays completos são consultados pela API.',{
  'id':text('UUID imutável, igual a webhook-id.',format='uuid'),
- 'tipo':text('Importação local, atualização relevante ou cancelamento efetivo.',enum=events),
+ 'tipo':text('Tipo de notificação da venda.',enum=events),
  'schema_version':text('Versão do payload de webhook, separada da revisão do recurso.',const='1.0'),
- 'criado_em':timestamp('Publicação local após confirmação da transação; não hora ERP.'),
+ 'criado_em':timestamp('Instante de disponibilização do evento.'),
  'recurso_versao':ident('Revisão da venda do snapshot mínimo.'),
  'origem_carga':text('Distingue importação inicial e rotina contínua.',enum=['historica','continua','reprocessamento']),
  'campos_alterados':field('array','Caminhos públicos alterados; nenhum valor pessoal.',items={'type':'string'},maxItems=100),
@@ -305,11 +305,11 @@ SCOPES={
  'webhooks:ler':'Consultar inscrições e entregas do próprio cliente; exige vendas:ler.',
  'webhooks:gerenciar':'Criar/testar/alterar/rotacionar/reencaminhar inscrições próprias; exige vendas:ler.'}
 spec={'openapi':'3.1.0','info':{'title':'Join Network · API de Integrações Varejo','version':'0.1.0',
- 'description':'INFRAESTRUTURA PUBLICADA NA HOSTGATOR EM 13/11/2026. OAuth, consultas, cursores, revisões, log e projeções ativos e verificados; nenhum consumidor real habilitado. Entregas de webhooks e console administrativo permanecem desativados até provisionamento e homologação. Dados de exemplo fictícios. /api/v1 continua sendo a API interna do painel.'},
- 'servers':[{'url':BASE,'description':'API publicada; exige consumidor e chave pública provisionados'}],
- 'x-status':'publicado-sem-consumidores','x-source-revision':'c1c1eb2','tags':[{'name':n} for n in ['Autenticacao','Vendas','Filiais','Produtos','Estoques','Alteracoes','Webhooks']],
+ 'description':'Consultas de vendas, filiais, produtos e estoque, sincronização incremental e webhooks assinados. Autenticação OAuth 2.0 com private_key_jwt. Exemplos com dados fictícios. A disponibilidade de webhooks depende da habilitação da integração e da verificação do destino.'},
+ 'servers':[{'url':BASE,'description':'API de Integrações'}],
+ 'tags':[{'name':n} for n in ['Autenticacao','Vendas','Filiais','Produtos','Estoques','Alteracoes','Webhooks']],
  'security':[{'IntegracaoOAuth':[]}], 'paths':{}, 'components':{'securitySchemes':{
- 'IntegracaoOAuth':{'type':'oauth2','description':'Client Credentials + private_key_jwt RS256 no token endpoint. O access token é opaco. Filiais e tenant vêm do cadastro, nunca do corpo livre.','flows':{'clientCredentials':{'tokenUrl':BASE+'/oauth/token','scopes':SCOPES}}},
+ 'IntegracaoOAuth':{'type':'oauth2','description':'Client Credentials + private_key_jwt RS256 no token endpoint. O access token é opaco. O acesso é limitado à organização, às filiais e aos escopos da credencial.','flows':{'clientCredentials':{'tokenUrl':BASE+'/oauth/token','scopes':SCOPES}}},
  'WebhookSignature':{'type':'apiKey','in':'header','name':'webhook-signature','description':'HMAC-SHA256 Standard Webhooks: v1,BASE64; exige também webhook-id e webhook-timestamp. Não usa Bearer do destinatário.'}},'schemas':SCHEMAS}}
 
 def param(name, description, schema=None, required=False, location='query'):
@@ -330,19 +330,19 @@ def operation(path, method, summary, tag, scopes, schema, params=(), body=None, 
     responses['401']['headers']['WWW-Authenticate']={'schema':{'type':'string'},'description':'Bearer challenge conforme a falha.'}
     responses['429']['headers']['Retry-After']={'schema':{'type':'integer','minimum':1},'description':'Segundos antes de tentar novamente.'}
     responses['503']['headers']['Retry-After']={'schema':{'type':'integer','minimum':1}}
-    o={'summary':summary,'description':'Implementado. '+description,'operationId':method+'_'+path.replace('/','_').replace('{','').replace('}','').replace('-','_'),'tags':[tag],
-       'security':[{'IntegracaoOAuth':scopes}],'parameters':list(params),'responses':responses,'x-implementation-status':'implementado-publicado'}
+    o={'summary':summary,'description':description or summary,'operationId':method+'_'+path.replace('/','_').replace('{','').replace('}','').replace('-','_'),'tags':[tag],
+       'security':[{'IntegracaoOAuth':scopes}],'parameters':list(params),'responses':responses}
     if body:o['requestBody']={'required':True,'content':{'application/json':{'schema':ref(body)}}}
     spec['paths'].setdefault(path,{})[method]=o
     return o
 
-o=operation('/oauth/token','post','Obter token de integração','Autenticacao',[],'TokenResponse',description='Prova JWT obrigatória no formulário; security vazio NÃO significa endpoint anônimo.')
+o=operation('/oauth/token','post','Obter token de integração','Autenticacao',[],'TokenResponse',description='Autentica a integração por private_key_jwt e emite um token de acesso opaco.')
 o['security']=[];o['requestBody']={'required':True,'content':{'application/x-www-form-urlencoded':{'schema':ref('TokenRequest')}}}
 o['responses']={k:response('OAuthError','Erro OAuth') for k in ['400','401','429','503']};o['responses']['200']=response('TokenResponse')
 o['responses']['429']['headers']['Retry-After']={'schema':{'type':'integer'}}
 o['responses']['401']['headers']['WWW-Authenticate']={'schema':{'type':'string'}}
 o['responses']['200']['headers']['Cache-Control']={'schema':{'type':'string','const':'no-store'}}
-filters=[branch(),param('inicio','Primeiro dia civil, inclusivo.',{'type':'string','format':'date'},True),param('fim','Último dia civil, inclusivo. Até 31 dias por consulta.',{'type':'string','format':'date'},True),param('estado','TODA a situação por padrão para não perder cancelamentos.',{'type':'string','enum':['todas','ativas','canceladas'],'default':'todas'}),param('tipo_operacao','E não é devolução por inferência.',{'type':'string','enum':['S','E','todas'],'default':'S'}),persons(),*page()]
+filters=[branch(),param('inicio','Primeiro dia civil, inclusivo.',{'type':'string','format':'date'},True),param('fim','Último dia civil, inclusivo. Até 31 dias por consulta.',{'type':'string','format':'date'},True),param('estado','Situação da venda; inclui ativas e canceladas por padrão.',{'type':'string','enum':['todas','ativas','canceladas'],'default':'todas'}),param('tipo_operacao','E não é devolução por inferência.',{'type':'string','enum':['S','E','todas'],'default':'S'}),persons(),*page()]
 operation('/v1/vendas','get','Listar vendas e movimentações','Vendas',['vendas:ler'],'ListaVendaResumo',filters,description='Ordenação estável por data_operacao, cod_operacao e tipo_operacao crescentes no snapshot. Sem expansão de itens.')
 o=operation('/v1/vendas/{venda_id}','get','Consultar detalhe da venda','Vendas',['vendas:ler'],'RespostaVenda',[path_id('venda_id'),persons()])
 o['responses']['200']['headers']['ETag']={'description':'ETag desta revisão, necessário para ler itens/pagamentos com consistência.','schema':{'type':'string'}}
@@ -359,15 +359,15 @@ operation('/v1/filiais/{filial_id}/estoques/{sku}','get','Consultar um SKU na fi
 operation('/v1/alteracoes','get','Consumir log incremental','Alteracoes',[],'ListaAlteracoes',[branch(),param('recurso','Exige o escopo correspondente, dinamicamente validado.',{'type':'string','enum':['vendas','filiais','produtos','estoques']},True),param('posicao','Somente atual para obter um checkpoint inicial sem eventos. Mutuamente exclusivo com cursor.',{'type':'string','enum':['atual']}),*page()],description='Requer vendas:ler, filiais:ler, produtos:ler ou estoques:ler conforme recurso. Após bootstrap, cursor é obrigatório. Cursor com retenção de 30 dias; 410 exige nova carga. Não usa updated_at como posição confiável.')
 spec['paths']['/v1/alteracoes']['get']['security']=[{'IntegracaoOAuth':[s]} for s in ['vendas:ler','filiais:ler','produtos:ler','estoques:ler']]
 operation('/v1/webhooks','get','Listar inscrições do cliente','Webhooks',['webhooks:ler','vendas:ler'],'ListaWebhook',page())
-operation('/v1/webhooks','post','Criar inscrição desativada','Webhooks',['webhooks:gerenciar','vendas:ler'],'WebhookComSegredo',[idem()],body='WebhookCriacaoRequest',status='201',description='Máximo de 3 inscrições por cliente; ativo deve ser false. Segredo não é retornado em GET. Idempotência pode reproduzir a resposta cifrada por 24h.')
+operation('/v1/webhooks','post','Criar inscrição desativada','Webhooks',['webhooks:gerenciar','vendas:ler'],'WebhookComSegredo',[idem()],body='WebhookCriacaoRequest',status='201',description='Máximo de 3 inscrições por cliente; ativo deve ser false. Segredo não é retornado em GET. Uma repetição idempotente pode reproduzir a resposta por até 24h.')
 operation('/v1/webhooks/{webhook_id}','get','Consultar inscrição própria','Webhooks',['webhooks:ler','vendas:ler'],'RespostaWebhook',[path_id('webhook_id')])
 o=spec['paths']['/v1/webhooks/{webhook_id}']['get'];o['responses']['200']['headers']['ETag']={'schema':{'type':'string'}}
 operation('/v1/webhooks/{webhook_id}','put','Substituir configuração da inscrição','Webhooks',['webhooks:gerenciar','vendas:ler'],'RespostaWebhook',[path_id('webhook_id'),header_match(),idem()],body='WebhookRequest',description='Alterar destino exige novo teste, aprovação do hostname e estado pendente_verificacao. Não segue redirects.')
 operation('/v1/webhooks/{webhook_id}/testes','post','Enfileirar teste assinado','Webhooks',['webhooks:gerenciar','vendas:ler'],'AceiteFila',[path_id('webhook_id'),idem()],status='202')
-operation('/v1/webhooks/{webhook_id}/rotacionar-segredo','post','Rotacionar segredo de assinatura','Webhooks',['webhooks:gerenciar','vendas:ler'],'WebhookComSegredo',[path_id('webhook_id'),header_match(),idem()],description='Sobreposição proposta de 24h; o emissor assina com ambas as chaves durante a transição.')
+operation('/v1/webhooks/{webhook_id}/rotacionar-segredo','post','Rotacionar segredo de assinatura','Webhooks',['webhooks:gerenciar','vendas:ler'],'WebhookComSegredo',[path_id('webhook_id'),header_match(),idem()],description='Sobreposição de 24h; o emissor assina com ambas as chaves durante a transição.')
 operation('/v1/webhooks/{webhook_id}/entregas','get','Consultar entregas da inscrição','Webhooks',['webhooks:ler','vendas:ler'],'ListaEntrega',[path_id('webhook_id'),*page()])
 operation('/v1/webhooks/{webhook_id}/entregas/{entrega_id}/reenviar','post','Enfileirar reenvio autorizado','Webhooks',['webhooks:gerenciar','vendas:ler'],'AceiteFila',[path_id('webhook_id'),path_id('entrega_id'),idem()],status='202',description='Mantém evento/payload; nova assinatura e timestamp. Revalida permissões e destino. Até 30 dias de retenção; 410 depois disso.')
-spec['webhooks']={'eventoVenda':{'post':{'summary':'Receber evento de venda ou teste','operationId':'receberEventoVenda','tags':['Webhooks'],'description':'PROPOSTO. Handler do consumidor, não uma rota de entrada da plataforma. HTTPS + HMAC sobre bytes originais. Persistir antes de confirmar 2xx.',
+spec['webhooks']={'eventoVenda':{'post':{'summary':'Receber evento de venda ou teste','operationId':'receberEventoVenda','tags':['Webhooks'],'description':'Endpoint implementado pelo integrador para receber notificações HTTPS. Verifique a assinatura HMAC sobre os bytes originais e persista o evento antes de responder com sucesso.',
  'security':[{'WebhookSignature':[]}], 'parameters':[param('webhook-id','UUID do corpo; estável em retries e replay.',{'type':'string','format':'uuid'},True,'header'),param('webhook-timestamp','Unix timestamp em segundos. Tolerância de 300 segundos.',{'type':'string','pattern':r'^\d+$'},True,'header')],
  'requestBody':{'required':True,'content':{'application/json':{'schema':{'oneOf':[ref('EventoVenda'),ref('EventoTeste')]}}}},
  'responses':{'204':{'description':'Recebido e persistido duravelmente pelo consumidor; não significa processamento comercial concluído.'},'400':{'description':'Payload inválido; falha permanente.'},'401':{'description':'Assinatura ou timestamp inválido; inscrição deve ser pausada para revisão.'},'429':{'description':'Consumidor saturado; Retry-After em segundos.'},'503':{'description':'Falha transitória; reenfileirar.'}}}}}
@@ -396,6 +396,18 @@ for filename,(schema,value) in examples.items():
     p=ROOT/'docs/integracoes/exemplos'/filename;p.parent.mkdir(parents=True,exist_ok=True)
     p.write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n')
     SCHEMAS[schema].setdefault('examples',[]).append(value)
+def remover_metadados_internos(value):
+    if isinstance(value, dict):
+        for key in list(value):
+            if key.startswith('x-'):
+                del value[key]
+            else:
+                remover_metadados_internos(value[key])
+    elif isinstance(value, list):
+        for item in value:
+            remover_metadados_internos(item)
+
+remover_metadados_internos(spec)
 (ROOT/'apis/integracoes.openapi.json').write_text(json.dumps(spec,ensure_ascii=False,indent=2)+'\n')
 
 def typename(v):
@@ -405,16 +417,16 @@ def typename(v):
     if v.get('items'):t+=' de '+typename(v['items'])
     return t
 
-lines=['# Dicionário de campos','', '> Contrato 0.1.0 com infraestrutura publicada em 13/11/2026. Nenhum consumidor real habilitado; entregas de webhooks desativadas. Confira operacao.md para provisionamento e limites conhecidos.','',
+lines=['# Dicionário de campos','', 'Contrato 0.1.0. Referência de campos das requisições, respostas e eventos da API.','',
  'Todos os exemplos são fictícios. Obrigatório significa presença da chave no contrato; uma chave obrigatória pode aceitar null. Campos pessoais opcionais são omitidos quando não autorizados. Clientes devem tolerar propriedades novas em respostas.','']
 count=0
 for name,schema in SCHEMAS.items():
-    lines+=['## '+name,'',schema['description'],'','| Campo | Tipo | Presença | Origem / disponibilidade | Descrição e restrições |','| --- | --- | --- | --- | --- |']
+    lines+=['## '+name,'',schema['description'],'','| Campo | Tipo | Presença | Descrição e restrições |','| --- | --- | --- | --- |']
     for key,value in schema['properties'].items():
         description=value.get('description','Objeto referenciado; consultar seção correspondente.')
         for attr in ['enum','const','pattern','minimum','maximum','minLength','maxLength','format']:
             if attr in value:description+=' '+attr+'='+json.dumps(value[attr],ensure_ascii=False)+'.'
-        cells=['`'+key+'`',typename(value),'obrigatória' if key in schema['required'] else 'opcional / condicional',value.get('x-origem','novo: camada externa'),description]
+        cells=['`'+key+'`',typename(value),'obrigatória' if key in schema['required'] else 'opcional / condicional',description]
         lines.append('| '+' | '.join(str(c).replace('|','\\|').replace('\n',' ') for c in cells)+' |');count+=1
     lines.append('')
 (ROOT/'docs/integracoes/dicionario.md').write_text('\n'.join(lines))

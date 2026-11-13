@@ -1,4 +1,4 @@
-// Adaptador de referência para o CONTRATO PROPOSTO. Não executa chamadas ao importar.
+// Consumidor de referência do log incremental. Não executa chamadas ao importar.
 // persistirPagina deve salvar dados/revisões e cursor atomicamente no seu banco.
 export async function consumirAlteracoes({baseUrl,obterToken,filial,recurso,cursor,
  persistirPagina,fetchImpl=fetch,esperar=ms=>new Promise(r=>setTimeout(r,ms)),maxPaginas=100}){

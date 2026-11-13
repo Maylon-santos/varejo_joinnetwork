@@ -1,0 +1,29 @@
+{
+  "arquivos": [
+    "apis/integracoes.openapi.json",
+    "docs/integracoes/index.html",
+    "docs/integracoes/README.md",
+    "docs/integracoes/autenticacao.md",
+    "docs/integracoes/consultas.md",
+    "docs/integracoes/sincronizacao.md",
+    "docs/integracoes/webhooks.md",
+    "docs/integracoes/dicionario.md",
+    "docs/integracoes/exemplos/alteracoes.json",
+    "docs/integracoes/exemplos/filiais.json",
+    "docs/integracoes/exemplos/estoque.json",
+    "docs/integracoes/exemplos/vendas.json",
+    "docs/integracoes/exemplos/erro.json",
+    "docs/integracoes/exemplos/webhook-teste.json",
+    "docs/integracoes/exemplos/venda.json",
+    "docs/integracoes/exemplos/webhook-venda.json",
+    "docs/integracoes/exemplos/pagamentos.json",
+    "docs/integracoes/exemplos/produtos.json",
+    "docs/integracoes/exemplos/itens.json",
+    "docs/integracoes/exemplos/gerar_assertion.py",
+    "docs/integracoes/exemplos/verificar-webhook.mjs",
+    "docs/integracoes/exemplos/verificar_webhook.py",
+    "docs/integracoes/exemplos/consumir-alteracoes.mjs",
+    "docs/integracoes/exemplos/consultas.sh",
+    "docs/integracoes/exemplos/inbox.sql"
+  ]
+}

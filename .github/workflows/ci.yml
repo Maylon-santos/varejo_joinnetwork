@@ -45,6 +45,13 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install -r docs/integracoes/exemplos/requirements-validacao.txt
+      - name: Preparar e conferir documentação pública
+        run: |
+          python scripts/gerar-contrato-integracoes.py
+          python scripts/gerar-portal-integracoes.py
+          python scripts/preparar-docs-integracoes.py
+          git diff --exit-code -- apis/integracoes.openapi.json docs/integracoes deploy/nginx-integracoes-publico.conf
       - run: python scripts/validar-docs-integracoes.py
+      - run: node scripts/verificar-portal-integracoes.mjs
       - run: python scripts/validar-respostas-integracoes.py
       # Publicação continua operacional via SSH. Este workflow não possui credenciais de produção.

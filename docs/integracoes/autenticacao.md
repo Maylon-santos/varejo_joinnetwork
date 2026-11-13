@@ -1,28 +1,12 @@
-# Autenticação, autorização e limites
+# Autenticação e acesso
 
-> OAuth publicado com HTTPS e validado em 13/11/2026. Nenhum cliente real provisionado; a credencial temporária de verificação foi revogada. Consulte [operação e ativação](operacao.md).
+A API utiliza OAuth 2.0 Client Credentials com autenticação `private_key_jwt` e assinatura RS256. Cada integração recebe um `client_id`, escopos e filiais autorizadas. O fluxo é destinado a serviços que protegem sua chave privada.
 
-## Identidade de máquina, separada do painel
+## Credenciais e chaves
 
-Cada integração terá seu próprio `client_id`, um tenant fixo, filiais concedidas, escopos e estado ativo/revogado. O fluxo é OAuth 2.0 Client Credentials, destinado a sistemas capazes de proteger credenciais. A autenticação do cliente será `private_key_jwt`, com prova assimétrica RS256. Isso segue a preferência por autenticação assimétrica da [BCP de segurança OAuth](https://www.rfc-editor.org/rfc/rfc9700.html#section-2.5).
+Registre a chave pública e seu `kid` antes de solicitar tokens. Utilize RSA de pelo menos 2048 bits; mantenha a chave privada exclusivamente no backend do integrador. Cada ambiente deve utilizar credenciais próprias.
 
-São dois objetos diferentes:
-
-| Objeto | Quem produz | Para que serve | Validade |
-| --- | --- | --- | --- |
-| Prova `client_assertion` JWT | Seu sistema, com a chave privada | Autenticar a troca em `/oauth/token` | No máximo 60 segundos, uso único |
-| `access_token` opaco | Plataforma | Autorizar chamadas aos recursos | 900 segundos |
-
-O token de acesso não deve ser decodificado como JWT. Não haverá refresh token nesse fluxo. Reutilize o access token em memória e solicite outro perto da expiração, com margem de 60 segundos e exclusão mútua para evitar uma tempestade de renovações.
-
-## Cadastro e ciclo de vida de chaves
-
-1. Um responsável interno autoriza tenant, filiais e finalidade antes da criação do cliente. Nenhum cadastro público concede acesso automaticamente.
-2. A chave privada permanece no integrador; a plataforma guarda a chave pública, `kid`, datas de validade e trilha de aprovação.
-3. O algoritmo aceito inicialmente será RS256; chaves RSA devem ter ao menos 2048 bits. Não aceitar `alg=none`, algoritmos simétricos ou escolha livre pelo JWT.
-4. A consulta de chave ocorre no cadastro local pelo par cliente/`kid`. Não buscar `jku`/`x5u` arbitrários recebidos no token.
-5. Cada ambiente tem cliente e par de chaves próprios. Troca planejada aceita duas chaves públicas durante até 24 horas; comprometimento exige revogação imediata, sem período de tolerância.
-6. A política administrativa inicial propõe revisão de acesso a cada 90 dias e rotação planejada de chaves em até 180 dias. São parâmetros do produto, a confirmar operacionalmente; não exigências dos RFCs.
+A prova JWT autentica a emissão do token e é válida por até 60 segundos, para uso único. O `access_token` retornado é uma credencial opaca, válida por 900 segundos, utilizada nas consultas. Na rotação planejada, as chaves podem coexistir por até 24 horas. Em caso de comprometimento, solicite a revogação imediata.
 
 ## Prova JWT
 
@@ -38,7 +22,7 @@ O token de acesso não deve ser decodificado como JWT. Não haverá refresh toke
 | Payload | `exp` | Maior que `iat`, no máximo `iat + 60` |
 | Payload | `jti` | UUID aleatório novo em toda tentativa |
 
-O servidor verificará assinatura, cliente ativo, chave válida, público pretendido, janela temporal e uso único de `jti`. A tolerância de relógio aplicada é de 30 segundos; `jti` deve ficar bloqueado por pelo menos 120 segundos após o aceite. Renovar a prova em retentativas do token. Rejeitar reutilização mesmo quando o pedido anterior terminou sem o consumidor receber a resposta.
+O servidor verifica assinatura, cliente ativo, chave válida, público pretendido, janela temporal e uso único de `jti`. A tolerância de relógio aplicada é de 30 segundos. Gere uma nova prova em cada tentativa, inclusive após falha de comunicação.
 
 O [RFC 7523](https://www.rfc-editor.org/rfc/rfc7523.html) define o uso do JWT na autenticação OAuth. Os tempos, algoritmo único e proteção obrigatória contra repetição acima são decisões deste contrato.
 
@@ -66,7 +50,7 @@ curl --request POST \
 
 Não registrar o formulário, o JWT ou o token em logs, traces, histórico de terminal compartilhado ou capturas. Em ambiente compartilhado, prefira fornecer o formulário por stdin a uma biblioteca HTTP; os exemplos cURL mostram a sintaxe, mas argumentos de processos podem ser visíveis no sistema operacional.
 
-As respostas do token terão `Cache-Control: no-store`. Falhas usam o formato OAuth, por exemplo `{"error":"invalid_client","error_description":"Autenticação do cliente inválida"}`. Não detalhar se o cliente ou `kid` existe. O recurso protegido usa outro envelope de erro, descrito abaixo.
+As respostas do token incluem `Cache-Control: no-store`. Falhas usam o formato OAuth, por exemplo `{"error":"invalid_client","error_description":"Autenticação do cliente inválida"}`. A resposta não informa a existência do cliente ou da chave. O recurso protegido usa outro envelope de erro, descrito abaixo.
 
 ## Escopos e isolamento
 
@@ -80,50 +64,32 @@ As respostas do token terão `Cache-Control: no-store`. Falhas usam o formato OA
 | `webhooks:ler` | Inscrições e metadados de entregas próprias | Exige também `vendas:ler` |
 | `webhooks:gerenciar` | Criar, testar, alterar, rotacionar e reenviar | Exige também `vendas:ler`; não permite alterar vendas |
 
-O pedido de token não amplia permissões. Escopo desconhecido ou fora da concessão resulta em `invalid_scope`, sem concessão parcial silenciosa. O tenant é resolvido pelo cadastro da credencial. Um `tenant_id` enviado em header/query/body não troca de banco ou de tenant e será rejeitado como parâmetro não suportado.
+O pedido de token não amplia permissões. Escopo desconhecido ou fora da concessão resulta em `invalid_scope`, sem concessão parcial silenciosa. A organização é definida pela credencial. O parâmetro `tenant_id` não é aceito para selecionar outra organização.
 
-Toda consulta, página, replay e entrega de webhook revalida cliente ativo, escopos e filiais atuais. Filtrar depois de carregar dados de todos os tenants não é aceitável. Os filtros entram na própria consulta ao banco e na seleção do outbox. A identidade do cliente será propagada de forma confiável à camada de dados.
+Toda consulta, página, replay e entrega de webhook revalida cliente ativo, escopos e filiais atuais. As respostas contêm somente recursos autorizados para a credencial.
 
 Filial explicitamente não concedida resulta em 403. Um objeto que não exista dentro do escopo concedido resulta em 404, sem revelar sua existência em outra filial ou tenant. A lista retorna somente recursos autorizados. Revogar filiais invalida cursores anteriores e cancela entregas pendentes que perderam autorização.
 
-## Administração e trilha de acesso
+## Tokens, revogação e limites
 
-O [console de integrações](administracao.md) implementa gestão delegada por tenant, clientes, concessões, chaves públicas, auditoria e métricas. O acesso humano exige habilitação explícita, senha e TOTP; é separado do OAuth de máquina. O papel global SuperAdmin continua evolução. Ver [operação](operacao.md).
+O token de acesso é opaco, tem validade de 900 segundos e não possui refresh token. Reutilize-o até próximo da expiração; renove com margem de 60 segundos. Após revogação da credencial, novas requisições são recusadas. Apresente o token somente no header `Authorization`.
 
-## Tokens e revogação
+| Operação | Limite |
+| --- | --- |
+| Leituras por integração | 60 requisições por minuto, com burst de 10 |
+| Leituras compartilhadas por organização | 120 requisições por minuto |
+| Concorrência por integração | 2 requisições |
+| Emissão de token | 6 tentativas por minuto por integração; 30 por IP |
+| Gerenciamento de webhooks | 10 operações por minuto por integração |
+| Página de consulta | Padrão 100 registros; máximo 200 |
+| Período de vendas | Até 31 dias civis inclusivos |
+| Snapshot de listagem | 30 minutos |
+| Log de alterações e reenvio de eventos | Retenção de 30 dias |
+| Corpo enviado | Máximo de 64 KiB |
+| Resposta de leitura | Máximo de 2 MiB; reduza a página quando necessário |
+| Inscrições de webhook | Até 3 por integração |
 
-O access token deverá ter pelo menos 256 bits aleatórios, armazenado no servidor somente por hash. A autorização será consultada a cada requisição; no desenho inicial não haverá cache que mantenha acesso após revogação. Em múltiplas instâncias, o estado precisa ser compartilhado. Uma chamada já autorizada/em execução pode terminar; novas chamadas e entregas devem falhar após a revogação confirmada.
-
-Chaves de criptografia, tokens do ERP e credenciais dos bancos nunca aparecerão na API externa. Tokens não serão aceitos em URL, cookie ou corpo de consulta. Consumidores de navegador devem acessar seu próprio backend; a chave privada não pertence a JavaScript de frontend ou aplicativo distribuído.
-
-Mutual TLS e tokens vinculados ao certificado podem ser acrescentados em uma fase posterior de maior exigência. Não são capacidades implementadas ou requisitos ocultos nos exemplos da primeira versão.
-
-## Política inicial de limites
-
-Os valores abaixo formam uma configuração de partida, não um teste de capacidade do servidor. Todos os limites aplicáveis são cumulativos; atingir qualquer um bloqueia a operação. Homologação de carga deverá confirmar ou reduzir estes números antes de produção.
-
-| Dimensão | Limite aplicado | Comportamento |
-| --- | --- | --- |
-| Leituras por cliente | 60 por minuto, burst de 10 | Bucket compartilhado entre rotas e tokens do cliente |
-| Leituras por tenant | 120 por minuto | Um integrador não ocupa todo o tenant |
-| Leituras por instância | 240 por minuto | Proteção adicional da capacidade compartilhada |
-| Concorrência por cliente / tenant / instância | 2 / 4 / 8 requisições | 429 quando a admissão não estiver disponível |
-| Tráfego por IP real de integração | 120 por minuto | Defesa adicional; não substitui limite por identidade |
-| Token endpoint | 6 tentativas/minuto por cliente e 30/minuto por IP | Inclui falhas; evita trabalho criptográfico sem limite |
-| Administração de webhook | 10 operações/minuto por cliente | Também respeita os limites gerais |
-| Tamanho da página | Padrão 100, máximo 200 | Não fazer expansão de coleções em listas de vendas |
-| Período de vendas | Até 31 dias civis inclusivos | Dividir mês/ano em janelas; não disponibilizar varredura ilimitada |
-| Busca de produtos | 2 a 100 caracteres | Consulta parametrizada e índices próprios |
-| Snapshot de listagem | 30 minutos | 410 após expiração; reiniciar a janela |
-| Retenção do log/replay | 30 dias | 410 quando a continuação saiu da retenção |
-| SQL / HTTP | 3 / 10 segundos | Cancelar consulta ao abortar cliente e devolver erro controlado |
-| Corpo de administração / resposta de leitura | 64 KiB / 2 MiB | Não truncar dados; reduzir página ou separar filhos |
-| Inscrições por cliente | 3 destinos | Ativação somente após verificação |
-| Entrega webhook | 1/s por destino, uma chamada em voo por destino | Worker isolado com até 2 entregas concorrentes no início |
-
-O limitador externo precisa de contador compartilhado/atômico entre instâncias, evitando que vários tokens multipliquem a cota do mesmo cliente. Falha no mecanismo de admissão retorna 503 com espera; não deve abrir acesso sem limite. O número de conexões e pool de leitura precisa ser separado do painel/worker; iniciar com pool total de quatro conexões para o serviço externo e fila de admissão limitada.
-
-O IP só pode vir da conexão confiável ou de cabeçalho reescrito por proxy conhecido. Não confiar em `X-Forwarded-For` arbitrário. Os atuais limites em memória por IP do painel não implementam a política externa.
+Limites compartilhados também podem resultar em HTTP 429. Respeite os headers de limite e `Retry-After`, mesmo que sua integração ainda não tenha atingido a cota individual.
 
 ## Headers, saturação e retentativa do consumidor
 
@@ -164,5 +130,3 @@ Formato `application/problem+json`, baseado em [RFC 9457](https://www.rfc-editor
 | 429 | `RATE_LIMIT_EXCEEDED` | Aguardar Retry-After e reduzir concorrência |
 | 500 | `INTERNAL_ERROR` | Retentativa limitada em leitura; informar request_id |
 | 503 | `SERVICE_BUSY` | Backoff e Retry-After; não disparar carga paralela |
-
-Eventos pessoais, bodies, tokens e assinatura não devem ser registrados integralmente em observabilidade. Registrar identidade da integração, rota parametrizada, request_id, duração, status e decisão de autorização. A política de retenção dos metadados de auditoria deve ser aprovada antes da operação; 90 dias é uma proposta inicial, não declaração de conformidade legal.

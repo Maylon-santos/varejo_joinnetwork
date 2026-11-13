@@ -1,5 +1,5 @@
 #!/bin/sh
-# SINTAXE DE REFERÊNCIA. API externa ainda não implementada.
+# Exemplo de autenticação e consultas à API de Integrações.
 # Não executar com set -x ou salvar tokens em logs compartilhados.
 set -eu
 : "${CLIENT_ID:?Configure a identidade da integração}"

@@ -1,5 +1,5 @@
 {
-  "verificadoEm": "2026-11-13T10:07:52.793412+00:00",
+  "verificadoEm": "2026-11-13T12:52:30.291543+00:00",
   "escopo": "documentação e exemplos sintéticos, sem implementar serviço",
   "openapiValido": true,
   "schemas": 51,
@@ -8,6 +8,9 @@
   "exemplosJSONValidados": 11,
   "linksLocaisEAncorasValidos": true,
   "portalSemDependenciasRemotas": true,
+  "arquivosPublicos": 25,
+  "conteudoPublicoSemIdentidadesOuProcedimentosInternos": true,
+  "rotasEstaticasLimitadasAoManifesto": true,
   "assinaturaPython": true,
   "provaJWTAssinadaEVerificada": true,
   "jtiUnico": true,

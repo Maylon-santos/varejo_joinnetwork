@@ -1,5 +1,11 @@
 # Comece aqui — estado atual em 13/11/2026
 
+## Documentação pública da API revisada — 13/11/2026
+
+- [x] Guia público reescrito para integradores em seis seções, com descrições técnicas diretas, exemplos fictícios e sem nomes pessoais, gestão de usuários, regras de SuperAdmin ou regras internas do ERP. OpenAPI e dicionário sem mapeamentos de tabelas, históricos de publicação ou metadados internos. As 21 operações, 51 esquemas, 277 campos, escopos e formatos das respostas foram preservados por comparação estrutural.
+- [x] Publicação limitada aos 25 arquivos do manifesto `config/documentacao-integracoes-publica.json`. Guias de administração, implementação e operação, README de deploy e relatório da migração retornam 404, inclusive por acesso direto. Fontes internas preservadas fora da raiz servida; revisão pública própria e snippet Nginx com caminhos exatos.
+- [x] OpenAPI, 11 exemplos JSON, JWT/HMAC, links, busca, cópia e layout computador/celular aprovados. Conteúdo HTTPS igual à fonte, Nginx válido, 19 containers e outros vhosts preservados; cinco portais HTTP 200 e consulta sem token HTTP 401. Sem migrations, reinício de containers, alteração de banco ou ativação de webhooks. Evidência: [revisão pública](docs/validacao-revisao-api-publica.json).
+
 ## API externa publicada para uso futuro — 13/11/2026
 
 - [x] **API/OAuth e documentação publicados na HostGator:** https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/ . Migration 019 aplicada após backup, preservando por hash vendas, itens, cancelamentos e checkpoints. Worker de projeções ativo; carga inicial de **94.829 recursos** concluída (31.307 vendas, 15 filiais, 19.968 vínculos de produtos e 43.539 estoques).

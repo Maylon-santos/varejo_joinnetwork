@@ -1,4 +1,4 @@
-"""Exemplo do contrato proposto. Requer PyJWT[crypto]; não é credencial de produção."""
+"""Geração de prova private_key_jwt. Requer PyJWT[crypto]."""
 import os
 import sys
 import time

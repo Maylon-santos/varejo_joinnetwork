@@ -1,3 +1,7 @@
+# Documento interno de implementação
+
+> Referência de arquitetura e validação do projeto. Este arquivo não integra a documentação pública nem é servido pelo portal.
+
 # Base de implementação e critérios de aceite
 
 > Arquitetura do contrato e critérios de aceite. Implementação e testes isolados em 11/11/2026; infraestrutura, OAuth, consultas e projeções publicados na HostGator em 13/11. Entregas de webhooks e console desativados; primeiro consumidor e sua homologação pendentes. [Escopo entregue e roteiro operacional](operacao.md).
