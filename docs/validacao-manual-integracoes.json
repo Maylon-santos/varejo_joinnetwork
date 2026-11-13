@@ -1,0 +1,27 @@
+{
+  "verificadoEm": "2026-11-13T19:52:18.504235+00:00",
+  "backupAntesAtualizacao": {
+    "backup": "backup-20261113T195149Z-DtgyDG",
+    "checksumsVerificados": true
+  },
+  "manualEtapas": 10,
+  "unitarios": 80,
+  "integracaoPostgreSQL16": 16,
+  "interfaceSinteticaComputadorCelular": true,
+  "manualExigeOperadorEMFA": true,
+  "bloqueioSemMFAExpiradoETokenExterno": true,
+  "publicadoNaImagem": "aeropostale-varejo-integracoes:manual-20261113",
+  "apiSaudavel": true,
+  "containersPreservados": 18,
+  "somenteApiIntegracoesRecriada": true,
+  "nginxPreservado": true,
+  "documentacaoPublicaPreservada": true,
+  "portaisHTTP200": 5,
+  "semMigration": true,
+  "configuracaoPrivadaPreservada": true,
+  "consoleHabilitado": false,
+  "entregasHabilitadas": false,
+  "consumidorCriado": false,
+  "backupCopiaExternaNovaConferida": false,
+  "backupCopiaExternaEstado": "Conferência no MacBook Home não concluída na tentativa imediata; causa ainda não diagnosticada. Cópias anteriores e agendamento preservados."
+}

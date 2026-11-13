@@ -3,6 +3,12 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Manual interno das integrações
+
+A aba **Manual** do console apresenta o procedimento de cadastro de credencial de máquina e preparação de API/webhooks. O conteúdo está em `backend/src/integracoes/manual.mjs`, entregue somente após autorização do operador e MFA, em `GET /admin/integracoes/manual`. O Nginx público continua bloqueando `/admin/` e o console continua dependente de habilitação operacional privada. Não incluir o manual no manifesto de documentação pública.
+
+Esta revisão usa a imagem `aeropostale-varejo-integracoes:manual-20261113` somente para `integracoes-api`, mantendo a imagem anterior do worker e dos demais serviços. Publicar exclusivamente com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait integracoes-api`, depois de construir e validar a imagem. Preservar `INTEGRATIONS_ADMIN_ENABLED=false` e `INTEGRATIONS_DELIVERIES_ENABLED=false` até o provisionamento planejado; nenhuma migration é necessária. Para retorno, restaurar a tag anterior da API no override e recriar somente esse serviço.
+
 ## Publicação da documentação pública
 
 Este arquivo e os guias `administracao.md`, `implementacao.md` e `operacao.md` são documentos internos, fora da publicação HTTP. O contrato público e seus exemplos são definidos por `config/documentacao-integracoes-publica.json`.

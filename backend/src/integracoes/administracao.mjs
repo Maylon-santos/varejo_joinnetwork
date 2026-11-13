@@ -4,6 +4,7 @@ import {transacao,limite} from './banco.mjs';
 import {parametros} from './consultas.mjs';
 import {criarConsultas} from './consultas.mjs';
 import {criarWebhooks} from './webhooks.mjs';
+import {manualIntegracoes} from './manual.mjs';
 
 const clienteDTO=c=>({id:c.id,client_id:c.client_id,nome:c.nome,tenant_id:c.tenant_key,ambiente:c.ambiente,finalidade:c.finalidade,estado:c.estado,escopos:c.escopos,filiais:c.filiais,hosts:c.hosts,versao:c.versao,criado_em:c.criado_em,atualizado_em:c.atualizado_em,ultimo_acesso_em:c.ultimo_acesso_em});
 export function criarAdministracao(pool,tenant,cofre,auth,filiais){
@@ -48,6 +49,10 @@ export function criarAdministracao(pool,tenant,cofre,auth,filiais){
    });
   }
   if(req.method==='GET'){
+   if(sub==='/manual'){
+    exigir(!params.size,400,'INVALID_PARAMETER');
+    return {status:200,body:manualIntegracoes};
+   }
    if(sub==='/clientes'){
     exigir(!params.size,400,'INVALID_PARAMETER');const rows=(await pool.query('SELECT * FROM integration_clients WHERE tenant_key=$1 ORDER BY criado_em DESC LIMIT 200',[tenant])).rows;
     const keys=(await pool.query('SELECT k.cliente_id,k.kid,k.ativa,k.valida_ate FROM integration_keys k JOIN integration_clients c ON c.id=k.cliente_id WHERE c.tenant_key=$1',[tenant])).rows;

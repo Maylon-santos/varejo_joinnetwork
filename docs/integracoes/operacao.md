@@ -8,6 +8,8 @@ Documentação pública: https://api-varejo.aeropostale.joinnetwork.com.br/docs/
 
 ## Serviços e GitHub
 
+O console inclui a aba **Manual**, com dez etapas de cadastro de integração, escopos/filiais, chave pública, OAuth, inscrição/teste/ativação de webhook, manutenção e diagnóstico. O conteúdo é carregado de `GET /admin/integracoes/manual` somente após autenticação de operador e MFA válido. Não integra os assets públicos nem o manifesto de documentação. A criação de webhook continua pela API; o manual identifica quais ações existem na interface e quais dependem da equipe operacional. Criar o manual não habilita operador, console ou entregas no ambiente.
+
 O remoto do projeto é `Maylon-santos/varejo_joinnetwork`, branch `main`. O workflow `.github/workflows/ci.yml` executa testes unitários, integração em PostgreSQL 17 descartável, console no Chromium e validação do contrato. Não tem credenciais de produção ou etapa de deploy. A publicação do piloto continua via SSH conforme `deploy/README.md`.
 
 | Componente | Entrada | Responsabilidade |

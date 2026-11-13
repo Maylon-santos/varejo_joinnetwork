@@ -18,7 +18,7 @@ async function lerCorpo(req,form=false){
 export function rotaSegura(path){
  if(path==='/oauth/token'||path==='/health'||path==='/admin/integracoes/step-up')return path;
  if(path.startsWith('/admin/integracoes/clientes/'))return path.includes('/chaves/')?'/admin/integracoes/clientes/{id}/chaves/{kid}':'/admin/integracoes/clientes/{id}';
- if(['/admin/integracoes/clientes','/admin/integracoes/acessos','/admin/integracoes/auditoria','/admin/integracoes/entregas','/admin/integracoes/metricas','/admin/integracoes/webhooks'].includes(path))return path;
+ if(['/admin/integracoes/clientes','/admin/integracoes/acessos','/admin/integracoes/auditoria','/admin/integracoes/entregas','/admin/integracoes/metricas','/admin/integracoes/webhooks','/admin/integracoes/manual'].includes(path))return path;
  if(/^\/v1\/vendas\/[^/]+(?:\/(?:itens|pagamentos))?$/.test(path))return '/v1/vendas/{venda_id}'+(path.endsWith('/itens')?'/itens':path.endsWith('/pagamentos')?'/pagamentos':'');
  if(/^\/v1\/produtos\/[^/]+(?:\/variacoes)?$/.test(path))return '/v1/produtos/{produto_id}'+(path.endsWith('/variacoes')?'/variacoes':'');
  if(/^\/v1\/filiais\/[^/]+\/estoques\/[^/]+$/.test(path))return '/v1/filiais/{filial_id}/estoques/{sku}';

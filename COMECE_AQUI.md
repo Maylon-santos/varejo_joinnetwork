@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 13/11/2026
 
+## Manual interno para integrações — 13/11/2026
+
+- [x] Aba **Manual** no console administrativo de integrações, com dez etapas: identidades, preparação, cadastro, escopos/filiais, chave pública, OAuth, criação de webhook pela API, teste/ativação, manutenção e diagnóstico. Índice por etapa, tabelas e exemplos copiáveis; conteúdo alinhado aos formulários e ações existentes.
+- [x] Conteúdo servido exclusivamente por `GET /admin/integracoes/manual`, após operador habilitado e MFA válido. Testados bloqueio sem confirmação forte, expiração, token de máquina e console desativado. Manual fora da documentação pública e dos assets de login.
+- [x] 80 testes unitários, 16 testes de integração em PostgreSQL 16 descartável e interface sintética em 1440/390 px aprovados. Publicada a imagem `manual-20261113` somente na API de integrações; outros 18 containers, Nginx, documentação pública e cinco portais preservados. Sem migration ou cadastro de consumidor. Evidência: [manual das integrações](docs/validacao-manual-integracoes.json).
+- [ ] **Console e entregas continuam desativados em produção.** O manual está preparado na imagem e será acessível pela aba após habilitação operacional privada do console e matrícula do operador com MFA. Não existe papel global SuperAdmin nesta entrega. Backup anterior à atualização `backup-20261113T195149Z-DtgyDG` verificado no servidor; a tentativa imediata de conferir a nova cópia no MacBook Home não foi concluída. Cópias externas anteriores e a coleta agendada foram preservadas; confirmar a coleta do novo backup e diagnosticar a falha da conferência externa.
+
 ## Documentação pública da API revisada — 13/11/2026
 
 - [x] Guia público reescrito para integradores em seis seções, com descrições técnicas diretas, exemplos fictícios e sem nomes pessoais, gestão de usuários, regras de SuperAdmin ou regras internas do ERP. OpenAPI e dicionário sem mapeamentos de tabelas, históricos de publicação ou metadados internos. As 21 operações, 51 esquemas, 277 campos, escopos e formatos das respostas foram preservados por comparação estrutural.

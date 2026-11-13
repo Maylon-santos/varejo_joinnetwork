@@ -36,5 +36,5 @@ test('DTOs preservam BigInt, desconto informativo e omitem pessoas sem opt-in',(
  assert.equal(itemDTO({ordem:0,quantidade:3,preco_centavos:'9007199254740993',desconto_informado:'20'}).subtotal_centavos,'27021597764222979');
  const p=permitirPessoas({data:{vendedor:{codigo:'1',nome:'Pessoa fictícia'},clientes:[],cobertura:{pessoas:'disponivel'}},pagamentos:[{historico:'privado',desc_gerador:'privado',origem:'ERP'}]},false);assert.ok(!Object.hasOwn(p.data.vendedor,'nome'));assert.ok(!Object.hasOwn(p.data,'clientes'));assert.equal(p.data.cobertura.pessoas,'restrito');assert.deepEqual(p.pagamentos,[{origem:'ERP'}]);
  assert.ok(assinaturaWebhook('whsec_'+Buffer.alloc(32).toString('base64'),randomUUID(),'1',Buffer.from('{}')).startsWith('v1,'));
- assert.equal(rotaSegura('/v1/vendas/vnd_1_S_123/itens'),'/v1/vendas/{venda_id}/itens');assert.equal(rotaSegura('/segredo?x=1'),'desconhecida');
+ assert.equal(rotaSegura('/v1/vendas/vnd_1_S_123/itens'),'/v1/vendas/{venda_id}/itens');assert.equal(rotaSegura('/segredo?x=1'),'desconhecida');assert.equal(rotaSegura('/admin/integracoes/manual'),'/admin/integracoes/manual');
 });

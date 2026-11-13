@@ -139,15 +139,22 @@ test('API externa: autenticação, isolamento, snapshots, log, outbox, webhook e
    const admin=criarAdministracao(a.pool,tenant,crypt,a.auth,filiais),req={method:'GET',headers:{authorization:'Bearer '+a.tokens.admin},socket:{remoteAddress:'127.0.0.1'}};
    await assert.rejects(()=>admin(req,'/admin/integracoes/clientes',params({}),null),e=>e.code==='ADMIN_NOT_ENROLLED');
    const user=await a.auth.autenticar(a.tokens.admin),secret='c3'.repeat(20);await a.pool.query('INSERT INTO integration_admins(usuario_id,tenant_key,totp_secret) VALUES($1,$2,$3)',[user.id,tenant,crypt.cifrar(secret,'admin:'+user.id)]);
+   await assert.rejects(()=>admin(req,'/admin/integracoes/manual',params({}),null),e=>e.code==='STEP_UP_REQUIRED');
    const mfa=await admin({...req,method:'POST'},'/admin/integracoes/step-up',params({}),{codigo:totp(secret,Math.floor(Date.now()/30000))});req.headers['x-integration-admin']=mfa.body.token;
    await assert.rejects(()=>admin({...req,method:'POST'},'/admin/integracoes/step-up',params({}),{codigo:totp(secret,Math.floor(Date.now()/30000))}),e=>e.code==='MFA_INVALID');
+   const manual=await admin(req,'/admin/integracoes/manual',params({}),null);assert.equal(manual.status,200);assert.equal(manual.body.secoes.length,10);
+   await assert.rejects(()=>admin(req,'/admin/integracoes/manual',params({x:'1'}),null),e=>e.code==='INVALID_PARAMETER');
+   await assert.rejects(()=>admin({...req,headers:{...req.headers,authorization:'Bearer '+token}},'/admin/integracoes/manual',params({}),null),e=>e.status===403);
    assert.equal((await admin(req,'/admin/integracoes/clientes',params({}),null)).body.data.length,1);
    await assert.rejects(()=>admin({...req,headers:{...req.headers,authorization:'Bearer '+token}},'/admin/integracoes/clientes',params({}),null),e=>e.status===403);
    const result=await admin({...req,method:'PUT',headers:{...req.headers,'if-match':etag(id,'1')}},'/admin/integracoes/clientes/'+id,params({}),{nome:'Cliente atualizado',ambiente:'homologacao',finalidade:'Teste',estado:'suspenso',escopos:['vendas:ler'],filiais:['1'],hosts:[],motivo:'Teste de suspensão'});assert.equal(result.body.estado,'suspenso');assert.ok((await a.pool.query("SELECT 1 FROM integration_admin_audit WHERE acao='cliente_alterado'")).rowCount);await assert.rejects(()=>identity.autenticar(token));
    await a.pool.query("UPDATE integration_clients SET estado='ativo' WHERE id=$1",[id]);
+   await a.pool.query("UPDATE integration_admin_sessions SET expira_em=now()-interval '1 second'");
+   await assert.rejects(()=>admin(req,'/admin/integracoes/manual',params({}),null),e=>e.code==='STEP_UP_REQUIRED');
   });
   await t.test('HTTP produz Problem Details, auditoria medida e não guarda tokens/PII',async()=>{
    server=criarApiIntegracoes({pool:a.pool,tenant,cofre:crypt,filiais,audience});await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`;
+   assert.equal((await fetch(base+'/admin/integracoes/manual')).status,404);
    await a.pool.query('DELETE FROM integration_admission');const headers={Authorization:'Bearer '+token};let r=await fetch(base+'/v1/vendas/vnd_1_S_10',{headers});assert.equal(r.status,200);const rid=r.headers.get('x-request-id');await r.json();
    r=await fetch(base+'/v1/vendas?tenant=outro',{headers});assert.equal(r.status,400);assert.match(r.headers.get('content-type'),/problem/);const problem=await r.json();assert.equal(problem.code,'INVALID_PARAMETER');guardar('Problem',problem);
    await new Promise(r=>setTimeout(r,50));const logs=(await a.pool.query('SELECT * FROM integration_access_logs WHERE id=$1',[rid])).rows;assert.equal(logs.length,1);assert.equal(logs[0].cliente_id,id);assert.ok(logs[0].duracao_ms>=0);assert.ok(!JSON.stringify(logs).includes(token));assert.equal(logs[0].rota_template,'/v1/vendas/{venda_id}');

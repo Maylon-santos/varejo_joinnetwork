@@ -15,9 +15,35 @@ function tabela(data,editar=false){
 }
 function novo(){selecionado=null;$('#cliente').reset();$('#cliente [name=id]').value='';$('#cliente [name=versao]').value='';$('#cliente [name=ambiente]').disabled=false;$('#chaves').hidden=true;$('#editor-titulo').textContent='Cadastrar integração';for(const i of $('#cliente').querySelectorAll('[type=checkbox]'))i.checked=false;}
 function editarCliente(c){selecionado=c;const f=$('#cliente');for(const k of ['id','versao','nome','ambiente','estado','finalidade'])f.elements[k].value=c[k];f.elements.ambiente.disabled=true;f.elements.hosts.value=c.hosts.join('\n');f.elements.motivo.value='';for(const i of f.querySelectorAll('[type=checkbox]'))i.checked=(i.name==='escopos'?c.escopos:c.filiais).includes(i.value);$('#editor-titulo').textContent='Editar '+c.nome;$('#chaves').hidden=false;$('#chave').reset();aviso('Client ID: '+c.client_id+'\nChaves: '+(c.chaves.map(k=>k.kid+(k.ativa?' (ativa)':' (revogada)')).join(', ')||'nenhuma'));$('#editor').scrollIntoView({behavior:'smooth'});}
+function renderizarManual(manual){
+ const root=$('#manual');root.replaceChildren();
+ const texto=(tag,text,parent)=>{const node=document.createElement(tag);node.textContent=text;parent.append(node);return node;};
+ texto('h2',manual.titulo,root);texto('p',manual.descricao,root);
+ const indice=document.createElement('nav');indice.setAttribute('aria-label','Etapas do manual');indice.className='manual-indice';root.append(indice);
+ for(const secao of manual.secoes){
+  const link=texto('a',secao.titulo,indice);link.href='#manual-'+secao.id;
+  const article=document.createElement('section');article.className='manual-etapa';article.id='manual-'+secao.id;root.append(article);texto('h3',secao.titulo,article);
+  for(const p of secao.paragrafos??[])texto('p',p,article);
+  if(secao.passos){const lista=document.createElement('ol');article.append(lista);for(const passo of secao.passos)texto('li',passo,lista);}
+  if(secao.campos){
+   const wrap=document.createElement('div');wrap.className='manual-tabela';wrap.tabIndex=0;wrap.setAttribute('role','region');wrap.setAttribute('aria-label',secao.titulo);
+   const table=document.createElement('table'),head=document.createElement('thead'),tr=document.createElement('tr');texto('th','Campo ou situação',tr).scope='col';texto('th','Orientação',tr).scope='col';head.append(tr);table.append(head);
+   const body=document.createElement('tbody');for(const campo of secao.campos){const row=document.createElement('tr');texto('th',campo.campo,row).scope='row';texto('td',campo.orientacao,row);body.append(row);}table.append(body);wrap.append(table);article.append(wrap);
+  }
+  if(secao.codigo){
+   const box=document.createElement('div');box.className='manual-exemplo';const header=document.createElement('div');header.className='linha';texto('span','Exemplo · '+secao.codigo.linguagem,header);
+   const button=texto('button','Copiar exemplo',header);button.type='button';button.className='secundario';button.onclick=operar(async()=>{await navigator.clipboard.writeText(secao.codigo.texto);aviso('Exemplo copiado. Substitua os valores demonstrativos antes de usar.');});
+   box.append(header);const pre=document.createElement('pre');texto('code',secao.codigo.texto,pre);box.append(pre);article.append(box);
+  }
+  if(secao.nota)texto('aside',secao.nota,article).className='manual-nota';
+  for(const item of secao.links??[]){const url=new URL(item.url);if(url.protocol!=='https:')continue;const a=texto('a',item.rotulo,article);a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';}
+ }
+}
 const titles={clientes:'Integrações',acessos:'Acessos da API',entregas:'Tentativas de entrega',webhooks:'Destinos de webhook',metricas:'Desempenho da API',auditoria:'Auditoria administrativa'};
 function dataLocal(date){const d=new Date(date.getTime()-date.getTimezoneOffset()*60000);return d.toISOString().slice(0,16);}
 async function carregar(proxima=false){
+ const manual=tab==='manual';$('#consulta').hidden=manual;$('#manual').hidden=!manual;
+ if(manual){$('#editor').hidden=true;$('#chaves').hidden=true;$('#mais').hidden=true;for(const b of document.querySelectorAll('[data-tab]'))b.toggleAttribute('aria-current',b.dataset.tab===tab);renderizarManual(await api('/manual'));return;}
  $('#titulo').textContent=titles[tab];$('#editor').hidden=tab!=='clientes';$('#chaves').hidden=tab!=='clientes'||!selecionado;$('#filtros').hidden=tab==='clientes'||tab==='webhooks';$('#descricao').textContent=tab==='clientes'?'Escopos, filiais e chaves públicas são concessões explícitas. Nenhuma chave privada é cadastrada.':'Medições da aplicação. Payloads comerciais, tokens e segredos não aparecem nesta consulta.';
  for(const b of document.querySelectorAll('[data-tab]'))b.toggleAttribute('aria-current',b.dataset.tab===tab);
  let query='';if(tab!=='clientes'&&tab!=='webhooks'){

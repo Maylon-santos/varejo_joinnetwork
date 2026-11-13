@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## Manual administrativo das integrações — 13/11/2026
+
+- [x] Manual em dez etapas integrado à aba **Manual** do console, com índice, tabelas e exemplos copiáveis. Cadastro da identidade de sistema, filiais/escopos, chave pública, OAuth e fluxo real de inscrição/teste/ativação de webhook documentados.
+- [x] Endpoint interno protegido por operador e MFA, com bloqueio de token externo e confirmação expirada. 80 unitários, 16 de integração PostgreSQL 16 e interface computador/celular aprovados. Nova imagem somente da API de integrações; outros 18 containers, Nginx e documentação pública preservados, cinco portais HTTP 200. Evidência: `docs/validacao-manual-integracoes.json`.
+- [ ] Console/entregas em produção continuam desativados; acesso ao manual depende da habilitação operacional e matrícula do operador. Nenhum consumidor real criado ou SuperAdmin global implementado. Confirmar a cópia externa do backup prévio à atualização e diagnosticar a tentativa não concluída; a conferência no servidor passou.
+
 ## Referência pública da API revisada — 13/11/2026
 
 - [x] Documentação profissional para integradores, sem identidades pessoais, regras administrativas ou lógica interna do ERP. Seis capítulos, OpenAPI e dicionário com o contrato de acesso/consulta/eventos; estrutura das 21 operações e 277 campos preservada.
