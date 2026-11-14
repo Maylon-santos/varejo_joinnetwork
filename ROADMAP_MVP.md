@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## Console de integrações habilitado no painel — 14/11/2026
+
+- [x] Menu Admin **Integrações e API** e link direto para a aba Manual. Primeiro acesso com senha, convite individual emitido por operação e cadastro do autenticador pelo titular; não habilita outros Admins automaticamente. Desafio vinculado à sessão, prazo de cinco minutos, bloqueio de replay e revogação auditada. Segredo não alterável pelo LOGIN da API.
+- [x] 85 unitários, 94 integração PostgreSQL 16 e interface computador/celular aprovados; publicação das duas APIs com outros 23 containers e vhosts preservados. Histórico financeiro e itens preservados por hash, backup verificado, cinco portais HTTP 200. Administração protegida no domínio do painel e bloqueada no domínio público da API. Evidência: `docs/validacao-console-integracoes.json`.
+- [ ] Titular deve cadastrar/confirmar o autenticador no primeiro acesso. Webhooks continuam com envios desativados; nenhum consumidor/destino real criado. Homologação R31 e pendências comerciais continuam separadas. Esta atualização substitui as notas anteriores de console desativado.
+
 ## Histórico das 15 filiais concluído — 14/11/2026
 
 - [x] Carga 2023–2025 concluída em todas as 15 filiais, com 138.543 operações e 3.591 eventos de cancelamento. Contagens no banco conferidas por filial; 16.440 janelas diárias concluídas. Sincronização regular de 2026 atualizada até 14/11 nos 30 checkpoints e fila da API externa vazia.

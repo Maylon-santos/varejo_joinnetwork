@@ -22,3 +22,6 @@ REVOKE INSERT,UPDATE,DELETE ON integration_dirty,integration_resources,integrati
 REVOKE UPDATE,DELETE ON integration_access_logs,integration_admin_audit FROM varejo_integracoes_api;
 REVOKE INSERT,UPDATE,DELETE ON integration_admins FROM varejo_integracoes_api;
 GRANT UPDATE(ultimo_passo) ON integration_admins TO varejo_integracoes_api;
+-- Ativação somente de convite individual previamente registrado por SSH,
+-- após prova TOTP vinculada à sessão. A API não cria nem altera o segredo.
+GRANT UPDATE(ativo) ON integration_admins TO varejo_integracoes_api;

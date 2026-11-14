@@ -16,7 +16,7 @@ async function lerCorpo(req,form=false){
  try{const v=JSON.parse(raw);exigir(v&&typeof v==='object'&&!Array.isArray(v),400,'INVALID_JSON');return v;}catch{throw new Falha(400,'INVALID_JSON');}
 }
 export function rotaSegura(path){
- if(path==='/oauth/token'||path==='/health'||path==='/admin/integracoes/step-up')return path;
+ if(path==='/oauth/token'||path==='/health'||['/admin/integracoes/login','/admin/integracoes/logout','/admin/integracoes/cadastro-confirmar','/admin/integracoes/step-up'].includes(path))return path;
  if(path.startsWith('/admin/integracoes/clientes/'))return path.includes('/chaves/')?'/admin/integracoes/clientes/{id}/chaves/{kid}':'/admin/integracoes/clientes/{id}';
  if(['/admin/integracoes/clientes','/admin/integracoes/acessos','/admin/integracoes/auditoria','/admin/integracoes/entregas','/admin/integracoes/metricas','/admin/integracoes/webhooks','/admin/integracoes/manual'].includes(path))return path;
  if(/^\/v1\/vendas\/[^/]+(?:\/(?:itens|pagamentos))?$/.test(path))return '/v1/vendas/{venda_id}'+(path.endsWith('/itens')?'/itens':path.endsWith('/pagamentos')?'/pagamentos':'');

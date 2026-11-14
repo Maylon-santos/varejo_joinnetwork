@@ -1,5 +1,16 @@
 # Operação da implementação 0.1.0
 
+## Acesso administrativo atual — 14/11/2026
+
+Console habilitado pelo menu Admin **Integrações e API**, em https://aeropostale.joinnetwork.com.br/admin/integracoes/console#manual . O domínio público da API segue sem rotas `/admin/`. Os envios de webhooks permanecem desativados e nenhum consumidor real foi criado.
+
+O primeiro operador recebeu um convite individual de 24 horas, com ativação dependente de confirmação do autenticador pelo titular. Depois de informar sua senha, ele recebe a chave de configuração e um desafio vinculado à sessão com validade de cinco minutos. A confirmação TOTP ativa o operador, descarta os desafios anteriores e gera a autorização forte usual. A chave é apagada da interface após confirmar ou expirar; não há tokens em localStorage/sessionStorage. Login de outro Admin sem convite continua bloqueado.
+
+Para preparar outro convite, usar `node scripts/autorizar-operador.mjs UUID_DO_USUARIO` por operação privada, com `TENANT_DATABASE_URL`, `CONTROL_DATABASE_URL`, `TENANT_KEY` e a chave cifradora existente disponíveis no processo, sem imprimi-las ou passá-las como argumentos. O usuário deve existir, estar ativo e ter papel Admin do tenant. O comando não sobrescreve operador existente. O fluxo antigo de provisionamento confirmado por arquivo privado abaixo continua disponível para recuperação/revogação operacional explícita; não executar em nome do titular como substituto do primeiro acesso.
+
+A API pode ativar um convite existente e atualizar o passo TOTP, mas não inserir operadores nem alterar o segredo cifrado. Não ampliar esses privilégios. Sem migration; teste o fluxo sob os LOGINs restritos antes de futuras publicações.
+
+
 > Documento interno. Não integra o manifesto da documentação pública e não deve ser servido por HTTP. Para publicar o guia dos integradores, siga a seção de documentação pública em `deploy/README.md`.
 
 Implementada em 11/11/2026 e publicada na HostGator em 13/11/2026, após testes isolados e verificação autenticada pelo HTTPS público. **Infraestrutura pronta para o futuro, conforme decisão de Maylon: nenhum consumidor real habilitado, entregas de webhooks e console administrativo desativados.** A credencial temporária de validação foi revogada. Código enviado ao GitHub continua sem publicar serviços automaticamente.
@@ -54,7 +65,7 @@ Logs de acesso são gravados após finish/close; falha de persistência emite ap
 2. Gerar uma chave aleatória de 32 bytes, gravar como 64 caracteres hexadecimais em `INTEGRATIONS_ENCRYPTION_KEY`, somente no arquivo privado. **Guardar cópia protegida fora do servidor e do Git**: sem essa chave não é possível recuperar segredos/payloads cifrados de backups. A versão inicial suporta uma chave de armazenamento; trocá-la exige migração/recriptação planejada, não substituição direta.
 3. Configurar `INTEGRATIONS_ENABLED=true`, ambiente `homologacao` e base HTTPS exata. A audience será `${BASE}/oauth/token`; o token de homologação não autentica um serviço configurado para produção.
 4. Iniciar a API. Habilitar o worker de projeção com `INTEGRATIONS_WORKER_ENABLED=true`; deixar `INTEGRATIONS_DELIVERIES_ENABLED=false` até ter consumidor aprovado. `--once` processa um lote.
-5. Habilitar o console somente por acesso operacional privado, com `INTEGRATIONS_ADMIN_ENABLED=true`. O vhost externo bloqueia integralmente `/admin/`.
+5. Habilitar o console por operação privada, com `INTEGRATIONS_ADMIN_ENABLED=true`. O vhost da API externa bloqueia `/admin/`; o acesso humano protegido fica no domínio do painel.
 
 ```sh
 npm run integracoes:api
@@ -83,7 +94,7 @@ O script confirma usuário/tenant, exige a prova do autenticador e grava concess
 
 Para recuperar acesso em perda de MFA, um operador com acesso SSH controlado pode preparar nova matrícula. Para bloquear o operador sem possuir o autenticador, arquivo 0600 com `usuario_id`, `ativo=false` e `motivo` revoga concessão/sessões com auditoria. Isso não concede permissões globais ao Admin.
 
-O console usa credenciais somente em memória da aba. O logout revoga a sessão do painel criada para esse acesso e o step-up; não grava tokens em localStorage. Endereço operacional: túnel SSH para `127.0.0.1:3200` e `/admin/integracoes/console`. No console, cadastrar cliente, escolher ambiente/escopos/filiais/hosts e registrar somente sua chave pública PEM/kid. Segredo privado RSA permanece no consumidor. Chave revogada não pode ser reativada; usar novo kid.
+O console usa credenciais somente em memória da aba. O logout revoga a sessão do painel criada para esse acesso e o step-up; não grava tokens em localStorage. Endereço atual: domínio do painel, em `/admin/integracoes/console`. O túnel SSH para `127.0.0.1:3200` permanece alternativa operacional. No console, cadastrar cliente, escolher ambiente/escopos/filiais/hosts e registrar somente sua chave pública PEM/kid. Segredo privado RSA permanece no consumidor. Chave revogada não pode ser reativada; usar novo kid.
 
 ## Publicação controlada
 

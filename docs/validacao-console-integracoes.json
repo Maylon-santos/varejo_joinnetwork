@@ -1,0 +1,75 @@
+{
+  "verificadoEm": "2026-11-14T13:33:26.907917+00:00",
+  "urlConsole": "https://aeropostale.joinnetwork.com.br/admin/integracoes/console#manual",
+  "servicos": {
+    "api": {
+      "ativo": true,
+      "health": "healthy",
+      "reinicios": 0
+    },
+    "integracoes-api": {
+      "ativo": true,
+      "health": "healthy",
+      "reinicios": 0
+    },
+    "integracoes-worker": {
+      "ativo": true,
+      "health": null,
+      "reinicios": 0
+    },
+    "sync-worker": {
+      "ativo": true,
+      "health": null,
+      "reinicios": 0
+    },
+    "postgres": {
+      "ativo": true,
+      "health": "healthy",
+      "reinicios": 0
+    }
+  },
+  "consoleHabilitado": true,
+  "enviosWebhookHabilitados": false,
+  "menuPublicado": true,
+  "loginHTTPSValidado": true,
+  "titularPrecisaCadastrarAutenticador": true,
+  "manualBloqueadoAntesDoMFA": true,
+  "administracaoBloqueadaNoDominioPublico": true,
+  "documentacaoPublicaDisponivel": true,
+  "portaisHTTP200": 5,
+  "administracao": {
+    "operadoresAtivos": 0,
+    "convitesPendentes": 1,
+    "clientesAtivos": 0,
+    "webhooks": 0,
+    "sessoesMFA": 0,
+    "ativoPermitido": true,
+    "segredoAlteravel": false
+  },
+  "testes": {
+    "unitarios": 85,
+    "integracaoPostgreSQL16": 94,
+    "interfaceCadastroComputadorCelular": true,
+    "interfaceConsoleComputadorCelular": true,
+    "MFAObrigatorio": true,
+    "desafioVinculadoASessao": true,
+    "desafioExpira": true,
+    "bloqueioReplay": true,
+    "semSegredosEmAuditoria": true
+  },
+  "publicacao": {
+    "publicadoEm": "2026-11-14T13:28:35.162825+00:00",
+    "backup": "backup-20261114T132727Z-4yq6pf",
+    "checksumsBackup": true,
+    "servicosAtualizados": [
+      "api",
+      "integracoes-api"
+    ],
+    "outrosContainersPreservados": 23,
+    "historicoFinanceiroEItensPreservados": true,
+    "semMigrations": true,
+    "outrosVhostsPreservados": true
+  },
+  "limite": "Titular ainda deve confirmar o autenticador no primeiro acesso; o convite não ativa automaticamente o operador.",
+  "workerLocalDesativado": true
+}

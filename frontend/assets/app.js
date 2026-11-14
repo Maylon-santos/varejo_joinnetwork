@@ -48,6 +48,7 @@ $('login-form').addEventListener('submit',async e=>{
   const session=await api('/auth/login',{method:'POST',body:JSON.stringify({email:$('email').value,senha:$('password').value})});token=session.token;$('password').value='';
   const [me,branches]=await Promise.all([api('/auth/me'),api('/filiais')]);
   userRole=me.usuario.role;somenteProprias=!!me.usuario.somente_proprias_vendas;isAdmin=userRole==='Admin';$('goals-month').value=today().slice(0,7);permissoes=new Set(me.usuario.permissoes||[]);
+  $('integrations-console').hidden=!isAdmin;
   $('user-role').textContent=me.usuario.role_nome||me.usuario.role;
   $('workspace-scope').textContent=me.usuario.somente_proprias_vendas?'Minhas vendas':'Filiais autorizadas';
   for(const button of document.querySelectorAll('[data-page]'))button.hidden=!podePagina(button.dataset.page);

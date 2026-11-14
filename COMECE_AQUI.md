@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 14/11/2026
 
+## Console e manual integrados ao painel — 14/11/2026
+
+- [x] Acesso **Integrações e API** no menu de Admin, abrindo o console na aba Manual em https://aeropostale.joinnetwork.com.br/admin/integracoes/console#manual . Console habilitado no domínio do painel; administração continua HTTP 404 no domínio público da API. Documentação pública preservada.
+- [x] Cadastro inicial do autenticador pelo titular: exige conta Admin ativa, senha válida, convite individual emitido por SSH, desafio de cinco minutos vinculado à sessão e confirmação TOTP. Chave mascarada e apagada da interface após confirmação/expiração, sem armazenamento persistente no navegador. Um convite de 24 horas foi preparado para a conta administrativa configurada; **o titular ainda precisa confirmar o autenticador no primeiro acesso**. Nenhuma chave/código foi confirmado pela automação.
+- [x] 85 unitários, 94 integração PostgreSQL 16 e interface sintética computador/celular aprovados. Publicadas somente as imagens do painel e da API de integrações; outros 23 containers preservados, hashes financeiros/itens históricos iguais e cinco portais HTTP 200. Backup prévio `backup-20261114T132727Z-4yq6pf` com checksums conferidos no servidor. Sem migrations; API ganhou apenas permissão adicional para ativar o convite já existente, sem alterar seu segredo. Evidência: `docs/validacao-console-integracoes.json`.
+- [ ] **Envios de webhooks permanecem desativados**, como solicitado. Nenhum consumidor real ou destino criado; autenticação forte e concessões continuam obrigatórias. A ativação do console não conclui a homologação de um consumidor nem R11/R22/R29. Worker local desativado. O estado atual substitui os registros anteriores de console desativado.
+
 ## Carga histórica concluída nas 15 filiais — 14/11/2026
 
 - [x] Consultadas as 1.096 datas de 2023–2025 de cada uma das 15 filiais, na ordem solicitada. Conclusão em 14/11 às 00h29 de São Paulo; 138.543 operações e 3.591 eventos de cancelamento processados. Contagens por filial no banco iguais ao progresso persistido. Quatro filiais sem operações no retorno desse período, sem presumir ausência fora dele.

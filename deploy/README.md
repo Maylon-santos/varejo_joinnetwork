@@ -3,11 +3,23 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Console de integrações no painel — 14/11/2026
+
+Acesso Admin pelo menu **Integrações e API** ou https://aeropostale.joinnetwork.com.br/admin/integracoes/console#manual . `INTEGRATIONS_ADMIN_ENABLED=true`; `INTEGRATIONS_DELIVERIES_ENABLED=false`. O domínio público da API continua bloqueando `/admin/`; a rota administrativa existe somente no domínio do painel e exige operador individual e MFA para consultar dados.
+
+Um convite individual de 24 horas foi criado para a conta administrativa configurada. O titular entra com sua senha, adiciona a chave apresentada ao autenticador e confirma o código na própria interface. Até essa confirmação não há operador ativo ou acesso ao manual. O desafio expira em cinco minutos, fica vinculado à sessão e não serve como autorização de MFA. Não cadastrar o autenticador, copiar chaves ou enviar códigos pelo chat em nome do titular.
+
+Imagens atuais: `aeropostale-varejo-api:console-20261114` e `aeropostale-varejo-integracoes:console-20261114` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
+
+Sem migration. `deploy/integracoes-permissoes.sql` concede `UPDATE(ativo)` além de `UPDATE(ultimo_passo)` no registro administrativo; o LOGIN da API continua sem INSERT/DELETE de operadores ou UPDATE do segredo. A emissão do convite usa `scripts/autorizar-operador.mjs UUID` em processo operacional com as URLs dos owners e a chave existente disponibilizadas de forma privada; cria somente um registro inativo e auditoria. Não cria usuário do painel, não substitui cadastro de operador existente e não ativa consumidores ou entregas. Para matrícula/revogação/recuperação operacional já existente, consultar `docs/integracoes/operacao.md`.
+
+Antes de alterar, guardar `.env.integracoes`, override e vhost, verificar backup dos dois bancos e registrar os containers. Para retorno, restaurar os arquivos privados anteriores, as tags e o vhost, validar `nginx -t`, recriar somente `api`/`integracoes-api` e recarregar o Nginx. Não reativar webhooks durante retorno. A evidência desta publicação está em `docs/validacao-console-integracoes.json`; a confirmação real do autenticador ainda depende do titular.
+
 ## Carga complementar de vendas desde 2023
 
-O serviço `carga-historica`, definido em `deploy/historico.compose.yaml`, processa 2023–2025 por filial na HostGator. O coletor regular permanece ativo cobrindo 2026 até hoje. Não resetar checkpoints nem ativar o worker local. Estado e erros ficam em `artifacts/carga-historica-2023/estado.json`, fora do Git. Rotina iniciada em 13/11/2026, ainda em andamento; consultar [procedimento, sequência, pendências e comandos de retomada](../docs/CARGA_HISTORICA_VENDAS.md). Não incluir este guia operacional na documentação pública.
+O serviço `carga-historica`, definido em `deploy/historico.compose.yaml`, processa 2023–2025 por filial na HostGator. O coletor regular permanece ativo cobrindo 2026 até hoje. Não resetar checkpoints nem ativar o worker local. Estado e erros ficam em `artifacts/carga-historica-2023/estado.json`, fora do Git. Rotina iniciada em 13/11/2026 e concluída nas 15 filiais em 14/11/2026; consultar [procedimento, sequência, pendências e comandos de retomada](../docs/CARGA_HISTORICA_VENDAS.md). Não incluir este guia operacional na documentação pública.
 
-## Manual interno das integrações
+## Histórico: publicação inicial do manual em 13/11/2026
 
 A aba **Manual** do console apresenta o procedimento de cadastro de credencial de máquina e preparação de API/webhooks. O conteúdo está em `backend/src/integracoes/manual.mjs`, entregue somente após autorização do operador e MFA, em `GET /admin/integracoes/manual`. O Nginx público continua bloqueando `/admin/` e o console continua dependente de habilitação operacional privada. Não incluir o manual no manifesto de documentação pública.
 

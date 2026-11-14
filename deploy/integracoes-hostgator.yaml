@@ -2,11 +2,11 @@
 # Confirmar o subnet provisionado antes de reutilizar estes IPs em outra máquina.
 services:
   api:
-    image: aeropostale-varejo-api:integracoes-b8d8448
+    image: aeropostale-varejo-api:console-20261114
   sync-worker:
     image: aeropostale-varejo-sync-worker:integracoes-b8d8448
   integracoes-api:
-    image: aeropostale-varejo-integracoes:manual-20261113
+    image: aeropostale-varejo-integracoes:console-20261114
     networks:
       default:
         ipv4_address: 172.22.254.20

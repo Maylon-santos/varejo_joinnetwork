@@ -6,6 +6,6 @@ COPY --chown=node:node backend/src ./backend/src
 COPY --chown=node:node config ./config
 COPY --chown=node:node database/migrations ./database/migrations
 COPY --chown=node:node frontend/integracoes ./frontend/integracoes
-COPY --chown=node:node scripts/integracoes-api.mjs scripts/integracoes-worker.mjs scripts/integracoes-operador.mjs scripts/migrar.mjs ./scripts/
+COPY --chown=node:node scripts/integracoes-api.mjs scripts/integracoes-worker.mjs scripts/integracoes-operador.mjs scripts/autorizar-operador.mjs scripts/migrar.mjs ./scripts/
 USER node
 CMD ["node", "scripts/integracoes-api.mjs"]

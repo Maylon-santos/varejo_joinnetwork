@@ -5,13 +5,18 @@ import {parametros} from './consultas.mjs';
 import {criarConsultas} from './consultas.mjs';
 import {criarWebhooks} from './webhooks.mjs';
 import {manualIntegracoes} from './manual.mjs';
+import {prepararCadastro,confirmarCadastro} from './cadastro-operador.mjs';
 
 const clienteDTO=c=>({id:c.id,client_id:c.client_id,nome:c.nome,tenant_id:c.tenant_key,ambiente:c.ambiente,finalidade:c.finalidade,estado:c.estado,escopos:c.escopos,filiais:c.filiais,hosts:c.hosts,versao:c.versao,criado_em:c.criado_em,atualizado_em:c.atualizado_em,ultimo_acesso_em:c.ultimo_acesso_em});
 export function criarAdministracao(pool,tenant,cofre,auth,filiais){
  const webhooks=criarWebhooks(pool,cofre,criarConsultas(pool,tenant,cofre,filiais));
  async function auditar(db,user,acao,alvo,motivo,dados={}){await db.query('INSERT INTO integration_admin_audit(id,ator_id,tenant_key,acao,alvo_id,motivo,dados) VALUES($1,$2,$3,$4,$5,$6,$7)',[randomUUID(),user.id,tenant,acao,alvo,motivo,JSON.stringify(dados)]);}
- async function humano(token){
+ async function usuarioAdmin(token){
   const u=await auth.autenticar(token);exigir(u?.tenant_key===tenant&&u.role==='Admin',403,'ADMIN_FORBIDDEN');
+  return u;
+ }
+ async function humano(token){
+  const u=await usuarioAdmin(token);
   const a=(await pool.query('SELECT * FROM integration_admins WHERE usuario_id=$1 AND tenant_key=$2 AND ativo',[u.id,tenant])).rows[0];exigir(a,403,'ADMIN_NOT_ENROLLED');return {u,a};
  }
  return async(req,path,params,body)=>{
@@ -19,12 +24,23 @@ export function criarAdministracao(pool,tenant,cofre,auth,filiais){
   if(sub==='/login'&&req.method==='POST'){
    await transacao(pool,db=>limite(db,'admin-login:'+hash(req.socket.remoteAddress??''),5,5));
    const session=await auth.login(body.email,body.senha);exigir(session,401,'LOGIN_INVALID');
-   try{await humano(session.token);}catch(e){await auth.logout(session.token);throw e;}return {status:200,body:session};
+   try{
+    const u=await usuarioAdmin(session.token);
+    const ativo=(await pool.query('SELECT 1 FROM integration_admins WHERE usuario_id=$1 AND tenant_key=$2 AND ativo',[u.id,tenant])).rowCount;
+    const cadastro=ativo?null:await transacao(pool,db=>prepararCadastro(db,u,tenant,cofre,session.token));
+    return {status:200,body:{...session,...(cadastro?{cadastro}:{})}};
+   }catch(e){await auth.logout(session.token);throw e;}
   }
-  const token=/^Bearer ([a-f0-9]{64})$/.exec(req.headers.authorization??'')?.[1],{u}=await humano(token);
+  if(sub==='/cadastro-confirmar'&&req.method==='POST'){
+   const token=/^Bearer ([a-f0-9]{64})$/.exec(req.headers.authorization??'')?.[1],u=await usuarioAdmin(token);
+   await transacao(pool,db=>limite(db,'admin-mfa:'+u.id,5,5));
+   return {status:200,body:await transacao(pool,db=>confirmarCadastro(db,u,tenant,cofre,token,req.headers['x-integration-enrollment'],body.codigo))};
+  }
   if(sub==='/logout'&&req.method==='POST'){
+   const token=/^Bearer ([a-f0-9]{64})$/.exec(req.headers.authorization??'')?.[1],u=await usuarioAdmin(token);
    await auth.logout(token);await pool.query('DELETE FROM integration_admin_sessions WHERE usuario_id=$1 AND sessao_hash=$2',[u.id,hash(token)]);return {status:200,body:{ok:true}};
   }
+  const token=/^Bearer ([a-f0-9]{64})$/.exec(req.headers.authorization??'')?.[1],{u}=await humano(token);
   if(sub==='/step-up'&&req.method==='POST'){
    await transacao(pool,db=>limite(db,'admin-mfa:'+u.id,5,5));
    return transacao(pool,async db=>{

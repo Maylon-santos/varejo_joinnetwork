@@ -41,6 +41,7 @@ jobs:
       - run: node --test backend/tests/integration/*.test.mjs
       - run: npx playwright install --with-deps chromium
       - run: node scripts/verificar-integracoes-ui.mjs
+      - run: node scripts/verificar-cadastro-integracoes-ui.mjs
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
