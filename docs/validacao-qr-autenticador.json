@@ -1,0 +1,45 @@
+{
+  "alteracao": "QR code no cadastro do autenticador de integrações",
+  "testes": {
+    "unitariosAprovados": 85,
+    "integracaoDirecionadosAprovados": 17,
+    "interface": {
+      "verificadoEm": "2026-11-14T15:05:24.201Z",
+      "ambiente": "dados sintéticos isolados",
+      "menuSomenteAdmin": true,
+      "cadastroComChaveMascarada": true,
+      "qrDecodificadoIgualAoOtpauth": true,
+      "qrRemovidoAposExpiracaoEConfirmacao": true,
+      "semRequisicoesExternas": true,
+      "confirmacaoTotp": true,
+      "manualAbertoPeloLink": true,
+      "chaveRemovidaAposConfirmacao": true,
+      "semTokensNoArmazenamentoDoNavegador": true,
+      "logoutRevogaSessao": true,
+      "computadorCelularSemOverflow": true,
+      "errosJS": []
+    }
+  },
+  "producao": {
+    "publicadoEm": "2026-11-14T15:12:40.292439+00:00",
+    "backup": "backup-20261114T151131Z-I7CbfB",
+    "checksumsBackup": true,
+    "imagem": "aeropostale-varejo-integracoes:qr-20261114",
+    "servicosAtualizados": [
+      "integracoes-api"
+    ],
+    "outrosContainersPreservados": 24,
+    "historicoFinanceiroEItensPreservados": true,
+    "operadoresEAutenticadoresPreservados": true,
+    "envPrivadoPreservado": true,
+    "webhooksDesativados": true,
+    "assetsHTTPSConferidos": true,
+    "bibliotecaLocalDisponivel": true,
+    "manualAindaExigeMFA": true,
+    "administracaoBloqueadaNoDominioPublico": true,
+    "portaisHTTP200": 5,
+    "semMigrations": true
+  },
+  "confirmacaoRealDoAutenticador": "Realizada exclusivamente pelo titular na interface; não executada pela automação",
+  "credencialLooklab": "Ainda não provisionada; depende da autenticação administrativa e do cadastro autorizado"
+}

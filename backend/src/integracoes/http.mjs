@@ -58,6 +58,7 @@ export function criarApiIntegracoes({pool,tenant,cofre,filiais,audience,ambiente
     res.setHeader('Content-Type','text/html; charset=utf-8');res.setHeader('Content-Security-Policy',"default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'");const html=await readFile(new URL('../../../frontend/integracoes/index.html',import.meta.url));bytes=html.length;res.writeHead(200);return res.end(html);
    }
    if(['/admin/integracoes/console.js','/admin/integracoes/console.css'].includes(path)&&req.method==='GET'&&administracao){const ext=path.endsWith('.js')?'js':'css';res.setHeader('Content-Type',ext==='js'?'text/javascript; charset=utf-8':'text/css; charset=utf-8');const asset=await readFile(new URL('../../../frontend/integracoes/console.'+ext,import.meta.url));bytes=asset.length;res.writeHead(200);return res.end(asset);}
+   if(path==='/admin/integracoes/qrcode.mjs'&&req.method==='GET'&&administracao){res.setHeader('Content-Type','text/javascript; charset=utf-8');const asset=await readFile(new URL('../../../node_modules/qrcode-generator/dist/qrcode.mjs',import.meta.url));bytes=asset.length;res.writeHead(200);return res.end(asset);}
    if(path.startsWith('/admin/integracoes')){
     canal='administracao';exigir(administracao,404,'NOT_FOUND');const result=await administracao(req,path,url.searchParams,req.method==='GET'?null:await lerCorpo(req));return enviar(result.status,result.body,result.etag);
    }

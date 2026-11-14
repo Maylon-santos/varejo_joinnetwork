@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 14/11/2026
 
+## QR code para configurar o autenticador — 14/11/2026
+
+- [x] Cadastro inicial do autenticador agora apresenta QR code e instruções para **Google Authenticator → + → Ler QR code**. Geração no próprio navegador com biblioteca local, sem enviar a chave a serviços externos. Entrada manual preservada; QR e chave apagados após confirmação, expiração ou saída.
+- [x] QR decodificado e comparado ao endereço de cadastro com dados sintéticos em computador/celular; expiração e confirmação TOTP verificadas. 85 testes unitários, 17 de integração direcionados e os dois fluxos de interface aprovados, sem requisições externas ou armazenamento persistente de credenciais.
+- [x] Publicada somente `integracoes-api`, imagem `qr-20261114`; outros 24 containers e os demais vhosts preservados, histórico financeiro/itens iguais e cinco portais HTTP 200. Backup `backup-20261114T151131Z-I7CbfB` com checksums conferidos no servidor. Sem migrations, alteração do segredo do autenticador ou ativação de webhooks. Evidência: [validação do QR](docs/validacao-qr-autenticador.json).
+- [ ] A confirmação real do autenticador continua a cargo do titular. O acesso looklab-rgb-dash ainda não foi provisionado; chave pública validada e 11 filiais definidas em preparação privada. A API de terceiros permanece dependente do cadastro autorizado; webhooks seguem desativados.
+
 ## Console e manual integrados ao painel — 14/11/2026
 
 - [x] Acesso **Integrações e API** no menu de Admin, abrindo o console na aba Manual em https://aeropostale.joinnetwork.com.br/admin/integracoes/console#manual . Console habilitado no domínio do painel; administração continua HTTP 404 no domínio público da API. Documentação pública preservada.

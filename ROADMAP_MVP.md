@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## QR code no cadastro do autenticador — 14/11/2026
+
+- [x] QR gerado localmente no navegador, com alternativa de chave manual e instruções de leitura no Google Authenticator. Canvas/chave removidos após confirmação, expiração ou saída; segredo não enviado a serviço externo.
+- [x] Leitura real do QR sintético em computador/celular, expiração e confirmação verificadas; 85 unitários, 17 integração direcionados e interface aprovados. Publicada somente a API de integrações, outros 24 containers preservados, histórico igual e cinco portais HTTP 200. Backup conferido; sem migrations ou alteração do autenticador. [Evidência](docs/validacao-qr-autenticador.json).
+- [ ] Titular deve confirmar o código no console. Credencial looklab-rgb-dash ainda não criada; webhooks permanecem desativados. Esta entrega não conclui a homologação de consumidores ou pendências comerciais.
+
 ## Console de integrações habilitado no painel — 14/11/2026
 
 - [x] Menu Admin **Integrações e API** e link direto para a aba Manual. Primeiro acesso com senha, convite individual emitido por operação e cadastro do autenticador pelo titular; não habilita outros Admins automaticamente. Desafio vinculado à sessão, prazo de cinco minutos, bloqueio de replay e revogação auditada. Segredo não alterável pelo LOGIN da API.

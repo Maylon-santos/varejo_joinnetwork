@@ -6,7 +6,7 @@ services:
   sync-worker:
     image: aeropostale-varejo-sync-worker:integracoes-b8d8448
   integracoes-api:
-    image: aeropostale-varejo-integracoes:console-20261114
+    image: aeropostale-varejo-integracoes:qr-20261114
     networks:
       default:
         ipv4_address: 172.22.254.20
