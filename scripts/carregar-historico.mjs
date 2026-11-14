@@ -35,7 +35,7 @@ try{
    if((await pool.query('SELECT count(*)::int n FROM integration_dirty')).rows[0].n>1000){await esperar(5000);continue;}
    const result=await carregarJanela({estado,maxDias:diasPorJanela,repositorio,salvar,confirmarCobertura,consultarVendas:p=>consultarVendasHistoricas({...base,...p}),consultarCancelamentos:p=>consultarCancelamentos({...base,...p})});
    estado=result.estado;falhas=0;diasPorJanela=1;
-   console.log(JSON.stringify({evento:'historico_janela_concluida',...result.janela,operacoes:result.operacoes,cancelamentos:result.cancelamentos,clientesPendentes:result.clientesPendentes,pagamentosPendentes:result.pagamentosPendentes}));
+   console.log(JSON.stringify({evento:'historico_janela_concluida',...result.janela,operacoes:result.operacoes,cancelamentos:result.cancelamentos,clientesPendentes:result.clientesPendentes,pagamentosPendentes:result.pagamentosPendentes,notasFiscaisPendentes:result.notasFiscaisPendentes}));
    await esperar(500);
   }catch(e){
    const codigo=erroSeguro(e);falhas++;diasPorJanela=1;

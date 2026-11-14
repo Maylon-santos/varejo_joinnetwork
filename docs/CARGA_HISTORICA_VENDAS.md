@@ -22,6 +22,12 @@ Quando a venda só falha por seus lançamentos complementares, a rotina valida n
 
 `pagamentosPendentes` registra as ocorrências da carga. A API externa apresenta pagamentos como pendentes, e o banco mantém as operações identificáveis por sua chave e data para nova consulta posterior. Uma reexecução não apaga parcelas válidas já armazenadas. Preencher a composição dos pagamentos depende de retorno válido da origem; a carga das vendas não comprova essa composição.
 
+## Notas fiscais divergentes
+
+Em 13/11/2026 foi escolhido carregar a venda e deixar a nota pendente quando duplicidades do ERP diferem **exclusivamente** em `nota_fiscal`. A comparação exige igualdade exata dos demais campos normalizados, incluindo data, quantidade, preço/itens, totais, ajuste, frete/cortesia, cancelamento, vendedor, clientes e pagamentos. Outras diferenças continuam bloqueando o dia. A sincronização regular mantém a rejeição original de duplicidades conflitantes.
+
+Nessa situação, grava uma única operação com `complementos.nota_fiscal = null` e preserva as versões em `complementos.notas_fiscais_divergentes`. Documentos previamente armazenados também são preservados nessa coleção, sem eleger uma versão como correta. A reexecução não duplica documentos por diferença de ordem das propriedades JSON. `notasFiscaisPendentes` registra as ocorrências por operação na carga; as versões ficam no banco e não nos logs ou na documentação pública. A API externa indica cobertura fiscal pendente. A eleição de documento ou modelagem de múltiplas notas depende de conferência posterior.
+
 ## Implantação e acompanhamento
 
 Servidor: alias SSH `Hostgator`; diretório `/opt/aeropostale-varejo`. Ler `deploy/README.md` antes de operar. O serviço adicional usa a imagem existente do coletor com os arquivos de execução montados em modo somente leitura. Não reconstruir ou recriar os demais serviços para esta carga.

@@ -1,5 +1,5 @@
 {
-  "verificadoEm": "2026-11-13T22:57:05.128059+00:00",
+  "verificadoEm": "2026-11-14T00:33:46.576123+00:00",
   "ambiente": "HostGator; rotina complementar dedicada; consultas ERP sem escrita na origem",
   "conclusaoIntegral": false,
   "estado": "processando",
@@ -10,17 +10,18 @@
   "coberturaRegularDesde": "2026-01-01",
   "ordemFiliais": "config/piloto.json; uma filial completa antes da próxima; ITUPEVA primeiro",
   "filiaisPlanejadas": 15,
-  "filiaisConcluidas": 0,
+  "filiaisConcluidas": 2,
   "progressoObservado": {
-    "filial": "30098297",
-    "proximoDia": "2024-09-23",
-    "ate": "2024-09-22",
+    "filial": "30098401",
+    "proximoDia": "2024-01-18",
+    "ate": "2024-01-17",
     "estado": "processando",
-    "janelas": 631,
-    "operacoes": 16977,
-    "cancelamentos": 314,
-    "clientesPendentes": 9,
-    "pagamentosPendentes": 3
+    "janelas": 382,
+    "operacoes": 7715,
+    "cancelamentos": 125,
+    "clientesPendentes": 0,
+    "pagamentosPendentes": 2,
+    "notasFiscaisPendentes": 0
   },
   "observacaoContagens": "Progresso e banco consultados enquanto o serviço está ativo; não constituem fechamento nem homologação comercial.",
   "backupPrevio": {
@@ -30,7 +31,7 @@
     "copiaExternaNovaConferidaNestaEtapa": false
   },
   "testes": {
-    "unitarios": 84,
+    "unitarios": 85,
     "integracaoPostgres16": 13,
     "aprovados": true,
     "sequenciaSemPularDatas": true,
@@ -42,7 +43,10 @@
     "parcelasInvalidasNaoArredondadas": true,
     "totaisItensAjusteFreteContinuamObrigatorios": true,
     "reexecucaoPreservaClientesEParcelasValidos": true,
-    "comportamentoRegularPreservado": true
+    "comportamentoRegularPreservado": true,
+    "divergenciaExclusivamenteFiscalFicaPendente": true,
+    "versoesFiscaisPreservadasSemDuplicacao": true,
+    "outrosConflitosContinuamBloqueados": true
   },
   "producao": {
     "ativo": true,
@@ -60,7 +64,7 @@
       "atualizados": 30,
       "menordata": "2026-11-13"
     },
-    "filaProjecoesNaConferencia": 41,
+    "filaProjecoesNaConferencia": 0,
     "https": {
       "https://aeropostale.joinnetwork.com.br": 200,
       "https://ragabesh.joinnetwork.com.br": 200,
@@ -69,7 +73,7 @@
       "https://sublicenciados.joinnetwork.com.br": 200,
       "https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/": 200
     },
-    "discoLivreBytes": 163573395456,
+    "discoLivreBytes": 161973510144,
     "workerLocalDesativado": true,
     "semMigrations": true,
     "nenhumConsumidorOuWebhookAtivado": true
@@ -85,13 +89,24 @@
   "pendencias": [
     "Carga das 15 filiais ainda em execução; acompanhar erros persistentes sem avançar manualmente a posição.",
     "Identidade de clientes e parcelas inválidas permanecem pendentes; consultar banco para o saldo atual.",
-    "Conferência financeira e homologação comercial continuam separadas."
+    "Conferência financeira e homologação comercial continuam separadas.",
+    "Notas fiscais divergentes exigem conferência posterior; versões mantidas internamente, sem escolher documento automaticamente."
   ],
   "sha256Fontes": {
-    "backend/src/carga-historica.mjs": "162e7c410a8a9d74404ca24d30f930323a147211e8cd4a0f796d4c68fc3e95ae",
-    "backend/src/vendas.mjs": "12f83e6552fc8106e9e7062d3a9d18b0b97448e6566e1aad15baac5a91d6a108",
-    "backend/src/repositorio-postgres.mjs": "04d0f81e5dce3fbabcba0cad2d48bbb255b9c9284536e7a762e20f5c81b72737",
-    "scripts/carregar-historico.mjs": "f6fe99f213c99200a5b1c8f0fc73f7b9f6a55994b89c80d47499a6190a5614ae",
+    "backend/src/carga-historica.mjs": "6a14ee1344bc87767e1453c0d78e38ae83ee4e8f46c5948d8e0ff83a37e7c970",
+    "backend/src/vendas.mjs": "b20c9a0984d0b914f428801b97dd16d5d1926d2f97be60d2b865e2ff9e200db7",
+    "backend/src/repositorio-postgres.mjs": "5a383dd55bae27194b22b25c0f925d6bcc0737f6ae2feebaed1caff7bd3a62b4",
+    "scripts/carregar-historico.mjs": "440ac26583802d94f3bc79d69ca12a039ee63669f737729b1e4095f31e05d2a0",
     "deploy/historico.compose.yaml": "f645921c883fde85fb7ea90cbefad142c6be1512a952492789acf53e9bc665fd"
+  },
+  "historicosConcluidos": [
+    "ITUPEVA",
+    "AERO-009"
+  ],
+  "decisaoFiscal": "Escolha expressa: carregar vendas coincidentes e manter notas divergentes pendentes, preservando as versões.",
+  "pendenciasAgregadasNaConferencia": {
+    "clientesHistoricosPendentes": 9,
+    "pagamentosHistoricosAusentesOuPendentes": 8,
+    "notasFiscaisHistoricasPendentes": 45
   }
 }

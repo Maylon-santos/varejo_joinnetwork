@@ -31,7 +31,7 @@ export function normalizarVenda(v,filial,inicio,fim){
   vendedor_nome:vendedor?.nome??null,evento_codigo:v.codigo??null,produtos,clientes:clientesDaVenda(v),complementos:complementosDaVenda(v,diaMillennium),
  };
 }
-export async function consultarVendas({baseUrl,token,filial,inicio,fim,fetchImpl=fetch,onDuplicado=()=>{},normalizador=normalizarVenda}){
+export async function consultarVendas({baseUrl,token,filial,inicio,fim,fetchImpl=fetch,onDuplicado=()=>{},normalizador=normalizarVenda,resolverDuplicado}){
  validarDia(inicio);validarDia(fim);
  if(inicio>fim||!/^\d+$/.test(String(filial))||!token)throw new Error('CONFIGURACAO_INVALIDA');
  const url=new URL(baseUrl);
@@ -47,8 +47,12 @@ export async function consultarVendas({baseUrl,token,filial,inicio,fim,fetchImpl
  for(const v of body.value){
   const op=normalizador(v,filial,inicio,fim);const key=chaveOperacao(op.cod_operacao,op.tipo_operacao,op.filial);
   if(unicas.has(key)){
-   if(JSON.stringify(unicas.get(key))!==JSON.stringify(op))throw new Error('CHAVE_DUPLICADA_CONFLITANTE');
-   onDuplicado({chave:key,dia:op.data_operacao});
+   if(JSON.stringify(unicas.get(key))!==JSON.stringify(op)){
+    if(!resolverDuplicado)throw new Error('CHAVE_DUPLICADA_CONFLITANTE');
+    const resolvida=resolverDuplicado(unicas.get(key),op);
+    if(chaveOperacao(resolvida.cod_operacao,resolvida.tipo_operacao,resolvida.filial)!==key)throw Error('CHAVE_DUPLICADA_CONFLITANTE');
+    unicas.set(key,resolvida);
+   }else onDuplicado({chave:key,dia:op.data_operacao});
   }else unicas.set(key,op);
  }
  return [...unicas.values()];

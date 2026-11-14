@@ -20,7 +20,14 @@ export function normalizarVendaHistorica(v,...escopo){
  if(clientePendente){op.clientes=null;op.clientes_pendencia=clientePendente;}
  return op;
 }
-export function consultarVendasHistoricas(options){return consultarVendas({...options,normalizador:normalizarVendaHistorica});}
+export function resolverDuplicadoFiscal(a,b){
+ const comparavel=o=>({...o,nota_fiscal_pendencia:undefined,complementos:{...o.complementos,nota_fiscal:null,notas_fiscais_divergentes:undefined}});
+ if(JSON.stringify(comparavel(a))!==JSON.stringify(comparavel(b)))throw Error('CHAVE_DUPLICADA_CONFLITANTE');
+ const notas=[...(a.complementos.notas_fiscais_divergentes??[a.complementos.nota_fiscal]),...(b.complementos.notas_fiscais_divergentes??[b.complementos.nota_fiscal])].filter(n=>n!==null);
+ const distintas=[...new Map(notas.map(n=>[JSON.stringify(Object.entries(n).sort(([a],[b])=>a.localeCompare(b))),n])).values()];
+ return {...a,nota_fiscal_pendencia:'NOTA_FISCAL_DIVERGENTE',complementos:{...a.complementos,nota_fiscal:null,notas_fiscais_divergentes:distintas}};
+}
+export function consultarVendasHistoricas(options){return consultarVendas({...options,normalizador:normalizarVendaHistorica,resolverDuplicado:resolverDuplicadoFiscal});}
 
 export function somarDias(dia,n){return new Date(Date.parse(dia+'T00:00:00Z')+n*86400000).toISOString().slice(0,10);}
 export function iniciarCarga(plano){
@@ -42,7 +49,8 @@ export async function carregarJanela({estado,maxDias=7,consultarVendas,consultar
  f.ate=janela.fim;f.proximoDia=somarDias(janela.fim,1);f.janelas++;f.operacoes+=operacoes.length;f.cancelamentos+=eventos.length;f.estado=janela.fim===novo.plano.fim?'concluida':'processando';
  f.clientesPendentes=(f.clientesPendentes??0)+operacoes.filter(o=>o.clientes_pendencia).length;
  f.pagamentosPendentes=(f.pagamentosPendentes??0)+operacoes.filter(o=>o.pagamentos_pendencia).length;
+ f.notasFiscaisPendentes=(f.notasFiscaisPendentes??0)+operacoes.filter(o=>o.nota_fiscal_pendencia).length;
  novo.estado=novo.filiais.every(f=>f.estado==='concluida')?'carga_concluida':'processando';novo.atualizadoEm=new Date().toISOString();delete novo.ultimoErro;
  await salvar(novo);
- return {estado:novo,janela,operacoes:operacoes.length,cancelamentos:eventos.length,clientesPendentes:operacoes.filter(o=>o.clientes_pendencia).length,pagamentosPendentes:operacoes.filter(o=>o.pagamentos_pendencia).length};
+ return {estado:novo,janela,operacoes:operacoes.length,cancelamentos:eventos.length,clientesPendentes:operacoes.filter(o=>o.clientes_pendencia).length,pagamentosPendentes:operacoes.filter(o=>o.pagamentos_pendencia).length,notasFiscaisPendentes:operacoes.filter(o=>o.nota_fiscal_pendencia).length};
 }

@@ -2,9 +2,9 @@
 
 ## Carga histórica por filial desde 2023 — 13/11/2026
 
-- [x] Serviço complementar em produção, com ITUPEVA primeiro e as demais 14 filiais na sequência cadastrada. Carga 2023–2025 somada ao coletor regular de 2026 até hoje; transações diárias, retomada persistida e proteção de datas/identidades/checkpoints. Backup verificado e outros 19 containers preservados. 84 unitários e 13 integração PostgreSQL 16 aprovados.
+- [x] Serviço complementar em produção, com ITUPEVA primeiro e as demais 14 filiais na sequência cadastrada. Carga 2023–2025 somada ao coletor regular de 2026 até hoje; transações diárias, retomada persistida e proteção de datas/identidades/checkpoints. Backup verificado e outros 19 containers preservados. 85 unitários e 13 integração PostgreSQL 16 aprovados.
 - [x] Cadastro de cliente e parcelas inválidos ficam como pendências explícitas na carga histórica; vendas continuam sujeitas às validações de data, identidade, cabeçalho, itens e paginação. Nenhuma regra financeira, cliente fictício ou conciliação forçada. Projeções identificam origem histórica; nenhum consumidor ou webhook ativado.
-- [ ] Carga ainda em andamento em ITUPEVA; as demais filiais aguardam. Validar cobertura integral 2023–dia atual e pendências ao concluir, acompanhando o arquivo privado de progresso. Não conclui homologação dos indicadores, identidade de clientes ou R11/R22/R29. [Operação](docs/CARGA_HISTORICA_VENDAS.md) e `docs/validacao-carga-historica-2023.json`.
+- [ ] ITUPEVA concluiu 2023–2025 (27.979 operações e 627 cancelamentos), com 2026 atualizado pelo coletor regular. AERO-009 também concluiu; AERO-010 em andamento e demais filiais na sequência. Por escolha expressa, duplicidades exclusivamente fiscais ficam com nota pendente e versões preservadas; diferenças comerciais continuam bloqueantes. Validar cobertura integral 2023–dia atual e pendências ao concluir, acompanhando o arquivo privado de progresso. Não conclui homologação dos indicadores, identidade de clientes ou R11/R22/R29. [Operação](docs/CARGA_HISTORICA_VENDAS.md) e `docs/validacao-carga-historica-2023.json`.
 
 ## Manual administrativo das integrações — 13/11/2026
 

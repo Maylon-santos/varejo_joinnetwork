@@ -48,3 +48,18 @@ test('parcelas fora do contrato ficam pendentes sem arredondar ou dispensar vali
  const valido={...v,customers:[],lancamentos:[{valor_inicial:10}]};
  assert.deepEqual(normalizarVendaHistorica(valido,...escopo),normalizarVenda(valido,...escopo));
 });
+test('somente notas fiscais divergentes ficam pendentes e suas versões são preservadas sem liberar conflitos comerciais',async()=>{
+ const v={cod_operacao:1,tipo_operacao:'S',filial:1,data:'/Date(1672542000000)/',qtde:1,valor_final:10,cancelada:false,v_acerto:0,numero_nota:'0001',status:'100',produtos:[{quantidade:1,preco:10}]};
+ const rows=[v,{...v,numero_nota:'0002'},{...v,numero_nota:'0003'}];
+ const args={baseUrl:'https://example.invalid',token:'ficticio',filial:'1',inicio:'2023-01-01',fim:'2023-01-01',fetchImpl:async()=>({ok:true,json:async()=>({'odata.count':rows.length,value:rows})})};
+ await assert.rejects(consultarVendas(args),/CHAVE_DUPLICADA_CONFLITANTE/);
+ const ops=await consultarVendasHistoricas(args);assert.equal(ops.length,1);
+ assert.equal(ops[0].complementos.nota_fiscal,null);assert.equal(ops[0].nota_fiscal_pendencia,'NOTA_FISCAL_DIVERGENTE');
+ assert.deepEqual(ops[0].complementos.notas_fiscais_divergentes.map(n=>n.numero_nota),['0001','0002','0003']);
+ for(const fields of [{valor_final:11},{v_acerto:1},{qtde:2},{cancelada:true},{v_frete:1},{cortesia:1},{vendedor:[{funcionario:1,nome:'Exemplo'}]},{produtos:[{quantidade:1,preco:11}]}]){
+  const value=[v,{...v,numero_nota:'0002',...fields}];
+  await assert.rejects(consultarVendasHistoricas({...args,fetchImpl:async()=>({ok:true,json:async()=>({'odata.count':value.length,value})})}),/CHAVE_DUPLICADA_CONFLITANTE/);
+ }
+ const r=await carregarJanela({estado:iniciarCarga({...plano,fim:plano.inicio}),consultarVendas:async()=>ops,consultarCancelamentos:async()=>[],repositorio:{transacao:async(s,fn)=>fn({salvarHistorico:async()=>{}})},salvar:async()=>{}});
+ assert.equal(r.estado.filiais[0].notasFiscaisPendentes,1);
+});

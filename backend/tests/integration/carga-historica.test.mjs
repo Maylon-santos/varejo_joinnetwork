@@ -27,6 +27,13 @@ test('histórico preserva datas atuais e checkpoints, grava origem e reexecuta s
   await assert.rejects(()=>repo.transacao({tenant:'teste',filial:'1'},tx=>tx.salvarHistorico([], [evento],janela)),/CANCELAMENTO_CONFLITANTE/);
   await assert.rejects(()=>repo.transacao({tenant:'teste',filial:'1'},tx=>tx.salvarHistorico([{...op,cod_operacao:'900001',data_operacao:'2023-01-07'}],[{...evento,cod_operacao:'900001'}],{inicio:'2023-01-01',fim:'2023-01-07'})),/CANCELAMENTO_CONFLITANTE/);
   assert.equal((await a.pool.query('SELECT count(*)::int n FROM operacoes WHERE cod_operacao=900001')).rows[0].n,0);
+  const fiscal={...op,cod_operacao:'900002',clientes_pendencia:undefined,pagamentos_pendencia:undefined,complementos:{nota_fiscal:{numero_nota:'0001',status:'100'}}};
+  await repo.transacao({tenant:'teste',filial:'1'},tx=>tx.salvarHistorico([fiscal],[],janela));
+  const divergente={...fiscal,nota_fiscal_pendencia:'NOTA_FISCAL_DIVERGENTE',complementos:{nota_fiscal:null,notas_fiscais_divergentes:[{numero_nota:'0002'},{numero_nota:'0003'},{status:'100',numero_nota:'0001'}]}};
+  for(let i=0;i<2;i++)await repo.transacao({tenant:'teste',filial:'1'},tx=>tx.salvarHistorico([divergente],[],janela));
+  const docs=(await a.pool.query('SELECT complementos FROM operacoes WHERE cod_operacao=900002')).rows[0].complementos;
+  assert.equal(docs.nota_fiscal,null);assert.deepEqual(docs.notas_fiscais_divergentes.map(n=>n.numero_nota).sort(),['0001','0002','0003']);
+
   assert.equal((await a.pool.query('SELECT row_to_json(o)::text v FROM operacoes o WHERE filial=1 AND cod_operacao=10')).rows[0].v,antes);
   assert.equal((await a.pool.query('SELECT json_agg(c ORDER BY recurso)::text v FROM sync_checkpoints c')).rows[0].v,cps);
  }finally{await a.close();}

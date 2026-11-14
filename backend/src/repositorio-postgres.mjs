@@ -42,9 +42,15 @@ export class RepositorioPostgres {
           const historicas=[];
           for(const op of operacoes){
             let preservar=op;
-            if(op.pagamentos_pendencia){
-              const anterior=(await client.query("SELECT complementos->'lancamentos' pagamentos FROM operacoes WHERE filial=$1 AND cod_operacao=$2 AND tipo_operacao=$3",[filial,op.cod_operacao,op.tipo_operacao])).rows[0]?.pagamentos;
-              if(Array.isArray(anterior))preservar={...op,complementos:{...op.complementos,lancamentos:anterior}};
+            if(op.pagamentos_pendencia||op.nota_fiscal_pendencia){
+              const anterior=(await client.query('SELECT complementos FROM operacoes WHERE filial=$1 AND cod_operacao=$2 AND tipo_operacao=$3',[filial,op.cod_operacao,op.tipo_operacao])).rows[0]?.complementos;
+              const complementos={...op.complementos};
+              if(op.pagamentos_pendencia&&Array.isArray(anterior?.lancamentos))complementos.lancamentos=anterior.lancamentos;
+              if(op.nota_fiscal_pendencia){
+                const notas=[...(complementos.notas_fiscais_divergentes??[]),...(anterior?.notas_fiscais_divergentes??[]),...(anterior?.nota_fiscal?[anterior.nota_fiscal]:[])];
+                complementos.notas_fiscais_divergentes=[...new Map(notas.map(n=>[JSON.stringify(Object.entries(n).sort(([a],[b])=>a.localeCompare(b))),n])).values()];
+              }
+              preservar={...op,complementos};
             }
             historicas.push(preservar);
           }
