@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 14/11/2026
 
+## Primeiro acesso de integração validado — 14/11/2026
+
+- [x] Titular confirmou o autenticador diretamente no console. Integração cadastrada e ativada pela interface com concessão explícita de `filiais:ler` para 11 filiais e chave RSA de teste válida até 21/11/2026 às 23h59 de São Paulo. Identificadores, chave e inventário detalhado permanecem na preparação privada, fora do Git.
+- [x] Teste pelo HTTPS público com `curl`: OAuth HTTP 200, token de 900 segundos e consulta HTTP 200 contendo exatamente as 11 filiais concedidas, sem página adicional. Filial não concedida e vendas sem escopo retornaram HTTP 403. Prova JWT e token mantidos somente em memória/stdin, sem gravação ou exposição em argumentos do curl.
+- [x] Consulta operacional somente leitura confirmou cliente ativo, escopo único, 11 filiais, chave ativa, auditoria e ausência de inscrições de webhook. Envios continuam desativados; worker local desativado. Sem deploy, migration ou alteração de dados comerciais. [Evidência agregada](docs/validacao-acesso-integracao-filiais.json).
+- [ ] Demais recursos dependem de escopos expressamente definidos. Credencial de teste expira e não substitui a homologação completa do consumidor, renovação de chave ou R11/R22/R29/SaaS. Este estado substitui as pendências anteriores de matrícula do titular e primeiro cadastro.
+
 ## QR code para configurar o autenticador — 14/11/2026
 
 - [x] Cadastro inicial do autenticador agora apresenta QR code e instruções para **Google Authenticator → + → Ler QR code**. Geração no próprio navegador com biblioteca local, sem enviar a chave a serviços externos. Entrada manual preservada; QR e chave apagados após confirmação, expiração ou saída.

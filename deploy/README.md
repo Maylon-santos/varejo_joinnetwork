@@ -3,6 +3,12 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Estado do primeiro consumidor — 14/11/2026
+
+Titular concluiu o cadastro do autenticador e validou MFA diretamente na interface. Primeiro consumidor ativado pelo console, restrito a `filiais:ler` e 11 filiais. Chave de teste válida até 21/11/2026 às 23h59 de São Paulo. Identificadores e arquivos individuais ficam na preparação privada ignorada pelo Git. Não foi necessário publicar imagens, executar migrations ou alterar dados comerciais.
+
+Teste com `curl` confirmou OAuth HTTP 200/token de 900 segundos, lista HTTP 200 com exatamente as 11 filiais e HTTP 403 para filial fora da concessão e vendas sem escopo. Conferência somente leitura confirmou concessão/chave ativas, auditoria e zero inscrições desse consumidor; envios de webhooks continuam desativados. [Evidência agregada](../docs/validacao-acesso-integracao-filiais.json). A matrícula e o primeiro cadastro substituem as respectivas pendências históricas abaixo; homologação de outros recursos e renovação da chave permanecem separadas.
+
 ## Console de integrações no painel — 14/11/2026
 
 Acesso Admin pelo menu **Integrações e API** ou https://aeropostale.joinnetwork.com.br/admin/integracoes/console#manual . `INTEGRATIONS_ADMIN_ENABLED=true`; `INTEGRATIONS_DELIVERIES_ENABLED=false`. O domínio público da API continua bloqueando `/admin/`; a rota administrativa existe somente no domínio do painel e exige operador individual e MFA para consultar dados.

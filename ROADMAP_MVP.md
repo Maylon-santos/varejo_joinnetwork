@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## Acesso de leitura às filiais validado — 14/11/2026
+
+- [x] Autenticador confirmado pelo titular e primeiro consumidor ativado pelo console, com somente `filiais:ler` para 11 filiais explícitas. Chave RSA de teste com validade até 21/11/2026 às 23h59 de São Paulo; metadados individuais e material de autenticação fora do Git.
+- [x] `curl` no HTTPS público validou OAuth HTTP 200/token de 15 minutos e lista HTTP 200 com exatamente as 11 filiais. Filial sem concessão e vendas sem escopo bloqueadas com HTTP 403. Banco conferido somente em leitura: concessão/chave ativas, auditoria e zero inscrições desse consumidor. Webhooks desativados; worker local desativado. [Evidência](docs/validacao-acesso-integracao-filiais.json).
+- [ ] Homologação limitada à autenticação e leitura de filiais. Recursos adicionais, renovação da chave de teste e aceite completo do consumidor permanecem pendentes; R11/R22/R29/SaaS não concluídos. Este registro substitui as pendências anteriores de MFA e primeiro cadastro.
+
 ## QR code no cadastro do autenticador — 14/11/2026
 
 - [x] QR gerado localmente no navegador, com alternativa de chave manual e instruções de leitura no Google Authenticator. Canvas/chave removidos após confirmação, expiração ou saída; segredo não enviado a serviço externo.

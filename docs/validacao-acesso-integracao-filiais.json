@@ -1,0 +1,32 @@
+{
+  "verificado_em": "2026-11-14T15:35:41.343685+00:00",
+  "ambiente": "producao",
+  "transporte": "curl",
+  "autenticador_confirmado_pelo_titular": true,
+  "provisionamento_pelo_console_com_mfa": true,
+  "escopos": ["filiais:ler"],
+  "filiais_autorizadas": 11,
+  "chave_teste_valida_ate": "2026-11-22T02:59:00+00:00",
+  "validacoes": {
+    "oauth_http": 200,
+    "token_expira_em_segundos": 900,
+    "lista_filiais_http": 200,
+    "lista_igual_a_concessao": true,
+    "paginacao_tem_mais": false,
+    "filial_nao_concedida_http": 403,
+    "vendas_sem_escopo_http": 403,
+    "cliente_ativo": true,
+    "chave_ativa": true,
+    "auditoria_confirmada": true,
+    "inscricoes_webhook_consumidor": 0,
+    "envios_webhook_habilitados": false,
+    "worker_local_habilitado": false
+  },
+  "alteracao_codigo_ou_deploy": false,
+  "material_autenticacao_no_git_ou_resultado": false,
+  "limitacoes": [
+    "Validação limitada a autenticação, leitura de filiais e bloqueios de permissão.",
+    "Demais recursos dependem de concessão explícita e homologação.",
+    "Chave de teste expira; renovação permanece pendente."
+  ]
+}
