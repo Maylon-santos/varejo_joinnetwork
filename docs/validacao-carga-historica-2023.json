@@ -1,8 +1,8 @@
 {
-  "verificadoEm": "2026-11-14T00:33:46.576123+00:00",
+  "verificadoEm": "2026-11-14T12:32:15.866839+00:00",
   "ambiente": "HostGator; rotina complementar dedicada; consultas ERP sem escrita na origem",
-  "conclusaoIntegral": false,
-  "estado": "processando",
+  "conclusaoIntegral": true,
+  "estado": "concluido",
   "periodoComplementar": {
     "inicio": "2023-01-01",
     "fim": "2025-12-31"
@@ -10,20 +10,9 @@
   "coberturaRegularDesde": "2026-01-01",
   "ordemFiliais": "config/piloto.json; uma filial completa antes da próxima; ITUPEVA primeiro",
   "filiaisPlanejadas": 15,
-  "filiaisConcluidas": 2,
-  "progressoObservado": {
-    "filial": "30098401",
-    "proximoDia": "2024-01-18",
-    "ate": "2024-01-17",
-    "estado": "processando",
-    "janelas": 382,
-    "operacoes": 7715,
-    "cancelamentos": 125,
-    "clientesPendentes": 0,
-    "pagamentosPendentes": 2,
-    "notasFiscaisPendentes": 0
-  },
-  "observacaoContagens": "Progresso e banco consultados enquanto o serviço está ativo; não constituem fechamento nem homologação comercial.",
+  "filiaisConcluidas": 15,
+  "progressoObservado": null,
+  "observacaoContagens": "Contagens históricas por filial confrontadas com o progresso persistido; todas coincidem. Quatro filiais retornaram zero operações no período. Não constitui homologação comercial.",
   "backupPrevio": {
     "nome": "backup-20261113T213043Z-NEJ5qh",
     "completo": true,
@@ -49,7 +38,7 @@
     "outrosConflitosContinuamBloqueados": true
   },
   "producao": {
-    "ativo": true,
+    "ativo": false,
     "reinicios": 0,
     "containersAnterioresPreservados": 19,
     "saude": {
@@ -62,7 +51,7 @@
     "checkpointsRegulares": {
       "total": 30,
       "atualizados": 30,
-      "menordata": "2026-11-13"
+      "menordata": "2026-11-14"
     },
     "filaProjecoesNaConferencia": 0,
     "https": {
@@ -73,10 +62,13 @@
       "https://sublicenciados.joinnetwork.com.br": 200,
       "https://api-varejo.aeropostale.joinnetwork.com.br/docs/integracoes/": 200
     },
-    "discoLivreBytes": 161973510144,
+    "discoLivreBytes": 160558600192,
     "workerLocalDesativado": true,
     "semMigrations": true,
-    "nenhumConsumidorOuWebhookAtivado": true
+    "nenhumConsumidorOuWebhookAtivado": true,
+    "saida": 0,
+    "fontesPublicadasConferidas": true,
+    "contagensHistoricasPorFilialConferidas": true
   },
   "retomada": "artifacts/carga-historica-2023/estado.json; privado e fora do Git",
   "limites": {
@@ -87,10 +79,9 @@
     "retentativaMaximaSegundos": 300
   },
   "pendencias": [
-    "Carga das 15 filiais ainda em execução; acompanhar erros persistentes sem avançar manualmente a posição.",
-    "Identidade de clientes e parcelas inválidas permanecem pendentes; consultar banco para o saldo atual.",
-    "Conferência financeira e homologação comercial continuam separadas.",
-    "Notas fiscais divergentes exigem conferência posterior; versões mantidas internamente, sem escolher documento automaticamente."
+    "19 cadastros de cliente e 14 composições de parcelas pendentes no histórico.",
+    "50 notas fiscais divergentes pendentes, com versões preservadas.",
+    "Homologação comercial, conciliação e pendências R11/R22/R29 permanecem separadas."
   ],
   "sha256Fontes": {
     "backend/src/carga-historica.mjs": "6a14ee1344bc87767e1453c0d78e38ae83ee4e8f46c5948d8e0ff83a37e7c970",
@@ -100,13 +91,219 @@
     "deploy/historico.compose.yaml": "f645921c883fde85fb7ea90cbefad142c6be1512a952492789acf53e9bc665fd"
   },
   "historicosConcluidos": [
-    "ITUPEVA",
-    "AERO-009"
+    {
+      "filial": "30098297",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 27979,
+      "cancelamentos": 627,
+      "clientesPendentes": 9,
+      "pagamentosPendentes": 4
+    },
+    {
+      "filial": "30098400",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 14753,
+      "cancelamentos": 228,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 2,
+      "notasFiscaisPendentes": 45
+    },
+    {
+      "filial": "30098401",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 22460,
+      "cancelamentos": 728,
+      "clientesPendentes": 7,
+      "pagamentosPendentes": 4,
+      "notasFiscaisPendentes": 1
+    },
+    {
+      "filial": "30098409",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 17940,
+      "cancelamentos": 611,
+      "clientesPendentes": 2,
+      "pagamentosPendentes": 0,
+      "notasFiscaisPendentes": 0
+    },
+    {
+      "filial": "30098495",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 19439,
+      "cancelamentos": 493,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 2,
+      "notasFiscaisPendentes": 2
+    },
+    {
+      "filial": "30098696",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 16725,
+      "cancelamentos": 313,
+      "clientesPendentes": 1,
+      "pagamentosPendentes": 1,
+      "notasFiscaisPendentes": 0
+    },
+    {
+      "filial": "30098697",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 3132,
+      "cancelamentos": 90,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 0,
+      "notasFiscaisPendentes": 0
+    },
+    {
+      "filial": "30098704",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 118,
+      "cancelamentos": 16,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 0,
+      "notasFiscaisPendentes": 0
+    },
+    {
+      "filial": "30098702",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 8374,
+      "cancelamentos": 280,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 1,
+      "notasFiscaisPendentes": 0
+    },
+    {
+      "filial": "30098708",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 6501,
+      "cancelamentos": 171,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 0,
+      "notasFiscaisPendentes": 2
+    },
+    {
+      "filial": "30098795",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 1122,
+      "cancelamentos": 18,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 0,
+      "notasFiscaisPendentes": 0
+    },
+    {
+      "filial": "30098802",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 0,
+      "cancelamentos": 0,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 0,
+      "notasFiscaisPendentes": 0
+    },
+    {
+      "filial": "30098797",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 0,
+      "cancelamentos": 1,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 0,
+      "notasFiscaisPendentes": 0
+    },
+    {
+      "filial": "30098699",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 0,
+      "cancelamentos": 15,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 0,
+      "notasFiscaisPendentes": 0
+    },
+    {
+      "filial": "30098803",
+      "proximoDia": "2026-01-01",
+      "ate": "2025-12-31",
+      "estado": "concluida",
+      "janelas": 1096,
+      "operacoes": 0,
+      "cancelamentos": 0,
+      "clientesPendentes": 0,
+      "pagamentosPendentes": 0,
+      "notasFiscaisPendentes": 0
+    }
   ],
   "decisaoFiscal": "Escolha expressa: carregar vendas coincidentes e manter notas divergentes pendentes, preservando as versões.",
   "pendenciasAgregadasNaConferencia": {
-    "clientesHistoricosPendentes": 9,
-    "pagamentosHistoricosAusentesOuPendentes": 8,
-    "notasFiscaisHistoricasPendentes": 45
-  }
+    "clientesHistoricosPendentes": 19,
+    "pagamentosHistoricosAusentesOuPendentes": 14,
+    "notasFiscaisHistoricasPendentes": 50
+  },
+  "conferenciaAnteriorEm": "2026-11-14T00:33:46.576123+00:00",
+  "concluidoEm": "2026-11-14T03:29:47.529Z",
+  "totaisHistorico": {
+    "operacoes": 138543,
+    "eventosCancelamentosProcessados": 3591,
+    "janelasConsultadas": 16440
+  },
+  "operacoesPorAno": [
+    {
+      "ano": 2023,
+      "operacoes": 43057,
+      "saidas": 40970
+    },
+    {
+      "ano": 2024,
+      "operacoes": 48359,
+      "saidas": 46293
+    },
+    {
+      "ano": 2025,
+      "operacoes": 47127,
+      "saidas": 45095
+    },
+    {
+      "ano": 2026,
+      "operacoes": 31386,
+      "saidas": 29967
+    }
+  ]
 }

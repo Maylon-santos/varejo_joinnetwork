@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## Histórico das 15 filiais concluído — 14/11/2026
+
+- [x] Carga 2023–2025 concluída em todas as 15 filiais, com 138.543 operações e 3.591 eventos de cancelamento. Contagens no banco conferidas por filial; 16.440 janelas diárias concluídas. Sincronização regular de 2026 atualizada até 14/11 nos 30 checkpoints e fila da API externa vazia.
+- [x] Serviço complementar encerrado normalmente, sem reinícios. API/banco saudáveis, seis endereços HTTPS HTTP 200, outros 19 containers preservados e worker local desativado. Evidência final: `docs/validacao-carga-historica-2023.json`.
+- [ ] Conferir 19 cadastros de cliente, 14 composições de parcelas e 50 notas fiscais pendentes no histórico. Homologação financeira, R11/R22/R29 e consumidores reais seguem separados. A conclusão da carga substitui os progressos parciais abaixo.
+
 ## Carga histórica por filial desde 2023 — 13/11/2026
 
 - [x] Serviço complementar em produção, com ITUPEVA primeiro e as demais 14 filiais na sequência cadastrada. Carga 2023–2025 somada ao coletor regular de 2026 até hoje; transações diárias, retomada persistida e proteção de datas/identidades/checkpoints. Backup verificado e outros 19 containers preservados. 85 unitários e 13 integração PostgreSQL 16 aprovados.

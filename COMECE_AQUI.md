@@ -1,4 +1,12 @@
-# Comece aqui — estado atual em 13/11/2026
+# Comece aqui — estado atual em 14/11/2026
+
+## Carga histórica concluída nas 15 filiais — 14/11/2026
+
+- [x] Consultadas as 1.096 datas de 2023–2025 de cada uma das 15 filiais, na ordem solicitada. Conclusão em 14/11 às 00h29 de São Paulo; 138.543 operações e 3.591 eventos de cancelamento processados. Contagens por filial no banco iguais ao progresso persistido. Quatro filiais sem operações no retorno desse período, sem presumir ausência fora dele.
+- [x] Conferência às 09h32 de São Paulo: os 30 checkpoints regulares de vendas/cancelamentos alcançaram 14/11/2026, fila de projeções vazia, API/banco saudáveis e seis endereços HTTPS com HTTP 200. O serviço complementar terminou com saída zero e permanece parado; coletor regular ativo, local desativado, outros 19 containers preservados.
+- [ ] Permanecem 19 cadastros de cliente, 14 composições de parcelas e 50 notas fiscais divergentes pendentes, sem impedir a carga das vendas. Versões fiscais preservadas, sem escolha automática; nenhuma conciliação forçada. Homologações R11/R22/R29 e demais pendências comerciais continuam separadas. Console/webhooks não ativados.
+
+Evidência final: [validação da carga histórica](docs/validacao-carga-historica-2023.json). Este resultado substitui o progresso parcial registrado em 13/11 abaixo.
 
 ## Histórico desde 2023 em carga sequencial — 13/11/2026
 
