@@ -1,5 +1,10 @@
 # Comece aqui — estado atual em 16/11/2026
 
+## Nova chave de integração conferida — 16/11/2026
+
+- [x] Titular informou o cadastro de nova chave pelo console; consulta somente leitura confirmou o client_id esperado, chave pública RSA 3072 ativa e igualdade com o PEM recebido. Cadastro ativo em produção, 11 filiais e somente `filiais:ler` preservados. Chaves, identificadores e validade individual mantidos em preparação privada. [Evidência](docs/validacao-nova-chave-integracao.json).
+- [ ] A chave anterior continua ativa; substituição ainda não concluída. Titular deve revogá-la pelo console. O teste assinado com a chave privada cabe ao integrador; validação de cadastro não comprova autenticação. Sem alterações de aplicação, concessões ou webhooks pela automação.
+
 ## Crescimento: textos removidos e pendências apuradas — 16/11/2026
 
 - [x] Removidos os dois textos abaixo do comparativo nos modos ano anterior/todos os anos. Cálculos e dados preservados. Interface isolada e navegador em produção computador/celular aprovados; publicação somente de `api`, imagem `crescimento-limpo-20261116`, outros 24 containers e Nginx preservados.

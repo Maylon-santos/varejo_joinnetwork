@@ -1,0 +1,19 @@
+{
+  "verificadoEm": "2026-11-16T20:38:07.152Z",
+  "somenteLeituraPelaAutomacao": true,
+  "clientIdInformadoCorresponde": true,
+  "novaChaveRSA3072Valida": true,
+  "novaChaveCorrespondeAoPEM": true,
+  "novaChaveAtiva": true,
+  "filiais": 11,
+  "escopos": [
+    "filiais:ler"
+  ],
+  "filiaisPreservadas": true,
+  "escoposPreservados": true,
+  "chaveAnteriorAindaAtiva": true,
+  "testeAssinadoPeloIntegrador": false,
+  "substituicaoConcluida": false,
+  "pendencia": "Titular deve revogar a chave anterior pelo console e integrador deve testar a assinatura com a nova chave.",
+  "metadadosIndividuais": "Preparação privada fora do Git; PEM e identificadores não incluídos nesta evidência."
+}
