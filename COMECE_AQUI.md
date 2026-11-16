@@ -1,4 +1,11 @@
-# Comece aqui — estado atual em 14/11/2026
+# Comece aqui — estado atual em 16/11/2026
+
+## Crescimento anual das filiais — 16/11/2026
+
+- [x] Menu **Crescimento anual** com ano de referência, ano anterior, filtro de filial e indicador (valor, vendas, peças e ticket), cartões, gráfico e tabelas por filial/mês. Padrão de ano atual acumulado com mesmo corte de data nos dois anos; anos encerrados permitem comparação completa. Base anterior zero/negativa permanece sem percentual, com diferença absoluta e atualização explícitas.
+- [x] Mesmas regras de vendas não canceladas e permissões do consolidado; Diretoria/Supervisão limitadas aos vínculos. Ticket total recalculado pelas somas, centavos em BigInt, transação somente leitura. Conferência de cobertura e pendências preservada; não subtrai entradas como devoluções sem homologação.
+- [x] 89 unitários, 27 integração em PostgreSQL isolado e interfaces sintéticas aprovados. Publicado somente `api`, imagem `crescimento-20261116`; outros 24 containers, Nginx, integrações/autenticadores e histórico financeiro/itens preservados. Backup `backup-20261116T143826Z-Q1gyqu` conferido no servidor. Sem migrations; remoto ativo, local e webhooks desativados.
+- [x] HTTPS e navegador público aprovados, computador/celular sem transbordamento. Totais das 15 filiais e somas mensais iguais ao consolidado nos comparativos de 2024, 2025 e 2026. [Uso e regras](docs/CRESCIMENTO_ANUAL.md), [publicação](docs/validacao-crescimento-anual.json). R11/R22/R29/SaaS continuam separados.
 
 ## Primeiro acesso de integração validado — 14/11/2026
 

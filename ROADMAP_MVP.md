@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## R32 — Crescimento anual por filial publicado — 16/11/2026
+
+- [x] Dashboard **Crescimento anual** para comparar cada filial e o total selecionado com o ano anterior. Ano/filial/indicador, cartões, gráfico e detalhes mensais; acumulado equivalente e anos completos encerrados. Sem percentual quando a base anterior é zero/negativa; dados ausentes e atualização apresentados explicitamente.
+- [x] Mesma elegibilidade e permissão do consolidado, vínculos por filial e tenant; precisão em centavos, ticket pelas somas e consultas somente leitura. 89 unitários, 27 integração PostgreSQL e interfaces sintéticas aprovados.
+- [x] Publicada somente a API do painel na HostGator, outros 24 containers/Nginx/integrações preservados, backup verificado no servidor, sem migrations. Comparativos de 2024/2025/2026 conferidos nas 15 filiais contra o consolidado; navegador público e celular aprovados. Remoto ativo, local desativado e webhooks desativados. [Uso](docs/CRESCIMENTO_ANUAL.md) e [evidência](docs/validacao-crescimento-anual.json). Não conclui homologações R11/R22/R29/SaaS.
+
 ## Acesso de leitura às filiais validado — 14/11/2026
 
 - [x] Autenticador confirmado pelo titular e primeiro consumidor ativado pelo console, com somente `filiais:ler` para 11 filiais explícitas. Chave RSA de teste com validade até 21/11/2026 às 23h59 de São Paulo; metadados individuais e material de autenticação fora do Git.
@@ -145,7 +151,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-20 de 31 tarefas deste quadro concluídas. Atualização: 2026-11-11. A contagem não representa prazo ou esforço.
+21 de 32 tarefas deste quadro concluídas. Atualização: 2026-11-16. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
@@ -169,6 +175,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 | — | — | — | R27 — Dashboard de filiais e metas mensais |
 | — | — | — | R28 — Carga inicial de AERO-BAZAR |
 | — | — | — | R30 — Exportações CSV e envio diário |
+| — | — | — | R32 — Crescimento anual por filial |
 
 ### Pendências e dependências
 

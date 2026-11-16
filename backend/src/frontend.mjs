@@ -6,6 +6,7 @@ export async function criarFrontend(root=new URL('../../frontend/',import.meta.u
   ['/','index.html','text/html; charset=utf-8'],
   ['/assets/styles.css','assets/styles.css','text/css; charset=utf-8'],
   ['/assets/app.js','assets/app.js','text/javascript; charset=utf-8'],
+  ['/assets/crescimento.js','assets/crescimento.js','text/javascript; charset=utf-8'],
   ['/assets/favicon.svg','assets/favicon.svg','image/svg+xml'],
  ])files.set(path,{body:await readFile(new URL(file,root)),type});
  return async(req,res,path)=>{

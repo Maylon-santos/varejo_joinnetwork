@@ -3,6 +3,14 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Dashboard de crescimento anual — 16/11/2026
+
+Imagem atual do painel: `aeropostale-varejo-api:crescimento-20261116`. Publicada somente `api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait api`; sem migration ou Nginx novo. API de integrações continua `qr-20261114`, workers e os outros 24 containers preservados. Permissão existente `consolidado:ler`, com vínculos explícitos de Diretoria/Supervisão; nenhuma concessão adicional à API de terceiros.
+
+Backup prévio `backup-20261116T143826Z-Q1gyqu` com COMPLETE e checksums dos dois bancos conferidos no servidor. Fontes/override anteriores e relatório privado de publicação em `/opt/aeropostale-varejo/artifacts/crescimento-anual-20261116T143824Z`. Para retorno, restaurar as fontes e o override dessa pasta e recriar exclusivamente `api`, preservando imagens, credenciais, workers e webhooks desativados. Não requer alteração de banco.
+
+Cálculos conferidos nas 15 filiais com o consolidado para 2024/2025 completos e 2026 acumulado; interface HTTPS verificada em computador/celular. Histórico financeiro/itens e credenciais/autenticadores preservados por hash. [Regras e uso](../docs/CRESCIMENTO_ANUAL.md) e [evidência](../docs/validacao-crescimento-anual.json).
+
 ## Estado do primeiro consumidor — 14/11/2026
 
 Titular concluiu o cadastro do autenticador e validou MFA diretamente na interface. Primeiro consumidor ativado pelo console, restrito a `filiais:ler` e 11 filiais. Chave de teste válida até 21/11/2026 às 23h59 de São Paulo. Identificadores e arquivos individuais ficam na preparação privada ignorada pelo Git. Não foi necessário publicar imagens, executar migrations ou alterar dados comerciais.
@@ -15,7 +23,7 @@ Acesso Admin pelo menu **Integrações e API** ou https://aeropostale.joinnetwor
 
 Um convite individual de 24 horas foi criado para a conta administrativa configurada. O titular entra com sua senha, abre o Google Authenticator em **+ → Ler QR code**, escaneia o código mostrado no console e confirma os seis dígitos na própria interface. A inclusão manual da chave permanece disponível como alternativa. O QR é gerado localmente no navegador e apagado após confirmação, expiração ou saída; não usa serviço externo de imagens. Até essa confirmação não há operador ativo ou acesso ao manual. O desafio expira em cinco minutos, fica vinculado à sessão e não serve como autorização de MFA. Não cadastrar o autenticador, copiar chaves ou enviar códigos pelo chat em nome do titular.
 
-Imagens atuais: `aeropostale-varejo-api:console-20261114` e `aeropostale-varejo-integracoes:qr-20261114` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
+Imagens atuais: `aeropostale-varejo-api:crescimento-20261116` e `aeropostale-varejo-integracoes:qr-20261114` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
 
 Sem migration. `deploy/integracoes-permissoes.sql` concede `UPDATE(ativo)` além de `UPDATE(ultimo_passo)` no registro administrativo; o LOGIN da API continua sem INSERT/DELETE de operadores ou UPDATE do segredo. A emissão do convite usa `scripts/autorizar-operador.mjs UUID` em processo operacional com as URLs dos owners e a chave existente disponibilizadas de forma privada; cria somente um registro inativo e auditoria. Não cria usuário do painel, não substitui cadastro de operador existente e não ativa consumidores ou entregas. Para matrícula/revogação/recuperação operacional já existente, consultar `docs/integracoes/operacao.md`.
 

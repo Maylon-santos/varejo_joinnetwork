@@ -1,6 +1,7 @@
 import {ErroApi, elegivel} from './painel.mjs';
 import {validarDia} from './sincronizar-cancelamentos.mjs';
 import {centavos} from './reconciliar-venda.mjs';
+import {consultarCrescimento,hojeSaoPaulo} from './crescimento.mjs';
 export const cargosConsolidado=['Admin','Diretoria','Supervisao'];
 const metaCampos='filial::text,competencia::text,valor_centavos::text,versao,atualizado_em';
 export function periodoConsolidado(inicio,fim){
@@ -14,7 +15,7 @@ export function periodoMeta(mes){
  return {inicio,fim:d.toISOString().slice(0,10)};
 }
 const percentual=(valor,total)=>{if(BigInt(total)<=0n)return null;const n=BigInt(valor)*10000n/BigInt(total),a=n<0n?-n:n;return `${n<0n?'-':''}${a/100n}.${String(a%100n).padStart(2,'0')}`;};
-export function criarConsolidado(pool,tenant,autorizadas){
+export function criarConsolidado(pool,tenant,autorizadas,{hoje=hojeSaoPaulo}={}){
  function escopo(user,recurso='consolidado:ler'){
   if(user?.tenant_key!==tenant||!cargosConsolidado.includes(user?.role)||user.somente_proprias_vendas||!user.permissoes?.includes(recurso))throw new ErroApi(403,'RECURSO_NAO_AUTORIZADO');
   return user.role==='Admin'?[...autorizadas]:autorizadas.filter(f=>user.vinculos?.some(v=>String(v.filial)===f));
@@ -44,6 +45,7 @@ export function criarConsolidado(pool,tenant,autorizadas){
    regra:'Vendas S não canceladas, com valores e peças do cabeçalho ERP. Inclui pendências sinalizadas. Devoluções e faturamento bruto/líquido aguardam validação; entradas não são subtraídas.'};
  }
  return {
+  crescimento:async(user,ano,modo='acumulado')=>{const filiais=escopo(user),dia=hoje();return transacao(db=>consultarCrescimento(db,filiais,ano??dia.slice(0,4),modo,dia));},
   consultar:async(user,inicio,fim)=>{const filiais=escopo(user);periodoConsolidado(inicio,fim);return transacao(db=>resumo(db,filiais,inicio,fim));},
   metas:async(user,mes)=>{
    const filiais=escopo(user),{inicio,fim}=periodoMeta(mes);

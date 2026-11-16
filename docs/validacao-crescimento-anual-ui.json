@@ -1,0 +1,16 @@
+{
+  "verificadoEm": "2026-11-16T14:25:32.222Z",
+  "ambiente": "PostgreSQL isolado com dados sintéticos",
+  "desktopMobile": true,
+  "semOverflow": true,
+  "comparacaoEquivalente": true,
+  "anosCompletos": true,
+  "mesesFuturosOcultos": true,
+  "filtrosFilialIndicador": true,
+  "semBasePercentual": true,
+  "detalhePorFilial": true,
+  "permissoesPorFilial": true,
+  "erroRetentativa": true,
+  "limpezaLogout": true,
+  "errors": []
+}

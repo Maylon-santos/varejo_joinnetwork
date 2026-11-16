@@ -1,0 +1,29 @@
+import {chromium} from 'playwright';import assert from 'node:assert/strict';import {mkdir,writeFile} from 'node:fs/promises';
+import {ambienteFila} from '../backend/tests/fixtures/fila.mjs';import {dadosCrescimento} from '../backend/tests/fixtures/crescimento.mjs';
+let e,browser;const out='artifacts/crescimento-anual';await mkdir(out,{recursive:true});
+try{
+ e=await ambienteFila({hoje:()=> '2026-11-16'});await dadosCrescimento(e);
+ browser=await chromium.launch({channel:'chrome',headless:true});const p=await browser.newPage({viewport:{width:1440,height:1050}}),errors=[];p.on('pageerror',()=>errors.push('ERRO_JS'));
+ await p.clock.install({time:new Date('2026-11-16T15:00:00Z')});
+ const login=async(page,email)=>{await page.goto(e.base);await page.fill('#email',email+'@fila.local');await page.fill('#password',e.senha);await page.click('#login-submit');await page.locator('#app-view').waitFor({state:'visible'});};
+ await login(p,'admin');await p.click('[data-page="growth"]');await p.locator('#growth-body tr').first().waitFor();
+ assert.equal(await p.locator('#growth-body tr').count(),10);assert.match(await p.locator('#growth-period').textContent(),/16\/11\/2026.*16\/11\/2025/);assert.match(await p.locator('#growth-metrics').textContent(),/20,00%/);assert.equal(await p.locator('#growth-months tr').count(),11);assert.equal(await p.locator('#filters').isVisible(),false);assert.equal(await p.locator('#overview-panel').isVisible(),false);
+ await p.screenshot({path:out+'/desktop.png',fullPage:true});
+ await p.selectOption('#growth-branch','2');assert.match(await p.locator('#growth-metrics').textContent(),/−50,00%/);assert.equal(await p.locator('#growth-body tr').count(),1);
+ await p.selectOption('#growth-metric','ticket_medio_centavos');assert.match(await p.locator('#growth-chart-title').textContent(),/Ticket médio/);await p.selectOption('#growth-branch','3');assert.match(await p.locator('#growth-body').textContent(),/Sem base percentual/);
+ await p.selectOption('#growth-branch','');await p.selectOption('#growth-metric','valor_centavos');
+ await p.selectOption('#growth-year','2025');await p.waitForFunction(()=>document.querySelector('#growth-period').textContent.includes('31/12/2025'));assert.equal(await p.locator('#growth-months tr').count(),12);assert.match(await p.locator('#growth-total').textContent(),/900,00/);
+ await p.selectOption('#growth-mode','acumulado');await p.waitForFunction(()=>document.querySelector('#growth-period').textContent.includes('16/11/2025'));assert.match(await p.locator('#growth-total').textContent(),/400,00/);
+ await p.selectOption('#growth-year','2026');await p.waitForFunction(()=>document.querySelector('#growth-period').textContent.includes('16/11/2026'));assert.equal(await p.locator('#growth-mode option[value="completo"]').isDisabled(),true);
+ await p.setViewportSize({width:390,height:844});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);await p.screenshot({path:out+'/mobile.png',fullPage:true});await p.locator('#growth-chart-title').scrollIntoViewIfNeeded();await p.screenshot({path:out+'/mobile-grafico.png'});
+ await p.locator('#growth-body .growth-detail').first().click();assert.equal(await p.locator('#growth-branch').inputValue(),'1');assert.equal(await p.locator('#growth-body tr').count(),1);
+ await p.click('[data-page="consolidated"]');await p.locator('#consolidated-body tr').first().waitFor();assert.equal(await p.locator('#growth-panel').isVisible(),false);
+ await p.click('[data-page="growth"]');await p.locator('#growth-body tr').first().waitFor();
+ await p.route('**/api/v1/crescimento?*',route=>route.abort());await p.locator('#growth-filters button').click();await p.locator('#page-error').waitFor({state:'visible'});assert.equal(await p.locator('#growth-body tr').count(),0);await p.unroute('**/api/v1/crescimento?*');await p.click('#retry');await p.locator('#growth-body tr').first().waitFor();assert.equal(await p.locator('#page-error').isVisible(),false);
+ await p.click('#logout');await p.locator('#login-view').waitFor({state:'visible'});assert.equal(await p.locator('#growth-body tr').count(),0);assert.equal(await p.locator('#growth-chart svg').count(),0);
+ await e.control.query("UPDATE admin_users SET role='Supervisao' WHERE email='leitor@fila.local'");await e.control.query("DELETE FROM user_branches WHERE user_id=(SELECT id FROM admin_users WHERE email='leitor@fila.local') AND filial<>2");
+ await login(p,'leitor');await p.click('[data-page="growth"]');await p.locator('#growth-body tr').first().waitFor();assert.equal(await p.locator('#growth-body tr').count(),1);assert.equal(await p.locator('#growth-branch option').count(),2);assert.equal(await p.locator('#growth-year option').count(),2);
+ await p.click('#logout');await p.locator('#login-view').waitFor({state:'visible'});await e.control.query("UPDATE admin_users SET role='Gerentes' WHERE email='leitor@fila.local'");await login(p,'leitor');assert.equal(await p.locator('[data-page="growth"]').isVisible(),false);await p.click('#logout');await p.locator('#login-view').waitFor({state:'visible'});assert.deepEqual(errors,[]);
+ await writeFile('docs/validacao-crescimento-anual-ui.json',JSON.stringify({verificadoEm:new Date().toISOString(),ambiente:'PostgreSQL isolado com dados sintéticos',desktopMobile:true,semOverflow:true,comparacaoEquivalente:true,anosCompletos:true,mesesFuturosOcultos:true,filtrosFilialIndicador:true,semBasePercentual:true,detalhePorFilial:true,permissoesPorFilial:true,erroRetentativa:true,limpezaLogout:true,errors},null,2)+'\n');
+ console.log('Crescimento anual: interface computador/celular, períodos, permissões e recuperação aprovados.');
+}finally{await browser?.close();await e?.close();}

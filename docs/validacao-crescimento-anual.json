@@ -1,0 +1,55 @@
+{
+  "publicadoEm": "2026-11-16T14:39:29.951397+00:00",
+  "backup": "backup-20261116T143826Z-Q1gyqu",
+  "checksumsBackupConferidosNoServidor": true,
+  "imagem": "aeropostale-varejo-api:crescimento-20261116",
+  "servicosAtualizados": [
+    "api"
+  ],
+  "outrosContainersPreservados": 24,
+  "nginxPreservado": true,
+  "historicoFinanceiroEItensPreservados": true,
+  "credenciaisIntegracoesEAutenticadoresPreservados": true,
+  "envPrivadoPreservado": true,
+  "workerRemotoAtivo": true,
+  "webhooksDesativados": true,
+  "assetsHTTPSConferidos": true,
+  "comparativos": [
+    {
+      "ano": 2026,
+      "modo": "acumulado",
+      "filiaisConferidas": 15,
+      "totaisEMesesIguaisAoConsolidado": true,
+      "duracaoVerificacaoMs": 476
+    },
+    {
+      "ano": 2025,
+      "modo": "completo",
+      "filiaisConferidas": 15,
+      "totaisEMesesIguaisAoConsolidado": true,
+      "duracaoVerificacaoMs": 809
+    },
+    {
+      "ano": 2024,
+      "modo": "completo",
+      "filiaisConferidas": 15,
+      "totaisEMesesIguaisAoConsolidado": true,
+      "duracaoVerificacaoMs": 538
+    }
+  ],
+  "anonimoHTTP": 401,
+  "parametrosInvalidosHTTP": 400,
+  "portaisHTTP200": 5,
+  "documentacaoPublicaHTTP200": true,
+  "semMigrations": true,
+  "testes": {
+    "unitarios": 89,
+    "integracaoPostgreSQLIsolado": 27,
+    "interfacesSinteticas": [
+      "crescimento-anual",
+      "consolidado"
+    ],
+    "interfaceProducaoAprovada": true
+  },
+  "workerLocalAtivo": false
+}
