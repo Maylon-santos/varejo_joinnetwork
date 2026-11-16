@@ -1,0 +1,119 @@
+{
+  "publicacao": {
+    "publicadoEm": "2026-11-16T19:59:45.983447+00:00",
+    "textosRemovidosDoCrescimento": true,
+    "javascriptHTTPSIgualAFonte": true,
+    "htmlHTTPSIgualAFonte": true,
+    "imagem": "aeropostale-varejo-api:crescimento-limpo-20261116",
+    "servicosAtualizados": [
+      "api"
+    ],
+    "outrosContainersPreservados": 24,
+    "demaisAssetsPreservados": true,
+    "nginxPreservado": true,
+    "backupExistenteConferidoNoServidor": "backup-20261116T151554Z-ud7mPC",
+    "semAlteracaoDeBanco": true
+  },
+  "interface": {
+    "verificadoEm": "2026-11-16T20:09:44.439Z",
+    "desktopMobile": true,
+    "textosAusentesNosDoisModos": true,
+    "todosAnos": true,
+    "padraoAnterior": true,
+    "semErrosJS": true
+  },
+  "apuracao": {
+    "verificadoEm": "2026-11-16T19:38:03.074Z",
+    "somenteLeitura": true,
+    "periodos": {
+      "modo": "acumulado",
+      "hoje": "2026-11-16",
+      "atual": {
+        "ano": 2026,
+        "inicio": "2026-01-01",
+        "fim": "2026-11-16"
+      },
+      "anterior": {
+        "ano": 2025,
+        "inicio": "2025-01-01",
+        "fim": "2025-11-16"
+      }
+    },
+    "pendenciasNoComparativo": 6309,
+    "pendenciasHistorico": 17787,
+    "comparativoPorSituacao": {
+      "quantidade_divergente": 57,
+      "regra_pendente": 6252
+    },
+    "historicoPorSituacao": {
+      "divergente": 1,
+      "quantidade_divergente": 271,
+      "regra_pendente": 17515
+    },
+    "comparativoPorAno": {
+      "2025": 5452,
+      "2026": 857
+    },
+    "comparativoPorFilial": {
+      "AERO-009": 14,
+      "AERO-010": 2095,
+      "AERO-014": 1615,
+      "AERO-015": 1954,
+      "AERO-018": 63,
+      "AERO-019": 314,
+      "AERO-019-2": 6,
+      "AERO-020": 29,
+      "AERO-021": 186,
+      "AERO-BAZAR": 4,
+      "ITUPEVA": 29
+    },
+    "historicoPorAno": {
+      "2023": 892,
+      "2024": 9498,
+      "2025": 6540,
+      "2026": 857
+    },
+    "semConsultaERP": true
+  },
+  "conferenciaERP": {
+    "verificadoEm": "2026-11-16T19:47:39.027Z",
+    "somenteLeitura": true,
+    "alvos": 58,
+    "consultasERP": 46,
+    "porResultado": {
+      "CONFERIDA": 58
+    },
+    "porComparacao": {
+      "IGUAL": 58
+    },
+    "porSituacao": {
+      "quantidade_divergente": 24,
+      "regra_pendente": 34
+    },
+    "porFilial": {
+      "ITUPEVA": {
+        "alvos": 29,
+        "conferidas": 29,
+        "iguais": 29
+      },
+      "AERO-020": {
+        "alvos": 29,
+        "conferidas": 29,
+        "iguais": 29
+      }
+    }
+  },
+  "formulaCandidataCortesia": {
+    "casos": 34,
+    "todosComCortesiaNegativa": true,
+    "valorFinalIgualItensMaisAjusteMaisCortesia": 34,
+    "homologada": false
+  },
+  "situacao": "Apuração em leitura concluída nas 58 vendas; correção comercial pendente de validação da regra e documentos.",
+  "analiseQuantidades": {
+    "casos": 24,
+    "cabecalhoIgualPecasComPreco": 0,
+    "cabecalhoIgualNumeroDeLinhas": 0,
+    "casosComItensSemPreco": 0
+  }
+}

@@ -12,7 +12,7 @@ const percentual=(a,b)=>{if(a===null||b===null||BigInt(b)<=0n)return null;const 
 const meses=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 const dinheiro=k=>['valor_centavos','ticket_medio_centavos'].includes(k);
 const formato=(v,k)=>v===null?'—':dinheiro(k)?moeda(v):inteiro.format(BigInt(v));
-const campos=['growth-metrics','growth-chart','growth-legend','growth-body','growth-total','growth-months','growth-quality','growth-rule'];
+const campos=['growth-metrics','growth-chart','growth-legend','growth-body','growth-total','growth-months'];
 function linha(valores,labels){const tr=el('tr');valores.forEach((v,i)=>{const td=el('td');td.dataset.label=labels[i];if(v instanceof Node)td.append(v);else td.textContent=v;tr.append(td);});return tr;}
 function variacao(a,b){return el('strong',percentual(a,b)??'Sem base percentual',a!==null&&b!==null&&BigInt(b)>0n?(BigInt(a)>=BigInt(b)?'growth-up':'growth-down'):'growth-neutral');}
 function grafico(root,serie,k,anterior,atual){
@@ -64,7 +64,6 @@ export function criarDashboardCrescimento({api,ativo,carregando,erro,limparErro}
   $('growth-total').replaceChildren(linha(['Total selecionado',...totais.map((a,i)=>celula(a,totais[i-1])),lojas.length+' filiais'],labels));
   const mensalLabels=['Mês',...periodos.map(p=>String(p.ano))];$('growth-month-head').replaceChildren(linha(mensalLabels,mensalLabels));for(const td of [...$('growth-month-head').querySelector('tr').children])td.replaceWith(el('th',td.textContent));
   $('growth-months').replaceChildren();for(let m=0;m<(totais[0]?.mensal.length??0);m++)$('growth-months').append(linha([meses[m],...totais.map((a,i)=>celula({...a.mensal[m],ano:a.ano},i?{...totais[i-1].mensal[m],ano:totais[i-1].ano}:null))],mensalLabels));
-  $('growth-quality').textContent=totais.reduce((n,a)=>n+a.pendencias,0)+' vendas com pendência nos anos exibidos. '+dados.observacao;$('growth-rule').textContent=dados.regra;
  }
  function render(){
   if(!dados||!ativo())return;
@@ -91,7 +90,6 @@ export function criarDashboardCrescimento({api,ativo,carregando,erro,limparErro}
   if(!filiais.length)$('growth-body').append(linha(['Nenhuma filial atribuída','—','—','—','—','Solicite a atribuição de filiais ao administrador.'],labels));
   $('growth-total').replaceChildren(linha(['Total selecionado',formato(anterior[k],k),formato(atual[k],k),formato(diferenca(atual[k],anterior[k]),k),variacao(atual[k],anterior[k]),`${filiais.length} filiais`],labels));
   $('growth-months').replaceChildren();for(const m of serie)$('growth-months').append(linha([meses[m.mes-1],formato(m.anterior[k],k),formato(m.atual[k],k),formato(diferenca(m.atual[k],m.anterior[k]),k),variacao(m.atual[k],m.anterior[k])],['Mês',...labels.slice(1,5)]));
-  $('growth-quality').textContent=`${atual.pendencias+anterior.pendencias} vendas com pendência de conferência nos dois períodos. ${filiais.filter(b=>b.sem_base_anterior).length} filiais sem vendas no período anterior. ${dados.observacao}`;$('growth-rule').textContent=dados.regra;
  }
  async function carregar(){
   if(!ativo())return;const v=++versao;abort?.abort();abort=new AbortController();limparErro();carregando(true);dados=null;limparValores();$('data-notice').hidden=true;$('growth-period').textContent='Carregando comparativo…';

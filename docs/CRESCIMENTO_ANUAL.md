@@ -16,7 +16,7 @@ No celular, o gráfico possui rolagem horizontal e as tabelas se adaptam a cart�
 
 ## Cálculos
 
-O valor de vendas, as peças e a elegibilidade seguem o consolidado existente: operações S não canceladas, incluindo cancelamento registrado em tabela separada. Utiliza valor e quantidade do cabeçalho; pendências de conferência continuam incluídas e são informadas. Entradas não são subtraídas como devoluções, cuja regra permanece em homologação.
+O valor de vendas, as peças e a elegibilidade seguem o consolidado existente: operações S não canceladas, incluindo cancelamento registrado em tabela separada. Utiliza valor e quantidade do cabeçalho; pendências de conferência continuam incluídas. Os textos de metodologia e o resumo de pendências foram retirados desta tela; os registros continuam disponíveis na Conferência e na apuração operacional. Entradas não são subtraídas como devoluções, cuja regra permanece em homologação.
 
 A diferença é `valor atual - valor anterior`. A variação percentual é `(valor atual - valor anterior) / valor anterior × 100`, com duas casas decimais e truncamento. Quando a base anterior é zero ou negativa, a interface informa **Sem base percentual**. Uma filial sem vendas anteriores continua visível; suas vendas atuais entram no total selecionado.
 

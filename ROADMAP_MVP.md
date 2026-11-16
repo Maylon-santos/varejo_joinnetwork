@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## Crescimento: textos removidos e pendências apuradas — 16/11/2026
+
+- [x] Removidos os dois textos abaixo do comparativo nos modos ano anterior/todos os anos. Cálculos e dados preservados. Interface isolada e navegador em produção computador/celular aprovados; publicação somente de `api`, imagem `crescimento-limpo-20261116`, outros 24 containers e Nginx preservados.
+- [x] Consulta somente leitura: 29 pendências em Itupeva e 29 em Imigrantes no corte atual. As 58 conferidas no ERP coincidem com o banco: 34 com cortesia negativa/regra não homologada e 24 com quantidade dos itens superior ao cabeçalho. Relação individual privada, sem reprocessamento ou homologação automática. [Apuração e encaminhamento](docs/APURACAO_CONFERENCIA_CRESCIMENTO.md), [evidência](docs/validacao-limpeza-crescimento-apuracao.json).
+- [ ] Validar fórmula comercial da cortesia e documentos das quantidades divergentes antes de corrigir. O levantamento completo contém outras pendências; a conferência do ERP ficou restrita às duas filiais. R11/R22/R29/SaaS permanecem separados.
+
 ## Texto do rodapé atualizado — 16/11/2026
 
 - [x] Rodapé compartilhado do painel atualizado para **Feito por Join Network**. Busca nas fontes e HTML recebido por HTTPS conferidos, com igualdade de bytes e uma ocorrência do texto novo. Publicada somente `api`, imagem `rodape-20261116`; demais assets, outros 24 containers e Nginx preservados. [Evidência](docs/validacao-rodape.json).
