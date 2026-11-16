@@ -1,5 +1,9 @@
 # Comece aqui — estado atual em 16/11/2026
 
+## Texto do rodapé atualizado — 16/11/2026
+
+- [x] Rodapé compartilhado do painel atualizado para **Feito por Join Network**. Busca nas fontes e HTML recebido por HTTPS conferidos, com igualdade de bytes e uma ocorrência do texto novo. Publicada somente `api`, imagem `rodape-20261116`; demais assets, outros 24 containers e Nginx preservados. [Evidência](docs/validacao-rodape.json).
+
 ## Comparação de todos os anos — 16/11/2026
 
 - [x] Novo filtro **Comparar com → Todos os anos** no Crescimento anual: gráfico com uma linha por ano, colunas anuais por filial e mês e variações consecutivas. Anos até a referência selecionada; todos usam o mesmo modo/corte de data. Cartões mantêm o resumo da referência versus seu anterior.

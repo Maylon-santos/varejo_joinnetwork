@@ -1,5 +1,9 @@
 # Roadmap — Aeropostale Varejo
 
+## Texto do rodapé atualizado — 16/11/2026
+
+- [x] Rodapé compartilhado do painel atualizado para **Feito por Join Network**. Busca nas fontes e HTML recebido por HTTPS conferidos, com igualdade de bytes e uma ocorrência do texto novo. Publicada somente `api`, imagem `rodape-20261116`; demais assets, outros 24 containers e Nginx preservados. [Evidência](docs/validacao-rodape.json).
+
 ## R32 — Todos os anos com padrão anterior preservado — 16/11/2026
 
 - [x] Comparar com **Todos os anos**: gráfico anual, tabela por filial/mês e variação de um ano para o seguinte, até a referência selecionada. Mesmos cortes de período, filtros, permissões e base zero. Ao abrir/retornar ao dashboard, **Ano anterior** é sempre o padrão.

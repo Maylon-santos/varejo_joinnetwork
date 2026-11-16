@@ -1,0 +1,15 @@
+{
+  "publicadoEm": "2026-11-16T19:09:48.925389+00:00",
+  "texto": "Feito por Join Network",
+  "ocorrenciasPublicadas": 1,
+  "htmlHTTPSIgualAFonte": true,
+  "imagem": "aeropostale-varejo-api:rodape-20261116",
+  "servicosAtualizados": [
+    "api"
+  ],
+  "outrosContainersPreservados": 24,
+  "demaisAssetsPreservados": true,
+  "nginxPreservado": true,
+  "backupExistenteConferidoNoServidor": "backup-20261116T151554Z-ud7mPC",
+  "semAlteracaoDeBanco": true
+}
