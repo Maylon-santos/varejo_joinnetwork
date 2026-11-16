@@ -1,0 +1,78 @@
+{
+  "publicadoEm": "2026-11-16T15:16:57.195394+00:00",
+  "backup": "backup-20261116T151554Z-ud7mPC",
+  "checksumsBackupConferidosNoServidor": true,
+  "imagem": "aeropostale-varejo-api:crescimento-todos-20261116",
+  "servicosAtualizados": [
+    "api"
+  ],
+  "outrosContainersPreservados": 24,
+  "nginxPreservado": true,
+  "historicoFinanceiroEItensPreservados": true,
+  "credenciaisIntegracoesEAutenticadoresPreservados": true,
+  "envPrivadoPreservado": true,
+  "workerRemotoAtivo": true,
+  "webhooksDesativados": true,
+  "assetsHTTPSConferidos": true,
+  "comparativos": [
+    {
+      "ano": 2026,
+      "modo": "acumulado",
+      "filiaisConferidas": 15,
+      "totaisEMesesIguaisAoConsolidado": true,
+      "duracaoVerificacaoMs": 434
+    },
+    {
+      "ano": 2025,
+      "modo": "completo",
+      "filiaisConferidas": 15,
+      "totaisEMesesIguaisAoConsolidado": true,
+      "duracaoVerificacaoMs": 579
+    },
+    {
+      "ano": 2024,
+      "modo": "completo",
+      "filiaisConferidas": 15,
+      "totaisEMesesIguaisAoConsolidado": true,
+      "duracaoVerificacaoMs": 402
+    }
+  ],
+  "todosAnos": [
+    {
+      "anoReferencia": 2026,
+      "modo": "acumulado",
+      "anosConferidos": [
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "filiaisConferidas": 15,
+      "totaisEMesesIguaisAoConsolidado": true
+    },
+    {
+      "anoReferencia": 2025,
+      "modo": "completo",
+      "anosConferidos": [
+        2023,
+        2024,
+        2025
+      ],
+      "filiaisConferidas": 15,
+      "totaisEMesesIguaisAoConsolidado": true
+    }
+  ],
+  "padraoAnoAnterior": true,
+  "anonimoHTTP": 401,
+  "parametrosInvalidosHTTP": 400,
+  "portaisHTTP200": 5,
+  "documentacaoPublicaHTTP200": true,
+  "semMigrations": true,
+  "testes": {
+    "unitarios": 89,
+    "integracaoPostgreSQLIsolado": 28,
+    "interfaceSinteticaAprovada": true,
+    "interfaceProducaoAprovada": true
+  },
+  "workerLocalAtivo": false
+}

@@ -45,7 +45,7 @@ export function criarConsolidado(pool,tenant,autorizadas,{hoje=hojeSaoPaulo}={})
    regra:'Vendas S não canceladas, com valores e peças do cabeçalho ERP. Inclui pendências sinalizadas. Devoluções e faturamento bruto/líquido aguardam validação; entradas não são subtraídas.'};
  }
  return {
-  crescimento:async(user,ano,modo='acumulado')=>{const filiais=escopo(user),dia=hoje();return transacao(db=>consultarCrescimento(db,filiais,ano??dia.slice(0,4),modo,dia));},
+  crescimento:async(user,ano,modo='acumulado',comparacao='anterior')=>{const filiais=escopo(user),dia=hoje();return transacao(db=>consultarCrescimento(db,filiais,ano??dia.slice(0,4),modo,dia,comparacao));},
   consultar:async(user,inicio,fim)=>{const filiais=escopo(user);periodoConsolidado(inicio,fim);return transacao(db=>resumo(db,filiais,inicio,fim));},
   metas:async(user,mes)=>{
    const filiais=escopo(user),{inicio,fim}=periodoMeta(mes);

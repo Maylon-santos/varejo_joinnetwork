@@ -23,3 +23,14 @@ test('autorizações de consolidado limitam dados, anos e séries; tenant incorr
  await e.control.query("DELETE FROM user_branches WHERE user_id=(SELECT id FROM admin_users WHERE email='leitor@fila.local')");const vazio=(await req(e,path,'leitor')).body;assert.equal(vazio.filiais.length,0);assert.equal(vazio.total.atual.valor_centavos,'0');
  }finally{await e.close();}
 });
+test('todos os anos respeita corte, totais, mensal, base zero e ano de referência; padrão continua anterior',async()=>{
+ const e=await ambienteFila({hoje});try{await dadosCrescimento(e);
+ const padrao=(await req(e)).body;assert.equal(padrao.comparacao,'anterior');assert.equal(padrao.historico,undefined);
+ const d=(await req(e,path+'&comparacao=todos')).body;assert.equal(d.comparacao,'todos');assert.deepEqual(d.historico.periodos.map(p=>p.ano),[2024,2025,2026]);assert.deepEqual(d.historico.totais.map(t=>t.valor_centavos),['10000','40000','48000']);assert.equal(d.historico.totais[0].variacao_anterior,null);assert.equal(d.historico.totais[1].variacao_anterior.valor_centavos.percentual,'300.00');assert.equal(d.historico.totais[2].variacao_anterior.valor_centavos.percentual,'20.00');
+ for(const b of d.historico.filiais)for(const a of b.anos){assert.equal(a.mensal.length,11);assert.equal(a.mensal.reduce((n,m)=>n+BigInt(m.valor_centavos),0n).toString(),a.valor_centavos);}
+ assert.equal(d.historico.filiais.find(b=>b.filial==='3').anos[2].variacao_anterior.valor_centavos.percentual,null);
+ const completos=(await req(e,'/api/v1/crescimento?ano=2025&modo=completo&comparacao=todos')).body;assert.deepEqual(completos.historico.periodos.map(p=>p.ano),[2024,2025]);assert.equal(completos.historico.totais[1].valor_centavos,'90000');assert.equal(completos.historico.totais[1].mensal.length,12);
+ for(const q of ['&comparacao=x','&comparacao=todos&comparacao=anterior'])assert.equal((await req(e,path+q)).status,400);
+ await e.control.query("UPDATE admin_users SET role='Supervisao' WHERE email='leitor@fila.local'");await e.control.query("DELETE FROM user_branches WHERE user_id=(SELECT id FROM admin_users WHERE email='leitor@fila.local') AND filial<>2");const restrito=(await req(e,path+'&comparacao=todos','leitor')).body.historico;assert.deepEqual(restrito.filiais.map(b=>b.filial),['2']);assert.deepEqual(restrito.periodos.map(p=>p.ano),[2025,2026]);assert.deepEqual(restrito.totais.map(a=>a.valor_centavos),['20000','10000']);
+ }finally{await e.close();}
+});

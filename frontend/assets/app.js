@@ -85,7 +85,7 @@ function setPage(next,load=true){
  clearOverviewMedia();clearEmployeePhotos();clearSellerPhotos();
  clearInterval(queueTimer);if(next==='queue')queueTimer=setInterval(()=>{if(token&&!document.hidden&&!queueBusy&&!$('queue-action-dialog').open)loadQueue(true);},30000);
  goalsGeneration++;goalsAbort?.abort();$('goal-dialog').close();goalEditing=null;crescimento.cancelar();
- page=next;$('growth-panel').hidden=page!=='growth';$('consolidated-panel').hidden=page!=='consolidated';$('branch').parentElement.hidden=page==='consolidated';salesPage=1;rankPage=1;customerPage=1;productPage=1;generation++;abort?.abort();
+ page=next;if(page==='growth')crescimento.abrir();$('growth-panel').hidden=page!=='growth';$('consolidated-panel').hidden=page!=='consolidated';$('branch').parentElement.hidden=page==='consolidated';salesPage=1;rankPage=1;customerPage=1;productPage=1;generation++;abort?.abort();
  $('products-panel').hidden=page!=='products';$('employees-panel').hidden=page!=='employees';
  for(const id of ['period','start-date','end-date'])$(id).parentElement.hidden=page==='products'&&$('products-mode').value==='catalogo';
  $('queue-panel').hidden=page!=='queue';$('customers-panel').hidden=page!=='customers';$('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users','employees','queue','growth'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users','employees','queue','growth'].includes(page);

@@ -1,5 +1,10 @@
 # Roadmap — Aeropostale Varejo
 
+## R32 — Todos os anos com padrão anterior preservado — 16/11/2026
+
+- [x] Comparar com **Todos os anos**: gráfico anual, tabela por filial/mês e variação de um ano para o seguinte, até a referência selecionada. Mesmos cortes de período, filtros, permissões e base zero. Ao abrir/retornar ao dashboard, **Ano anterior** é sempre o padrão.
+- [x] 89 unitários, 28 integração PostgreSQL e interface isolada aprovados. Publicado somente `api`, outros 24 containers/Nginx preservados, backup conferido no servidor e nenhuma migration. Anos 2023–2026 acumulados e 2023–2025 completos iguais ao consolidado nas 15 filiais; navegador público/celular aprovados. Worker local e webhooks desativados. [Evidência](docs/validacao-crescimento-todos-anos.json). Extensão de R32, sem concluir R11/R22/R29/SaaS.
+
 ## R32 — Crescimento anual por filial publicado — 16/11/2026
 
 - [x] Dashboard **Crescimento anual** para comparar cada filial e o total selecionado com o ano anterior. Ano/filial/indicador, cartões, gráfico e detalhes mensais; acumulado equivalente e anos completos encerrados. Sem percentual quando a base anterior é zero/negativa; dados ausentes e atualização apresentados explicitamente.

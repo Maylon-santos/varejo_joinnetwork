@@ -78,3 +78,7 @@
 @media(max-width:760px){.growth-filters{display:grid;grid-template-columns:1fr}.growth-filters button{width:100%}.growth-chart{padding:0 8px 14px}.growth-chart svg{min-height:150px}.growth-table th:not(:first-child),.growth-table td:not(:first-child){text-align:left}.growth-table td:last-child{grid-column:1/-1}.growth-period{font-size:12px}.growth-block .panel-heading{padding-bottom:12px}}
 .growth-chart{overflow-x:auto}.growth-chart svg{min-width:720px}.growth-axis{font-size:14px}
 @media(max-width:760px){.growth-chart svg{min-width:760px}}
+.growth-filters{grid-template-columns:repeat(3,minmax(0,1fr))}.growth-legend{flex-wrap:wrap}.growth-key.history-0:before{background:#7b91b3}.growth-key.history-1:before{background:#b67943}.growth-key.history-2:before{background:#458d80}.growth-key.history-3:before{background:#253f69}.growth-key.history-4:before{background:#946bb0}.growth-key.history-5:before{background:#b34e64}.growth-key.history-6:before{background:#536976}.growth-key.history-7:before{background:#7e7c42}
+@media(max-width:1200px){.growth-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.growth-filters{grid-template-columns:1fr}}
+.growth-filters{display:grid}

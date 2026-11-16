@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 16/11/2026
 
+## Comparação de todos os anos — 16/11/2026
+
+- [x] Novo filtro **Comparar com → Todos os anos** no Crescimento anual: gráfico com uma linha por ano, colunas anuais por filial e mês e variações consecutivas. Anos até a referência selecionada; todos usam o mesmo modo/corte de data. Cartões mantêm o resumo da referência versus seu anterior.
+- [x] **Ano anterior (padrão)** permanece selecionado ao abrir ou retornar à tela, sem preferência persistida. Filtros de filial/indicador, permissões e tratamento de base zero preservados; histórico não revela anos de filiais fora dos vínculos.
+- [x] 89 unitários, 28 integração PostgreSQL e interface computador/celular aprovados. Publicado somente `api`, imagem `crescimento-todos-20261116`, com backup `backup-20261116T151554Z-ud7mPC` conferido no servidor. Outros 24 containers/Nginx, histórico financeiro/itens, integrações e autenticadores preservados; sem migrations. Remoto ativo, local e webhooks desativados.
+- [x] Produção: anos 2023–2026 acumulados e 2023–2025 completos conferidos nas 15 filiais contra o consolidado, incluindo somas mensais. Navegador confirmou a opção, o retorno ao padrão e celular sem transbordamento. [Regras](docs/CRESCIMENTO_ANUAL.md) e [evidência](docs/validacao-crescimento-todos-anos.json). Complementa R32; homologações comerciais permanecem separadas.
+
 ## Crescimento anual das filiais — 16/11/2026
 
 - [x] Menu **Crescimento anual** com ano de referência, ano anterior, filtro de filial e indicador (valor, vendas, peças e ticket), cartões, gráfico e tabelas por filial/mês. Padrão de ano atual acumulado com mesmo corte de data nos dois anos; anos encerrados permitem comparação completa. Base anterior zero/negativa permanece sem percentual, com diferença absoluta e atualização explícitas.

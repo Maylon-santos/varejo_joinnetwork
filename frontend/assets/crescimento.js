@@ -26,15 +26,46 @@ function grafico(root,serie,k,anterior,atual){
  serie.forEach((m,i)=>{const x=106+i*step+step/2;for(const [j,lado]of ['anterior','atual'].entries()){if(m[lado][k]===null)continue;const value=BigInt(m[lado][k]),yy=y(value),r=svg('rect',{x:x+(j===0?-width-2:2),y:Math.min(yy,base),width,height:Math.abs(base-yy),rx:3,class:'growth-bar-'+lado});const tip=svg('title');tip.textContent=`${meses[i]} ${lado==='atual'?atual:anterior}: ${formato(m[lado][k],k)}`;r.append(tip);chart.append(r);}const text=svg('text',{x,y:276,'text-anchor':'middle',class:'growth-axis'});text.textContent=meses[i];chart.append(text);});
  root.append(chart);if(valores.every(v=>v===0n))root.append(el('p','Sem valores de venda nos períodos selecionados.','growth-chart-empty'));
 }
+const cores=['#7b91b3','#b67943','#458d80','#253f69','#946bb0','#b34e64','#536976','#7e7c42'];
+function graficoHistorico(root,series,k){
+ root.replaceChildren();const ns='http://www.w3.org/2000/svg',svg=(tag,attrs={})=>{const n=document.createElementNS(ns,tag);for(const [a,b]of Object.entries(attrs))n.setAttribute(a,String(b));return n;};
+ const chart=svg('svg',{viewBox:'0 0 920 300',role:'img','aria-labelledby':'growth-svg-title growth-svg-desc'}),title=svg('title',{id:'growth-svg-title'}),desc=svg('desc',{id:'growth-svg-desc'});title.textContent='Comparativo mensal de todos os anos: '+series.map(s=>s.ano).join(', ');desc.textContent='Cada linha representa um ano. Valores exatos e variações disponíveis nas tabelas abaixo.';chart.append(title,desc);
+ const valores=series.flatMap(s=>s.mensal.map(m=>BigInt(m[k]??0))),min=valores.reduce((a,b)=>b<a?b:a,0n),max=valores.reduce((a,b)=>b>a?b:a,0n),range=max-min||1n;
+ const y=v=>24+Number((max-v)*100000n/range)/100000*220,n=series[0]?.mensal.length??1,x=i=>112+i*780/Math.max(n-1,1);
+ for(let i=0;i<=4;i++){const value=max-range*BigInt(i)/4n,yy=y(value);chart.append(svg('line',{x1:98,x2:905,y1:yy,y2:yy,class:'growth-grid'}));const t=svg('text',{x:88,y:yy+4,'text-anchor':'end',class:'growth-axis'});t.textContent=new Intl.NumberFormat('pt-BR',{notation:'compact',maximumFractionDigits:1}).format(Number(value)/(dinheiro(k)?100:1));chart.append(t);}
+ for(let i=0;i<n;i++){const t=svg('text',{x:x(i),y:276,'text-anchor':'middle',class:'growth-axis'});t.textContent=meses[i];chart.append(t);}
+ series.forEach((s,i)=>{const color=cores[i%cores.length];let points=[];const flush=()=>{if(points.length)chart.append(svg('polyline',{points:points.join(' '),fill:'none',stroke:color,'stroke-width':2.5}));points=[];};for(const [j,m]of s.mensal.entries()){if(m[k]===null){flush();continue;}const xx=x(j),yy=y(BigInt(m[k]));points.push(xx+','+yy);const dot=svg('circle',{cx:xx,cy:yy,r:3,fill:color}),tip=svg('title');tip.textContent=`${meses[j]} ${s.ano}: ${formato(m[k],k)}`;dot.append(tip);chart.append(dot);}flush();});root.append(chart);
+ if(valores.every(v=>v===0n))root.append(el('p','Sem valores nos períodos selecionados.','growth-chart-empty'));
+}
 export function criarDashboardCrescimento({api,ativo,carregando,erro,limparErro}){
  let dados=null,versao=0,abort=null;
+ const headers={filiais:$('growth-table-head').cloneNode(true),mensal:$('growth-month-head').cloneNode(true)};
+ const restaurarCabecalhos=()=>{for(const [id,key]of [['growth-table-head','filiais'],['growth-month-head','mensal']])$(id).replaceChildren(...[...headers[key].childNodes].map(n=>n.cloneNode(true)));};
  const anoAtual=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric'}).format(new Date());
  $('growth-year').append(new Option(anoAtual(),anoAtual()));
  const ajustarModo=()=>{const corrente=$('growth-year').value===anoAtual();$('growth-mode').querySelector('[value="completo"]').disabled=corrente;if(corrente)$('growth-mode').value='acumulado';};
  ajustarModo();
  function limparValores(){for(const id of campos)$(id).replaceChildren();}
  function cancelar(){versao++;abort?.abort();}
- function limpar(){cancelar();dados=null;limparValores();$('growth-period').textContent='';$('growth-branch').replaceChildren(new Option('Todas as autorizadas',''));$('growth-year').replaceChildren(new Option(anoAtual(),anoAtual()));$('growth-metric').value='valor_centavos';$('growth-mode').value='acumulado';ajustarModo();}
+ function abrir(){$('growth-comparison').value='anterior';}
+ function limpar(){abrir();restaurarCabecalhos();cancelar();dados=null;limparValores();$('growth-period').textContent='';$('growth-branch').replaceChildren(new Option('Todas as autorizadas',''));$('growth-year').replaceChildren(new Option(anoAtual(),anoAtual()));$('growth-metric').value='valor_centavos';$('growth-mode').value='acumulado';ajustarModo();}
+ function renderTodos(filiais,k,rotulo,selecao){
+  const historico=dados.historico,periodos=historico.periodos,ids=new Set(filiais.map(b=>b.filial)),lojas=historico.filiais.filter(b=>ids.has(b.filial));
+  const totais=periodos.map(p=>{const total={ano:p.ano,...zero(),mensal:Array.from({length:Number(p.fim.slice(5,7))},(_,i)=>({mes:i+1,...zero()}))};for(const b of lojas){const a=b.anos.find(a=>a.ano===p.ano);soma(total,a);a.mensal.forEach((m,i)=>soma(total.mensal[i],m));}ticket(total);total.mensal.forEach(ticket);return total;});
+  $('growth-period').textContent=selecao+' · Todos os anos até '+dados.periodos.atual.ano+' · '+periodos.map(p=>`${p.ano}: ${data(p.inicio)} a ${data(p.fim)}`).join(' · ')+'. Os cartões resumem o ano de referência e seu anterior.';
+  $('growth-chart-title').textContent=rotulo+' · todos os anos';$('growth-chart-description').textContent='Uma linha por ano, com os mesmos meses e corte de data. Deslize o gráfico no celular para consultar todos os meses.';
+  $('growth-table-description').textContent=rotulo+' por ano e filial. Cada variação compara o valor com o ano imediatamente anterior exibido.';
+  $('growth-month-description').textContent=selecao+' · '+rotulo+' por mês em todos os anos selecionados.';
+  $('growth-legend').replaceChildren(...periodos.map((p,i)=>el('span',String(p.ano),'growth-key history-'+i%cores.length)));graficoHistorico($('growth-chart'),totais,k);
+  const labels=['Filial',...periodos.map(p=>String(p.ano)),'Atualização'];$('growth-table-head').replaceChildren(linha(labels,labels));for(const td of [...$('growth-table-head').querySelector('tr').children]){const th=el('th',td.textContent);td.replaceWith(th);}
+  const celula=(a,anterior)=>{const box=el('div');box.append(el('strong',formato(a[k],k)));if(anterior){const small=el('small','vs '+anterior.ano+': ');small.append(variacao(a[k],anterior[k]));box.append(small);}else box.append(el('small','Primeiro ano exibido'));return box;};
+  $('growth-body').replaceChildren();for(const b of lojas){const button=el('button',nome(b),'text-button growth-detail');button.type='button';button.addEventListener('click',()=>{$('growth-branch').value=b.filial;render();$('growth-period').scrollIntoView({block:'start',behavior:'smooth'});});const status=el('div',b.atualizado_ate?'Atualização até '+data(b.atualizado_ate):'Atualização ainda não informada');if(!b.atualizado_ate||b.atualizado_ate<periodos.at(-1).fim)status.append(el('small','Atualização não alcançou o fim selecionado.'));if(b.primeira_operacao)status.append(el('small','Primeiro registro importado: '+data(b.primeira_operacao)));$('growth-body').append(linha([button,...b.anos.map((a,i)=>celula(a,b.anos[i-1])),status],labels));}
+  if(!lojas.length)$('growth-body').append(linha(['Nenhuma filial atribuída',...periodos.map(()=> '—'),'Solicite a atribuição de filiais.'],labels));
+  $('growth-total').replaceChildren(linha(['Total selecionado',...totais.map((a,i)=>celula(a,totais[i-1])),lojas.length+' filiais'],labels));
+  const mensalLabels=['Mês',...periodos.map(p=>String(p.ano))];$('growth-month-head').replaceChildren(linha(mensalLabels,mensalLabels));for(const td of [...$('growth-month-head').querySelector('tr').children])td.replaceWith(el('th',td.textContent));
+  $('growth-months').replaceChildren();for(let m=0;m<(totais[0]?.mensal.length??0);m++)$('growth-months').append(linha([meses[m],...totais.map((a,i)=>celula({...a.mensal[m],ano:a.ano},i?{...totais[i-1].mensal[m],ano:totais[i-1].ano}:null))],mensalLabels));
+  $('growth-quality').textContent=totais.reduce((n,a)=>n+a.pendencias,0)+' vendas com pendência nos anos exibidos. '+dados.observacao;$('growth-rule').textContent=dados.regra;
+ }
  function render(){
   if(!dados||!ativo())return;
   const k=$('growth-metric').value,rotulo=$('growth-metric').selectedOptions[0].textContent,p=dados.periodos,filiais=dados.filiais.filter(b=>!$('growth-branch').value||b.filial===$('growth-branch').value);
@@ -46,6 +77,8 @@ export function criarDashboardCrescimento({api,ativo,carregando,erro,limparErro}
   $('growth-metrics').replaceChildren();
   const cards=[['Valor de vendas · '+p.atual.ano,moeda(atual.valor_centavos),`${p.anterior.ano}: ${moeda(anterior.valor_centavos)}`],['Crescimento em vendas',percentual(atual.valor_centavos,anterior.valor_centavos)??'Sem base percentual',`Diferença: ${moeda(diferenca(atual.valor_centavos,anterior.valor_centavos))}`],['Vendas realizadas',inteiro.format(atual.vendas),`${p.anterior.ano}: ${inteiro.format(anterior.vendas)} · ${percentual(atual.vendas,anterior.vendas)??'Sem base percentual'}`],['Ticket médio',moeda(atual.ticket_medio_centavos),`${p.anterior.ano}: ${moeda(anterior.ticket_medio_centavos)} · ${inteiro.format(BigInt(atual.pecas))} peças no ano de referência`]];
   for(const [label,value,note]of cards){const card=el('article','','consolidated-metric');card.append(el('span',label),el('strong',value),el('small',note));$('growth-metrics').append(card);}
+  if(dados.comparacao==='todos'){renderTodos(filiais,k,rotulo,selecao);return;}
+  restaurarCabecalhos();
   for(const id of ['growth-previous-heading','growth-month-previous'])$(id).textContent=String(p.anterior.ano);
   for(const id of ['growth-current-heading','growth-month-current'])$(id).textContent=String(p.atual.ano);
   $('growth-chart-title').textContent=rotulo+' mês a mês';$('growth-chart-description').textContent='Mesmos meses e mesmo corte de data nos dois anos. Valores exatos na tabela abaixo.';
@@ -62,7 +95,7 @@ export function criarDashboardCrescimento({api,ativo,carregando,erro,limparErro}
  }
  async function carregar(){
   if(!ativo())return;const v=++versao;abort?.abort();abort=new AbortController();limparErro();carregando(true);dados=null;limparValores();$('data-notice').hidden=true;$('growth-period').textContent='Carregando comparativo…';
-  try{const d=await api('/crescimento?'+new URLSearchParams({ano:$('growth-year').value,modo:$('growth-mode').value}),{signal:abort.signal});if(v!==versao||!ativo())return;dados=d;
+  try{const d=await api('/crescimento?'+new URLSearchParams({ano:$('growth-year').value,modo:$('growth-mode').value,comparacao:$('growth-comparison').value}),{signal:abort.signal});if(v!==versao||!ativo())return;dados=d;
    $('growth-year').replaceChildren(...d.anos.map(y=>new Option(String(y),String(y))));$('growth-year').value=String(d.periodos.atual.ano);ajustarModo();
    const filial=$('growth-branch').value;$('growth-branch').replaceChildren(new Option('Todas as autorizadas',''),...d.filiais.map(b=>new Option(nome(b),b.filial)));$('growth-branch').value=d.filiais.some(b=>b.filial===filial)?filial:'';render();
   }catch(e){if(e.name!=='AbortError'&&v===versao&&ativo()){$('growth-period').textContent='Comparativo não carregado. Tente atualizar novamente.';erro(e);}}
@@ -70,7 +103,8 @@ export function criarDashboardCrescimento({api,ativo,carregando,erro,limparErro}
  }
  $('growth-filters').addEventListener('submit',e=>{e.preventDefault();carregar();});
  $('growth-year').addEventListener('change',()=>{$('growth-mode').value=$('growth-year').value===anoAtual()?'acumulado':'completo';ajustarModo();if(ativo())carregar();});
+ $('growth-comparison').addEventListener('change',()=>{if(ativo())carregar();});
  $('growth-mode').addEventListener('change',()=>{if(ativo())carregar();});
  for(const id of ['growth-branch','growth-metric'])$(id).addEventListener('change',render);
- return {carregar,cancelar,limpar};
+ return {carregar,cancelar,limpar,abrir};
 }
