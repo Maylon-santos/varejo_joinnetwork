@@ -50,5 +50,20 @@
   "revogacaoDeChaveExpirada": true,
   "tokenRevogadoBloqueadoImediatamente": true,
   "reativacaoDeChaveRevogadaBloqueada": true,
-  "revogacaoRealPendenteDoTitular": true
+  "revogacaoRealPendenteDoTitular": false,
+  "revogacaoReal": {
+    "verificadoEm": "2026-11-17T01:11:09.169Z",
+    "confirmadaPeloTitularNoConsole": true,
+    "chaveAnteriorRevogada": true,
+    "apenasNovaChaveAtiva": true,
+    "novaChaveCorrespondeAoPEM": true,
+    "filiaisPreservadas": 11,
+    "escoposPreservados": [
+      "filiais:ler"
+    ],
+    "auditoriaConfirmada": true,
+    "cadastrosTemporariosRevogados": 3,
+    "consultaSomenteLeituraPelaAutomacao": true,
+    "testeAssinadoPeloIntegrador": false
+  }
 }

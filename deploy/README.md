@@ -9,7 +9,7 @@ Imagem atual de `integracoes-api`: `aeropostale-varejo-integracoes:revogacao-202
 
 Publicada somente `integracoes-api`; outros 24 containers, Nginx, envs, clientes, chaves e autenticadores preservados. Backup prévio `backup-20261117T004151Z-h9hFc7` com COMPLETE/checksums conferidos no servidor (16/11 às 21h41 de São Paulo). Fontes/override anteriores em `/opt/aeropostale-varejo/artifacts/revogacao-chave-20261117T004151Z`. Para retorno, restaurar esses arquivos, usar a tag anterior `qr-20261114` e recriar somente `integracoes-api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait integracoes-api`. Retornar a imagem não reativa chaves revogadas. Sem migrations; workers e webhooks preservados.
 
-A publicação preservou as credenciais. A revogação real depende de confirmação do titular no console. [Evidência](../docs/validacao-revogacao-chaves.json).
+A publicação preservou as credenciais. Posteriormente, o titular confirmou a revogação real no console: consulta somente leitura confirmou chave anterior inativa, nova como única ativa, auditoria e concessões preservadas. Os três cadastros temporários continuam revogados. O teste assinado com a nova chave depende do integrador. [Evidência](../docs/validacao-revogacao-chaves.json).
 
 ## Textos do crescimento removidos — 16/11/2026
 

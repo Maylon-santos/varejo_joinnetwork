@@ -5,12 +5,14 @@
 - [x] Lista de chaves cadastradas com botão **Revogar** por kid e confirmação identificando aplicação/chave. Motivo obrigatório, sem pedir PEM ou validade; cancelamento e MFA expirado tratados na interface. Manual interno atualizado.
 - [x] Rota administrativa exige operador, MFA vinculado à sessão, tenant, If-Match e motivo. Auditoria transacional; preserva PEM, validade, outras chaves e concessões. Chaves expiradas também podem ser revogadas; tokens associados passam a ser recusados e reativação permanece bloqueada.
 - [x] 16 testes de integração PostgreSQL e interface sintética computador/celular aprovados, incluindo cancelamento e MFA expirado. Publicada somente `integracoes-api`, imagem `revogacao-20261116`; outros 24 containers, Nginx, configurações e credenciais preservados. Backup prévio verificado, sem migration. [Evidência](docs/validacao-revogacao-chaves.json).
-- [ ] A publicação não revoga credenciais reais. Titular deve confirmar a revogação da chave anterior pelo botão; o teste assinado com a chave nova continua a cargo do integrador.
+- [x] Titular confirmou a revogação real no console. Consulta somente leitura confirmou chave anterior inativa, nova como única ativa e igualdade com o PEM recebido; client_id, 11 filiais e somente `filiais:ler` preservados. Auditoria conferida; três cadastros temporários permanecem revogados.
+- [ ] Integrador deve testar a assinatura com a chave privada correspondente à nova chave pública.
 
 ## Nova chave de integração conferida — 16/11/2026
 
 - [x] Titular informou o cadastro de nova chave pelo console; consulta somente leitura confirmou o client_id esperado, chave pública RSA 3072 ativa e igualdade com o PEM recebido. Cadastro ativo em produção, 11 filiais e somente `filiais:ler` preservados. Chaves, identificadores e validade individual mantidos em preparação privada. [Evidência](docs/validacao-nova-chave-integracao.json).
-- [ ] A chave anterior continua ativa; substituição ainda não concluída. Titular deve revogá-la pelo console. O teste assinado com a chave privada cabe ao integrador; validação de cadastro não comprova autenticação. Sem alterações de aplicação, concessões ou webhooks pela automação.
+- [x] Substituição concluída pelo titular: chave anterior revogada e nova como única ativa, com auditoria e concessões preservadas conferidas no servidor.
+- [ ] O teste assinado com a nova chave privada cabe ao integrador; validação de cadastro não comprova autenticação. Webhooks continuam desativados.
 
 ## Crescimento: textos removidos e pendências apuradas — 16/11/2026
 
