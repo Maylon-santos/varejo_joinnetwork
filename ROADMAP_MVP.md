@@ -1,5 +1,12 @@
 # Roadmap — Aeropostale Varejo
 
+## Fonte alternativa de imagens — 16/11/2026
+
+- [x] Foto principal mantida como prioridade. Ausência, HTTP com erro ou imagem corrompida acionam a segunda API por código exato; seleção por cor quando disponível. Catálogo sem venda com foto também atendido, preservando permissões de filial/vendedor e imagens.
+- [x] Chave `PASSWORD_JOINKEY` somente no servidor/API do painel; navegador recebe bytes pela sessão existente. URLs restritas, sem redirecionamento, limites de tamanho/pixels, cache e controle de concorrência/memória.
+- [x] 98 unitários, 30 integração PostgreSQL e interface computador/celular aprovados. Download real da segunda base decodificado no Mac e na VPS. HTTPS/login/catálogo e bloqueios de acesso conferidos; as três fotos históricas amostradas continuaram indisponíveis nas origens. Na amostra inicial de oito produtos sem URL principal, dois existem na segunda base, ambos sem fotos; não garante cobertura de todo o catálogo.
+- [x] Publicada somente `api`, imagem `imagens-alternativas-20261116`, com backup `backup-20261117T022423Z-4fCCKn` conferido e outros 24 containers/Nginx/concessões/autenticadores preservados. Sem migrations; worker local e webhooks desativados. [Regras e configuração](docs/IMAGENS_PRODUTOS.md), [evidência](docs/validacao-imagens-alternativas.json).
+
 ## Experiência do console de integrações — 16/11/2026
 
 - [x] Visão geral compacta por aplicação, com busca por nome/client_id, status/ambiente, resumo de acessos/chaves e histórico revogado acessível por filtro. Formulário separado da lista, seções de identificação/permissões/confirmação, cópia do client_id e adição de chave em área própria.
@@ -187,7 +194,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-22 de 33 tarefas deste quadro concluídas. Atualização: 2026-11-16. A contagem não representa prazo ou esforço.
+23 de 34 tarefas deste quadro concluídas. Atualização: 2026-11-16. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
@@ -213,6 +220,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 | — | — | — | R30 — Exportações CSV e envio diário |
 | — | — | — | R32 — Crescimento anual por filial |
 | — | — | — | R33 — Experiência do console de integrações |
+| — | — | — | R34 — Fonte alternativa de imagens de produtos |
 
 ### Pendências e dependências
 

@@ -1,0 +1,158 @@
+{
+  "verificadoEm": "2026-11-17T02:25:23.599869+00:00",
+  "escopo": "Fallback de imagens no painel, catálogo, rankings e detalhes de vendas",
+  "testes": {
+    "unitarios": 98,
+    "integracaoPostgreSQL": 30,
+    "interface": {
+      "ambiente": "PostgreSQL isolado, dados e credencial sintéticos",
+      "catalogoSemVenda": true,
+      "origemAusente": true,
+      "origemQuebrada": true,
+      "ranking": true,
+      "ampliacao": true,
+      "desktopMobileSemOverflow": true,
+      "chaveSomenteServidor": true,
+      "erros": []
+    }
+  },
+  "origemReal": {
+    "origemAlternativaReal": true,
+    "tipo": "image/webp",
+    "bytes": 36598,
+    "largura": 1000,
+    "altura": 1500
+  },
+  "coberturaInicial": {
+    "amostraDeProdutosSemFotoPrincipal": 8,
+    "encontradosNaSegundaBase": 2,
+    "comImagem": 0,
+    "retornos": [
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 200,
+        "imagens": 0
+      },
+      {
+        "status": 200,
+        "imagens": 0
+      }
+    ]
+  },
+  "httpsAutenticado": {
+    "login": 200,
+    "catalogoAutenticado": 200,
+    "exemploHistoricoEncontrado": false,
+    "imagemAutenticada": null,
+    "retornosImagensAmostradas": [
+      502,
+      502,
+      502
+    ],
+    "filialNaoAutorizada": 403
+  },
+  "publicacao": {
+    "publicadoEm": "2026-11-17T02:25:23.599869+00:00",
+    "imagem": "aeropostale-varejo-api:imagens-alternativas-20261116",
+    "servicosAtualizados": [
+      "api"
+    ],
+    "outrosContainersPreservados": 24,
+    "nginxPreservado": true,
+    "unicaConfiguracaoPrivadaAlterada": "PASSWORD_JOINKEY, somente api",
+    "clientesChavesAutenticadoresPreservados": true,
+    "assetsHTTPSIguaisAFonte": true,
+    "imagemSemAutenticacao": 401,
+    "apiSaudavel": true,
+    "imagemRealNaVPS": {
+      "tipo": "image/webp",
+      "bytes": 36598,
+      "largura": 1000,
+      "altura": 1500
+    },
+    "semMigration": true,
+    "backupConferido": "backup-20261117T022423Z-4fCCKn",
+    "pastaOperacional": "/opt/aeropostale-varejo/artifacts/imagens-alternativas-20261117T022423Z"
+  },
+  "workerLocalDesativado": true,
+  "webhooksContinuamDesativados": true,
+  "limites": "Código exato e cor compatível quando conhecida; cobertura da segunda base não é garantida; sem alteração do banco comercial.",
+  "coberturaAdicional": {
+    "amostraDeProdutosSemFotoPrincipal": 12,
+    "encontradosNaSegundaBase": 0,
+    "comImagem": 0,
+    "retornos": [
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      },
+      {
+        "status": 404,
+        "imagens": 0
+      }
+    ]
+  }
+}

@@ -3,6 +3,16 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Fonte alternativa de imagens — 16/11/2026
+
+Imagem atual de `api`: `aeropostale-varejo-api:imagens-alternativas-20261116`. A imagem importada continua prioritária. Sem URL ou com falha de download/decodificação, o painel consulta a segunda base por código e, quando disponível, cor do SKU. Permissões e restrições de filial/vendedor continuam obrigatórias; catálogo sem venda com foto usa uma rota autenticada de consulta ao estoque atual.
+
+`PASSWORD_JOINKEY` foi acrescentada ao `.env` privado e fornecida somente à `api` pelo Compose. Nenhum valor foi incluído nas fontes ou nos assets do navegador. Sem token a segunda base fica desativada. Cache somente em memória; sem migrations ou alteração de registros comerciais. [Correspondência, limites e cobertura](../docs/IMAGENS_PRODUTOS.md).
+
+Publicada somente `api`; outros 24 containers, Nginx, clientes/chaves/autenticadores e `.env.integracoes` preservados. Backup `backup-20261117T022423Z-4fCCKn` com COMPLETE/checksums conferidos (16/11 às 23h24 de São Paulo). Fontes/override e `.env` anterior privados em `/opt/aeropostale-varejo/artifacts/imagens-alternativas-20261117T022423Z`. Para retorno, restaurar os arquivos anteriores dessa pasta, remover o módulo novo que não existia e usar a tag `crescimento-limpo-20261116`; recriar somente `api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait api`. Não alterar os workers nem os demais serviços.
+
+Download real da segunda API validado dentro da VPS; login/catálogo por HTTPS aprovados e imagens sem sessão bloqueadas. A disponibilidade final depende de imagens cadastradas nas duas origens. [Evidência](../docs/validacao-imagens-alternativas.json).
+
 ## Experiência do console — 16/11/2026
 
 Imagem atual de `integracoes-api`: `aeropostale-varejo-integracoes:console-ux-20261116`. Atualizados lista, busca/filtros, formulários, seleção de filiais com nomes, chaves e modal responsivo. A consulta administrativa de clientes passa a incluir `filiais_detalhes`, obtido somente das projeções de filiais autorizadas existentes, sob os mesmos controles de operador/MFA. Contrato público e permissões do banco preservados.
@@ -21,7 +31,7 @@ A publicação preservou as credenciais. Posteriormente, o titular confirmou a r
 
 ## Textos do crescimento removidos — 16/11/2026
 
-Imagem atual do painel: `aeropostale-varejo-api:crescimento-limpo-20261116`. Retirados somente os dois parágrafos de metodologia/pendências abaixo do dashboard. HTML e JavaScript conferidos por HTTPS; navegação computador/celular aprovada nos dois modos. Publicada somente `api`, demais assets, outros 24 containers e Nginx preservados. Sem alteração de banco.
+Imagem desta publicação: `aeropostale-varejo-api:crescimento-limpo-20261116`. Retirados somente os dois parágrafos de metodologia/pendências abaixo do dashboard. HTML e JavaScript conferidos por HTTPS; navegação computador/celular aprovada nos dois modos. Publicada somente `api`, demais assets, outros 24 containers e Nginx preservados. Sem alteração de banco.
 
 Backup existente reconferido no servidor: `backup-20261116T151554Z-ud7mPC`. Fontes/override anteriores em `/opt/aeropostale-varejo/artifacts/crescimento-limpo-20261116T195937Z`; para retorno, restaurar HTML, `assets/crescimento.js` e override, usando a tag anterior `rodape-20261116`, e recriar somente `api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait api`. A apuração comercial foi somente leitura. [Evidência](../docs/validacao-limpeza-crescimento-apuracao.json).
 
@@ -57,7 +67,7 @@ Acesso Admin pelo menu **Integrações e API** ou https://aeropostale.joinnetwor
 
 Um convite individual de 24 horas foi criado para a conta administrativa configurada. O titular entra com sua senha, abre o Google Authenticator em **+ → Ler QR code**, escaneia o código mostrado no console e confirma os seis dígitos na própria interface. A inclusão manual da chave permanece disponível como alternativa. O QR é gerado localmente no navegador e apagado após confirmação, expiração ou saída; não usa serviço externo de imagens. Até essa confirmação não há operador ativo ou acesso ao manual. O desafio expira em cinco minutos, fica vinculado à sessão e não serve como autorização de MFA. Não cadastrar o autenticador, copiar chaves ou enviar códigos pelo chat em nome do titular.
 
-Imagens atuais: `aeropostale-varejo-api:crescimento-limpo-20261116` e `aeropostale-varejo-integracoes:console-ux-20261116` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
+Imagens atuais: `aeropostale-varejo-api:imagens-alternativas-20261116` e `aeropostale-varejo-integracoes:console-ux-20261116` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
 
 Sem migration. `deploy/integracoes-permissoes.sql` concede `UPDATE(ativo)` além de `UPDATE(ultimo_passo)` no registro administrativo; o LOGIN da API continua sem INSERT/DELETE de operadores ou UPDATE do segredo. A emissão do convite usa `scripts/autorizar-operador.mjs UUID` em processo operacional com as URLs dos owners e a chave existente disponibilizadas de forma privada; cria somente um registro inativo e auditoria. Não cria usuário do painel, não substitui cadastro de operador existente e não ativa consumidores ou entregas. Para matrícula/revogação/recuperação operacional já existente, consultar `docs/integracoes/operacao.md`.
 

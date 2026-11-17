@@ -135,13 +135,21 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
     const d=await painelUsuario.detalhe(cliente[1],cliente[2],cliente[3]);
     return enviar(200,{clientes:d.operacao.clientes,importados_em:d.operacao.clientes_importados_em});
    }
+   const imagemCatalogo=/^\/api\/v1\/produtos\/(\d+)\/(\d+)\/imagem$/.exec(path);
+   if(imagemCatalogo){
+    if(!produtos?.imagem||!imagemProduto)throw new ErroApi(404,'IMAGEM_INDISPONIVEL');
+    for(const k of url.searchParams.keys())if(k!=='sku'||url.searchParams.getAll(k).length!==1)throw new ErroApi(400,'PARAMETRO_INVALIDO');
+    const item=await produtos.imagem(user,new URLSearchParams({filial:imagemCatalogo[1],produto:imagemCatalogo[2],sku:url.searchParams.get('sku')??''}));
+    let asset;try{asset=await imagemProduto(item.imagem_url,item);}catch{throw new ErroApi(404,'IMAGEM_INDISPONIVEL');}
+    res.setHeader('Content-Type',asset.type);res.setHeader('Content-Length',asset.body.length);res.writeHead(200);res.end(asset.body);return;
+   }
    const imagem=/^\/api\/v1\/operacoes\/([^/]+)\/([^/]+)\/([^/]+)\/itens\/(\d+)\/imagem$/.exec(path);
    if(imagem){
     exigirPermissao(acesso.permissoes,'vendas:ler');exigirPermissao(acesso.permissoes,'imagens:ler');
     const d=await painelUsuario.detalhe(imagem[1],imagem[2],imagem[3]);
     const item=d.itens.find(i=>i.ordem===Number(imagem[4]));
-    if(!item?.imagem_url||!imagemProduto)throw new ErroApi(404,'IMAGEM_INDISPONIVEL');
-    let asset;try{asset=await imagemProduto(item.imagem_url);}catch{throw new ErroApi(502,'IMAGEM_INDISPONIVEL');}
+    if(!item||(!item.imagem_url&&!item.cod_produto)||!imagemProduto)throw new ErroApi(404,'IMAGEM_INDISPONIVEL');
+    let asset;try{asset=await imagemProduto(item.imagem_url,item);}catch{throw new ErroApi(502,'IMAGEM_INDISPONIVEL');}
     res.setHeader('Content-Type',asset.type);res.setHeader('Content-Length',asset.body.length);res.writeHead(200);res.end(asset.body);return;
    }
    const detalhe=/^\/api\/v1\/operacoes\/([^/]+)\/([^/]+)\/([^/]+)$/.exec(path);

@@ -61,6 +61,7 @@ services:
       TZ: America/Sao_Paulo
       PORT: 3000
       API_HOST: 0.0.0.0
+      PASSWORD_JOINKEY: ${PASSWORD_JOINKEY:-}
       TENANT_KEY: ${TENANT_KEY:?Configure TENANT_KEY}
       CONTROL_DATABASE_URL: postgresql://varejo_control:${CONTROL_DB_PASSWORD}@postgres:5432/varejo_control
       TENANT_DATABASE_URL: postgresql://varejo_aeropostale:${TENANT_DB_PASSWORD}@postgres:5432/varejo_aeropostale

@@ -275,7 +275,7 @@ function loadCustomer(o,container,version){
  for(const customer of o.clientes){container.append(el('strong',customer.nome));const contacts=el('ul');for(const c of customer.contatos){const li=el('li');li.append(el('span',`${c.tipo}: `));const display=[c.ddd,c.telefone].filter(Boolean).join(' ');const link=el('a',display);link.href='tel:'+display.replace(/[^+0-9]/g,'');li.append(link);contacts.append(li);}container.append(customer.contatos.length?contacts:el('p','Telefone não informado pelo ERP.'));}
 }
 async function addProductImage(cell,item,operacao,version){
- if(!pode('imagens:ler')||!item.imagem_url)return;
+ if(!pode('imagens:ler')||(!item.imagem_url&&!item.cod_produto))return;
  const button=el('button',null,'product-photo');button.type='button';button.disabled=true;button.setAttribute('aria-label','Carregando imagem do produto');button.append(el('span','…'));cell.prepend(button);
  try{
   const response=await fetch('/api/v1'+operationPath(operacao)+`/itens/${item.ordem}/imagem`,{headers:{Authorization:`Bearer ${token}`},signal:detailAbort.signal});
@@ -628,7 +628,7 @@ async function openProductDetails(product,pagina=1){
 function smallProductPhoto(p,version,jobs,photoSignal){
  const photo=el('button',null,'product-photo top-product-photo');photo.type='button';photo.disabled=true;photo.setAttribute('aria-label','Foto não disponível');photo.title=p.imagem?'Carregando foto':pode('imagens:ler')?'Sem foto disponível':'Fotos sem permissão';photo.append(el('span',p.imagem?'…':'—'));
  if(p.imagem&&pode('imagens:ler'))jobs.push(async()=>{
-   try{const r=await fetch('/api/v1'+operationPath(p.imagem)+`/itens/${p.imagem.ordem}/imagem`,{headers:{Authorization:`Bearer ${token}`},signal:photoSignal});
+   try{const r=await fetch(p.imagem.catalogo?`/api/v1/produtos/${encodeURIComponent(p.imagem.filial)}/${encodeURIComponent(p.imagem.produto)}/imagem?sku=${encodeURIComponent(p.imagem.sku)}`:'/api/v1'+operationPath(p.imagem)+`/itens/${p.imagem.ordem}/imagem`,{headers:{Authorization:`Bearer ${token}`},signal:photoSignal});
     if(version!==generation)return;if(r.status===401){exitSession(errorText.NAO_AUTENTICADO);return;}if(!r.ok)throw Error('FOTO_INDISPONIVEL');
     const blob=await r.blob();if(version!==generation||photoSignal.aborted)return;
     const url=URL.createObjectURL(blob);overviewPhotoUrls.add(url);const img=el('img');img.alt=p.descricao||'Foto do produto';img.src=url;photo.replaceChildren(img);photo.disabled=false;photo.title='Ampliar foto';photo.setAttribute('aria-label','Ampliar foto de '+(p.descricao||p.cod_produto));

@@ -199,6 +199,12 @@
       "titulo": "Experiência do console de integrações",
       "status": "concluido",
       "detalhe": "Lista com busca/status, cadastro por seções, filiais com nomes, chaves, modal responsivo e renovação de MFA com rascunho. Publicação e preservação verificadas; docs/validacao-console-integracoes-ux.json."
+    },
+    {
+      "id": "R34",
+      "titulo": "Fonte alternativa de imagens de produtos",
+      "status": "concluido",
+      "detalhe": "Fallback por código/cor, prioridade da foto principal, chave restrita à API, cache e permissões preservadas. Publicação e testes aprovados; disponibilidade depende do cadastro de imagens nas origens. docs/validacao-imagens-alternativas.json."
     }
   ]
 }

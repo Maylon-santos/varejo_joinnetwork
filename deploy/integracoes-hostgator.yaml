@@ -2,7 +2,7 @@
 # Confirmar o subnet provisionado antes de reutilizar estes IPs em outra máquina.
 services:
   api:
-    image: aeropostale-varejo-api:crescimento-limpo-20261116
+    image: aeropostale-varejo-api:imagens-alternativas-20261116
   sync-worker:
     image: aeropostale-varejo-sync-worker:integracoes-b8d8448
   integracoes-api:

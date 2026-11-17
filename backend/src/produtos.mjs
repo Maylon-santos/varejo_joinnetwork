@@ -2,7 +2,8 @@ import {ErroApi,filtros,elegivel} from './painel.mjs';
 import {escopoUsuario,exigirPermissao} from './permissoes.mjs';
 const chaveProduto="CASE WHEN NULLIF(i.cod_produto,'') IS NOT NULL THEN 'produto:'||i.cod_produto WHEN NULLIF(i.sku,'') IS NOT NULL THEN 'sku:'||i.sku ELSE 'item:'||i.cod_operacao||':'||i.ordem END";
 const tipoEfetivo='COALESCE(p.tipo_prod,e.tipo_prod)';
-export function criarProdutos(pool,tenant,filiais){
+export function criarProdutos(pool,tenant,filiais,{imagensAlternativas=false}={}){
+ const referenciaImagem="NULLIF(imagem_url,'') IS NOT NULL"+(imagensAlternativas?" OR NULLIF(cod_produto,'') IS NOT NULL":'');
  async function snapshot(user,params,executar){
   if(user.tenant_key!==tenant)throw new ErroApi(403,'TENANT_INCORRETO');
   const acesso=escopoUsuario(user,filiais);exigirPermissao(acesso.permissoes,'produtos:ler');
@@ -22,11 +23,23 @@ export function criarProdutos(pool,tenant,filiais){
   const refs=(await db.query(`SELECT DISTINCT ON(i.sku,i.cod_produto) i.sku,i.cod_produto,
    jsonb_build_object('filial',i.filial::text,'tipo_operacao',i.tipo_operacao,'cod_operacao',i.cod_operacao::text,'ordem',i.ordem) AS imagem
    FROM operacoes o JOIN operacao_itens i USING(cod_operacao,tipo_operacao,filial)
-   WHERE o.filial=$1 AND i.sku=ANY($2::text[]) AND ($3::text IS NULL OR o.vendedor_codigo=$3) AND ${elegivel} AND NULLIF(i.imagem_url,'') IS NOT NULL
-   ORDER BY i.sku,i.cod_produto,o.data_operacao DESC,i.cod_operacao DESC,i.ordem`,[filial,rows.map(p=>p.sku).filter(Boolean),acesso.vendedores===null?null:(acesso.vendedores[filial]??'')])).rows;
-  for(const row of rows)row.imagem=refs.find(r=>r.sku===row.sku&&r.cod_produto===row.cod_produto)?.imagem??null;
+   WHERE o.filial=$1 AND i.sku=ANY($2::text[]) AND ($3::text IS NULL OR o.vendedor_codigo=$3) AND ${elegivel} AND (NULLIF(i.imagem_url,'') IS NOT NULL${imagensAlternativas?" OR NULLIF(i.cod_produto,'') IS NOT NULL":''})
+   ORDER BY i.sku,i.cod_produto,(NULLIF(i.imagem_url,'') IS NOT NULL) DESC,o.data_operacao DESC,i.cod_operacao DESC,i.ordem`,[filial,rows.map(p=>p.sku).filter(Boolean),acesso.vendedores===null?null:(acesso.vendedores[filial]??'')])).rows;
+  for(const row of rows)row.imagem=refs.find(r=>r.sku===row.sku&&r.cod_produto===row.cod_produto)?.imagem??(imagensAlternativas&&acesso.vendedores===null&&row.cod_produto?{catalogo:true,filial,produto:row.produto,sku:row.sku}:null);
  }
  return {
+  imagem:(user,params)=>snapshot(user,params,async(db,acesso,f)=>{
+   exigirPermissao(acesso.permissoes,'imagens:ler');exigirPermissao(acesso.permissoes,'vendas:ler');
+   const produto=params.get('produto'),sku=params.get('sku');
+   if(!imagensAlternativas||!/^\d{1,18}$/.test(produto??'')||!sku||sku.length>100)throw new ErroApi(404,'IMAGEM_INDISPONIVEL');
+   const vendedor=acesso.vendedores===null?null:(acesso.vendedores[f.filial]??'');
+   const item=(await db.query(`SELECT p.cod_produto,e.cor FROM estoque_atual e JOIN cadastro_produtos p USING(produto)
+    WHERE e.filial=$1 AND e.produto=$2 AND e.sku=$3 AND e.presente_ultima_carga
+    AND ($4::text IS NULL OR EXISTS(SELECT 1 FROM operacoes o JOIN operacao_itens i USING(cod_operacao,tipo_operacao,filial) WHERE o.filial=$1 AND i.sku=e.sku AND i.cod_produto=p.cod_produto AND o.vendedor_codigo=$4 AND ${elegivel}))`,[f.filial,produto,sku,vendedor])).rows[0];
+   if(!item)throw new ErroApi(404,'IMAGEM_INDISPONIVEL');
+   const primary=(await db.query(`SELECT i.imagem_url FROM operacoes o JOIN operacao_itens i USING(cod_operacao,tipo_operacao,filial) WHERE o.filial=$1 AND i.sku=$2 AND i.cod_produto=$3 AND ($4::text IS NULL OR o.vendedor_codigo=$4) AND ${elegivel} AND NULLIF(i.imagem_url,'') IS NOT NULL ORDER BY o.data_operacao DESC,i.cod_operacao DESC,i.ordem LIMIT 1`,[f.filial,sku,item.cod_produto,vendedor])).rows[0];
+   return {...item,imagem_url:primary?.imagem_url??null};
+  }),
   top:(user,params)=>snapshot(user,params,async(db,acesso)=>{
    const ordenar=params.get('ordenar')??'valor';if(!['valor','quantidade'].includes(ordenar))throw new ErroApi(400,'FILTRO_INVALIDO');
    const ordem=ordenar==='valor'?'grupos.subtotal_centavos DESC,grupos.pecas DESC':'grupos.pecas DESC,grupos.subtotal_centavos DESC';
@@ -41,7 +54,7 @@ export function criarProdutos(pool,tenant,filiais){
      count(DISTINCT sku)::int AS variacoes,sum(quantidade) AS pecas,count(DISTINCT cod_operacao)::int AS vendas,
      sum(quantidade::numeric*preco_centavos) AS subtotal_centavos,
      (array_agg(jsonb_build_object('filial',filial::text,'tipo_operacao',tipo_operacao,'cod_operacao',cod_operacao::text,'ordem',ordem)
-       ORDER BY data_operacao DESC,cod_operacao DESC,ordem) FILTER(WHERE NULLIF(imagem_url,'') IS NOT NULL))[1] AS imagem
+       ORDER BY (NULLIF(imagem_url,'') IS NOT NULL) DESC,data_operacao DESC,cod_operacao DESC,ordem) FILTER(WHERE ${referenciaImagem}))[1] AS imagem
      FROM itens GROUP BY chave)`;
    const total=(await db.query(`${cte} SELECT count(*)::int AS produtos,COALESCE(sum(pecas),0)::text AS pecas,COALESCE(sum(subtotal_centavos),0)::text AS subtotal_centavos FROM grupos`,args)).rows[0];
    const rows=(await db.query(`${cte} SELECT chave,cod_produto,descricao,variacoes,pecas::text,vendas,subtotal_centavos::text,
@@ -115,7 +128,7 @@ export function criarProdutos(pool,tenant,filiais){
     (array_agg(cod_produto ORDER BY data_operacao DESC,cod_operacao DESC,ordem))[1] AS cod_produto,
     (array_agg(descricao ORDER BY data_operacao DESC,cod_operacao DESC,ordem))[1] AS descricao,
     max(sku) AS sku,
-    (array_agg(jsonb_build_object('filial',filial::text,'tipo_operacao',tipo_operacao,'cod_operacao',cod_operacao::text,'ordem',ordem) ORDER BY data_operacao DESC,cod_operacao DESC,ordem) FILTER(WHERE NULLIF(imagem_url,'') IS NOT NULL))[1] AS imagem,
+    (array_agg(jsonb_build_object('filial',filial::text,'tipo_operacao',tipo_operacao,'cod_operacao',cod_operacao::text,'ordem',ordem) ORDER BY (NULLIF(imagem_url,'') IS NOT NULL) DESC,data_operacao DESC,cod_operacao DESC,ordem) FILTER(WHERE ${referenciaImagem}))[1] AS imagem,
     sum(quantidade) AS pecas,count(DISTINCT cod_operacao)::int AS vendas,
     sum(quantidade::numeric*preco_centavos) AS subtotal_centavos,
     sum(quantidade) FILTER(WHERE desconto_informado IS NOT NULL) AS pecas_com_desconto,
