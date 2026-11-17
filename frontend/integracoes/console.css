@@ -8,3 +8,5 @@ table{min-width:1200px}th{white-space:nowrap;z-index:2}th,td{min-width:110px}tab
 
 /* QR gerado no navegador, sem enviar o segredo a serviços externos. */
 .cadastro-qr{margin:22px 0;max-width:320px}.cadastro-qr canvas{display:block;width:288px;max-width:100%;height:auto;image-rendering:pixelated;border:1px solid #dce3ed;border-radius:8px}.cadastro-qr figcaption{font-size:12px;line-height:1.6;color:#61718a;margin-top:10px}
+
+.chave-cadastrada{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:1rem 0;border-bottom:1px solid #dce4ec}.chave-cadastrada span{overflow-wrap:anywhere;min-width:0;flex:1 1 15rem}#chaves-cadastradas{margin-bottom:1.5rem}dialog{max-width:min(36rem,calc(100vw - 2rem));border:1px solid #dce4ec;border-radius:1rem;padding:1.5rem;color:#172b4d}dialog::backdrop{background:#172b4d66}dialog form{display:grid;gap:1rem}#revogar-alvo{overflow-wrap:anywhere}

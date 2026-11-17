@@ -1,0 +1,54 @@
+{
+  "publicadoEm": "2026-11-17T00:43:01.207589+00:00",
+  "imagem": "aeropostale-varejo-integracoes:revogacao-20261116",
+  "servicosAtualizados": [
+    "integracoes-api"
+  ],
+  "outrosContainersPreservados": 24,
+  "nginxPreservado": true,
+  "configuracaoPrivadaPreservada": true,
+  "clientesChavesAutenticadoresPreservados": true,
+  "assetsHTTPSIguaisAFonte": true,
+  "revogacaoSemAutenticacaoBloqueada": 403,
+  "administracaoNoDominioPublico": 404,
+  "apiSaudavel": true,
+  "semMigration": true,
+  "nenhumaChaveRevogadaPelaPublicacao": true,
+  "backupConferido": "backup-20261117T004151Z-h9hFc7",
+  "testesIntegracaoPostgreSQL": 16,
+  "interface": {
+    "data": "2026-11-17T00:43:42.678Z",
+    "ambiente": "PostgreSQL isolado com dados sintéticos",
+    "login_mfa": true,
+    "cadastro_concessao": true,
+    "cadastro_chave_publica": true,
+    "revogacao_sem_pem": true,
+    "cancelamento_revogacao": true,
+    "mfa_expirado_na_revogacao": true,
+    "auditoria": true,
+    "texto_html_escapado": true,
+    "logout_revoga_sessao": true,
+    "manual_privado": true,
+    "manual_etapas": 10,
+    "manual_computador_celular": true,
+    "copia_sem_clipboard_real": true,
+    "viewports": [
+      {
+        "largura": 1440,
+        "sem_transbordamento": true
+      },
+      {
+        "largura": 390,
+        "sem_transbordamento": true
+      }
+    ],
+    "erros_js": [],
+    "producao_alterada": false
+  },
+  "revogacaoExigeOperadorMFAIfMatchEMotivo": true,
+  "revogacaoPreservaPEMValidadeEOutrasChaves": true,
+  "revogacaoDeChaveExpirada": true,
+  "tokenRevogadoBloqueadoImediatamente": true,
+  "reativacaoDeChaveRevogadaBloqueada": true,
+  "revogacaoRealPendenteDoTitular": true
+}

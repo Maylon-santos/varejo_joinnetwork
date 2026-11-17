@@ -77,7 +77,7 @@ export const manualIntegracoes={
   ],nota:'Reenvios respeitam a retenção de 30 dias, as permissões atuais e o destino verificado. O consumidor precisa tratar duplicatas e eventos fora de ordem. Alterar a URL exige nova verificação.'},
   {id:'manutencao',titulo:'9. Mantenha e encerre acessos',passos:[
    'Revise periodicamente as filiais, os escopos, o estado da integração e a validade das chaves.',
-   'Para trocar a chave da API, cadastre um novo kid, valide a autenticação do consumidor com ele e revogue a chave anterior após concluir a transição.',
+   'Para trocar a chave da API, cadastre um novo kid, valide a autenticação do consumidor com ele e revogue a chave anterior após concluir a transição. Em Editar / chaves, localize a chave antiga na lista Chaves cadastradas, clique em Revogar, confira o kid, informe o motivo e confirme. Não é necessário colar o PEM ou alterar a validade para revogar.',
    'A rotação do segredo de webhook é realizada pela operação POST /v1/webhooks/{webhook_id}/rotacionar-segredo. Ela exige Idempotency-Key e If-Match e possui sobreposição de 24 horas. Essa ação não possui formulário próprio neste console.',
    'Para interromper temporariamente o sistema, selecione Suspenso no cadastro. Para encerrar definitivamente, selecione Revogado. Novos acessos são recusados após a alteração.',
    'Use Auditoria para acompanhar concessões e ações administrativas. Registre o motivo de cada mudança sem inserir tokens, segredos ou dados comerciais.',

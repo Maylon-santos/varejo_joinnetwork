@@ -3,6 +3,14 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Revogação por chave — 16/11/2026
+
+Imagem atual de `integracoes-api`: `aeropostale-varejo-integracoes:revogacao-20261116`. Nova rota administrativa `POST /admin/integracoes/clientes/{id}/chaves/{kid}/revogar`, com os mesmos requisitos de operador/MFA, tenant, If-Match e motivo. O console lista os kids com botão Revogar e confirmação individual, sem PEM ou validade. Cancelar preserva a chave; MFA expirado fecha a confirmação e solicita autenticação novamente. Não expor esta rota no domínio público da API.
+
+Publicada somente `integracoes-api`; outros 24 containers, Nginx, envs, clientes, chaves e autenticadores preservados. Backup prévio `backup-20261117T004151Z-h9hFc7` com COMPLETE/checksums conferidos no servidor (16/11 às 21h41 de São Paulo). Fontes/override anteriores em `/opt/aeropostale-varejo/artifacts/revogacao-chave-20261117T004151Z`. Para retorno, restaurar esses arquivos, usar a tag anterior `qr-20261114` e recriar somente `integracoes-api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait integracoes-api`. Retornar a imagem não reativa chaves revogadas. Sem migrations; workers e webhooks preservados.
+
+A publicação preservou as credenciais. A revogação real depende de confirmação do titular no console. [Evidência](../docs/validacao-revogacao-chaves.json).
+
 ## Textos do crescimento removidos — 16/11/2026
 
 Imagem atual do painel: `aeropostale-varejo-api:crescimento-limpo-20261116`. Retirados somente os dois parágrafos de metodologia/pendências abaixo do dashboard. HTML e JavaScript conferidos por HTTPS; navegação computador/celular aprovada nos dois modos. Publicada somente `api`, demais assets, outros 24 containers e Nginx preservados. Sem alteração de banco.
@@ -41,7 +49,7 @@ Acesso Admin pelo menu **Integrações e API** ou https://aeropostale.joinnetwor
 
 Um convite individual de 24 horas foi criado para a conta administrativa configurada. O titular entra com sua senha, abre o Google Authenticator em **+ → Ler QR code**, escaneia o código mostrado no console e confirma os seis dígitos na própria interface. A inclusão manual da chave permanece disponível como alternativa. O QR é gerado localmente no navegador e apagado após confirmação, expiração ou saída; não usa serviço externo de imagens. Até essa confirmação não há operador ativo ou acesso ao manual. O desafio expira em cinco minutos, fica vinculado à sessão e não serve como autorização de MFA. Não cadastrar o autenticador, copiar chaves ou enviar códigos pelo chat em nome do titular.
 
-Imagens atuais: `aeropostale-varejo-api:crescimento-limpo-20261116` e `aeropostale-varejo-integracoes:qr-20261114` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
+Imagens atuais: `aeropostale-varejo-api:crescimento-limpo-20261116` e `aeropostale-varejo-integracoes:revogacao-20261116` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
 
 Sem migration. `deploy/integracoes-permissoes.sql` concede `UPDATE(ativo)` além de `UPDATE(ultimo_passo)` no registro administrativo; o LOGIN da API continua sem INSERT/DELETE de operadores ou UPDATE do segredo. A emissão do convite usa `scripts/autorizar-operador.mjs UUID` em processo operacional com as URLs dos owners e a chave existente disponibilizadas de forma privada; cria somente um registro inativo e auditoria. Não cria usuário do painel, não substitui cadastro de operador existente e não ativa consumidores ou entregas. Para matrícula/revogação/recuperação operacional já existente, consultar `docs/integracoes/operacao.md`.
 

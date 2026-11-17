@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 16/11/2026
 
+## Revogação de chaves simplificada — 16/11/2026
+
+- [x] Lista de chaves cadastradas com botão **Revogar** por kid e confirmação identificando aplicação/chave. Motivo obrigatório, sem pedir PEM ou validade; cancelamento e MFA expirado tratados na interface. Manual interno atualizado.
+- [x] Rota administrativa exige operador, MFA vinculado à sessão, tenant, If-Match e motivo. Auditoria transacional; preserva PEM, validade, outras chaves e concessões. Chaves expiradas também podem ser revogadas; tokens associados passam a ser recusados e reativação permanece bloqueada.
+- [x] 16 testes de integração PostgreSQL e interface sintética computador/celular aprovados, incluindo cancelamento e MFA expirado. Publicada somente `integracoes-api`, imagem `revogacao-20261116`; outros 24 containers, Nginx, configurações e credenciais preservados. Backup prévio verificado, sem migration. [Evidência](docs/validacao-revogacao-chaves.json).
+- [ ] A publicação não revoga credenciais reais. Titular deve confirmar a revogação da chave anterior pelo botão; o teste assinado com a chave nova continua a cargo do integrador.
+
 ## Nova chave de integração conferida — 16/11/2026
 
 - [x] Titular informou o cadastro de nova chave pelo console; consulta somente leitura confirmou o client_id esperado, chave pública RSA 3072 ativa e igualdade com o PEM recebido. Cadastro ativo em produção, 11 filiais e somente `filiais:ler` preservados. Chaves, identificadores e validade individual mantidos em preparação privada. [Evidência](docs/validacao-nova-chave-integracao.json).

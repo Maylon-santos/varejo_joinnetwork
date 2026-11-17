@@ -95,9 +95,14 @@ export function criarAdministracao(pool,tenant,cofre,auth,filiais){
   }
   exigir(['POST','PUT'].includes(req.method),405,'METHOD_NOT_ALLOWED');exigir(typeof body.motivo==='string'&&body.motivo.trim().length>=5&&body.motivo.length<=500,422,'REASON_REQUIRED');
   return transacao(pool,async db=>{
-   const clientMatch=/^\/clientes(?:\/([a-f0-9-]+))?$/.exec(sub),keyMatch=/^\/clientes\/([a-f0-9-]+)\/chaves\/([A-Za-z0-9_-]{1,100})$/.exec(sub);
+   const clientMatch=/^\/clientes(?:\/([a-f0-9-]+))?$/.exec(sub),keyMatch=/^\/clientes\/([a-f0-9-]+)\/chaves\/([A-Za-z0-9_-]{1,100})(?:\/(revogar))?$/.exec(sub);
    if(keyMatch){
-    exigir(req.method==='PUT'&&UUID.test(keyMatch[1]),400,'INVALID_PARAMETER');const c=(await db.query('SELECT * FROM integration_clients WHERE id=$1 AND tenant_key=$2 FOR UPDATE',[keyMatch[1],tenant])).rows[0];exigir(c,404,'NOT_FOUND');exigir(req.headers['if-match']===etag(c.id,c.versao),412,'RESOURCE_CHANGED');
+    exigir(req.method===(keyMatch[3]?'POST':'PUT')&&UUID.test(keyMatch[1]),400,'INVALID_PARAMETER');const c=(await db.query('SELECT * FROM integration_clients WHERE id=$1 AND tenant_key=$2 FOR UPDATE',[keyMatch[1],tenant])).rows[0];exigir(c,404,'NOT_FOUND');exigir(req.headers['if-match']===etag(c.id,c.versao),412,'RESOURCE_CHANGED');
+    if(keyMatch[3]){
+     const key=(await db.query('UPDATE integration_keys SET ativa=false WHERE cliente_id=$1 AND kid=$2 RETURNING kid,ativa,valida_ate',[c.id,keyMatch[2]])).rows[0];exigir(key,404,'NOT_FOUND');
+     const row=(await db.query('UPDATE integration_clients SET versao=versao+1,atualizado_em=now() WHERE id=$1 RETURNING *',[c.id])).rows[0];
+     await auditar(db,u,'chave_revogada',c.id,body.motivo,{kid:key.kid,ativa:false,valida_ate:key.valida_ate});return {status:200,etag:etag(row.id,row.versao),body:clienteDTO(row)};
+    }
     exigir(typeof body.ativa==='boolean'&&Number.isFinite(Date.parse(body.valida_ate))&&Date.parse(body.valida_ate)>Date.now()&&Date.parse(body.valida_ate)<=Date.now()+366*86400000,422,'INVALID_KEY');chavePublica(body.public_key);
     const old=(await db.query('SELECT public_key,ativa FROM integration_keys WHERE cliente_id=$1 AND kid=$2',[c.id,keyMatch[2]])).rows[0];exigir(!old||old.public_key===body.public_key,409,'KID_ALREADY_USED');exigir(!old||old.ativa||!body.ativa,409,'KEY_REVOKED');
     await db.query('INSERT INTO integration_keys VALUES($1,$2,$3,$4,$5) ON CONFLICT(cliente_id,kid) DO UPDATE SET ativa=$4,valida_ate=$5',[c.id,keyMatch[2],body.public_key,body.ativa,body.valida_ate]);
