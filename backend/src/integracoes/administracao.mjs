@@ -6,6 +6,7 @@ import {criarConsultas} from './consultas.mjs';
 import {criarWebhooks} from './webhooks.mjs';
 import {manualIntegracoes} from './manual.mjs';
 import {prepararCadastro,confirmarCadastro} from './cadastro-operador.mjs';
+import {contextoRecurso} from './projecoes.mjs';
 
 const clienteDTO=c=>({id:c.id,client_id:c.client_id,nome:c.nome,tenant_id:c.tenant_key,ambiente:c.ambiente,finalidade:c.finalidade,estado:c.estado,escopos:c.escopos,filiais:c.filiais,hosts:c.hosts,versao:c.versao,criado_em:c.criado_em,atualizado_em:c.atualizado_em,ultimo_acesso_em:c.ultimo_acesso_em});
 export function criarAdministracao(pool,tenant,cofre,auth,filiais){
@@ -72,7 +73,9 @@ export function criarAdministracao(pool,tenant,cofre,auth,filiais){
    if(sub==='/clientes'){
     exigir(!params.size,400,'INVALID_PARAMETER');const rows=(await pool.query('SELECT * FROM integration_clients WHERE tenant_key=$1 ORDER BY criado_em DESC LIMIT 200',[tenant])).rows;
     const keys=(await pool.query('SELECT k.cliente_id,k.kid,k.ativa,k.valida_ate FROM integration_keys k JOIN integration_clients c ON c.id=k.cliente_id WHERE c.tenant_key=$1',[tenant])).rows;
-    return {status:200,body:{tenant_id:tenant,filiais,data:rows.map(c=>({...clienteDTO(c),chaves:keys.filter(k=>k.cliente_id===c.id)}))}};
+    const resources=(await pool.query("SELECT * FROM integration_resources WHERE recurso='filiais' AND filial=ANY($1::bigint[])",[filiais])).rows;
+    const filiaisDetalhes=resources.map(r=>{const d=cofre.abrir(r.dados,contextoRecurso(r)).data;return {id:String(r.filial),codigo:d.codigo,nome:d.fantasia??d.codigo};});
+    return {status:200,body:{tenant_id:tenant,filiais,filiais_detalhes:filiaisDetalhes,data:rows.map(c=>({...clienteDTO(c),chaves:keys.filter(k=>k.cliente_id===c.id)}))}};
    }
    exigir(['/acessos','/auditoria','/entregas','/metricas','/webhooks'].includes(sub),404,'NOT_FOUND');
    const p=parametros(params,['inicio','fim','cliente_id','limite','antes']),inicio=p.inicio??new Date(Date.now()-3600000).toISOString(),fim=p.fim??new Date().toISOString();

@@ -16,7 +16,7 @@ export const manualIntegracoes={
    'Entre no console com um operador habilitado e valide o MFA. A confirmação forte dura até cinco minutos; informe um novo código quando solicitado.'
   ],nota:'A chave privada fica exclusivamente com o integrador. Nunca a cole no console nem a envie junto com a chave pública.'},
   {id:'cadastro',titulo:'3. Cadastre a integração',passos:[
-   'Abra Integrações e clique em Novo cadastro. Preencha o formulário Cadastrar integração.',
+   'Abra Integrações e clique em Nova integração. Preencha as seções Identificação, Permissões e filiais e Registro e confirmação.',
    'Informe um nome que identifique o sistema e descreva sua finalidade. Selecione Homologação ou Produção conforme o serviço que será acessado. O ambiente não poderá ser alterado após o cadastro.',
    'Durante a preparação, selecione Suspenso. Escolha os escopos e as filiais estritamente necessários.',
    'Para webhook, preencha Hostnames autorizados com um domínio por linha, sem https://, caminho ou porta. Exemplo: integrador.example.com. São permitidos até três hostnames.',
@@ -40,7 +40,7 @@ export const manualIntegracoes={
   ],nota:'Para o fluxo completo de webhook, conceda vendas:ler, webhooks:ler e webhooks:gerenciar. Para uma integração somente de consulta, selecione apenas os recursos de leitura necessários.'},
   {id:'chave',titulo:'5. Registre a chave pública',passos:[
    'Na tabela de integrações, clique em Editar / chaves no cadastro desejado.',
-   'No formulário Chave pública da integração, informe um kid exclusivo. Utilize letras, números, hífen ou sublinhado, com até 100 caracteres.',
+   'Em Chaves de acesso, clique em Adicionar chave e informe um kid exclusivo. Utilize letras, números, hífen ou sublinhado, com até 100 caracteres.',
    'Defina uma validade futura, limitada a 366 dias a partir do cadastro. O horário do formulário segue o fuso do navegador.',
    'Selecione Ativa, cole somente o PEM PUBLIC KEY e informe o motivo do registro.',
    'Clique em Salvar chave. Depois, reabra Editar / chaves para conferir o kid e seu estado.',

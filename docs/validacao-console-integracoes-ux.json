@@ -1,0 +1,94 @@
+{
+  "publicacao": {
+    "publicadoEm": "2026-11-17T01:36:20.542879+00:00",
+    "imagem": "aeropostale-varejo-integracoes:console-ux-20261116",
+    "servicosAtualizados": [
+      "integracoes-api"
+    ],
+    "outrosContainersPreservados": 24,
+    "nginxPreservado": true,
+    "configuracaoPrivadaPreservada": true,
+    "clientesChavesAutenticadoresPreservados": true,
+    "assetsHTTPSIguaisAFonte": true,
+    "revogacaoSemAutenticacaoBloqueada": 403,
+    "administracaoNoDominioPublico": 404,
+    "apiSaudavel": true,
+    "semMigration": true,
+    "nenhumaChaveRevogadaPelaPublicacao": true,
+    "backupConferido": "backup-20261117T013509Z-rIQSzV"
+  },
+  "testesIntegracaoPostgreSQL": 16,
+  "interfaceSintetica": {
+    "data": "2026-11-17T01:34:18.614Z",
+    "ambiente": "PostgreSQL isolado com dados sintéticos",
+    "login_mfa": true,
+    "cadastro_concessao": true,
+    "cadastro_chave_publica": true,
+    "revogacao_sem_pem": true,
+    "cancelamento_revogacao": true,
+    "mfa_expirado_na_revogacao": true,
+    "auditoria": true,
+    "texto_html_escapado": true,
+    "logout_revoga_sessao": true,
+    "manual_privado": true,
+    "manual_etapas": 10,
+    "manual_computador_celular": true,
+    "copia_sem_clipboard_real": true,
+    "viewports": [
+      {
+        "largura": 1440,
+        "sem_transbordamento": true
+      },
+      {
+        "largura": 390,
+        "sem_transbordamento": true
+      }
+    ],
+    "modal": [
+      {
+        "largura": 1440,
+        "controlesVisiveis": true
+      },
+      {
+        "largura": 390,
+        "controlesVisiveis": true
+      }
+    ],
+    "rascunhoPreservadoNoMfa": true,
+    "rascunhoObsoletoBloqueado": true,
+    "buscaAplicacoes": true,
+    "filtroStatus": true,
+    "filiaisComNome": true,
+    "buscaFiliaisPreservaSelecao": true,
+    "copiaClientId": true,
+    "erros_js": [],
+    "producao_alterada": false
+  },
+  "cadastroAutenticador": {
+    "verificadoEm": "2026-11-17T01:34:21.584Z",
+    "ambiente": "dados sintéticos isolados",
+    "menuSomenteAdmin": true,
+    "cadastroComChaveMascarada": true,
+    "qrDecodificadoIgualAoOtpauth": true,
+    "qrRemovidoAposExpiracaoEConfirmacao": true,
+    "semRequisicoesExternas": true,
+    "confirmacaoTotp": true,
+    "manualAbertoPeloLink": true,
+    "chaveRemovidaAposConfirmacao": true,
+    "semTokensNoArmazenamentoDoNavegador": true,
+    "logoutRevogaSessao": true,
+    "computadorCelularSemOverflow": true,
+    "errosJS": []
+  },
+  "safariProducao": {
+    "paginaRecarregada": true,
+    "novoVisualLoginConferido": true,
+    "semSolicitarCredenciaisOuMFA": true,
+    "fluxosAutenticadosConferidosEmAmbienteSintetico": true
+  },
+  "filiaisComNomesDeProjecoesAutorizadas": true,
+  "semNovasPermissoesNoBanco": true,
+  "workerLocalDesativado": true,
+  "webhooksPreservados": true,
+  "dadosPessoaisForaDoGit": true
+}

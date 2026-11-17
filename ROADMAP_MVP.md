@@ -1,5 +1,12 @@
 # Roadmap — Aeropostale Varejo
 
+## Experiência do console de integrações — 16/11/2026
+
+- [x] Visão geral compacta por aplicação, com busca por nome/client_id, status/ambiente, resumo de acessos/chaves e histórico revogado acessível por filtro. Formulário separado da lista, seções de identificação/permissões/confirmação, cópia do client_id e adição de chave em área própria.
+- [x] Permissões com descrições e filiais com nome/código das projeções já autorizadas, busca e contagem sem perder seleção. Configuração opcional de domínios não ativa webhooks. Nenhum acesso adicional ao banco ou à API pública.
+- [x] Modal de revogação corrigido, motivo e alvo claros e botões contidos em computador/celular. Prazo do MFA visível e renovação preservando campos somente em memória; concessão alterada por outro operador invalida o rascunho, sem envio automático.
+- [x] 16 testes de integração e fluxos sintéticos de console, modal, rascunho, QR e manual aprovados em 1440/390 px. Publicada somente `integracoes-api`, imagem `console-ux-20261116`; backup conferido e outros 24 containers/Nginx/credenciais preservados. Sem migrations; worker local e webhooks desativados. HTTPS igual à fonte e novo visual de login observado no Safari. [Uso](docs/CONSOLE_INTEGRACOES_UX.md), [evidência](docs/validacao-console-integracoes-ux.json).
+
 ## Revogação de chaves simplificada — 16/11/2026
 
 - [x] Lista de chaves cadastradas com botão **Revogar** por kid e confirmação identificando aplicação/chave. Motivo obrigatório, sem pedir PEM ou validade; cancelamento e MFA expirado tratados na interface. Manual interno atualizado.
@@ -180,7 +187,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-21 de 32 tarefas deste quadro concluídas. Atualização: 2026-11-16. A contagem não representa prazo ou esforço.
+22 de 33 tarefas deste quadro concluídas. Atualização: 2026-11-16. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
@@ -205,6 +212,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 | — | — | — | R28 — Carga inicial de AERO-BAZAR |
 | — | — | — | R30 — Exportações CSV e envio diário |
 | — | — | — | R32 — Crescimento anual por filial |
+| — | — | — | R33 — Experiência do console de integrações |
 
 ### Pendências e dependências
 
@@ -218,7 +226,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 - [ ] **R25 — Completar preços e pagamentos do histórico:** Consulta de 14/09 às 21h08 UTC: 731 de 26.090 operações preenchidas; 25.359 pendentes. Lotes de três dias por filial/rodada. Divergências registradas em quatro filiais aguardam retentativa/revisão; associação por produto/SKU publicada para tolerar mudança de ordem. Não alterar totais ou checkpoints. Evidência: docs/validacao-complementos.json.
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 - [ ] **R29 — Vendas por hora nos dashboards:** Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json.
-- [ ] **R31 — API externa e webhooks de vendas:** Implementação 0.1.0 concluída e testada isoladamente em 11/11: 21 operações, OAuth private_key_jwt, concessões por tenant/ambiente/filial, revisões/projeções cifradas, snapshots/log, outbox, webhooks HMAC/rotação, teste/ativação, retries/replay/circuito e SSRF. Console delegado com MFA/TOTP, cadastro de clientes/chaves, logs e tempos/p50/p95/p99; SuperAdmin global permanece evolução. Migration 019 e papéis SQL restritos, serviços opt-in, vhost adicional, backup e CI GitHub preparados. 80 unitários, 92 integração PostgreSQL isolado, 19 respostas OpenAPI e Chrome 1440/390 aprovados. Portal nove capítulos, 51 schemas/277 campos; docs/integracoes/operacao.md e docs/validacao-implementacao-integracoes.json. Preparação SSH somente leitura: DNS aponta ao servidor, certificado específico ausente, raiz em 92% com 1,6 GB livres. Maylon escolheu ampliar o disco e preservar imagens de retorno; nenhuma limpeza autorizada. LVM sem espaço livre nos dois discos de 10 GiB: expansão depende da hospedagem. Publicação, TLS/egress, reserva/carga real e consumidor homologado pendentes. Evidência docs/validacao-preparacao-integracoes.json. GitHub recebe código/validações, deploy permanece SSH. Sem credencial real/webhook provisionado ou mudança de produção; worker local desativado. Não conclui SaaS/R11/R22/R29. Backup externo verificado e snapshot disponível; reinícios por SSH e provedor concluídos em 11/11, com retomada dos 16 containers e HTTPS saudável. Disco ainda 10+10 GiB, raiz 19G/1,5G livres e LVM sem espaço: adicional ativo na Central ainda não apresentado ao Linux. Sem alteração de partição/LVM/filesystem. Evidência docs/validacao-reinicio-vps.json.
+- [ ] **R31 — API externa e webhooks de vendas:** Infraestrutura da API externa, documentação pública separada e console administrativo publicados na HostGator; coletor remoto ativo e worker local desativado. Primeiro acesso de leitura às 11 filiais validado em 14/11; substituição da chave confirmada em 16/11, com a anterior revogada. Console e manual revisados, MFA, concessões e auditoria preservados. Webhooks permanecem desativados. Teste assinado com a nova chave e homologação completa do consumidor/recursos adicionais continuam pendentes. Evidências: docs/validacao-publicacao-integracoes-hostgator.json, docs/validacao-acesso-integracao-filiais.json, docs/validacao-nova-chave-integracao.json e docs/validacao-console-integracoes-ux.json. Registros anteriores de recuperação e disco permanecem no histórico. Não conclui SaaS/R11/R22/R29.
 
 <!-- KANBAN:FIM -->
 

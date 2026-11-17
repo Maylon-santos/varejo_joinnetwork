@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 16/11/2026
 
+## Experiência do console de integrações — 16/11/2026
+
+- [x] Visão geral compacta por aplicação, com busca por nome/client_id, status/ambiente, resumo de acessos/chaves e histórico revogado acessível por filtro. Formulário separado da lista, seções de identificação/permissões/confirmação, cópia do client_id e adição de chave em área própria.
+- [x] Permissões com descrições e filiais com nome/código das projeções já autorizadas, busca e contagem sem perder seleção. Configuração opcional de domínios não ativa webhooks. Nenhum acesso adicional ao banco ou à API pública.
+- [x] Modal de revogação corrigido, motivo e alvo claros e botões contidos em computador/celular. Prazo do MFA visível e renovação preservando campos somente em memória; concessão alterada por outro operador invalida o rascunho, sem envio automático.
+- [x] 16 testes de integração e fluxos sintéticos de console, modal, rascunho, QR e manual aprovados em 1440/390 px. Publicada somente `integracoes-api`, imagem `console-ux-20261116`; backup conferido e outros 24 containers/Nginx/credenciais preservados. Sem migrations; worker local e webhooks desativados. HTTPS igual à fonte e novo visual de login observado no Safari. [Uso](docs/CONSOLE_INTEGRACOES_UX.md), [evidência](docs/validacao-console-integracoes-ux.json).
+
 ## Revogação de chaves simplificada — 16/11/2026
 
 - [x] Lista de chaves cadastradas com botão **Revogar** por kid e confirmação identificando aplicação/chave. Motivo obrigatório, sem pedir PEM ou validade; cancelamento e MFA expirado tratados na interface. Manual interno atualizado.

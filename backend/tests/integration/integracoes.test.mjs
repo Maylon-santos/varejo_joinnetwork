@@ -145,7 +145,7 @@ test('API externa: autenticação, isolamento, snapshots, log, outbox, webhook e
    const manual=await admin(req,'/admin/integracoes/manual',params({}),null);assert.equal(manual.status,200);assert.equal(manual.body.secoes.length,10);
    await assert.rejects(()=>admin(req,'/admin/integracoes/manual',params({x:'1'}),null),e=>e.code==='INVALID_PARAMETER');
    await assert.rejects(()=>admin({...req,headers:{...req.headers,authorization:'Bearer '+token}},'/admin/integracoes/manual',params({}),null),e=>e.status===403);
-   assert.equal((await admin(req,'/admin/integracoes/clientes',params({}),null)).body.data.length,1);
+   const listaAdmin=(await admin(req,'/admin/integracoes/clientes',params({}),null)).body;assert.equal(listaAdmin.data.length,1);assert.ok(listaAdmin.filiais_detalhes.length>0);assert.ok(listaAdmin.filiais_detalhes.every(f=>filiais.includes(f.id)));assert.ok(listaAdmin.filiais_detalhes.every(f=>Object.keys(f).sort().join(',')==='codigo,id,nome'));
    await assert.rejects(()=>admin({...req,headers:{...req.headers,authorization:'Bearer '+token}},'/admin/integracoes/clientes',params({}),null),e=>e.status===403);
    // Revogação direcionada dispensa PEM/validade e bloqueia imediatamente o token dessa chave.
    const pem=publicKey.export({type:'spki',format:'pem'}),revKid='revogar-antiga',keepKid='manter-nova';
