@@ -106,10 +106,11 @@ sale_fields={
  'cancelada':field('boolean','Indica se a venda está cancelada.','operacoes.cancelada OR EXISTS cancelamentos'),
  'vendedor':ref('Vendedor','Identificação disponível; nome exige permissão específica.',origin='operacoes.vendedor_codigo/vendedor_nome'),
  'evento_codigo':text('Código de classificação da operação na origem.','operacoes.evento_codigo',True),
+ 'evento_descricao':text('Descrição cadastral do evento, a partir do catálogo confirmado. Null quando o código estiver ausente ou sem descrição confirmada. Não representa uma descrição histórica individual da venda.','catálogo confirmado de eventos',True),
  'conferencia':ref('Conferencia','Indicadores de consistência da operação.'),
  'versao':ident('Versão monotônica do recurso na API.'),
  'atualizado_em':timestamp('Instante de disponibilização desta versão do recurso.')}
-obj('VendaResumo','Cabeçalho retornado na lista e na referência de eventos.',sale_fields)
+obj('VendaResumo','Cabeçalho retornado na lista e na referência de eventos.',sale_fields,optional=['evento_descricao'])
 obj('Venda','Detalhe sem arrays volumosos; itens/pagamentos possuem endpoints paginados.',{
  **copy.deepcopy(sale_fields),
  'ajuste_centavos':money('Ajuste monetário da operação; null é ausência, não zero.','operacoes.ajuste_centavos',True),
@@ -122,7 +123,7 @@ obj('Venda','Detalhe sem arrays volumosos; itens/pagamentos possuem endpoints pa
  'cancelada_em':timestamp('Data/hora do evento de cancelamento, quando existente.','cancelamentos.data_cancelou',True),
  'clientes':array('ClienteVenda','Omitido sem permissão e opt-in. Null=pending; []=fonte sem cliente.','operacoes.clientes',True),
  'itens_url':text('Rota relativa paginada; usar ETag em If-Match.',format='uri-reference'),
- 'pagamentos_url':text('Rota relativa paginada; usar ETag em If-Match.',format='uri-reference')},optional=['clientes'])
+ 'pagamentos_url':text('Rota relativa paginada; usar ETag em If-Match.',format='uri-reference')},optional=['clientes','evento_descricao'])
 obj('ItemVenda','Snapshot de item na venda; preço não é uma tabela atual do catálogo.',{
  'ordem':field('integer','Posição importada, baseada em zero. Pode mudar no reprocessamento; atualizar coleção inteira da revisão.','operacao_itens.ordem',minimum=0),
  'sku':text('SKU textual; null se a fonte não informou.','operacao_itens.sku',True),
@@ -374,7 +375,7 @@ spec['webhooks']={'eventoVenda':{'post':{'summary':'Receber evento de venda ou t
 
 meta={'request_id':'11111111-1111-4111-8111-111111111111','gerado_em':'2026-11-11T12:00:00Z','snapshot_id':None,'snapshot_expira_em':None,'recurso_versao':None}
 note={'numero_nota':'000123','modelo':'65','idnfe':'ID-FISCAL-DEMONSTRATIVO','status':None}
-sale={'id':'vnd_1001_S_900001','filial_id':'1001','cod_operacao':'900001','tipo_operacao':'S','data_operacao':'2026-11-10','hora_venda':None,'quantidade':2,'valor_final_centavos':'18000','cancelada':False,'vendedor':{'codigo':'42'},'evento_codigo':'10','conferencia':{'situacao':'conciliada','tolerancia_centavos':'2','erro_erp_confirmado':False,'homologacao_comercial':'nao_declarada'},'versao':'12','atualizado_em':'2026-11-11T12:00:00Z'}
+sale={'id':'vnd_1001_S_900001','filial_id':'1001','cod_operacao':'900001','tipo_operacao':'S','evento_codigo':'FR-02','evento_descricao':'VENDA VAREJO CUPOM FISCAL  - FRANQUIA','data_operacao':'2026-11-10','hora_venda':None,'quantidade':2,'valor_final_centavos':'18000','cancelada':False,'vendedor':{'codigo':'42'},'conferencia':{'situacao':'conciliada','tolerancia_centavos':'2','erro_erp_confirmado':False,'homologacao_comercial':'nao_declarada'},'versao':'12','atualizado_em':'2026-11-11T12:00:00Z'}
 detail={**copy.deepcopy(sale),'ajuste_centavos':'-2000','subtotal_itens_centavos':'20000','frete_centavos':None,'cortesia_informada':0,'nota_fiscal':note,'condicao_pagamento':{'id':'5','codigo':'CREDITO2','descricao':'Crédito em duas parcelas'},'cobertura':{'itens':'disponivel','pagamentos':'disponivel','nota_fiscal':'disponivel','pessoas':'restrito','complementos_importados_em':'2026-11-11T12:00:00Z'},'cancelada_em':None,'itens_url':'/v1/vendas/vnd_1001_S_900001/itens','pagamentos_url':'/v1/vendas/vnd_1001_S_900001/pagamentos'}
 pagination={'limite':100,'quantidade':1,'tem_mais':False,'cursor_proximo':None}
 listmeta={**meta,'snapshot_id':'snp_demo_001','snapshot_expira_em':'2026-11-11T12:30:00Z'}
@@ -386,7 +387,7 @@ examples={'venda.json':('RespostaVenda',{'data':detail,'meta':meta}),
  'itens.json':('ListaItemVenda',{'data':[{'ordem':0,'sku':'CAMISETA-AZUL-M','cod_produto':'CAM-001','descricao':'Camiseta demonstrativa','quantidade':2,'preco_centavos':'10000','preco_tabela_centavos':'12500','preco_aplicado_centavos':'10000','desconto_percentual_informado':'20','subtotal_centavos':'20000','imagem_disponivel':False}],'paginacao':pagination,'meta':{**listmeta,'recurso_versao':'12'}}),
  'pagamentos.json':('ListaPagamento',{'data':[{'ordem':0,'origem':'DEMO','n_documento':'DEMO/1','data_emissao':'2026-11-10','data_vencimento':'2026-12-10','desc_tipopgto':'CARTAO','nsu':None,'valor_inicial_centavos':'9000'},{'ordem':1,'origem':'DEMO','n_documento':'DEMO/2','data_emissao':'2026-11-10','data_vencimento':'2027-01-10','desc_tipopgto':'CARTAO','nsu':None,'valor_inicial_centavos':'9000'}],'paginacao':{**pagination,'quantidade':2},'meta':{**listmeta,'recurso_versao':'12'}}),
  'filiais.json':('ListaFilial',{'data':[{'id':'1001','codigo':'LOJA-DEMO','fantasia':'Loja demonstrativa','trans_id_origem':'900','versao':'4','atualizado_em':'2026-11-11T11:00:00Z'}],'paginacao':pagination,'meta':listmeta}),
- 'produtos.json':('ListaProduto',{'data':[{'id':'700001','codigo':'CAM-001','descricao':'Camiseta demonstrativa','tipo_prod':'AC','classificacao':{k:{'codigo':None,'descricao':None} for k in ['colecao','departamento','grupo','categoria','grade','marca']},'trans_id_origem':'901','cadastro_consultado_em':'2026-11-11T11:00:00Z','cadastro_disponivel':True,'versao':'10','atualizado_em':'2026-11-11T11:00:00Z'}],'paginacao':pagination,'meta':listmeta}),
+ 'produtos.json':('ListaProduto',{'data':[{'id':'700001','codigo':'CAM-001','descricao':'Camiseta demonstrativa','tipo_prod':'AC','classificacao':{**{k:{'codigo':None,'descricao':None} for k in ['colecao','departamento','grupo','categoria','grade','marca']},'marca':{'codigo':'MARCA-DEMO','descricao':'Marca demonstrativa'},'categoria':{'codigo':'CAMISETAS','descricao':'Camisetas'}},'trans_id_origem':'901','cadastro_consultado_em':'2026-11-11T11:00:00Z','cadastro_disponivel':True,'versao':'10','atualizado_em':'2026-11-11T11:00:00Z'}],'paginacao':pagination,'meta':listmeta}),
  'estoque.json':('RespostaEstoque',{'data':stock,'meta':meta}),
  'webhook-venda.json':('EventoVenda',event),
  'webhook-teste.json':('EventoTeste',{'id':'33333333-3333-4333-8333-333333333333','tipo':'webhook.teste','schema_version':'1.0','criado_em':'2026-11-11T12:00:00Z','data':{'mensagem':'Teste de conectividade e assinatura'}}),

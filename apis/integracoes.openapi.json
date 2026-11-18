@@ -13512,6 +13512,13 @@
             ],
             "description": "Código de classificação da operação na origem."
           },
+          "evento_descricao": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Descrição cadastral do evento, a partir do catálogo confirmado. Null quando o código estiver ausente ou sem descrição confirmada. Não representa uma descrição histórica individual da venda."
+          },
           "conferencia": {
             "$ref": "#/components/schemas/Conferencia",
             "description": "Indicadores de consistência da operação."
@@ -13609,6 +13616,13 @@
               "null"
             ],
             "description": "Código de classificação da operação na origem."
+          },
+          "evento_descricao": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Descrição cadastral do evento, a partir do catálogo confirmado. Null quando o código estiver ausente ou sem descrição confirmada. Não representa uma descrição histórica individual da venda."
           },
           "conferencia": {
             "$ref": "#/components/schemas/Conferencia",
@@ -15249,16 +15263,16 @@
                     "descricao": null
                   },
                   "categoria": {
-                    "codigo": null,
-                    "descricao": null
+                    "codigo": "CAMISETAS",
+                    "descricao": "Camisetas"
                   },
                   "grade": {
                     "codigo": null,
                     "descricao": null
                   },
                   "marca": {
-                    "codigo": null,
-                    "descricao": null
+                    "codigo": "MARCA-DEMO",
+                    "descricao": "Marca demonstrativa"
                   }
                 },
                 "trans_id_origem": "901",
@@ -15366,6 +15380,8 @@
                 "filial_id": "1001",
                 "cod_operacao": "900001",
                 "tipo_operacao": "S",
+                "evento_codigo": "FR-02",
+                "evento_descricao": "VENDA VAREJO CUPOM FISCAL  - FRANQUIA",
                 "data_operacao": "2026-11-10",
                 "hora_venda": null,
                 "quantidade": 2,
@@ -15374,7 +15390,6 @@
                 "vendedor": {
                   "codigo": "42"
                 },
-                "evento_codigo": "10",
                 "conferencia": {
                   "situacao": "conciliada",
                   "tolerancia_centavos": "2",
@@ -15680,6 +15695,8 @@
               "filial_id": "1001",
               "cod_operacao": "900001",
               "tipo_operacao": "S",
+              "evento_codigo": "FR-02",
+              "evento_descricao": "VENDA VAREJO CUPOM FISCAL  - FRANQUIA",
               "data_operacao": "2026-11-10",
               "hora_venda": null,
               "quantidade": 2,
@@ -15688,7 +15705,6 @@
               "vendedor": {
                 "codigo": "42"
               },
-              "evento_codigo": "10",
               "conferencia": {
                 "situacao": "conciliada",
                 "tolerancia_centavos": "2",

@@ -4,6 +4,8 @@
     "filial_id": "1001",
     "cod_operacao": "900001",
     "tipo_operacao": "S",
+    "evento_codigo": "FR-02",
+    "evento_descricao": "VENDA VAREJO CUPOM FISCAL  - FRANQUIA",
     "data_operacao": "2026-11-10",
     "hora_venda": null,
     "quantidade": 2,
@@ -12,7 +14,6 @@
     "vendedor": {
       "codigo": "42"
     },
-    "evento_codigo": "10",
     "conferencia": {
       "situacao": "conciliada",
       "tolerancia_centavos": "2",

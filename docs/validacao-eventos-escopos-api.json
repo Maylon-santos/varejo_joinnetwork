@@ -1,0 +1,32 @@
+{
+  "verificadoEm": "2026-11-18T20:22:54.776390+00:00",
+  "estado": "implementado_validado_publicacao_pendente",
+  "campo": "evento_descricao",
+  "origem": "descricao_evento: catálogo de dez códigos confirmado na origem em 2026-10-31; sem inferência para códigos desconhecidos",
+  "respostas": [
+    "GET /v1/vendas",
+    "GET /v1/vendas/{venda_id}"
+  ],
+  "historico": "Projeções antigas atendidas na leitura, sem reimportação comercial ou mudança da versão da venda. Campo opcional para compatibilidade com cursores já materializados.",
+  "escopos": {
+    "vendas:ler": "cabeçalho, valor, data, filial_id, código vendedor e itens em coleção separada",
+    "produtos:ler": "cadastro atual, marca/categoria e variações por SKU",
+    "vendas:pessoas:ler": "nome vendedor e clientes no detalhe; exige vendas:ler e incluir_pessoas=true"
+  },
+  "testes": {
+    "unitarios": 100,
+    "integracaoPostgreSQL": 17,
+    "respostasCompativeisOpenAPI": 19,
+    "exemplosJSON": 11,
+    "portalDesktopMobile": true,
+    "isolamentoDeEscopos": true,
+    "campoLegadoSemMutacao": true
+  },
+  "semMigration": true,
+  "dadosComerciaisAlterados": false,
+  "credenciaisOuConcessoesAlteradas": false,
+  "webhooksAtivados": false,
+  "workerLocalPreservadoDesativado": true,
+  "publicado": false,
+  "impedimento": "SSH Hostgator recusou senha local e chave configurada; atualização do acesso solicitada ao titular."
+}

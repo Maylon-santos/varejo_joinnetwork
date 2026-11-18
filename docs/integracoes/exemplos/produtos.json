@@ -19,16 +19,16 @@
           "descricao": null
         },
         "categoria": {
-          "codigo": null,
-          "descricao": null
+          "codigo": "CAMISETAS",
+          "descricao": "Camisetas"
         },
         "grade": {
           "codigo": null,
           "descricao": null
         },
         "marca": {
-          "codigo": null,
-          "descricao": null
+          "codigo": "MARCA-DEMO",
+          "descricao": "Marca demonstrativa"
         }
       },
       "trans_id_origem": "901",

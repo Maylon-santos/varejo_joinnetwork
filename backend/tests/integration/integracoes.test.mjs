@@ -24,9 +24,9 @@ test('API externa: autenticação, isolamento, snapshots, log, outbox, webhook e
  try{
   await a.pool.query(`INSERT INTO integration_clients(id,tenant_key,client_id,nome,ambiente,finalidade,estado,escopos,filiais,hosts) VALUES($1,'teste',$2,'Cliente sintético','homologacao','Teste automatizado','ativo',$3,'["1"]','["recebe.exemplo.com"]')`,[id,clientId,JSON.stringify(['vendas:ler','vendas:pessoas:ler','filiais:ler','produtos:ler','estoques:ler','webhooks:ler','webhooks:gerenciar'])]);
   await a.pool.query("INSERT INTO integration_keys VALUES($1,$2,$3,true,now()+interval '1 day')",[id,kid,publicKey.export({type:'spki',format:'pem'})]);
-  await a.pool.query("UPDATE operacoes SET data_operacao='2026-11-01',clientes='[]',complementos=$1,complementos_importados_em=now() WHERE filial=1",[JSON.stringify({nota_fiscal:{numero_nota:'000007',modelo:'65',idnfe:'9007199254740993',status:null},frete_centavos:'0',cortesia_informada:0,lancamentos:[{origem:'ERP',historico:'Pessoa fictícia',valor_inicial_centavos:'100'}]})]);
-  await a.pool.query("INSERT INTO operacao_itens(cod_operacao,tipo_operacao,filial,ordem,sku,quantidade,preco_centavos) VALUES(10,'S',1,0,'SKU/01',1,100)");
-  await a.pool.query("INSERT INTO cadastro_produtos(produto,cod_produto,descricao,tipo_prod) VALUES(9007199254740993,'00001','Produto fictício','AC')");
+  await a.pool.query("UPDATE operacoes SET data_operacao='2026-11-01',evento_codigo='FR-02',clientes='[{\"cliente_codigo\":\"99\",\"nome\":\"Cliente sintético\",\"contatos\":[]}]',complementos=$1,complementos_importados_em=now() WHERE filial=1",[JSON.stringify({nota_fiscal:{numero_nota:'000007',modelo:'65',idnfe:'9007199254740993',status:null},frete_centavos:'0',cortesia_informada:0,lancamentos:[{origem:'ERP',historico:'Pessoa fictícia',valor_inicial_centavos:'100'}]})]);
+  await a.pool.query("INSERT INTO operacao_itens(cod_operacao,tipo_operacao,filial,ordem,sku,cod_produto,quantidade,preco_centavos) VALUES(10,'S',1,0,'SKU/01','00001',1,100)");
+  await a.pool.query("INSERT INTO cadastro_produtos(produto,cod_produto,descricao,tipo_prod,classificacao) VALUES(9007199254740993,'00001','Produto fictício','AC',$1)",[JSON.stringify({marca:{codigo:'M1',descricao:'Marca sintética'},categoria:{codigo:'C1',descricao:'Categoria sintética'}})]);
   await a.pool.query("INSERT INTO estoque_atual(filial,sku,produto,saldo,trans_id) VALUES(1,'SKU/01',9007199254740993,-2.123456,1)");
   await t.test('private_key_jwt emite token opaco, rejeita replay e assinatura incorreta',async()=>{
    const jwt=assertion(),session=await identity.emitir(tokenBody(jwt),'ip-ficticio');token=session.access_token;c=await identity.autenticar(token);assert.equal(c.id,id);assert.equal(session.expires_in,900);
@@ -52,13 +52,23 @@ test('API externa: autenticação, isolamento, snapshots, log, outbox, webhook e
   const filtro={filial_id:'1',inicio:'2026-11-01',fim:'2026-11-01',limite:'1'};
   await t.test('snapshot fica estável após atualização; cursor não atravessa cliente, filtros ou concessões',async()=>{
    const first=await consultas.consultar(c,'/v1/vendas',params(filtro),{},rid());assert.equal(first.body.data.length,1);assert.equal(first.body.data[0].valor_final_centavos,'100');assert.ok(!('nome' in first.body.data[0].vendedor));
-   guardar('ListaVendaResumo',first.body);
+   assert.equal(first.body.data[0].evento_codigo,'FR-02');assert.equal(first.body.data[0].evento_descricao,'VENDA VAREJO CUPOM FISCAL  - FRANQUIA');guardar('ListaVendaResumo',first.body);
    const cursor=first.body.paginacao.cursor_proximo;assert.ok(cursor);await a.pool.query("UPDATE operacoes SET valor_final_centavos=777 WHERE filial=1 AND cod_operacao=20");await publicar(100);
    const second=await consultas.consultar(c,'/v1/vendas',params({...filtro,cursor}),{},rid());assert.equal(second.body.data[0].valor_final_centavos,'100');
    await assert.rejects(()=>consultas.consultar({...c,id:randomUUID()},'/v1/vendas',params({...filtro,cursor}),{},rid()),e=>e.code==='INVALID_CURSOR');
    await assert.rejects(()=>consultas.consultar({...c,versao:'2'},'/v1/vendas',params({...filtro,cursor}),{},rid()),e=>e.code==='INVALID_CURSOR');
    await assert.rejects(()=>consultas.consultar(c,'/v1/vendas',params({...filtro,estado:'ativas',cursor}),{},rid()),e=>e.code==='INVALID_CURSOR');
    await assert.rejects(()=>consultas.consultar(c,'/v1/vendas',params({...filtro,filial_id:'2'}),{},rid()),e=>e.status===403);
+  });
+  await t.test('escopos de vendas, produtos e pessoas são independentes; itens e classificação podem ser relacionados',async()=>{
+   const vendaOnly={...c,escopos:['vendas:ler']},produtoOnly={...c,escopos:['produtos:ler']},pessoasOnly={...c,escopos:['vendas:pessoas:ler']},url='/v1/vendas/vnd_1_S_10';
+   const d=await consultas.consultar(vendaOnly,url,params({}),{},rid());assert.equal(d.body.data.vendedor.codigo,'10');assert.ok(!('nome' in d.body.data.vendedor));assert.ok(!('clientes' in d.body.data));assert.equal(d.body.data.evento_descricao,'VENDA VAREJO CUPOM FISCAL  - FRANQUIA');
+   const items=await consultas.consultar(vendaOnly,url+'/itens',params({}),{'if-match':d.etag},rid());assert.equal(items.body.data[0].cod_produto,'00001');assert.equal(items.body.data[0].sku,'SKU/01');
+   const product=await consultas.consultar(produtoOnly,'/v1/produtos/9007199254740993',params({filial_id:'1'}),{},rid());assert.equal(product.body.data.codigo,items.body.data[0].cod_produto);assert.deepEqual(product.body.data.classificacao.marca,{codigo:'M1',descricao:'Marca sintética'});assert.deepEqual(product.body.data.classificacao.categoria,{codigo:'C1',descricao:'Categoria sintética'});
+   const people=await consultas.consultar(c,url,params({incluir_pessoas:'true'}),{},rid());assert.equal(people.body.data.clientes[0].cliente_codigo,'99');assert.equal(people.body.data.clientes[0].nome,'Cliente sintético');assert.equal(people.body.data.vendedor.nome,'Ana Exemplo');
+   await assert.rejects(()=>consultas.consultar(vendaOnly,url,params({incluir_pessoas:'true'}),{},rid()),e=>e.status===403);
+   await assert.rejects(()=>consultas.consultar(vendaOnly,'/v1/produtos/9007199254740993',params({filial_id:'1'}),{},rid()),e=>e.status===403);
+   for(const only of [produtoOnly,pessoasOnly])await assert.rejects(()=>consultas.consultar(only,url,params({}),{},rid()),e=>e.status===403);
   });
   await t.test('fiscal, pessoas, filhos com ETag, IDs grandes, SKU codificado e estoque negativo',async()=>{
    const d=await consultas.consultar(c,'/v1/vendas/vnd_1_S_10',params({}),{},rid());assert.equal(d.body.data.nota_fiscal.numero_nota,'000007');assert.equal(d.body.data.cortesia_informada,0);assert.ok(!('clientes' in d.body.data));

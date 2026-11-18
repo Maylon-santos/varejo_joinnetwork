@@ -1,6 +1,7 @@
 import {randomUUID} from 'node:crypto';
 import {hash,canonico} from './seguranca.mjs';
 import {transacao,identidade} from './banco.mjs';
+import {descricaoEvento} from './eventos-venda.mjs';
 
 const iso=v=>v==null?null:new Date(v).toISOString();
 const money=v=>v==null?null:String(v);
@@ -91,6 +92,9 @@ export function criarPublicador(pool,tenant,cofre,filiais){
 }
 export function permitirPessoas(payload,permitido,resumo=false){
  const p=structuredClone(payload),d=p.data;
+ // Campo aditivo de consulta: projeções antigas são atendidas sem reimportação
+ // comercial, mudança de versão da venda ou geração de eventos de webhook.
+ d.evento_descricao=descricaoEvento(d.evento_codigo);
  if(!permitido){delete d.vendedor?.nome;delete d.clientes;if(d.cobertura)d.cobertura.pessoas='restrito';p.pagamentos=p.pagamentos?.map(({desc_gerador,historico,...l})=>l)??null;}
  if(resumo){for(const k of ['ajuste_centavos','subtotal_itens_centavos','frete_centavos','cortesia_informada','nota_fiscal','condicao_pagamento','cobertura','cancelada_em','clientes','itens_url','pagamentos_url'])delete d[k];}
  return p;

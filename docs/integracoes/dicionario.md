@@ -131,6 +131,7 @@ Cabeçalho retornado na lista e na referência de eventos.
 | `cancelada` | boolean | obrigatória | Indica se a venda está cancelada. |
 | `vendedor` | Vendedor | obrigatória | Identificação disponível; nome exige permissão específica. |
 | `evento_codigo` | string / null | obrigatória | Código de classificação da operação na origem. |
+| `evento_descricao` | string / null | opcional / condicional | Descrição cadastral do evento, a partir do catálogo confirmado. Null quando o código estiver ausente ou sem descrição confirmada. Não representa uma descrição histórica individual da venda. |
 | `conferencia` | Conferencia | obrigatória | Indicadores de consistência da operação. |
 | `versao` | string | obrigatória | Versão monotônica do recurso na API. pattern="^\\d{1,30}$". |
 | `atualizado_em` | string | obrigatória | Instante de disponibilização desta versão do recurso. format="date-time". |
@@ -152,6 +153,7 @@ Detalhe sem arrays volumosos; itens/pagamentos possuem endpoints paginados.
 | `cancelada` | boolean | obrigatória | Indica se a venda está cancelada. |
 | `vendedor` | Vendedor | obrigatória | Identificação disponível; nome exige permissão específica. |
 | `evento_codigo` | string / null | obrigatória | Código de classificação da operação na origem. |
+| `evento_descricao` | string / null | opcional / condicional | Descrição cadastral do evento, a partir do catálogo confirmado. Null quando o código estiver ausente ou sem descrição confirmada. Não representa uma descrição histórica individual da venda. |
 | `conferencia` | Conferencia | obrigatória | Indicadores de consistência da operação. |
 | `versao` | string | obrigatória | Versão monotônica do recurso na API. pattern="^\\d{1,30}$". |
 | `atualizado_em` | string | obrigatória | Instante de disponibilização desta versão do recurso. format="date-time". |

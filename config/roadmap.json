@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-11-16",
+  "atualizadoEm": "2026-11-18",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -205,6 +205,12 @@
       "titulo": "Fonte alternativa de imagens de produtos",
       "status": "concluido",
       "detalhe": "Fallback por código/cor, prioridade da foto principal, chave restrita à API, cache e permissões preservadas. Publicação e testes aprovados; disponibilidade depende do cadastro de imagens nas origens. docs/validacao-imagens-alternativas.json."
+    },
+    {
+      "id": "R35",
+      "titulo": "Evento da venda e exemplos dos escopos da API",
+      "status": "validacao",
+      "detalhe": "Descrição do evento implementada por catálogo confirmado, API/documentação/testes aprovados. Publicação pendente de acesso SSH atualizado. docs/validacao-eventos-escopos-api.json."
     }
   ]
 }

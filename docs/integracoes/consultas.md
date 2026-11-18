@@ -75,6 +75,17 @@ curl --get "$BASE/v1/vendas" \
 
 A identidade de uma venda é o conjunto **tenant + filial + tipo de operação + código de operação**. O ID externo `vnd_1001_S_900001` codifica os três últimos componentes, mas não substitui autorização. O consumidor deve manter o namespace do tenant/credencial: o mesmo texto de ID em outro tenant não identifica a mesma venda.
 
+`evento_codigo` identifica a classificação da operação. `evento_descricao` informa sua descrição cadastral confirmada, ou `null` quando o código não estiver no catálogo confirmado. O campo foi acrescentado sem alterar os identificadores, valores ou a versão comercial da venda. Cursores materializados antes dessa atualização podem omiti-lo até o snapshot expirar; reinicie a consulta se precisar do novo campo.
+
+```json
+{
+  "cod_operacao": "900001",
+  "tipo_operacao": "S",
+  "evento_codigo": "FR-02",
+  "evento_descricao": "VENDA VAREJO CUPOM FISCAL  - FRANQUIA"
+}
+```
+
 Não usar número de nota, código de barras, nome de cliente ou código da operação isolado como chave única. A nota pode não estar preenchida e uma operação pode existir em filiais/tipos diferentes.
 
 ## Ler detalhe, itens e pagamentos sem misturar revisões
@@ -96,6 +107,72 @@ If-Match: "vnd_1001_S_900001:12"
 O detalhe fornece `versao`, `itens_url` e `pagamentos_url`. Para abrir as coleções, envie o ETag recebido em `If-Match`. Se a venda mudou antes de iniciar o snapshot dos filhos, o servidor responde 412. Reabra o detalhe e reinicie a coleção inteira, sem misturar itens de versões diferentes.
 
 Dentro do snapshot de filhos, as páginas ficam congeladas na revisão indicada por `meta.recurso_versao` por 30 minutos. A autorização continua sendo revalidada a cada página. `ordem` é uma posição nesta revisão, não identidade permanente do item. O consumidor deve substituir a coleção da revisão de maneira atômica após terminar todas as páginas.
+
+## Escopos para análises de vendas
+
+| Escopo | Dados disponíveis | Uso no consumidor |
+| --- | --- | --- |
+| `vendas:ler` | Data, filial, valor, quantidade, cancelamento, evento, código do vendedor, itens e pagamentos | Vendas por período/loja, produtos vendidos e ranking pelo código do vendedor |
+| `produtos:ler` | Cadastro, marca, categoria e demais classificações, além das variações por SKU | Relacionar os itens vendidos ao cadastro do produto |
+| `vendas:pessoas:ler` | Nome do vendedor e clientes disponíveis no snapshot da venda | Ranking nominal e análises de clientes, em conjunto com `vendas:ler` e `incluir_pessoas=true` |
+
+Os escopos precisam estar concedidos à credencial, com a filial autorizada. Um escopo não libera os demais. A API fornece os registros; os agrupamentos e rankings são calculados pelo consumidor.
+
+### Valor, data, filial e itens
+
+`GET /v1/vendas?filial_id=1001&inicio=2026-11-01&fim=2026-11-10` retorna os cabeçalhos. Cada item de `data` corresponde a uma operação; os produtos não vêm embutidos nessa listagem. Consulte o detalhe da venda para obter seu ETag e percorra `/v1/vendas/{id}/itens` com `If-Match`.
+
+Trecho fictício da coleção de itens:
+
+```json
+{
+  "ordem": 0,
+  "sku": "CAMISETA-AZUL-M",
+  "cod_produto": "CAM-001",
+  "descricao": "Camiseta demonstrativa",
+  "quantidade": 2,
+  "preco_centavos": "10000",
+  "subtotal_centavos": "20000"
+}
+```
+
+O valor do cabeçalho e os subtotais dos itens são campos distintos. Não atribua o valor inteiro de uma venda a cada marca/categoria quando houver produtos de classificações diferentes. Para agrupar itens, utilize seus subtotais e mantenha diferenças em relação ao cabeçalho identificadas separadamente.
+
+### Marca e categoria
+
+Com `produtos:ler`, consulte `GET /v1/produtos?filial_id=1001&busca=CAM-001`. A busca é parcial: confirme que `codigo` corresponde exatamente ao `cod_produto` do item. O `id` do produto é diferente de seu código comercial. Se houver mais de um candidato, confira também o SKU em `/v1/produtos/{produto_id}/variacoes?filial_id=1001`; não escolha automaticamente pelo primeiro resultado.
+
+Trecho fictício de um produto:
+
+```json
+{
+  "id": "700001",
+  "codigo": "CAM-001",
+  "classificacao": {
+    "marca": {"codigo": "MARCA-DEMO", "descricao": "Marca demonstrativa"},
+    "categoria": {"codigo": "CAMISETAS", "descricao": "Camisetas"}
+  }
+}
+```
+
+O catálogo representa o cadastro atual relacionado à filial, não a classificação histórica no instante da venda. Produtos antigos podem não ter correspondência no catálogo, e marca/categoria podem ser `null`. Preserve esses casos como sem classificação em vez de inferir valores pelo nome do produto. Não é necessário conceder `estoques:ler` para consultar marca, categoria ou variações; esse escopo é necessário para consultar saldos.
+
+### Cliente e vendedor
+
+Com os dois escopos `vendas:ler` e `vendas:pessoas:ler`, envie `GET /v1/vendas/{id}?incluir_pessoas=true`. A listagem com esse parâmetro pode incluir o nome do vendedor; os clientes são consultados no detalhe. Sem o parâmetro, os dados pessoais permanecem omitidos mesmo quando a credencial tem o escopo.
+
+Trecho fictício do detalhe:
+
+```json
+{
+  "vendedor": {"codigo": "42", "nome": "Vendedor demonstrativo"},
+  "clientes": [
+    {"cliente_codigo": "900", "nome": "Cliente demonstrativo", "aniversario_mm_dd": null, "contatos": []}
+  ]
+}
+```
+
+Os campos refletem o que está disponível na venda importada. O código/nome do vendedor pode estar ausente ou ambíguo; clientes podem estar pendentes, vazios ou sem código. Não use nomes como identificadores únicos nem presuma cadastro completo de clientes. Solicitar `incluir_pessoas=true` sem o escopo retorna HTTP 403.
 
 Quando itens ou pagamentos estão pendentes, a API retorna 409 `RESOURCE_NOT_READY`, orientando consultar `cobertura` e tentar mais tarde com backoff. Coleção conhecida e vazia é 200 com `data: []`. Um campo ausente na origem não deve ser inventado para permitir conferência.
 

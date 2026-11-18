@@ -6,7 +6,7 @@
 <a class="skip" href="#content">Ir para o conteúdo</a><aside class="sidebar"><div class="brand">Join <b>Network</b></div><div class="caption">Documentação da API</div><div class="version"><i></i>Contrato · v0.1.0</div><nav aria-label="Capítulos"><a class="nav-link" href="#visao-geral"><span>01</span>Visão geral</a><a class="nav-link" href="#autenticacao"><span>02</span>Autenticação</a><a class="nav-link" href="#consultas"><span>03</span>Consultas REST</a><a class="nav-link" href="#sincronizacao"><span>04</span>Sincronização</a><a class="nav-link" href="#webhooks"><span>05</span>Webhooks</a><a class="nav-link" href="#dicionario"><span>06</span>Dicionário de campos</a></nav><div class="sidebar-foot">API de integração · Varejo<a href="../../apis/integracoes.openapi.json" download>↗ Baixar OpenAPI 3.1</a><a href="README.md">↗ Guia em Markdown</a></div></aside>
 <div class="page"><header class="topbar"><div class="breadcrumb">Documentação <span aria-hidden="true">/</span> <b>Integrações de varejo</b></div><div class="tools"><label class="search"><span class="sr-only" hidden>Buscar na documentação</span><input id="search" aria-label="Buscar na documentação" type="search" placeholder="Buscar na documentação…  /" autocomplete="off"></label><button id="print" class="print" type="button">Imprimir / PDF</button></div></header>
 <main id="content"><section class="hero"><div class="eyebrow">API + Webhooks · Integrações de varejo</div><h1>API de Integrações</h1><p>Referência para consultar vendas, filiais, produtos e estoque, acompanhar alterações e receber notificações por webhook.</p><div class="base">https://api-varejo.aeropostale.joinnetwork.com.br</div><div class="hero-actions"><a href="#autenticacao">Começar pelo acesso →</a><a class="secondary" href="../../apis/integracoes.openapi.json" download>Baixar OpenAPI</a><a class="secondary" href="#webhooks">Explorar webhooks</a></div></section>
-<div class="stats"><div class="stat"><b>21</b><small>operações documentadas</small></div><div class="stat"><b>277</b><small>campos documentados</small></div><div class="stat"><b>4</b><small>recursos comerciais</small></div><div class="stat"><b>2</b><small>modelos de integração</small></div></div>
+<div class="stats"><div class="stat"><b>21</b><small>operações documentadas</small></div><div class="stat"><b>279</b><small>campos documentados</small></div><div class="stat"><b>4</b><small>recursos comerciais</small></div><div class="stat"><b>2</b><small>modelos de integração</small></div></div>
 <div id="search-status" class="search-status" aria-live="polite"></div><div id="no-results" class="empty-search" hidden>Nenhum resultado. Tente “nota fiscal”, “saldo” ou “assinatura”.</div><article id="visao-geral" class="doc-article" data-title="Visão geral"><div class="chapter">CAPÍTULO 01</div><h1 id="visao-geral-api-de-integracoes">API de Integrações<a class="permalink" href="#visao-geral-api-de-integracoes" aria-label="Link para esta seção">#</a></h1>
 <p>Referência para integrar sistemas a dados de vendas, filiais, produtos e estoque. A API oferece consultas REST, acompanhamento incremental de alterações e notificações de vendas por webhook.</p>
 <section class="doc-section" data-heading="Endereço e versão">
@@ -225,6 +225,13 @@ Accept: application/json</code></pre></div>
   --data-urlencode &#x27;tipo_operacao=S&#x27; \
   --data-urlencode &#x27;limite=100&#x27;</code></pre></div>
 <p>A identidade de uma venda é o conjunto <strong>tenant + filial + tipo de operação + código de operação</strong>. O ID externo <code>vnd_1001_S_900001</code> codifica os três últimos componentes, mas não substitui autorização. O consumidor deve manter o namespace do tenant/credencial: o mesmo texto de ID em outro tenant não identifica a mesma venda.</p>
+<p><code>evento_codigo</code> identifica a classificação da operação. <code>evento_descricao</code> informa sua descrição cadastral confirmada, ou <code>null</code> quando o código não estiver no catálogo confirmado. O campo foi acrescentado sem alterar os identificadores, valores ou a versão comercial da venda. Cursores materializados antes dessa atualização podem omiti-lo até o snapshot expirar; reinicie a consulta se precisar do novo campo.</p>
+<div class="code-block"><div class="code-head"><span>json</span><button class="copy-code" type="button" aria-label="Copiar exemplo">Copiar</button></div><pre><code>{
+  &quot;cod_operacao&quot;: &quot;900001&quot;,
+  &quot;tipo_operacao&quot;: &quot;S&quot;,
+  &quot;evento_codigo&quot;: &quot;FR-02&quot;,
+  &quot;evento_descricao&quot;: &quot;VENDA VAREJO CUPOM FISCAL  - FRANQUIA&quot;
+}</code></pre></div>
 <p>Não usar número de nota, código de barras, nome de cliente ou código da operação isolado como chave única. A nota pode não estar preenchida e uma operação pode existir em filiais/tipos diferentes.</p>
 </section>
 <section class="doc-section" data-heading="Ler detalhe, itens e pagamentos sem misturar revisões">
@@ -239,6 +246,50 @@ Authorization: Bearer &lt;token&gt;
 If-Match: &quot;vnd_1001_S_900001:12&quot;</code></pre></div>
 <p>O detalhe fornece <code>versao</code>, <code>itens_url</code> e <code>pagamentos_url</code>. Para abrir as coleções, envie o ETag recebido em <code>If-Match</code>. Se a venda mudou antes de iniciar o snapshot dos filhos, o servidor responde 412. Reabra o detalhe e reinicie a coleção inteira, sem misturar itens de versões diferentes.</p>
 <p>Dentro do snapshot de filhos, as páginas ficam congeladas na revisão indicada por <code>meta.recurso_versao</code> por 30 minutos. A autorização continua sendo revalidada a cada página. <code>ordem</code> é uma posição nesta revisão, não identidade permanente do item. O consumidor deve substituir a coleção da revisão de maneira atômica após terminar todas as páginas.</p>
+</section>
+<section class="doc-section" data-heading="Escopos para análises de vendas">
+<h2 id="consultas-escopos-para-analises-de-vendas">Escopos para análises de vendas<a class="permalink" href="#consultas-escopos-para-analises-de-vendas" aria-label="Link para esta seção">#</a></h2>
+<div class="table-wrap" role="region" aria-label="Tabela de referência" tabindex="0"><table><thead><tr><th>Escopo</th><th>Dados disponíveis</th><th>Uso no consumidor</th></tr></thead><tbody>
+<tr><td><code>vendas:ler</code></td><td>Data, filial, valor, quantidade, cancelamento, evento, código do vendedor, itens e pagamentos</td><td>Vendas por período/loja, produtos vendidos e ranking pelo código do vendedor</td></tr>
+<tr><td><code>produtos:ler</code></td><td>Cadastro, marca, categoria e demais classificações, além das variações por SKU</td><td>Relacionar os itens vendidos ao cadastro do produto</td></tr>
+<tr><td><code>vendas:pessoas:ler</code></td><td>Nome do vendedor e clientes disponíveis no snapshot da venda</td><td>Ranking nominal e análises de clientes, em conjunto com <code>vendas:ler</code> e <code>incluir_pessoas=true</code></td></tr>
+</tbody></table></div>
+<p>Os escopos precisam estar concedidos à credencial, com a filial autorizada. Um escopo não libera os demais. A API fornece os registros; os agrupamentos e rankings são calculados pelo consumidor.</p>
+<h3 id="consultas-valor-data-filial-e-itens">Valor, data, filial e itens<a class="permalink" href="#consultas-valor-data-filial-e-itens" aria-label="Link para esta seção">#</a></h3>
+<p><code>GET /v1/vendas?filial_id=1001&amp;inicio=2026-11-01&amp;fim=2026-11-10</code> retorna os cabeçalhos. Cada item de <code>data</code> corresponde a uma operação; os produtos não vêm embutidos nessa listagem. Consulte o detalhe da venda para obter seu ETag e percorra <code>/v1/vendas/{id}/itens</code> com <code>If-Match</code>.</p>
+<p>Trecho fictício da coleção de itens:</p>
+<div class="code-block"><div class="code-head"><span>json</span><button class="copy-code" type="button" aria-label="Copiar exemplo">Copiar</button></div><pre><code>{
+  &quot;ordem&quot;: 0,
+  &quot;sku&quot;: &quot;CAMISETA-AZUL-M&quot;,
+  &quot;cod_produto&quot;: &quot;CAM-001&quot;,
+  &quot;descricao&quot;: &quot;Camiseta demonstrativa&quot;,
+  &quot;quantidade&quot;: 2,
+  &quot;preco_centavos&quot;: &quot;10000&quot;,
+  &quot;subtotal_centavos&quot;: &quot;20000&quot;
+}</code></pre></div>
+<p>O valor do cabeçalho e os subtotais dos itens são campos distintos. Não atribua o valor inteiro de uma venda a cada marca/categoria quando houver produtos de classificações diferentes. Para agrupar itens, utilize seus subtotais e mantenha diferenças em relação ao cabeçalho identificadas separadamente.</p>
+<h3 id="consultas-marca-e-categoria">Marca e categoria<a class="permalink" href="#consultas-marca-e-categoria" aria-label="Link para esta seção">#</a></h3>
+<p>Com <code>produtos:ler</code>, consulte <code>GET /v1/produtos?filial_id=1001&amp;busca=CAM-001</code>. A busca é parcial: confirme que <code>codigo</code> corresponde exatamente ao <code>cod_produto</code> do item. O <code>id</code> do produto é diferente de seu código comercial. Se houver mais de um candidato, confira também o SKU em <code>/v1/produtos/{produto_id}/variacoes?filial_id=1001</code>; não escolha automaticamente pelo primeiro resultado.</p>
+<p>Trecho fictício de um produto:</p>
+<div class="code-block"><div class="code-head"><span>json</span><button class="copy-code" type="button" aria-label="Copiar exemplo">Copiar</button></div><pre><code>{
+  &quot;id&quot;: &quot;700001&quot;,
+  &quot;codigo&quot;: &quot;CAM-001&quot;,
+  &quot;classificacao&quot;: {
+    &quot;marca&quot;: {&quot;codigo&quot;: &quot;MARCA-DEMO&quot;, &quot;descricao&quot;: &quot;Marca demonstrativa&quot;},
+    &quot;categoria&quot;: {&quot;codigo&quot;: &quot;CAMISETAS&quot;, &quot;descricao&quot;: &quot;Camisetas&quot;}
+  }
+}</code></pre></div>
+<p>O catálogo representa o cadastro atual relacionado à filial, não a classificação histórica no instante da venda. Produtos antigos podem não ter correspondência no catálogo, e marca/categoria podem ser <code>null</code>. Preserve esses casos como sem classificação em vez de inferir valores pelo nome do produto. Não é necessário conceder <code>estoques:ler</code> para consultar marca, categoria ou variações; esse escopo é necessário para consultar saldos.</p>
+<h3 id="consultas-cliente-e-vendedor">Cliente e vendedor<a class="permalink" href="#consultas-cliente-e-vendedor" aria-label="Link para esta seção">#</a></h3>
+<p>Com os dois escopos <code>vendas:ler</code> e <code>vendas:pessoas:ler</code>, envie <code>GET /v1/vendas/{id}?incluir_pessoas=true</code>. A listagem com esse parâmetro pode incluir o nome do vendedor; os clientes são consultados no detalhe. Sem o parâmetro, os dados pessoais permanecem omitidos mesmo quando a credencial tem o escopo.</p>
+<p>Trecho fictício do detalhe:</p>
+<div class="code-block"><div class="code-head"><span>json</span><button class="copy-code" type="button" aria-label="Copiar exemplo">Copiar</button></div><pre><code>{
+  &quot;vendedor&quot;: {&quot;codigo&quot;: &quot;42&quot;, &quot;nome&quot;: &quot;Vendedor demonstrativo&quot;},
+  &quot;clientes&quot;: [
+    {&quot;cliente_codigo&quot;: &quot;900&quot;, &quot;nome&quot;: &quot;Cliente demonstrativo&quot;, &quot;aniversario_mm_dd&quot;: null, &quot;contatos&quot;: []}
+  ]
+}</code></pre></div>
+<p>Os campos refletem o que está disponível na venda importada. O código/nome do vendedor pode estar ausente ou ambíguo; clientes podem estar pendentes, vazios ou sem código. Não use nomes como identificadores únicos nem presuma cadastro completo de clientes. Solicitar <code>incluir_pessoas=true</code> sem o escopo retorna HTTP 403.</p>
 <p>Quando itens ou pagamentos estão pendentes, a API retorna 409 <code>RESOURCE_NOT_READY</code>, orientando consultar <code>cobertura</code> e tentar mais tarde com backoff. Coleção conhecida e vazia é 200 com <code>data: []</code>. Um campo ausente na origem não deve ser inventado para permitir conferência.</p>
 <p>Veja <a href="exemplos/venda.json">venda completa</a>, <a href="exemplos/itens.json">itens</a> e <a href="exemplos/pagamentos.json">pagamentos</a>.</p>
 </section>
@@ -598,6 +649,7 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td><code>cancelada</code></td><td>boolean</td><td>obrigatória</td><td>Indica se a venda está cancelada.</td></tr>
 <tr><td><code>vendedor</code></td><td>Vendedor</td><td>obrigatória</td><td>Identificação disponível; nome exige permissão específica.</td></tr>
 <tr><td><code>evento_codigo</code></td><td>string / null</td><td>obrigatória</td><td>Código de classificação da operação na origem.</td></tr>
+<tr><td><code>evento_descricao</code></td><td>string / null</td><td>opcional / condicional</td><td>Descrição cadastral do evento, a partir do catálogo confirmado. Null quando o código estiver ausente ou sem descrição confirmada. Não representa uma descrição histórica individual da venda.</td></tr>
 <tr><td><code>conferencia</code></td><td>Conferencia</td><td>obrigatória</td><td>Indicadores de consistência da operação.</td></tr>
 <tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>Versão monotônica do recurso na API. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
 <tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>Instante de disponibilização desta versão do recurso. format=&quot;date-time&quot;.</td></tr>
@@ -618,6 +670,7 @@ webhook-signature: v1,ASSINATURA_BASE64_DEMONSTRATIVA</code></pre></div>
 <tr><td><code>cancelada</code></td><td>boolean</td><td>obrigatória</td><td>Indica se a venda está cancelada.</td></tr>
 <tr><td><code>vendedor</code></td><td>Vendedor</td><td>obrigatória</td><td>Identificação disponível; nome exige permissão específica.</td></tr>
 <tr><td><code>evento_codigo</code></td><td>string / null</td><td>obrigatória</td><td>Código de classificação da operação na origem.</td></tr>
+<tr><td><code>evento_descricao</code></td><td>string / null</td><td>opcional / condicional</td><td>Descrição cadastral do evento, a partir do catálogo confirmado. Null quando o código estiver ausente ou sem descrição confirmada. Não representa uma descrição histórica individual da venda.</td></tr>
 <tr><td><code>conferencia</code></td><td>Conferencia</td><td>obrigatória</td><td>Indicadores de consistência da operação.</td></tr>
 <tr><td><code>versao</code></td><td>string</td><td>obrigatória</td><td>Versão monotônica do recurso na API. pattern=&quot;^\\d{1,30}$&quot;.</td></tr>
 <tr><td><code>atualizado_em</code></td><td>string</td><td>obrigatória</td><td>Instante de disponibilização desta versão do recurso. format=&quot;date-time&quot;.</td></tr>

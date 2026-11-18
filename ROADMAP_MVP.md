@@ -1,5 +1,12 @@
 # Roadmap — Aeropostale Varejo
 
+## Descrição do evento e exemplos dos escopos — 18/11/2026
+
+- [x] Implementado `evento_descricao` ao lado lógico de `evento_codigo` na lista e no detalhe de vendas. Texto do catálogo de dez códigos confirmado na origem em 31/10; código desconhecido/ausente retorna null. Projeções existentes atendidas na leitura, sem modificar valores, itens, versões comerciais ou disparar webhooks. Cursores anteriores podem omitir o campo até expirar.
+- [x] Documentação pública e exemplos atualizados: vendas/itens, cruzamento com marca/categoria do cadastro atual e dados pessoais com `vendas:ler` + `vendas:pessoas:ler` + `incluir_pessoas=true`. Código do vendedor já disponível sem dados pessoais; clientes somente no detalhe. Sem prometer cobertura cadastral histórica ou rankings prontos.
+- [x] 100 unitários, 17 integração PostgreSQL, 19 respostas compatíveis com OpenAPI, 11 exemplos JSON e portal em 1440/390 px aprovados. Escopos independentes, restrição por filial e omissão de pessoas preservados. [Exemplos](docs/integracoes/consultas.md), [evidência](docs/validacao-eventos-escopos-api.json).
+- [ ] Publicação de `integracoes-api` e dos arquivos públicos pendente: SSH da HostGator recusou senha e chave configuradas. Atualização do acesso solicitada ao titular; nenhuma alteração remota efetuada nesta entrega. Concessões existentes, worker remoto/local e webhooks preservados. Preparar backup e verificar saúde/HTTPS antes de concluir.
+
 ## Fonte alternativa de imagens — 16/11/2026
 
 - [x] Foto principal mantida como prioridade. Ausência, HTTP com erro ou imagem corrompida acionam a segunda API por código exato; seleção por cor quando disponível. Catálogo sem venda com foto também atendido, preservando permissões de filial/vendedor e imagens.
@@ -194,11 +201,11 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-23 de 34 tarefas deste quadro concluídas. Atualização: 2026-11-16. A contagem não representa prazo ou esforço.
+23 de 35 tarefas deste quadro concluídas. Atualização: 2026-11-18. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
-| R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | — | R01 — Importação e banco do piloto |
+| R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | R35 — Evento da venda e exemplos dos escopos da API | R01 — Importação e banco do piloto |
 | R17 — Notificações internas e alertas | R19 — Produtos, estoque e indicadores adicionais | — | R02 — Painel e acesso Admin |
 | R18 — Campanhas e mensagens | R22 — Definir bruto, líquido e devoluções | — | R03 — Publicação com HTTPS e backup diário |
 | R20 — SaaS: provisionamento, planos e cobrança | R25 — Completar preços e pagamentos do histórico | — | R04 — Correções de celular e fotos |
@@ -235,6 +242,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 - [ ] **R29 — Vendas por hora nos dashboards:** Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json.
 - [ ] **R31 — API externa e webhooks de vendas:** Infraestrutura da API externa, documentação pública separada e console administrativo publicados na HostGator; coletor remoto ativo e worker local desativado. Primeiro acesso de leitura às 11 filiais validado em 14/11; substituição da chave confirmada em 16/11, com a anterior revogada. Console e manual revisados, MFA, concessões e auditoria preservados. Webhooks permanecem desativados. Teste assinado com a nova chave e homologação completa do consumidor/recursos adicionais continuam pendentes. Evidências: docs/validacao-publicacao-integracoes-hostgator.json, docs/validacao-acesso-integracao-filiais.json, docs/validacao-nova-chave-integracao.json e docs/validacao-console-integracoes-ux.json. Registros anteriores de recuperação e disco permanecem no histórico. Não conclui SaaS/R11/R22/R29.
+- [ ] **R35 — Evento da venda e exemplos dos escopos da API:** Descrição do evento implementada por catálogo confirmado, API/documentação/testes aprovados. Publicação pendente de acesso SSH atualizado. docs/validacao-eventos-escopos-api.json.
 
 <!-- KANBAN:FIM -->
 
