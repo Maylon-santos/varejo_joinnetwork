@@ -209,8 +209,8 @@
     {
       "id": "R35",
       "titulo": "Evento da venda e exemplos dos escopos da API",
-      "status": "validacao",
-      "detalhe": "Descrição do evento implementada por catálogo confirmado, API/documentação/testes aprovados. Publicação pendente de acesso SSH atualizado. docs/validacao-eventos-escopos-api.json."
+      "status": "concluido",
+      "detalhe": "Descrição do evento por catálogo confirmado, exemplos dos escopos e documentação publicados. API saudável, 25 arquivos HTTPS conferidos, backup e outros 27 containers preservados; concessões não alteradas. docs/validacao-eventos-escopos-api.json."
     }
   ]
 }
