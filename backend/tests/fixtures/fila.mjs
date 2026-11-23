@@ -7,7 +7,8 @@ import {criarPool} from '../../src/postgres.mjs';import {migrar} from '../../src
 import {criarAuth,criarAdmin} from '../../src/admin-auth.mjs';import {criarServidor} from '../../src/http-api.mjs';
 import {criarPainel} from '../../src/painel.mjs';import {criarFila} from '../../src/fila-atendimento.mjs';
 import {criarGestaoPermissoes} from '../../src/gestao-permissoes.mjs';import {criarFrontend} from '../../src/frontend.mjs';
-export async function ambienteFila({imagemProduto,hoje,imagensAlternativas=false,limitesHttp={}}={}){
+import {criarNotificacoes} from '../../src/notificacoes.mjs';
+export async function ambienteFila({imagemProduto,hoje,imagensAlternativas=false,limitesHttp={},push}={}){
  const schema='fila_'+randomUUID().replaceAll('-',''),ca=criarPool(process.env.CONTROL_DATABASE_URL),ta=criarPool(process.env.TENANT_DATABASE_URL);let control,pool,server;
  async function close(){if(server)await new Promise(r=>server.close(r));await Promise.all([control?.end(),pool?.end()]);await ca.query(`DROP SCHEMA IF EXISTS ${schema} CASCADE`);await ta.query(`DROP SCHEMA IF EXISTS ${schema} CASCADE`);await Promise.all([ca.end(),ta.end()]);}
  try{
@@ -19,8 +20,10 @@ export async function ambienteFila({imagemProduto,hoje,imagensAlternativas=false
  await control.query("UPDATE admin_users SET role='Vendas' WHERE email='vendas@fila.local'");await control.query("UPDATE access_roles SET permissoes=permissoes||'[\"fila:ler\",\"fila:operar\"]'::jsonb WHERE role='Vendas' AND tenant_key='teste'");
  await control.query("UPDATE admin_users SET role='Gerentes' WHERE email='leitor@fila.local'");await control.query("UPDATE access_roles SET permissoes='[\"fila:ler\"]' WHERE role='Gerentes' AND tenant_key='teste'");
  for(const email of ['vendas@fila.local','leitor@fila.local'])for(const f of filiais)await control.query("INSERT INTO user_branches(user_id,tenant_key,filial,vendedor_codigo) SELECT id,tenant_key,$2,'10' FROM admin_users WHERE email=$1",[email,f]);
- const auth=await criarAuth(control,'teste'),fila=criarFila(pool,'teste',filiais);server=criarServidor({consolidado:criarConsolidado(pool,'teste',filiais,hoje?{hoje}:undefined),reprocessamentos:criarReprocessamentos(pool,'teste',filiais),funcionarios:criarFuncionarios(pool,'teste',filiais),auth,fila,imagemProduto,produtos:criarProdutos(pool,'teste',filiais,{imagensAlternativas}),painel:criarPainel(pool,'teste',filiais),filiais,gestaoPermissoes:criarGestaoPermissoes(control,'teste'),frontend:await criarFrontend(),limitar:()=>true,limitarLogin:()=>true,...limitesHttp});await new Promise(r=>server.listen(0,'127.0.0.1',r));
+ const usuarios=Object.fromEntries((await control.query('SELECT email,id FROM admin_users')).rows.map(u=>[u.email.split('@')[0],u.id]));
+ const notificacoes=push?criarNotificacoes({control,pool,tenant:'teste',filiais,...push,config:{...push.config,pilotUsers:push.config?.pilotUsers||[usuarios.admin]}}):undefined;
+ const auth=await criarAuth(control,'teste'),fila=criarFila(pool,'teste',filiais);server=criarServidor({notificacoes,consolidado:criarConsolidado(pool,'teste',filiais,hoje?{hoje}:undefined),reprocessamentos:criarReprocessamentos(pool,'teste',filiais),funcionarios:criarFuncionarios(pool,'teste',filiais),auth,fila,imagemProduto,produtos:criarProdutos(pool,'teste',filiais,{imagensAlternativas}),painel:criarPainel(pool,'teste',filiais),filiais,gestaoPermissoes:criarGestaoPermissoes(control,'teste'),frontend:await criarFrontend(),limitar:()=>true,limitarLogin:()=>true,...limitesHttp});await new Promise(r=>server.listen(0,'127.0.0.1',r));
  const tokens={};for(const role of ['admin','vendas','leitor'])tokens[role]=(await auth.login(role+'@fila.local',senha)).token;
- return {pool,control,auth,fila,filiais,senha,tokens,base:`http://127.0.0.1:${server.address().port}`,close,dia:new Date().toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'})};
+ return {pool,control,auth,fila,filiais,senha,tokens,usuarios,notificacoes,base:`http://127.0.0.1:${server.address().port}`,close,dia:new Date().toLocaleDateString('en-CA',{timeZone:'America/Sao_Paulo'})};
  }catch(e){await close();throw e;}
 }

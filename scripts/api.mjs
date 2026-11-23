@@ -12,6 +12,7 @@ import {criarPainel} from '../backend/src/painel.mjs';
 import {criarServidor} from '../backend/src/http-api.mjs';
 import {criarImagensProduto} from '../backend/src/imagens-alternativas.mjs';
 import {criarFrontend} from '../backend/src/frontend.mjs';
+import {criarNotificacoes} from '../backend/src/notificacoes.mjs';
 const control=criarPool(process.env.CONTROL_DATABASE_URL),tenantDb=criarPool(process.env.TENANT_DATABASE_URL);
 let server;
 try{
@@ -28,7 +29,7 @@ try{
  };
  await health();
  const auth=await criarAuth(control,tenant),painel=criarPainel(tenantDb,tenant,filiais);
- server=criarServidor({consolidado:criarConsolidado(tenantDb,tenant,filiais),reprocessamentos:criarReprocessamentos(tenantDb,tenant,filiais),funcionarios:criarFuncionarios(tenantDb,tenant,filiais),auth,painel,filiais,produtos:criarProdutos(tenantDb,tenant,filiais,{imagensAlternativas:!!process.env.PASSWORD_JOINKEY}),fila:criarFila(tenantDb,tenant,filiais),gestaoPermissoes:criarGestaoPermissoes(control,tenant),gestaoUsuarios:criarGestaoUsuarios(control,tenantDb,tenant,filiais),imagemProduto:criarImagensProduto({token:process.env.PASSWORD_JOINKEY}),frontend:await criarFrontend(),health,log:e=>console.error(JSON.stringify(e))});
+ server=criarServidor({notificacoes:criarNotificacoes({control,pool:tenantDb,tenant,filiais}),consolidado:criarConsolidado(tenantDb,tenant,filiais),reprocessamentos:criarReprocessamentos(tenantDb,tenant,filiais),funcionarios:criarFuncionarios(tenantDb,tenant,filiais),auth,painel,filiais,produtos:criarProdutos(tenantDb,tenant,filiais,{imagensAlternativas:!!process.env.PASSWORD_JOINKEY}),fila:criarFila(tenantDb,tenant,filiais),gestaoPermissoes:criarGestaoPermissoes(control,tenant),gestaoUsuarios:criarGestaoUsuarios(control,tenantDb,tenant,filiais),imagemProduto:criarImagensProduto({token:process.env.PASSWORD_JOINKEY}),frontend:await criarFrontend(),health,log:e=>console.error(JSON.stringify(e))});
  const port=Number(process.env.PORT||3000);
  if(!Number.isInteger(port)||port<1||port>65535)throw new Error('PORTA_INVALIDA');
  await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,process.env.API_HOST||'127.0.0.1',resolve);});

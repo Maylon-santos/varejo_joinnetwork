@@ -5,7 +5,12 @@
   <meta name="theme-color" content="#172649">
   <title>Aéropostale • Visão de varejo</title>
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Aéropostale">
   <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/notificacoes.css">
   <script type="module" src="/assets/app.js"></script>
 </head>
 <body>
@@ -44,6 +49,7 @@
       <button class="nav-button" data-page="queue"><span data-icon="receipt"></span>Lista da Vez</button>
       <button class="nav-button" data-page="products"><span data-icon="bag"></span>Produtos e estoque</button>
       <button class="nav-button" data-page="customers"><span data-icon="store"></span>Clientes</button>
+      <button class="nav-button" data-page="notifications" hidden><span data-icon="bell"></span>Notificações</button>
       <button class="nav-button" data-page="permissions" hidden><span data-icon="check"></span>Permissões</button>
           <button class="nav-button" data-page="employees" hidden><span data-icon="store"></span>Funcionários</button>
           <button class="nav-button" data-page="users" hidden><span data-icon="store"></span>Usuários</button>
@@ -72,6 +78,29 @@
       <div id="page-error" class="notice error" role="alert" hidden><span data-icon="alert"></span><p id="page-error-text"></p><button id="retry" class="button subtle" type="button">Tentar novamente</button></div>
       <div id="data-notice" class="notice" hidden><span data-icon="info"></span><p id="data-notice-text"></p><button type="button" id="review-notice" class="text-button">Conferir <span aria-hidden="true">→</span></button></div>
       <div id="loading" class="loading-state" role="status" hidden><span class="spinner"></span>Carregando resultados da loja…</div>
+      <section id="notifications-panel" hidden aria-label="Preferências de notificações">
+        <div class="notifications-grid">
+          <section class="panel notification-card">
+            <div class="notification-card-heading"><span class="notification-symbol" data-icon="bell"></span><div><p class="eyebrow">SEU APARELHO</p><h2>O resultado chega até você</h2></div></div>
+            <p class="muted">Receba o resumo das filiais escolhidas, mesmo com o painel fechado.</p>
+            <span id="notifications-device-state" class="notification-badge">Não ativado neste aparelho</span>
+            <p id="notifications-permission-help" class="muted"></p>
+            <div class="notification-actions"><button id="notifications-enable" type="button" class="button primary" disabled>Ativar neste aparelho</button><button id="notifications-test" type="button" class="button subtle" disabled>Enviar teste</button><button id="notifications-stop" type="button" class="text-button" disabled>Desativar neste aparelho</button></div>
+            <div id="notifications-install-help" class="notification-install"><h3>Tenha o painel na Tela de Início</h3><p>No iPhone, abra pelo Safari e instale para receber os avisos. Requer iOS 16.4 ou superior.</p><button id="notifications-install" type="button" class="button subtle">Como instalar</button><ol id="notifications-install-steps" hidden><li>No Safari, toque em Compartilhar.</li><li>Escolha Adicionar à Tela de Início e confirme.</li><li>Abra pelo novo ícone, entre na sua conta e toque em Ativar neste aparelho.</li></ol></div>
+          </section>
+          <form id="notifications-preferences" class="panel notification-card">
+            <div><p class="eyebrow">SUAS PREFERÊNCIAS</p><h2>Resumo do dia</h2></div>
+            <label class="notification-toggle"><input id="notifications-daily" type="checkbox"><span><strong>Receber o resumo diário</strong><small>Vendas, peças, valor de vendas, PA e ticket médio.</small></span></label>
+            <div class="notification-schedule"><strong>Uma vez por dia · a partir das 22h05</strong><p>Horário de São Paulo. Se a coleta estiver atrasada, aguardamos até 22h30 e identificamos o resumo como parcial.</p></div>
+            <fieldset class="notification-fieldset"><legend>Quais filiais você quer acompanhar?</legend><div id="notifications-branches" class="notification-branches"></div></fieldset>
+            <p class="muted notification-footnote">Os valores aparecem no aviso, inclusive na tela bloqueada. Seus acessos são conferidos antes de cada envio. Metas e outros alertas serão disponibilizados em uma etapa posterior.</p>
+            <button id="notifications-save" type="submit" class="button primary" disabled>Salvar preferências</button>
+          </form>
+        </div>
+        <p id="notifications-status" class="notification-status" role="status" aria-live="polite"></p>
+        <section class="panel notification-card"><div class="panel-heading"><div><p class="eyebrow">ACOMPANHAMENTO</p><h2>Seus últimos avisos</h2><p>O aceite do serviço de notificações não confirma a exibição no aparelho.</p></div><button id="notifications-refresh" type="button" class="button subtle">Atualizar</button></div><div id="notifications-history" class="notification-history"></div></section>
+        <section class="panel notification-card"><h2>Aparelhos autorizados</h2><p class="muted">Você pode desativar um aparelho a qualquer momento. Sair da conta interrompe os novos envios no aparelho conectado.</p><div id="notifications-device-list"></div></section>
+      </section>
       <section id="growth-panel" hidden aria-label="Comparativo anual por filial">
         <form id="growth-filters" class="filters growth-filters">
           <div><label for="growth-comparison">Comparar com</label><select id="growth-comparison"><option value="anterior" selected>Ano anterior (padrão)</option><option value="todos">Todos os anos</option></select></div>

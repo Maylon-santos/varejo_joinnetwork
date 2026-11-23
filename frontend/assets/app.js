@@ -1,8 +1,9 @@
 import {criarDashboardCrescimento} from './crescimento.js';
 import {criarNavegacaoMovel} from './navegacao.js';
+import {criarNotificacoesUI} from './notificacoes.js';
 const $=id=>document.getElementById(id);
 const icons={grid:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',receipt:'M6 3h12v18l-3-2-3 2-3-2-3 2z M9 8h6 M9 12h6',check:'M12 3 3 7v6c0 4 9 8 9 8s9-4 9-8V7z M8 12l3 3 5-6',store:'M4 10v11h16V10 M3 10l2-7h14l2 7 M3 10h18 M9 21v-7h6v7',logout:'M10 4H4v16h6 M8 12h13 M17 8l4 4-4 4',filter:'M4 6h16 M7 12h10 M10 18h4',refresh:'M20 7v5h-5 M4 17v-5h5 M5 8a7 7 0 0 1 12-3l3 3 M19 16a7 7 0 0 1-12 3l-3-3',info:'M12 8h.01 M12 11v6 M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0',alert:'M12 3 2 21h20z M12 9v5 M12 17h.01',trend:'M3 17l6-6 4 4 8-10 M15 5h6v6',bag:'M5 7h14l2 14H3z M8 8V6a4 4 0 0 1 8 0v2',cart:'M2 3h3l3 12h11l3-9H6 M9 20h.01 M18 20h.01'};
-icons.menu='M4 6h16 M4 12h16 M4 18h16';icons.close='M6 6l12 12 M18 6 6 18';
+icons.menu='M4 6h16 M4 12h16 M4 18h16';icons.close='M6 6l12 12 M18 6 6 18';icons.bell='M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10 M10 21h4';
 function svgEl(name,attrs={}){const e=document.createElementNS('http://www.w3.org/2000/svg',name);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,String(v));return e;}
 for(const el of document.querySelectorAll('[data-icon]')){const svg=svgEl('svg',{viewBox:'0 0 24 24','aria-hidden':'true'});svg.append(svgEl('path',{d:icons[el.dataset.icon]}));el.append(svg);}
 const branchLabel=b=>[b.cod_filial||'Filial sem código cadastrado',b.fantasia].filter(Boolean).join(' - ');
@@ -17,16 +18,17 @@ const when=d=>d?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',da
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const errorText={COMPARATIVO_INVALIDO:'Escolha um ano e um período válidos para o comparativo.',ANO_EM_ANDAMENTO:'Para o ano atual, selecione o período acumulado.',META_INVALIDA:'Informe uma meta válida em reais, com até duas casas decimais.',META_DESATUALIZADA:'Esta meta foi alterada por outra pessoa. Feche e abra novamente para conferir o valor atual.',META_EM_EDICAO:'A meta está sendo atualizada. Tente novamente.',COMPETENCIA_INVALIDA:'Escolha um mês entre 2000 e 2099.',CONSOLIDADO_CARGO_INVALIDO:'O consolidado exige Admin, Diretoria ou Supervisão, sem limitar a vendas próprias.',METAS_REQUER_CONSOLIDADO:'Habilite o dashboard consolidado para permitir cadastrar metas.',REPROCESSAMENTO_AGUARDE:'Aguarde um minuto antes de solicitar outra consulta desta venda.',VENDA_SEM_PENDENCIA:'Esta venda já está conciliada. Atualize a tela.',FILIAL_EM_ATUALIZACAO:'A filial está sendo atualizada. Tente novamente em instantes.',REQUISICAO_REUTILIZADA:'Esta solicitação já foi utilizada. Atualize a tela.',FOTO_INVALIDA:'Escolha uma foto JPG, PNG ou WebP de até 2 MB, com até 20 megapixels.',ESTOQUE_REQUER_PRODUTOS:'Para consultar estoque, habilite também a consulta de produtos.',USUARIO_INVALIDO:'Confira os dados do usuário.',VINCULOS_INVALIDOS:'Confira as filiais e os vínculos.',SENHA_INVALIDA:'Use uma senha com pelo menos 16 caracteres e no máximo 256 bytes.',PROPRIO_ACESSO_PROTEGIDO:'Seu próprio acesso é protegido. Outro Admin deve alterá-lo.',FILIAL_OBRIGATORIA:'Selecione pelo menos uma filial.',VENDEDOR_OBRIGATORIO:'Selecione o vendedor em cada filial.',VENDEDOR_NAO_ENCONTRADO:'Vendedor não encontrado no histórico desta filial.',EMAIL_JA_CADASTRADO:'Este e-mail já está cadastrado nesta empresa.',PERFIL_INVALIDO:'Confira o nome e as opções do cargo.',PERMISSAO_DEPENDENTE_DE_VENDAS:'Clientes, fotos e conferência precisam de acesso às movimentações.',VENDAS_REQUER_ESCOPO_PROPRIO:'O cargo Vendas deve acessar apenas as próprias vendas.',ESCOPO_INCOMPATIVEL:'Escolha filiais atribuídas para limitar às próprias vendas.',PERFIL_ADMIN_PROTEGIDO:'O perfil Admin mantém o acesso completo.',RECURSO_NAO_AUTORIZADO:'Seu acesso não permite consultar este recurso.',LOGIN_INVALIDO:'E-mail ou senha incorretos. Confira os dados e tente novamente.',LIMITE_DE_LOGIN:'Muitas tentativas de acesso. Aguarde 15 minutos antes de tentar novamente.',NAO_AUTENTICADO:'Sua sessão expirou. Entre novamente para continuar.',FILIAL_NAO_AUTORIZADA:'Esta loja ainda não está disponível para o seu acesso.',PERIODO_INVALIDO:'Escolha um período válido de até 366 dias.',LIMITE_DE_REQUISICOES:'Muitas consultas em sequência. Aguarde um minuto e tente novamente.',ERRO_INTERNO:'Não foi possível consultar os dados agora. Tente novamente.'};
 let token=null,page='overview',filters=null,rankPage=1,salesPage=1,customerPage=1,abort=null,generation=0,refreshTimer=null,detailGeneration=0,filterTimer=null,rateTimer=null;
-let lastIndicators=null,permissoes=new Set(),isAdmin=false,userRole='',somenteProprias=false;
+let lastIndicators=null,permissoes=new Set(),isAdmin=false,userRole='',somenteProprias=false,notificacoesLiberadas=false;
+let destinoNotificacao=location.search;
 const pode=recurso=>permissoes.has(recurso);
 const podeConsolidado=()=>['Admin','Diretoria','Supervisao'].includes(userRole)&&!somenteProprias&&pode('consolidado:ler');
-const podePagina=next=>['consolidated','growth'].includes(next)?podeConsolidado():next==='products'?pode('produtos:ler'):next==='queue'?pode('fila:ler'):['permissions','users','employees'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='customers'?(pode('clientes:ler')&&pode('vendas:ler')):next==='sales'&&pode('vendas:ler');
+const podePagina=next=>next==='notifications'?notificacoesLiberadas:['consolidated','growth'].includes(next)?podeConsolidado():next==='products'?pode('produtos:ler'):next==='queue'?pode('fila:ler'):['permissions','users','employees'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='customers'?(pode('clientes:ler')&&pode('vendas:ler')):next==='sales'&&pode('vendas:ler');
 let detailAbort=null;const detailImageUrls=new Set();
 function clearDetailMedia(){detailAbort?.abort();$('photo-dialog').close();for(const url of detailImageUrls)URL.revokeObjectURL(url);detailImageUrls.clear();}
 async function api(path,options={}){
  let response;try{response=await fetch('/api/v1'+path,{...options,headers:{...(options.body?{'Content-Type':'application/json'}:{}),...(token?{Authorization:`Bearer ${token}`} :{}),...options.headers}});}catch(e){if(e.name==='AbortError')throw e;throw new Error('Não foi possível conectar ao painel. Verifique sua conexão e tente novamente.');}
  const body=await response.json().catch(()=>({}));
- if(!response.ok){if(response.status===401&&path!=='/auth/login')exitSession(errorText.NAO_AUTENTICADO);const erro=new Error(errorText[body.erro]||'Não foi possível completar a consulta. Tente novamente.');if(response.status===429){erro.retryAfter=Math.min(900,Math.max(1,Number(response.headers.get('Retry-After'))||60));}throw erro;}
+ if(!response.ok){if(response.status===401&&path!=='/auth/login')exitSession(errorText.NAO_AUTENTICADO);const erro=new Error(errorText[body.erro]||'Não foi possível completar a consulta. Tente novamente.');erro.codigo=body.erro;if(response.status===429){erro.retryAfter=Math.min(900,Math.max(1,Number(response.headers.get('Retry-After'))||60));}throw erro;}
  return body;
 }
 function showToast(text){$('toast').textContent=text;$('toast').hidden=false;setTimeout(()=>$('toast').hidden=true,4000);}
@@ -43,6 +45,7 @@ function displayError(e){
 }
 function exitSession(message=''){
  navegacao.fechar();
+ notificacoesUI.limpar();notificacoesLiberadas=false;destinoNotificacao='';
  clearTimeout(filterTimer);filterTimer=null;clearRateWait();
  crescimento.limpar();
  goalsGeneration++;goalsAbort?.abort();goalEditing=null;$('goal-dialog').close();for(const id of ['consolidated-body','consolidated-total','consolidated-metrics','goals-body','goals-metrics'])$(id).replaceChildren();userRole='';
@@ -63,7 +66,7 @@ $('login-form').addEventListener('submit',async e=>{
   const session=await api('/auth/login',{method:'POST',body:JSON.stringify({email:$('email').value,senha:$('password').value})});token=session.token;$('password').value='';
   const [me,branches]=await Promise.all([api('/auth/me'),api('/filiais')]);
   userRole=me.usuario.role;somenteProprias=!!me.usuario.somente_proprias_vendas;isAdmin=userRole==='Admin';$('goals-month').value=today().slice(0,7);permissoes=new Set(me.usuario.permissoes||[]);
-  $('integrations-console').hidden=!isAdmin;
+  $('integrations-console').hidden=!isAdmin;notificacoesLiberadas=!!me.usuario.notificacoes;
   $('user-role').textContent=me.usuario.role_nome||me.usuario.role;
   $('workspace-scope').textContent=me.usuario.somente_proprias_vendas?'Minhas vendas':'Filiais autorizadas';
   for(const button of document.querySelectorAll('[data-page]'))button.hidden=!podePagina(button.dataset.page);
@@ -73,11 +76,13 @@ $('login-form').addEventListener('submit',async e=>{
   for(const item of branches.filiais){const opt=el('option',branchLabel(item));opt.value=item.filial;$('branch').append(opt);$('employees-branch').append(opt.cloneNode(true));$('queue-branch').append(opt.cloneNode(true));$('queue-report-branch').append(opt.cloneNode(true));}
   if(!branches.filiais.length)throw new Error('Nenhuma loja está liberada para este acesso.');
   $('login-view').hidden=true;$('app-view').hidden=false;page=inicial;rankPage=1;salesPage=1;$('period').value='month';setPeriod();setPage(inicial,false);applyFilters();
-  clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&!['permissions','users','employees'].includes(page)&&!document.hidden&&!$('detail-dialog').open&&!$('product-dialog').open&&!$('goal-dialog').open)loadData();},360000);
+  if(notificacoesLiberadas)notificacoesUI.iniciar(branches.filiais).catch(()=>showToast('As preferências de notificações estão temporariamente indisponíveis.'));
+  if(destinoNotificacao)abrirNotificacao(destinoNotificacao);
+  clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&!['permissions','users','employees','notifications'].includes(page)&&!document.hidden&&!$('detail-dialog').open&&!$('product-dialog').open&&!$('goal-dialog').open)loadData();},360000);
  }catch(e){if(token){await api('/auth/logout',{method:'POST'}).catch(()=>{});token=null;}$('login-error').textContent=e.message;$('login-error').hidden=false;}
  finally{$('login-submit').disabled=false;$('login-submit').replaceChildren(document.createTextNode('Entrar no painel '),el('span','→'));}
 });
-$('logout').addEventListener('click',async()=>{try{await api('/auth/logout',{method:'POST'});exitSession();}catch(e){showToast('Não foi possível confirmar o encerramento no servidor.');exitSession();}});
+$('logout').addEventListener('click',async()=>{try{await api('/auth/logout',{method:'POST'});await notificacoesUI.desconectar();exitSession();}catch(e){await notificacoesUI.desconectar().catch(()=>{});showToast('Não foi possível confirmar o encerramento no servidor.');exitSession();}});
 function setPeriod(){
  const end=today();let start=end,finish=end;const d=new Date(end+'T12:00:00Z');
  switch($('period').value){case'month':start=end.slice(0,8)+'01';break;case'last7':d.setUTCDate(d.getUTCDate()-6);start=d.toISOString().slice(0,10);break;case'lastMonth':d.setUTCDate(0);finish=d.toISOString().slice(0,10);start=finish.slice(0,8)+'01';break;case'year':start=end.slice(0,4)+'-01-01';break;case'custom':return;}
@@ -102,12 +107,12 @@ function setPage(next,load=true){
  clearOverviewMedia();clearEmployeePhotos();clearSellerPhotos();
  clearInterval(queueTimer);if(next==='queue')queueTimer=setInterval(()=>{if(token&&!document.hidden&&!queueBusy&&!$('queue-action-dialog').open)loadQueue(true);},30000);
  goalsGeneration++;goalsAbort?.abort();$('goal-dialog').close();goalEditing=null;crescimento.cancelar();
- page=next;if(page==='growth')crescimento.abrir();$('growth-panel').hidden=page!=='growth';$('consolidated-panel').hidden=page!=='consolidated';$('branch').parentElement.hidden=page==='consolidated';salesPage=1;rankPage=1;customerPage=1;productPage=1;generation++;abort?.abort();
+ page=next;$('notifications-panel').hidden=page!=='notifications';if(page==='growth')crescimento.abrir();$('growth-panel').hidden=page!=='growth';$('consolidated-panel').hidden=page!=='consolidated';$('branch').parentElement.hidden=page==='consolidated';salesPage=1;rankPage=1;customerPage=1;productPage=1;generation++;abort?.abort();
  $('products-panel').hidden=page!=='products';$('employees-panel').hidden=page!=='employees';
  for(const id of ['period','start-date','end-date'])$(id).parentElement.hidden=page==='products'&&$('products-mode').value==='catalogo';
- $('queue-panel').hidden=page!=='queue';$('customers-panel').hidden=page!=='customers';$('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users','employees','queue','growth'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users','employees','queue','growth'].includes(page);
- if(['permissions','users','employees','queue','growth'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
- const info={growth:['Crescimento anual','Compare cada filial com o ano anterior e acompanhe a evolução mês a mês.'],consolidated:['Visão das filiais','Compare os resultados das filiais autorizadas e acompanhe as metas mensais.'],employees:['Funcionários','Administre as fotos dos vendedores por filial.'],products:['Produtos e estoque','Consulte o saldo atual e os produtos vendidos na loja.'],queue:['Lista da Vez','Organize a equipe e acompanhe os atendimentos da loja.'],customers:['Clientes','Consulte o cadastro e os contatos dos seus clientes.'],users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
+ $('queue-panel').hidden=page!=='queue';$('customers-panel').hidden=page!=='customers';$('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users','employees','queue','growth','notifications'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users','employees','queue','growth','notifications'].includes(page);
+ if(['permissions','users','employees','queue','growth','notifications'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
+ const info={notifications:['Notificações','Escolha o que receber e acompanhe os resumos das suas filiais.'],growth:['Crescimento anual','Compare cada filial com o ano anterior e acompanhe a evolução mês a mês.'],consolidated:['Visão das filiais','Compare os resultados das filiais autorizadas e acompanhe as metas mensais.'],employees:['Funcionários','Administre as fotos dos vendedores por filial.'],products:['Produtos e estoque','Consulte o saldo atual e os produtos vendidos na loja.'],queue:['Lista da Vez','Organize a equipe e acompanhe os atendimentos da loja.'],customers:['Clientes','Consulte o cadastro e os contatos dos seus clientes.'],users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
  $('page-title').textContent=info[0];$('breadcrumb-page').textContent=info[0];$('page-subtitle').textContent=info[1];
  $('mobile-menu-page').textContent=info[0];
  for(const button of document.querySelectorAll('[data-page]')){const active=button.dataset.page===page;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');}
@@ -120,6 +125,7 @@ for(const b of document.querySelectorAll('[data-page]'))b.addEventListener('clic
 $('review-notice').addEventListener('click',()=>setPage('quality'));
 async function loadData(){
  if(!token)return;
+ if(page==='notifications'){busy(false);notificacoesUI.abrir();return;}
  if(page==='growth'){await crescimento.carregar();return;}
  if(page==='consolidated'){await loadConsolidated();return;}
  if(page==='products'){await loadProducts();return;}
@@ -763,3 +769,18 @@ async function saveGoal(remover=false){
 $('goal-form').addEventListener('submit',e=>{e.preventDefault();saveGoal();});$('goal-cancel').addEventListener('click',()=>$('goal-dialog').close());$('goal-dialog').addEventListener('close',()=>{goalEditing=null;});$('goal-remove').addEventListener('click',()=>{if(confirm('Remover a meta deste mês? O histórico das alterações será preservado.'))saveGoal(true);});
 
 const crescimento=criarDashboardCrescimento({api,ativo:()=>!!token&&page==='growth',carregando:busy,erro:displayError,limparErro:resetError});
+function abrirNotificacao(valor){
+ let u;try{u=new URL(valor,location.origin);}catch{return;}
+ if(u.origin!==location.origin||u.pathname!=='/')return;
+ if(!token){destinoNotificacao=u.search;return;}
+ const origem=u.searchParams.get('origem');destinoNotificacao='';
+ if(origem==='notificacoes'&&podePagina('notifications'))setPage('notifications');
+ if(origem==='resumo'){
+  const filial=u.searchParams.get('filial'),dia=u.searchParams.get('dia');let valido=false;
+  try{valido=/^20\d{2}-\d{2}-\d{2}$/.test(dia)&&new Date(dia+'T12:00:00Z').toISOString().slice(0,10)===dia&&dia<=today();}catch{}
+  if(!valido||!podePagina('overview')||![...$('branch').options].some(o=>o.value===filial)){showToast('Este resumo não está disponível para o seu acesso.');return;}
+  navegacao.fechar();setPage('overview',false);$('branch').value=filial;$('period').value='custom';$('start-date').value=dia;$('end-date').value=dia;applyFilters();
+ }
+ if(['notificacoes','resumo','app'].includes(origem))history.replaceState(null,'','/');
+}
+const notificacoesUI=criarNotificacoesUI({api,ativo:()=>!!token&&page==='notifications',abrirDestino:abrirNotificacao});

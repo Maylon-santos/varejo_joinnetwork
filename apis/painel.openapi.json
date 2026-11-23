@@ -77,6 +77,70 @@
         "type": "string",
         "pattern": "^-?[0-9]+$",
         "description": "Valor em centavos inteiros, representado como string."
+      },
+      "PreferenciasNotificacoes": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "resumo_diario",
+          "filiais"
+        ],
+        "properties": {
+          "resumo_diario": {
+            "type": "boolean",
+            "description": "Opt-in pessoal para o resumo após 22h, em São Paulo."
+          },
+          "filiais": {
+            "type": "array",
+            "maxItems": 100,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[0-9]+$"
+            }
+          }
+        }
+      },
+      "InscricaoPush": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "endpoint",
+          "keys"
+        ],
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 4096
+          },
+          "expirationTime": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "keys": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "p256dh",
+              "auth"
+            ],
+            "properties": {
+              "p256dh": {
+                "type": "string",
+                "minLength": 87,
+                "maxLength": 87
+              },
+              "auth": {
+                "type": "string",
+                "minLength": 22,
+                "maxLength": 22
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -1375,6 +1439,227 @@
           },
           "403": {
             "description": "Acesso negado"
+          }
+        }
+      }
+    },
+    "/api/v1/notificacoes": {
+      "get": {
+        "summary": "Preferências e aparelhos da própria conta. Disponível somente para o piloto autorizado.",
+        "tags": [
+          "Notificações pessoais"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação concluída"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Sessão necessária"
+          },
+          "403": {
+            "description": "Conta, filial ou permissão não autorizada"
+          },
+          "429": {
+            "description": "Limite de consultas ou testes; observar Retry-After"
+          }
+        }
+      }
+    },
+    "/api/v1/notificacoes/preferencias": {
+      "put": {
+        "summary": "Salvar opt-in e filiais autorizadas para o resumo diário.",
+        "tags": [
+          "Notificações pessoais"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação concluída"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Sessão necessária"
+          },
+          "403": {
+            "description": "Conta, filial ou permissão não autorizada"
+          },
+          "429": {
+            "description": "Limite de consultas ou testes; observar Retry-After"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferenciasNotificacoes"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notificacoes/dispositivos": {
+      "post": {
+        "summary": "Inscrever aparelho com autorização nativa; inscrição cifrada e pessoal.",
+        "tags": [
+          "Notificações pessoais"
+        ],
+        "responses": {
+          "201": {
+            "description": "Operação concluída"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Sessão necessária"
+          },
+          "403": {
+            "description": "Conta, filial ou permissão não autorizada"
+          },
+          "429": {
+            "description": "Limite de consultas ou testes; observar Retry-After"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "nome",
+                  "inscricao"
+                ],
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "inscricao": {
+                    "$ref": "#/components/schemas/InscricaoPush"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notificacoes/dispositivos/{id}": {
+      "delete": {
+        "summary": "Desativar um aparelho próprio e cancelar seus envios pendentes.",
+        "tags": [
+          "Notificações pessoais"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação concluída"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Sessão necessária"
+          },
+          "403": {
+            "description": "Conta, filial ou permissão não autorizada"
+          },
+          "429": {
+            "description": "Limite de consultas ou testes; observar Retry-After"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/notificacoes/teste": {
+      "post": {
+        "summary": "Enfileirar teste somente para aparelho da própria sessão. Repetição da mesma requisição é idempotente; novos testes limitados a um por minuto.",
+        "tags": [
+          "Notificações pessoais"
+        ],
+        "responses": {
+          "202": {
+            "description": "Teste na fila"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Sessão necessária"
+          },
+          "403": {
+            "description": "Conta, filial ou permissão não autorizada"
+          },
+          "429": {
+            "description": "Limite de consultas ou testes; observar Retry-After"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dispositivo",
+                  "requisicao"
+                ],
+                "properties": {
+                  "dispositivo": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "requisicao": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notificacoes/historico": {
+      "get": {
+        "summary": "Últimos vinte testes/resumos pessoais de filiais ainda autorizadas. Aceite do serviço não confirma recebimento no aparelho.",
+        "tags": [
+          "Notificações pessoais"
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação concluída"
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "401": {
+            "description": "Sessão necessária"
+          },
+          "403": {
+            "description": "Conta, filial ou permissão não autorizada"
+          },
+          "429": {
+            "description": "Limite de consultas ou testes; observar Retry-After"
           }
         }
       }

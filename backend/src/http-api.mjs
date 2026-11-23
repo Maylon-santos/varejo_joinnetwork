@@ -27,7 +27,7 @@ async function lerJson(req,limite=4096){
  try{const v=JSON.parse(Buffer.concat(chunks).toString('utf8'));if(!v||typeof v!=='object'||Array.isArray(v))throw new Error();return v;}
  catch{throw new ErroApi(400,'JSON_INVALIDO');}
 }
-export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuarios,funcionarios,reprocessamentos,consolidado,fila,produtos,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarImagens=limitador({limite:240}),limitarEntrada=limitador({limite:1800}),limitarAnonimo=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
+export function criarServidor({auth,painel,filiais,notificacoes,gestaoPermissoes,gestaoUsuarios,funcionarios,reprocessamentos,consolidado,fila,produtos,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarImagens=limitador({limite:240}),limitarEntrada=limitador({limite:1800}),limitarAnonimo=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
  const server=createServer(async(req,res)=>{
   const requestId=randomUUID();
   res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
@@ -55,8 +55,20 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
    limitarOuFalhar(req.method==='GET'&&/\/(?:imagem|foto)$/.test(path)?limitarImagens:limitar,conta);
    const acesso=escopoUsuario(user,filiais);
    const painelUsuario=painel.restringir(acesso.filiais,acesso.vendedores);
-   if(path==='/api/v1/auth/me'&&req.method==='GET')return enviar(200,{usuario:{id:user.id,email:user.email,role:user.role,role_nome:user.role_nome,tenant_key:user.tenant_key,permissoes:acesso.permissoes,filiais:acesso.filiais,somente_proprias_vendas:user.somente_proprias_vendas}});
-   if(path==='/api/v1/auth/logout'&&req.method==='POST'){await auth.logout(token);return enviar(200,{ok:true});}
+   if(path==='/api/v1/auth/me'&&req.method==='GET')return enviar(200,{usuario:{id:user.id,email:user.email,role:user.role,role_nome:user.role_nome,tenant_key:user.tenant_key,permissoes:acesso.permissoes,filiais:acesso.filiais,somente_proprias_vendas:user.somente_proprias_vendas,notificacoes:!!notificacoes?.disponivel(user)}});
+   if(path==='/api/v1/auth/logout'&&req.method==='POST'){await notificacoes?.sair(user,token);await auth.logout(token);return enviar(200,{ok:true});}
+   if(path==='/api/v1/notificacoes'||path.startsWith('/api/v1/notificacoes/')){
+    if(url.search)throw new ErroApi(400,'PARAMETRO_INVALIDO');
+    if(!notificacoes)throw new ErroApi(503,'NOTIFICACOES_INDISPONIVEIS');
+    if(path==='/api/v1/notificacoes'&&req.method==='GET')return enviar(200,await notificacoes.status(user,token));
+    if(path==='/api/v1/notificacoes/preferencias'&&req.method==='PUT')return enviar(200,await notificacoes.salvarPreferencias(user,await lerJson(req)));
+    if(path==='/api/v1/notificacoes/dispositivos'&&req.method==='POST')return enviar(201,await notificacoes.inscrever(user,token,await lerJson(req,7000)));
+    const dispositivo=/^\/api\/v1\/notificacoes\/dispositivos\/([a-f0-9-]{36})$/.exec(path);
+    if(dispositivo&&req.method==='DELETE')return enviar(200,await notificacoes.desativar(user,dispositivo[1]));
+    if(path==='/api/v1/notificacoes/teste'&&req.method==='POST')return enviar(202,await notificacoes.testar(user,token,await lerJson(req)));
+    if(path==='/api/v1/notificacoes/historico'&&req.method==='GET')return enviar(200,await notificacoes.historico(user));
+    throw new ErroApi(405,'METODO_NAO_PERMITIDO');
+   }
    if(path==='/api/v1/crescimento'||path==='/api/v1/consolidado'||path==='/api/v1/metas'||path.startsWith('/api/v1/metas/')){
     if(!['Admin','Diretoria','Supervisao'].includes(user.role))throw new ErroApi(403,'RECURSO_NAO_AUTORIZADO');
     if(!consolidado)throw new ErroApi(503,'CONSOLIDADO_INDISPONIVEL');

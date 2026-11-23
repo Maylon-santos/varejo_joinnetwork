@@ -1,5 +1,13 @@
 # Comece aqui — estado atual em 23/11/2026
 
+## Aplicativo e resumo diário — 23/11/2026
+
+- [x] Implementados manifesto/ícones, service worker sem cache de dados autenticados e área Notificações com instalação orientada, opt-in, filiais, aparelhos, teste pessoal e histórico. Piloto limitado à conta do titular; resumo diário desligado até adesão.
+- [x] Resumo após 22h05 de São Paulo, com vendas, peças, valor, PA e ticket; dados atrasados aguardam até 22h30 e geram versão parcial explícita. Outbox cifrada, idempotência, checagem de acesso e LOGIN restrito; nenhum aviso por atendimento ou webhook reativado.
+- [x] 111 unitários, 30 integrações PostgreSQL e interface aprovados. Transporte cifrado/decifrado com dados sintéticos; service worker real recebe push sintético. Instalação/inscrição nativa simuladas; recebimento real no iPhone ainda depende do titular. [Uso e operação](docs/ALERTAS_NOTIFICACOES.md), [interface](docs/validacao-notificacoes-ui.json).
+- [ ] Publicar API e novo worker após backup, aplicar somente migration central aditiva e conferir saúde, assets, credenciais e demais serviços. Não inscrever aparelho nem ativar preferências em nome do titular. Metas/conferência/Lista da Vez permanecem posteriores.
+
+
 ## Troca rápida de filiais e alertas — 23/11/2026
 
 - [x] Corrigida a causa do 429: cota de consultas por conta/tenant, separada das imagens; teto de entrada, anônimos e proteção de login mantidos. `Retry-After` real, contagem de espera, agrupamento por 250 ms, cancelamento de consultas/fotos antigas e fotos sob demanda. Legenda usa a filial aplicada. Datas e mensagem ajustadas para celular.

@@ -1,42 +1,67 @@
-# Alertas e resumo diário: requisitos do piloto
+# Notificações e resumo diário
 
-## Escopo aprovado em 23/11/2026
+## Piloto
 
-Preferências de notificações para metas atingidas, novas pendências de conferência, Lista da Vez e resumo diário após as 22h, respeitando conta, tenant, filiais e permissões. Web Push/PWA ainda não foram implementados. A aprovação dos requisitos não significa que existam dispositivos inscritos ou envios ativos.
+Instalação como aplicativo web, preferências por filial e Web Push implementados em 23/11/2026. O piloto fica restrito à conta do titular, definida por identificador numa configuração privada. Nenhuma conta adicional é incluída automaticamente. Ativar o recurso no servidor não inscreve aparelhos nem habilita o resumo: cada aparelho precisa de consentimento, e o resumo diário exige salvar as preferências.
 
-O titular definiu o primeiro piloto: **somente sua conta, em seu iPhone**, com **um resumo diário por filial após as 22h**. Notificações de cada atendimento da Lista da Vez ficam fora deste primeiro teste. Metas e pendências permanecem no escopo futuro das preferências, sem ativação implícita.
+Metas atingidas, pendências de conferência e acontecimentos da Lista da Vez permanecem para etapas posteriores. Esta entrega não reativa os relatórios da R30 nem os webhooks da API de integrações.
 
-| Alerta | Regra proposta |
-| --- | --- |
-| Meta atingida | Conferir a meta mensal vigente e os mesmos números do painel. Uma notificação por meta/filial no mês; alteração da meta não redispara automaticamente no primeiro piloto. |
-| Conferência | Avisar sobre novas pendências identificadas após a inscrição, sem disparar uma notificação para cada pendência antiga. Consolidar ocorrências próximas e abrir a Conferência já filtrada. |
-| Lista da Vez | Fora do primeiro piloto. Não disparar a cada atendimento ou atualização periódica; eventual gatilho será definido numa etapa posterior. |
-| Resumo diário | Primeiro piloto: execução após as 22h, com proposta inicial de 22h05, horário de São Paulo, para a data comercial do dia. Uma notificação por destinatário/filial/dia. O titular solicitou vendas, peças, valor, PA e ticket no próprio aviso; não incluir dados de clientes ou vendedores. O clique abre a filial e o dia correspondentes, com sessão e autorização. |
+## Instalar no iPhone e testar
 
-Formato solicitado, com os números de exemplo fornecidos pelo titular:
+1. No iPhone com iOS 16.4 ou superior, abra https://aeropostale.joinnetwork.com.br no Safari.
+2. Toque em **Compartilhar → Adicionar à Tela de Início → Adicionar**.
+3. Abra pelo novo ícone e entre com sua conta.
+4. No menu, abra **Notificações**. Toque em **Ativar neste aparelho** e permita as notificações no iPhone.
+5. Toque em **Enviar teste**. A rotina verifica a fila a cada minuto. Confira o aviso com o painel fechado ou a tela bloqueada e toque nele para abrir o painel.
+6. Marque **Receber o resumo diário**, selecione inicialmente Itupeva e toque em **Salvar preferências**. A seleção inicial é uma sugestão; nada é salvo antes dessa ação.
+
+A primeira entrega real no iPhone precisa ser confirmada pelo titular; a inscrição nativa é simulada nos testes automatizados. No navegador, a área **Seus últimos avisos** distingue fila, aceite do serviço, falha, prazo encerrado e resultado incerto. O aceite do serviço não confirma a exibição no aparelho.
+
+Android e computador podem usar navegadores compatíveis, mas não integram o primeiro teste solicitado. No iPhone, abrir somente uma aba do Safari não habilita o Web Push: é necessário entrar pelo aplicativo adicionado à Tela de Início. Não é necessário número de telefone nem conta Apple Developer.
+
+## Resumo do dia
+
+- Um aviso por conta, aparelho, filial e dia comercial. Agenda a partir de **22h05, America/Sao_Paulo**; a rotina roda a cada minuto.
+- O resumo inclui quantidade de vendas, peças, valor de vendas, peças por venda (PA) e ticket médio. PA é peças ÷ vendas; ticket é valor ÷ vendas. Zero vendas resulta em PA/ticket indisponíveis, sem divisão por zero. Os cálculos monetários usam centavos inteiros.
+- Usa vendas `S` não canceladas, quantidade e valor do cabeçalho, conforme o painel. Entradas não são subtraídas como devoluções. Pendências de conferência continuam incluídas segundo as regras existentes; não há homologação implícita de bruto/líquido ou cobertura histórica.
+- Entre 22h05 e 22h29, aguarda vendas e cancelamentos com checkpoint cobrindo o dia, sem erro, com sucesso após 22h e há no máximo vinte minutos. Esses sinais indicam atualização recente, não comprovam o fechamento definitivo da loja ou a integridade de toda a coleta.
+- A partir de 22h30, se esses sinais não forem atendidos, envia uma única versão **Resumo parcial**, identificando a atualização pendente. Não envia outra versão quando a coleta terminar. A geração encerra às 23h55 e o envio expira no fim do dia; não há disparo retroativo na manhã seguinte.
+- Valores aparecem no próprio aviso, conforme solicitado. Não inclui clientes, contatos ou vendedores. A exibição e eventual corte de texto são controlados pelo iPhone; o aviso abre a Visão geral na filial e no dia, exigindo login quando necessário.
+
+Exemplo exclusivamente sintético:
 
 ```text
-Resumo do dia · Itupeva · 23/11/2026
-28 vendas · 95 peças
-Valor das vendas: R$ 14.216,58
-PA: 3,39 · Ticket médio: R$ 507,74
+Resumo do dia · Loja exemplo
+23/11/2026 · 10 vendas · 30 peças
+Vendas: R$ 3.000,00
+PA: 3,00 · Ticket médio: R$ 300,00
 ```
 
-PA segue a métrica de peças por venda do painel: 95 ÷ 28. Ticket médio: 14.216,58 ÷ 28. Arredondar somente na apresentação e não confundir a quantidade de vendas com atendimentos registrados na Lista da Vez. Os dados reais serão calculados no momento da geração; o exemplo não comprova os resultados comerciais do dia.
+## Preferências e aparelhos
 
-O resumo usa as regras comerciais existentes do painel. Não subtrair entradas como devoluções nem alterar bruto/líquido sem a homologação pendente. Atualização atrasada, filial ainda aberta ou coleta incompleta precisam ficar sinalizadas; o horário de 22h05 não comprova sozinho um fechamento definitivo. Definir tolerância e política de reenvio antes de automatizar correções de resumo.
+A conta precisa estar ativa, na allowlist do piloto, ter `indicadores:ler` e poder consultar a filial completa. Perfis limitados às próprias vendas não recebem o total de uma filial. A geração e cada tentativa verificam novamente os vínculos e as permissões atuais; o histórico também filtra as filiais ainda permitidas.
 
-O resumo por push é separado do envio de relatórios anteriormente pausado na R30. Não reativar aquele timer nem os webhooks da API externa para implementar este canal.
+O cadastro é pessoal e aceita até três aparelhos, sem transferir uma inscrição entre contas. **Desativar neste aparelho**, a lista **Aparelhos autorizados** e o logout interrompem novos envios para o dispositivo correspondente e cancelam sua fila pendente. Sair de uma sessão não desativa os demais aparelhos. A expiração natural de uma sessão de oito horas não é um logout: os avisos podem chegar com o aplicativo fechado, mas o acesso ao painel continuará exigindo login. Mensagens já aceitas pelo serviço de push não podem ser recolhidas pelo servidor.
 
-## O que falta para testar no celular
+A permissão do iOS é dada no próprio aparelho. Bloqueio, Modo Foco, conexão e preferências de exibição podem silenciar ou atrasar avisos. Reative a permissão nos ajustes quando estiver negada. Uma rotação de chave VAPID exige reconectar os aparelhos.
 
-1. Implementar manifesto/ícones, instalação PWA e service worker, sem cache offline de respostas autenticadas, vendas, tokens ou dados pessoais.
-2. Implementar preferências e inscrição autenticada de cada dispositivo; credencial VAPID privada no servidor, remetente/fila, deduplicação, tratamento de inscrições expiradas e egress restrito aos serviços de push.
-3. Piloto escolhido: conta do titular e seu iPhone; nenhuma conta adicional recebe alertas sem aderir. Selecionar as filiais permitidas nas preferências e apresentar o horário proposto de 22h05. Gatilhos de atendimento da Lista da Vez ficam fora do primeiro teste.
-4. No iPhone com iOS 16.4 ou superior: adicionar o painel à Tela de Início, abri-lo pelo ícone, entrar com a conta e tocar em **Ativar notificações** para autorizar. Android exige navegador compatível e autorização de notificações. Não é necessário informar número de telefone ou fornecer a senha pelo chat.
-5. Enviar uma notificação de teste somente ao dispositivo inscrito. Conferir recebimento com tela bloqueada, abertura da página correta e exigência de sessão; repetir com notificações negadas, usuário inativo, filial removida, logout e inscrição expirada.
-6. Simular o resumo diário com relógio/dados de teste, inclusive 21h59/22h05 em São Paulo, coleta atrasada, repetição do job e alteração de permissão. Confirmar que não há duplicatas nem exposição de outras filiais antes de habilitar o primeiro resumo real. Metas, conferência e Lista da Vez exigirão testes próprios quando forem implementados.
+## Implementação e operação
 
-A autorização do sistema operacional precisa ser dada no próprio aparelho. Modo Foco/Silencioso, conexão e configurações de notificações podem atrasar ou silenciar a exibição. Push não substitui o histórico de alertas no painel.
+- Assets públicos fixos: `/manifest.webmanifest`, `/sw.js`, ícones PNG e módulo/CSS de notificações. Service worker apenas recebe/exibe push e abre o painel; não intercepta consultas nem guarda tokens, vendas ou dados pessoais em cache offline.
+- API do painel: `GET /api/v1/notificacoes`, `PUT /preferencias`, `POST /dispositivos`, `DELETE /dispositivos/{id}`, `POST /teste` e `GET /historico`, sob `/api/v1/notificacoes`. Todas exigem a sessão do painel; não são endpoints da API de terceiros.
+- Configuração privada `.env.notificacoes`: VAPID pública/privada, cofre AES-256-GCM próprio, IDs do piloto e LOGIN exclusivo do worker. A API recebe a chave pública e a chave do cofre; a chave VAPID privada fica somente no worker. Nunca registrar endpoints, inscrições, URLs de banco, chaves ou conteúdo comercial em logs.
+- Migration central aditiva `008_notificacoes_push.sql`: preferências, inscrições cifradas e outbox cifrada. Não altera vendas, itens, filas de atendimento, integrações, concessões ou autenticadores existentes. Histórico e inscrições inativas retidos por trinta dias.
+- Worker separado, com leitura dos indicadores e das permissões e escrita somente na outbox/inscrições. Não lê hashes de senha, não escreve em usuários ou registros comerciais. O wrapper inclui `deploy/notificacoes.compose.yaml` apenas quando o arquivo privado existe; worker local continua desativado.
+- Transporte usa `web-push` para VAPID/criptografia e socket HTTPS com certificado/SNI, DNS público fixado e sem redirecionamentos. Destinos limitados a `*.push.apple.com`, `push.apple.com`, `fcm.googleapis.com` e `updates.push.services.mozilla.com`. Não ampliar o egress dos serviços de integrações.
+- Lock de worker por tenant e chave única por resumo/aparelho/dia. Teste pessoal tem chave de idempotência e intervalo de um minuto. Respostas 404/410 desativam a inscrição; 429/5xx conhecidos admitem até três tentativas, respeitando Retry-After. TTL limitado a trinta minutos e ao prazo da entrega; avisos substituídos usam o mesmo tag/topic.
+- Intenção de envio é persistida antes da rede. Timeout após iniciar a requisição ou processo interrompido fica **incerto**, sem reenvio automático. Isso evita repetir cegamente um aviso que o serviço pode ter aceitado, mas não garante entrega exatamente uma vez de ponta a ponta.
 
-Referências: [WebKit — Web Push no iOS e iPadOS](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/), [MDN — Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_API).
+Consultar `deploy/README.md` para implantação, backup e retorno. Guardar as chaves privadas com os backups; não regenerar o cofre em uma atualização comum.
+
+## Validação
+
+Testes verificam horários/data de São Paulo, cálculo monetário/PA, cancelamentos, atraso/versão parcial, opt-in, isolamento de conta/filial, logout, idempotência, concorrência, inscrição expirada, espera do serviço, resultado incerto e permissões do LOGIN restrito. Transporte real é cifrado/decifrado com chaves sintéticas e socket simulado, sem envio externo. Interface confere manifesto/service worker real com push sintético, instalação orientada, autorização simulada, preferências, teste, logout e abertura do resumo em computador/celular.
+
+Esses testes não substituem o recebimento no iPhone nem um teste de carga de todos os usuários. Metas, conferência e Lista da Vez terão validação própria quando implementados.
+
+Referências: [Apple — Web Push](https://developer.apple.com/documentation/usernotifications/sending-web-push-notifications-in-web-apps-and-browsers), [WebKit — Web Push no iOS](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/), [web-push](https://github.com/web-push-libs/web-push).

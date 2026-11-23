@@ -102,7 +102,7 @@
       "id": "R17",
       "titulo": "Notificações internas e alertas",
       "status": "em_andamento",
-      "detalhe": "Requisitos aprovados em 23/11. Primeiro piloto: somente conta do titular no iPhone, resumo diário por filial após 22h (São Paulo), com vendas, peças, valor, PA e ticket; sem notificações por atendimento. PWA, preferências e remetente ainda não implementados. Metas, conferência e Lista da Vez permanecem posteriores. R30 e webhooks não reativados. docs/ALERTAS_NOTIFICACOES.md."
+      "detalhe": "Piloto de resumo diário implementado: PWA, preferências, filiais, aparelhos e outbox cifrada, restritos ao titular. 111 unitários, 30 integrações e interface aprovados; publicação e teste real no iPhone pendentes. Metas, conferência e Lista da Vez continuam posteriores, sem reativar R30/webhooks. docs/ALERTAS_NOTIFICACOES.md."
     },
     {
       "id": "R18",
@@ -223,6 +223,12 @@
       "titulo": "Troca de filiais sem bloqueio indevido",
       "status": "concluido",
       "detalhe": "Cotas por conta/tenant e mídia separadas, debounce/cancelamento, fotos sob demanda e espera real. 105 unitários, 30 integrações e interface aprovados. API publicada após backup, HTTPS/limitador/saúde e navegador com dados sintéticos conferidos; 27 outros containers e credenciais preservados. docs/validacao-troca-filiais.json."
+    },
+    {
+      "id": "R38",
+      "titulo": "Aplicativo e resumo diário no iPhone",
+      "status": "validacao",
+      "detalhe": "PWA sem cache privado e Web Push com opt-in e LOGIN restrito. Resumo após 22h05, parcial explícito quando atrasado, cálculos do painel. Testes aprovados; publicação e recebimento no aparelho pendentes. docs/ALERTAS_NOTIFICACOES.md."
     }
   ]
 }

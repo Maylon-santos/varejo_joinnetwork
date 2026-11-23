@@ -1,5 +1,13 @@
 # Roadmap — Aeropostale Varejo
 
+## Aplicativo e resumo diário — 23/11/2026
+
+- [x] Implementados manifesto/ícones, service worker sem cache de dados autenticados e área Notificações com instalação orientada, opt-in, filiais, aparelhos, teste pessoal e histórico. Piloto limitado à conta do titular; resumo diário desligado até adesão.
+- [x] Resumo após 22h05 de São Paulo, com vendas, peças, valor, PA e ticket; dados atrasados aguardam até 22h30 e geram versão parcial explícita. Outbox cifrada, idempotência, checagem de acesso e LOGIN restrito; nenhum aviso por atendimento ou webhook reativado.
+- [x] 111 unitários, 30 integrações PostgreSQL e interface aprovados. Transporte cifrado/decifrado com dados sintéticos; service worker real recebe push sintético. Instalação/inscrição nativa simuladas; recebimento real no iPhone ainda depende do titular. [Uso e operação](docs/ALERTAS_NOTIFICACOES.md), [interface](docs/validacao-notificacoes-ui.json).
+- [ ] Publicar API e novo worker após backup, aplicar somente migration central aditiva e conferir saúde, assets, credenciais e demais serviços. Não inscrever aparelho nem ativar preferências em nome do titular. Metas/conferência/Lista da Vez permanecem posteriores.
+
+
 ## Troca rápida de filiais e alertas — 23/11/2026
 
 - [x] Corrigida a causa do 429: cota de consultas por conta/tenant, separada das imagens; teto de entrada, anônimos e proteção de login mantidos. `Retry-After` real, contagem de espera, agrupamento por 250 ms, cancelamento de consultas/fotos antigas e fotos sob demanda. Legenda usa a filial aplicada. Datas e mensagem ajustadas para celular.
@@ -214,11 +222,11 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-26 de 37 tarefas deste quadro concluídas. Atualização: 2026-11-23. A contagem não representa prazo ou esforço.
+26 de 38 tarefas deste quadro concluídas. Atualização: 2026-11-23. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
-| R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | — | R01 — Importação e banco do piloto |
+| R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | R38 — Aplicativo e resumo diário no iPhone | R01 — Importação e banco do piloto |
 | R18 — Campanhas e mensagens | R17 — Notificações internas e alertas | — | R02 — Painel e acesso Admin |
 | R20 — SaaS: provisionamento, planos e cobrança | R19 — Produtos, estoque e indicadores adicionais | — | R03 — Publicação com HTTPS e backup diário |
 | — | R22 — Definir bruto, líquido e devoluções | — | R04 — Correções de celular e fotos |
@@ -249,7 +257,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 
 - [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
 - [ ] **R16 — Fila de atendimento:** R16.1 e relatórios/movimento intenso da R16.2 publicados em 15/09. Relatórios por filial/período (até 31 dias), vendedor/dia, tempos, motivos e histórico. Gestão liga/desliga ordem flexível com motivo, mantendo um atendimento aberto por vendedor. Permissão específica de relatórios; Vendas somente próprios dados. 52 testes unitários, 45 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Manual v1.1 entregue; treinamento da equipe ainda deve ser realizado. Pendentes: definição de correções gerenciais do histórico e R16.3 associação/confirmação de venda no ERP. Nenhum atendimento real alterado pelos testes.
-- [ ] **R17 — Notificações internas e alertas:** Requisitos aprovados em 23/11. Primeiro piloto: somente conta do titular no iPhone, resumo diário por filial após 22h (São Paulo), com vendas, peças, valor, PA e ticket; sem notificações por atendimento. PWA, preferências e remetente ainda não implementados. Metas, conferência e Lista da Vez permanecem posteriores. R30 e webhooks não reativados. docs/ALERTAS_NOTIFICACOES.md.
+- [ ] **R17 — Notificações internas e alertas:** Piloto de resumo diário implementado: PWA, preferências, filiais, aparelhos e outbox cifrada, restritos ao titular. 111 unitários, 30 integrações e interface aprovados; publicação e teste real no iPhone pendentes. Metas, conferência e Lista da Vez continuam posteriores, sem reativar R30/webhooks. docs/ALERTAS_NOTIFICACOES.md.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
 - [ ] **R19 — Produtos, estoque e indicadores adicionais:** Tipo pelo cadastro publicado e estoque reprocessado em 01/11: migration 018, vínculo por produto com prioridade cadastral e tipo do saldo como alternativa. Recarga das 15 filiais concluída (16 tentativas); 7.337 produtos consultados e 7.301 atualizados. 38.558 SKUs AC entre 38.606 presentes; ITUPEVA 4.256 AC e 19 sem tipo. Restam 48 SKUs em 36 cadastros ausentes pelo ID; alternativa por código vazia em 33 e outro ID em 3, sem trocar identidades/inferir classificação. 73 testes unitários, 74 de integração e navegador sintético/público computador/celular aprovados. Backup backup-20261101T125720Z-scBjC3, hashes comerciais/checkpoints preservados, worker remoto e timer Talk ativos, local desativado. Indicadores, Top 20, produtos e estoque publicados; completar cadastros ausentes e demais indicadores de movimentos/pagamentos/estoque histórico/bruto-líquido depende da R22, com homologação mensal/anual na R11. Evidência docs/validacao-tipo-cadastro-producao.json.
 - [ ] **R20 — SaaS: provisionamento, planos e cobrança:** Etapa 7. Manter isolamento por tenant e automatizar subdomínios após fechar o produto.
@@ -258,6 +266,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 - [ ] **R29 — Vendas por hora nos dashboards:** Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json.
 - [ ] **R31 — API externa e webhooks de vendas:** Infraestrutura da API externa, documentação pública separada e console administrativo publicados na HostGator; coletor remoto ativo e worker local desativado. Primeiro acesso de leitura às 11 filiais validado em 14/11; substituição da chave confirmada em 16/11, com a anterior revogada. Console e manual revisados, MFA, concessões e auditoria preservados. Webhooks permanecem desativados. Teste assinado com a nova chave e homologação completa do consumidor/recursos adicionais continuam pendentes. Evidências: docs/validacao-publicacao-integracoes-hostgator.json, docs/validacao-acesso-integracao-filiais.json, docs/validacao-nova-chave-integracao.json e docs/validacao-console-integracoes-ux.json. Registros anteriores de recuperação e disco permanecem no histórico. Não conclui SaaS/R11/R22/R29.
+- [ ] **R38 — Aplicativo e resumo diário no iPhone:** PWA sem cache privado e Web Push com opt-in e LOGIN restrito. Resumo após 22h05, parcial explícito quando atrasado, cálculos do painel. Testes aprovados; publicação e recebimento no aparelho pendentes. docs/ALERTAS_NOTIFICACOES.md.
 
 <!-- KANBAN:FIM -->
 

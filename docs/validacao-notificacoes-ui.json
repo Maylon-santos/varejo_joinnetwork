@@ -1,0 +1,18 @@
+{
+  "verificadoEm": "2026-11-23T17:03:12.661Z",
+  "ambiente": "Chromium e PostgreSQL isolado, dados sintéticos",
+  "assets": "Servidor local",
+  "manifestoEIcones": true,
+  "serviceWorkerRealRecebePush": true,
+  "semCacheOffline": true,
+  "urlExternaRejeitada": true,
+  "instalacaoIphoneOrientada": true,
+  "autorizacaoPorToqueSimulada": true,
+  "preferenciasEFiliais": true,
+  "testeNoAparelhoDaSessao": true,
+  "desativacaoELogout": true,
+  "acessoAoResumoValidado": true,
+  "contaForaDoPilotoSemAcesso": true,
+  "celularSemOverflow": true,
+  "errors": []
+}
