@@ -4,7 +4,8 @@
 
 - [x] Corrigida a causa do 429: cota de consultas por conta/tenant, separada das imagens; teto de entrada, anônimos e proteção de login mantidos. `Retry-After` real, contagem de espera, agrupamento por 250 ms, cancelamento de consultas/fotos antigas e fotos sob demanda. Legenda usa a filial aplicada. Datas e mensagem ajustadas para celular.
 - [x] 105 unitários e 30 integrações PostgreSQL aprovados. Interface sintética: dez seleções rápidas fazem uma consulta final; doze trocas sequenciais sem 429, isolamento de contas, resposta antiga descartada, espera/recuperação e logout. Navegação móvel revalidada. [Regras](docs/TROCA_FILIAIS.md), [interface](docs/validacao-troca-filiais-ui.json).
-- [ ] Publicar somente `api` após backup, verificar assets/saúde e preservação. Notificações/PWA não implementadas; requisitos de metas/conferência/Lista da Vez/resumo após 22h aprovados e [piloto documentado](docs/ALERTAS_NOTIFICACOES.md). Participantes e gatilho da fila solicitados ao titular; R17 separada da correção.
+- [x] Publicada somente `api`, imagem `navegacao-fluida-20261123`, após backup conferido. Assets HTTPS, limitador na imagem, saúde e navegador com dados sintéticos aprovados; outros 27 containers, Nginx, envs e credenciais preservados. [Publicação](docs/validacao-troca-filiais.json).
+- [ ] Notificações/PWA ainda não implementadas. Primeiro piloto definido: somente a conta do titular, em seu iPhone, com resumo diário por filial após 22h e métricas de vendas, peças, valor, PA e ticket; sem alertas por atendimento. [Requisitos e roteiro](docs/ALERTAS_NOTIFICACOES.md); R17, R30 e webhooks separados da correção.
 
 ## Navegação no celular — 23/11/2026
 

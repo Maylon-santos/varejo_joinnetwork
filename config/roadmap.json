@@ -102,7 +102,7 @@
       "id": "R17",
       "titulo": "Notificações internas e alertas",
       "status": "em_andamento",
-      "detalhe": "Requisitos aprovados em 23/11: preferências de metas, conferência, Lista da Vez e resumo diário após 22h (São Paulo), respeitando conta/filial/permissões. PWA/Web Push ainda não implementados; participantes e gatilho da fila em definição para o piloto. R30 e webhooks não reativados. docs/ALERTAS_NOTIFICACOES.md."
+      "detalhe": "Requisitos aprovados em 23/11. Primeiro piloto: somente conta do titular no iPhone, resumo diário por filial após 22h (São Paulo), com vendas, peças, valor, PA e ticket; sem notificações por atendimento. PWA, preferências e remetente ainda não implementados. Metas, conferência e Lista da Vez permanecem posteriores. R30 e webhooks não reativados. docs/ALERTAS_NOTIFICACOES.md."
     },
     {
       "id": "R18",
@@ -221,8 +221,8 @@
     {
       "id": "R37",
       "titulo": "Troca de filiais sem bloqueio indevido",
-      "status": "validacao",
-      "detalhe": "Cotas por conta/tenant e mídia separadas, debounce/cancelamento, fotos sob demanda e espera real. 105 unitários, 30 integrações e interface aprovados; publicação pendente. docs/TROCA_FILIAIS.md."
+      "status": "concluido",
+      "detalhe": "Cotas por conta/tenant e mídia separadas, debounce/cancelamento, fotos sob demanda e espera real. 105 unitários, 30 integrações e interface aprovados. API publicada após backup, HTTPS/limitador/saúde e navegador com dados sintéticos conferidos; 27 outros containers e credenciais preservados. docs/validacao-troca-filiais.json."
     }
   ]
 }

@@ -1,0 +1,68 @@
+{
+  "publicadoEm": "2026-11-23T13:48:46.095282+00:00",
+  "imagem": "aeropostale-varejo-api:navegacao-fluida-20261123",
+  "servicosAtualizados": [
+    "api"
+  ],
+  "outrosContainersPreservados": 27,
+  "nginxPreservado": true,
+  "envsPreservados": true,
+  "clientesChavesAutenticadoresPreservados": true,
+  "assetsHTTPSIguaisAFonte": [
+    "/assets/app.js",
+    "/assets/styles.css"
+  ],
+  "apiSaudavel": true,
+  "limitadorConferidoNaImagem": true,
+  "filiaisSemToken": 401,
+  "arquivoPrivado": 401,
+  "semMigration": true,
+  "notificacoesPushAtivadas": false,
+  "backupConferido": "backup-20261123T134745Z-3RAmkh",
+  "unitarios": {
+    "aprovados": 105,
+    "falhas": 0
+  },
+  "integracaoPostgreSQLIsolado": {
+    "aprovados": 30,
+    "falhas": 0
+  },
+  "interfaceLocal": {
+    "verificadoEm": "2026-11-23T13:43:05.257Z",
+    "ambiente": "PostgreSQL isolado e dados sintéticos; Chromium",
+    "assets": "Servidor local",
+    "dezSelecoesRapidasUmaConsulta": true,
+    "dozeTrocasSequenciaisSem429": true,
+    "respostaAntigaDescartada": true,
+    "rotuloDaFilialAplicada": true,
+    "fotosSomenteAoAproximarDaTela": true,
+    "tempoDeEsperaDoServidor": true,
+    "botaoLiberadoAposIntervalo": true,
+    "semRequisicaoPendenteNoLogout": true,
+    "celularSemOverflow": true,
+    "errors": []
+  },
+  "interfaceAssetsProducao": {
+    "verificadoEm": "2026-11-23T13:52:29.460Z",
+    "ambiente": "PostgreSQL isolado e dados sintéticos; Chromium",
+    "assets": "HTTPS de produção, API substituída pela fixture local",
+    "dezSelecoesRapidasUmaConsulta": true,
+    "dozeTrocasSequenciaisSem429": true,
+    "respostaAntigaDescartada": true,
+    "rotuloDaFilialAplicada": true,
+    "fotosSomenteAoAproximarDaTela": true,
+    "tempoDeEsperaDoServidor": true,
+    "botaoLiberadoAposIntervalo": true,
+    "semRequisicaoPendenteNoLogout": true,
+    "celularSemOverflow": true,
+    "errors": []
+  },
+  "capturasCelularRevisadas": true,
+  "limitesDaVerificacao": "Chromium com API substituída por fixture PostgreSQL e dados sintéticos; sem teste de carga simultânea ou teste real no iPhone.",
+  "pilotoNotificacoes": {
+    "participantes": "Somente conta do titular no iPhone",
+    "formato": "Resumo diário por filial após 22h, horário de São Paulo",
+    "implementado": false,
+    "envioAtivado": false
+  }
+}

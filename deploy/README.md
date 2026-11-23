@@ -3,9 +3,17 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Troca de filiais e limite de consultas — 23/11/2026
+
+Imagem atual de `api`: `aeropostale-varejo-api:navegacao-fluida-20261123`. Cotas por conta/tenant, mídia separada, proteção de entrada/login/anônimos e `Retry-After` real. Frontend agrupa filtros, cancela consultas antigas, carrega fotos sob demanda e apresenta a espera restante. Datas e erro ajustados para celular. Autenticação, permissões e regras comerciais preservadas; PWA/Web Push não implementados.
+
+Publicada somente `api` após backup `backup-20261123T134745Z-3RAmkh`, com COMPLETE/checksums dos dois bancos conferidos. API saudável, limitador conferido na imagem e CSS/JS iguais por HTTPS. Navegador com assets de produção e API de dados sintéticos aprovado, sem login comercial nessa verificação. Outros 27 containers, Nginx, envs, concessões/chaves/autenticadores preservados. Sem migration; workers e webhooks preservados.
+
+Fontes/override anteriores em `/opt/aeropostale-varejo/artifacts/troca-filiais-20261123T134745Z`. Para retorno, restaurar `backend/src/http-api.mjs`, `frontend/assets/app.js`, `frontend/assets/styles.css` e `deploy/integracoes-hostgator.yaml` dessa pasta, usando a imagem anterior `mobile-20261123`, e recriar somente `api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait api`. Não remover o módulo de navegação nem restaurar bancos. [Regras](../docs/TROCA_FILIAIS.md), [evidência](../docs/validacao-troca-filiais.json).
+
 ## Menu e filtros no celular — 23/11/2026
 
-Imagem atual de `api`: `aeropostale-varejo-api:mobile-20261123`. Menu lateral modal até 760 px com o mesmo nav/permissões; computador/tablet mantêm a barra lateral. Filtros e alvos de toque ajustados. Novo módulo estático `/assets/navegacao.js` incluído na allowlist do servidor, com CSP e no-store preservados. Nenhuma mudança em regras comerciais, autenticação, migrations ou API externa. PWA/Web Push não implementados.
+Imagem desta publicação de `api`: `aeropostale-varejo-api:mobile-20261123`. Menu lateral modal até 760 px com o mesmo nav/permissões; computador/tablet mantêm a barra lateral. Filtros e alvos de toque ajustados. Novo módulo estático `/assets/navegacao.js` incluído na allowlist do servidor, com CSP e no-store preservados. Nenhuma mudança em regras comerciais, autenticação, migrations ou API externa. PWA/Web Push não implementados.
 
 Publicada somente `api`, com outros 27 containers, Nginx, envs, clientes/chaves/autenticadores preservados. Backup `backup-20261123T124740Z-gg6Drs` com COMPLETE/checksums dos dois bancos conferidos. API saudável e HTML/CSS/JS iguais por HTTPS; interface com assets de produção e respostas sintéticas aprovada em 320/390/430/760/900/1440 px. Não foi usado login comercial nessa verificação. Worker local e webhooks preservados.
 
@@ -83,7 +91,7 @@ Acesso Admin pelo menu **Integrações e API** ou https://aeropostale.joinnetwor
 
 Um convite individual de 24 horas foi criado para a conta administrativa configurada. O titular entra com sua senha, abre o Google Authenticator em **+ → Ler QR code**, escaneia o código mostrado no console e confirma os seis dígitos na própria interface. A inclusão manual da chave permanece disponível como alternativa. O QR é gerado localmente no navegador e apagado após confirmação, expiração ou saída; não usa serviço externo de imagens. Até essa confirmação não há operador ativo ou acesso ao manual. O desafio expira em cinco minutos, fica vinculado à sessão e não serve como autorização de MFA. Não cadastrar o autenticador, copiar chaves ou enviar códigos pelo chat em nome do titular.
 
-Imagens atuais: `aeropostale-varejo-api:mobile-20261123` e `aeropostale-varejo-integracoes:eventos-vendas-20261118` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
+Imagens atuais: `aeropostale-varejo-api:navegacao-fluida-20261123` e `aeropostale-varejo-integracoes:eventos-vendas-20261118` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
 
 Sem migration. `deploy/integracoes-permissoes.sql` concede `UPDATE(ativo)` além de `UPDATE(ultimo_passo)` no registro administrativo; o LOGIN da API continua sem INSERT/DELETE de operadores ou UPDATE do segredo. A emissão do convite usa `scripts/autorizar-operador.mjs UUID` em processo operacional com as URLs dos owners e a chave existente disponibilizadas de forma privada; cria somente um registro inativo e auditoria. Não cria usuário do painel, não substitui cadastro de operador existente e não ativa consumidores ou entregas. Para matrícula/revogação/recuperação operacional já existente, consultar `docs/integracoes/operacao.md`.
 

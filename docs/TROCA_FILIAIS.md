@@ -26,4 +26,4 @@ Os limites continuam protegendo o serviço. A mudança evita que fotos e contas 
 
 `scripts/verificar-troca-filiais-ui.mjs` usa PostgreSQL isolado e dados sintéticos para conferir dez seleções rápidas com uma única consulta final, doze cargas sequenciais sem 429, descarte da resposta antiga, legenda correta, imagens sob demanda, contagem de espera, recuperação e logout. A suíte de navegação móvel também é repetida. As capturas ficam em `artifacts/troca-filiais-20261123/`.
 
-As regras comerciais, concessões, autenticação e sincronização não são alteradas. Testes e implantação são registrados separadamente na evidência.
+As regras comerciais, concessões, autenticação e sincronização não são alteradas. Publicação concluída somente na API do painel, após backup conferido: assets HTTPS iguais, limitador na imagem, saúde e interface com dados sintéticos aprovados. A verificação no navegador não substitui teste de carga simultânea nem constitui teste real no iPhone. [Evidência de publicação](validacao-troca-filiais.json).
