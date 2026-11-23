@@ -35,7 +35,7 @@
     <div class="sidebar-brand wordmark">AÉROPOSTALE<span>RETAIL INTELLIGENCE</span></div>
     <div class="workspace"><span class="store-icon" data-icon="store"></span><div><strong>Aeropostale Brasil</strong><small id="workspace-scope">Visão administrativa</small></div><span class="workspace-dot"></span></div>
     <div class="nav-label">ACOMPANHAMENTO</div>
-    <nav aria-label="Navegação principal">
+    <nav id="primary-navigation" aria-label="Navegação principal">
       <button class="nav-button active" data-page="overview"><span data-icon="grid"></span>Visão geral</button>
       <button class="nav-button" data-page="consolidated" hidden><span data-icon="trend"></span>Visão das filiais</button>
       <button class="nav-button" data-page="growth" hidden><span data-icon="trend"></span>Crescimento anual</button>
@@ -51,16 +51,22 @@
     </nav>
     <div class="sidebar-bottom"><div class="connection"><span class="dot"></span><div><strong id="sync-side">Dados da loja</strong><small id="sync-side-detail">Consultando atualização</small></div></div><div class="powered">join<span>network</span><small>INTELIGÊNCIA PARA O SEU NEGÓCIO</small></div></div>
   </aside>
+  <dialog id="mobile-menu" class="mobile-menu" aria-labelledby="mobile-menu-title">
+    <div class="mobile-menu-heading"><div><p class="eyebrow">NAVEGAÇÃO</p><h2 id="mobile-menu-title">Menu</h2></div><button id="mobile-menu-close" class="icon-button" type="button" aria-label="Fechar menu" autofocus><span data-icon="close"></span></button></div>
+    <div class="mobile-menu-context"><span>Página atual</span><strong id="mobile-menu-page">Visão geral</strong></div>
+    <div id="mobile-menu-content" class="mobile-menu-content"></div>
+    <div class="mobile-menu-footer"><button id="mobile-menu-back" class="button subtle" type="button">Voltar ao painel</button></div>
+  </dialog>
   <div class="app-body">
-    <header class="topbar"><div class="breadcrumb"><span>Aeropostale</span><span aria-hidden="true">/</span><strong id="breadcrumb-page">Visão geral</strong></div><div class="user-area"><span class="avatar">A</span><div><strong id="user-role">Administrador</strong><small id="user-email"></small></div><button id="logout" class="icon-button" aria-label="Sair da conta" title="Sair da conta"><span data-icon="logout"></span></button></div></header>
+    <header class="topbar"><div class="topbar-navigation"><button id="mobile-menu-toggle" class="icon-button mobile-menu-toggle" type="button" aria-label="Abrir menu de navegação" aria-controls="mobile-menu" aria-expanded="false" aria-haspopup="dialog"><span data-icon="menu"></span></button><span class="mobile-brand wordmark">AÉROPOSTALE</span><div class="breadcrumb"><span>Aeropostale</span><span aria-hidden="true">/</span><strong id="breadcrumb-page">Visão geral</strong></div></div><div class="user-area"><span class="avatar">A</span><div class="user-identity"><strong id="user-role">Administrador</strong><small id="user-email"></small></div><button id="logout" class="icon-button" aria-label="Sair da conta" title="Sair da conta"><span data-icon="logout"></span></button></div></header>
     <main id="main" tabindex="-1">
       <div class="page-heading"><div><p class="eyebrow">SEU NEGÓCIO, EM PERSPECTIVA</p><h1 id="page-title">Visão geral</h1><p id="page-subtitle" class="muted">Um olhar completo sobre os resultados da sua loja.</p></div><div class="today" id="today"></div></div>
       <form id="filters" class="filters">
         <div class="filter-store"><label for="branch">Loja</label><select id="branch" name="filial" required></select></div>
-        <div><label for="period">Período</label><select id="period"><option value="month">Este mês</option><option value="today">Hoje</option><option value="last7">Últimos 7 dias</option><option value="lastMonth">Mês anterior</option><option value="year">Este ano</option><option value="custom">Personalizado</option></select></div>
+        <div class="filter-period"><label for="period">Período</label><select id="period"><option value="month">Este mês</option><option value="today">Hoje</option><option value="last7">Últimos 7 dias</option><option value="lastMonth">Mês anterior</option><option value="year">Este ano</option><option value="custom">Personalizado</option></select></div>
         <div><label for="start-date">De</label><input id="start-date" type="date" required></div><div><label for="end-date">Até</label><input id="end-date" type="date" required></div>
-        <button class="button primary apply" type="submit"><span data-icon="filter"></span>Aplicar filtros</button>
-        <button id="refresh" class="icon-button refresh" type="button" aria-label="Atualizar dados" title="Atualizar dados"><span data-icon="refresh"></span></button>
+        <div class="filter-actions"><button class="button primary apply" type="submit"><span data-icon="filter"></span>Aplicar filtros</button>
+        <button id="refresh" class="icon-button refresh" type="button" aria-label="Atualizar dados" title="Atualizar dados"><span data-icon="refresh"></span></button></div>
       </form>
       <div class="data-caption"><span id="scope-label">Carregando dados…</span><span id="last-sync"></span></div>
       <div id="page-error" class="notice error" role="alert" hidden><span data-icon="alert"></span><p id="page-error-text"></p><button id="retry" class="button subtle" type="button">Tentar novamente</button></div>

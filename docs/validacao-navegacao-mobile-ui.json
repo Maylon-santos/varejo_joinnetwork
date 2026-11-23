@@ -1,0 +1,42 @@
+{
+  "verificadoEm": "2026-11-23T12:36:22.053Z",
+  "ambiente": "PostgreSQL isolado e dados sintéticos; Chromium",
+  "viewports": [
+    {
+      "largura": 320,
+      "semOverflow": true,
+      "focoContido": true,
+      "opcoesAcessiveis": true
+    },
+    {
+      "largura": 390,
+      "semOverflow": true,
+      "focoContido": true,
+      "opcoesAcessiveis": true
+    },
+    {
+      "largura": 430,
+      "semOverflow": true,
+      "focoContido": true,
+      "opcoesAcessiveis": true
+    },
+    {
+      "largura": 760,
+      "semOverflow": true,
+      "focoContido": true,
+      "opcoesAcessiveis": true
+    }
+  ],
+  "desktopTabletPreservados": true,
+  "menuUnicoSemDuplicacao": true,
+  "permissoesPreservadas": true,
+  "escapeBackdropBotaoFechar": true,
+  "focoRestaurado": true,
+  "navegacaoFechaMenuEFocaConteudo": true,
+  "retornoAoTopo": true,
+  "rotacaoRestauraSidebar": true,
+  "sessaoExpiradaFechaMenu": true,
+  "alvosDeToque44px": true,
+  "camposDeFiltro16px": true,
+  "errors": []
+}

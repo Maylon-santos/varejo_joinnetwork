@@ -1,9 +1,12 @@
 import {criarDashboardCrescimento} from './crescimento.js';
+import {criarNavegacaoMovel} from './navegacao.js';
 const $=id=>document.getElementById(id);
 const icons={grid:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',receipt:'M6 3h12v18l-3-2-3 2-3-2-3 2z M9 8h6 M9 12h6',check:'M12 3 3 7v6c0 4 9 8 9 8s9-4 9-8V7z M8 12l3 3 5-6',store:'M4 10v11h16V10 M3 10l2-7h14l2 7 M3 10h18 M9 21v-7h6v7',logout:'M10 4H4v16h6 M8 12h13 M17 8l4 4-4 4',filter:'M4 6h16 M7 12h10 M10 18h4',refresh:'M20 7v5h-5 M4 17v-5h5 M5 8a7 7 0 0 1 12-3l3 3 M19 16a7 7 0 0 1-12 3l-3-3',info:'M12 8h.01 M12 11v6 M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0',alert:'M12 3 2 21h20z M12 9v5 M12 17h.01',trend:'M3 17l6-6 4 4 8-10 M15 5h6v6',bag:'M5 7h14l2 14H3z M8 8V6a4 4 0 0 1 8 0v2',cart:'M2 3h3l3 12h11l3-9H6 M9 20h.01 M18 20h.01'};
+icons.menu='M4 6h16 M4 12h16 M4 18h16';icons.close='M6 6l12 12 M18 6 6 18';
 function svgEl(name,attrs={}){const e=document.createElementNS('http://www.w3.org/2000/svg',name);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,String(v));return e;}
 for(const el of document.querySelectorAll('[data-icon]')){const svg=svgEl('svg',{viewBox:'0 0 24 24','aria-hidden':'true'});svg.append(svgEl('path',{d:icons[el.dataset.icon]}));el.append(svg);}
 const branchLabel=b=>[b.cod_filial||'Filial sem código cadastrado',b.fantasia].filter(Boolean).join(' - ');
+const navegacao=criarNavegacaoMovel({app:$('app-view'),nav:$('primary-navigation'),dialogo:$('mobile-menu'),conteudo:$('mobile-menu-content'),abrir:$('mobile-menu-toggle'),fechar:$('mobile-menu-close'),voltar:$('mobile-menu-back'),main:$('main')});
 function el(tag,text='',className){const n=document.createElement(tag);if(text!==null)n.textContent=text;if(className)n.className=className;return n;}
 const integers=new Intl.NumberFormat('pt-BR');
 const number=v=>v==null?'—':integers.format(BigInt(v));
@@ -31,6 +34,7 @@ function busy(active){$('loading').hidden=!active;$('overview-panel').hidden=act
 function resetError(){$('page-error').hidden=true;}
 function displayError(e){$('page-error-text').textContent=e.message;$('page-error').hidden=false;}
 function exitSession(message=''){
+ navegacao.fechar();
  crescimento.limpar();
  goalsGeneration++;goalsAbort?.abort();goalEditing=null;$('goal-dialog').close();for(const id of ['consolidated-body','consolidated-total','consolidated-metrics','goals-body','goals-metrics'])$(id).replaceChildren();userRole='';
  clearOverviewMedia();$('top-products-list').replaceChildren();$('products-list').replaceChildren();
@@ -92,6 +96,7 @@ function setPage(next,load=true){
  if(['permissions','users','employees','queue','growth'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
  const info={growth:['Crescimento anual','Compare cada filial com o ano anterior e acompanhe a evolução mês a mês.'],consolidated:['Visão das filiais','Compare os resultados das filiais autorizadas e acompanhe as metas mensais.'],employees:['Funcionários','Administre as fotos dos vendedores por filial.'],products:['Produtos e estoque','Consulte o saldo atual e os produtos vendidos na loja.'],queue:['Lista da Vez','Organize a equipe e acompanhe os atendimentos da loja.'],customers:['Clientes','Consulte o cadastro e os contatos dos seus clientes.'],users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
  $('page-title').textContent=info[0];$('breadcrumb-page').textContent=info[0];$('page-subtitle').textContent=info[1];
+ $('mobile-menu-page').textContent=info[0];
  for(const button of document.querySelectorAll('[data-page]')){const active=button.dataset.page===page;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');}
  $('sales-title').textContent=page==='quality'?'Conferência das operações':'Todas as movimentações';
  $('sales-description').textContent=page==='quality'?'Diferenças identificadas no período selecionado.':'Consulte os valores e os itens de cada operação.';

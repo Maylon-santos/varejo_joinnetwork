@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-11-18",
+  "atualizadoEm": "2026-11-23",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -211,6 +211,12 @@
       "titulo": "Evento da venda e exemplos dos escopos da API",
       "status": "concluido",
       "detalhe": "Descrição do evento por catálogo confirmado, exemplos dos escopos e documentação publicados. API saudável, 25 arquivos HTTPS conferidos, backup e outros 27 containers preservados; concessões não alteradas. docs/validacao-eventos-escopos-api.json."
+    },
+    {
+      "id": "R36",
+      "titulo": "Menu e filtros no celular",
+      "status": "validacao",
+      "detalhe": "Menu lateral móvel com os mesmos links/permissões, foco e rolagem controlados, filtros e toque ajustados. 100 unitários e interface sintética aprovados; publicação pendente. Plano Web Push separado na R17. docs/NAVEGACAO_MOBILE.md."
     }
   ]
 }
