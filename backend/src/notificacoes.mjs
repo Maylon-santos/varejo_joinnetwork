@@ -66,7 +66,7 @@ export function criarNotificacoes({control,pool,tenant,filiais,config=configNoti
    const chave=`teste:${user.id}:${body.requisicao}`;
    const anterior=(await db.query('SELECT id FROM notificacao_entregas WHERE tenant_key=$1 AND chave=$2',[tenant,chave])).rows[0];if(anterior)return {ok:true,id:anterior.id};
    if((await db.query("SELECT 1 FROM notificacao_entregas WHERE usuario_id=$1 AND tenant_key=$2 AND tipo='teste' AND criado_em>now()-interval '1 minute' LIMIT 1",parametros(user))).rowCount)throw new ErroApi(429,'PUSH_TESTE_AGUARDE');
-   const id=await adicionar(db,user,d,{tipo:'teste',chave,payload:{title:'Notificações ativadas',body:'Este é um aviso de teste da Aéropostale. Seu resumo diário será enviado após as 22h, conforme as filiais escolhidas.',url:'/?origem=notificacoes'},expira:new Date(agora().getTime()+10*60000)});return {ok:true,id};
+   const id=await adicionar(db,user,d,{tipo:'teste',chave,payload:{title:'Notificações ativadas',body:'Este é um aviso de teste da Aéropostale. Para receber o resumo diário após as 22h, escolha as filiais e ative a opção nas preferências.',url:'/?origem=notificacoes'},expira:new Date(agora().getTime()+10*60000)});return {ok:true,id};
   }),
   historico:async user=>{
    const f=permitidas(user);const rows=(await control.query('SELECT id,tipo,filial::text,dia::text,estado,criado_em,finalizado_em,payload_cifrado FROM notificacao_entregas WHERE usuario_id=$1 AND tenant_key=$2 AND (filial IS NULL OR filial::text=ANY($3::text[])) ORDER BY criado_em DESC,id DESC LIMIT 20',[...parametros(user),f])).rows;

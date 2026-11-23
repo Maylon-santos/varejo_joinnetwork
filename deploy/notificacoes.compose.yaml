@@ -17,7 +17,7 @@ services:
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
-    tmpfs: [/tmp:size=8m,mode=1777]
+    tmpfs: ["/tmp:size=8m,mode=1777"]
     environment:
       NODE_ENV: production
       TZ: America/Sao_Paulo

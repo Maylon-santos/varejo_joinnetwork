@@ -1,5 +1,11 @@
 # Interface do piloto
 
+## Estado atual — 23/11/2026
+
+Painel publicado em https://aeropostale.joinnetwork.com.br, com navegação móvel e filiais liberadas conforme a conta. Instalação como aplicativo web e resumo diário em piloto pessoal: [uso e requisitos](../docs/ALERTAS_NOTIFICACOES.md). O service worker não implementa cache offline de dados autenticados; a sessão continua apenas em memória.
+
+## Referência da configuração inicial
+
 Abra **http://127.0.0.1:3100/** e use `ADMIN_EMAIL`/`ADMIN_PASSWORD` do `.env`. O Admin já foi criado. HTML, CSS e JavaScript são servidos pela API; não há processo de desenvolvimento separado nem dependências externas carregadas pelo navegador.
 
 - Visão geral: vendas, ticket, peças por venda, quantidade, gráfico e ranking paginado. Períodos longos agrupam o gráfico por mês.

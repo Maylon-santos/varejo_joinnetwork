@@ -12,23 +12,12 @@ Os filtros no celular usam período em linha inteira, datas em linhas próprias 
 
 `scripts/verificar-navegacao-mobile.mjs` usa o servidor real com PostgreSQL isolado e dados sintéticos. Verifica 320, 390, 430 e 760 px, retorno para 900/1440 px, ausência de transbordamento, navegação, foco por Tab/Shift+Tab, fechamento, opções permitidas/restritas, expiração de sessão e logout. Evidência: `docs/validacao-navegacao-mobile-ui.json`. As capturas sintéticas ficam em `artifacts/navegacao-mobile-20261123/`.
 
-## Notificações como aplicativo: próxima etapa
+## Instalação como aplicativo e notificações
 
-O painel ainda não tem instalação como PWA, service worker, inscrições Web Push ou rotina de envio de notificações do navegador. Esta alteração do menu não implementa nem ativa essas funções. Os webhooks da API de terceiros são um mecanismo separado e continuam conforme sua configuração anterior.
+Manifesto, ícones e service worker foram acrescentados em 23/11/2026. No iPhone, instalar pelo Safari em **Compartilhar → Adicionar à Tela de Início**, abrir pelo ícone e entrar. A área **Notificações** permite ativar o aparelho, solicitar um teste e escolher as filiais do resumo diário. O piloto é restrito à conta definida na configuração privada; o menu aparece somente para essa conta com acesso a indicadores da filial completa.
 
-Em 23/11, foram aprovados os quatro tipos de alerta, incluindo o resumo após as 22h. [Requisitos e teste do piloto](ALERTAS_NOTIFICACOES.md).
+O service worker recebe/exibe avisos e abre o painel; não armazena tokens, respostas autenticadas, vendas ou dados pessoais em cache offline. A sessão do painel continua em memória, com login exigido ao recarregar. As inscrições ficam cifradas no servidor e o logout desativa o aparelho correspondente. Webhooks de terceiros e relatórios antigos são canais separados.
 
-Uma implementação de Web Push precisa de:
+O resumo diário começa após 22h05 de São Paulo; atraso da coleta fica identificado como parcial após 22h30. Metas, conferência e Lista da Vez permanecem posteriores. Instalação/consentimento no próprio iPhone e recebimento real precisam ser confirmados pelo titular; os testes de navegador usam dados sintéticos.
 
-1. Manifesto e ícones para instalação do painel na Tela de Início, com identidade e endereço do aplicativo.
-2. Service worker para receber o evento push e exibir a notificação. Não armazenar respostas autenticadas, tokens, vendas ou dados pessoais em cache offline.
-3. Botão **Ativar notificações**, acionado voluntariamente pelo usuário, com orientação para instalar o painel quando necessário e tratamento de permissão negada/revogação.
-4. Cadastro autenticado de cada dispositivo, vinculado ao usuário e tenant, proteção contra inscrição de terceiros e limpeza/revalidação no logout, desativação ou alteração de acesso.
-5. Remetente Web Push com credencial VAPID privada, fila de envio, deduplicação, tentativas limitadas e remoção de inscrições expiradas. Destinos devem ser validados para evitar requisições arbitrárias; o egress deve ser configurado especificamente para os serviços de push.
-6. Preferências por tipo de alerta e horário. Antes de cada envio, revalidar conta ativa, filial e permissões. O clique abre uma página do próprio painel e exige sessão; a notificação deve usar texto mínimo para não expor dados de clientes ou valores na tela bloqueada.
-
-Exemplos de alertas a definir: nova pendência de conferência, meta atingida, atualização na Lista da Vez ou resumo diário. Cada regra precisa de destinatários e frequência definidos antes da ativação. Entrega pode sofrer atraso ou bloqueio pelo aparelho, conexão e configurações do usuário; não substitui o registro no painel.
-
-No iPhone/iPad, o Web Push é suportado para aplicativos web adicionados à Tela de Início, a partir do iOS/iPadOS 16.4. A solicitação de permissão deve partir de uma ação do usuário dentro do aplicativo instalado. Em navegadores Android compatíveis, a inscrição também depende da autorização de notificações.
-
-Referências técnicas: [WebKit: Web Push no iOS e iPadOS](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/), [Apple: envio de Web Push](https://developer.apple.com/documentation/usernotifications/sending-web-push-notifications-in-web-apps-and-browsers), [MDN: Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_API).
+[Procedimento, regras e operação](ALERTAS_NOTIFICACOES.md). Requisito do iPhone/iPad: aplicativo adicionado à Tela de Início com iOS/iPadOS 16.4 ou superior, conforme [WebKit](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/).
