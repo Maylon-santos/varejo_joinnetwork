@@ -4,7 +4,7 @@
 
 - [x] Menu sanduíche no cabeçalho até 760 px, com painel lateral, página atual e o mesmo conjunto de links/permissões. Fechamento por seleção, X, toque externo e Escape; foco contido/restaurado, fundo sem rolagem, opções roláveis e retorno ao topo ao navegar. Computador/tablet mantêm a barra lateral; sessão expirada fecha o menu.
 - [x] Filtros reorganizados no celular: período em linha inteira, datas lado a lado, ações próprias, campos de 16 px e botões com área de toque de 44 px. 100 unitários e interface sintética real em 320/390/430/760/900/1440 px aprovados; capturas revisadas. [Uso e plano de Web Push](docs/NAVEGACAO_MOBILE.md), [evidência](docs/validacao-navegacao-mobile-ui.json).
-- [ ] Publicar somente `api`, conferir assets/HTTPS e preservação dos demais serviços após backup. Notificações Web Push/PWA estudadas e documentadas, ainda não implementadas; R17 permanece separada. Worker local e envios de webhooks preservados.
+- [x] Publicada somente `api`, imagem `mobile-20261123`, após backup conferido. HTML/CSS/JS iguais por HTTPS, API saudável e navegador com assets públicos/dados sintéticos aprovado; outros 27 containers, Nginx, envs, clientes/chaves/autenticadores preservados. Sem migrations; worker local e webhooks preservados. [Publicação](docs/validacao-navegacao-mobile.json). Web Push/PWA apenas estudados, ainda não implementados; R17 permanece separada.
 
 ## Descrição do evento e exemplos dos escopos — 18/11/2026
 
@@ -207,11 +207,11 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-24 de 36 tarefas deste quadro concluídas. Atualização: 2026-11-23. A contagem não representa prazo ou esforço.
+25 de 36 tarefas deste quadro concluídas. Atualização: 2026-11-23. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
-| R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | R36 — Menu e filtros no celular | R01 — Importação e banco do piloto |
+| R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | — | R01 — Importação e banco do piloto |
 | R17 — Notificações internas e alertas | R19 — Produtos, estoque e indicadores adicionais | — | R02 — Painel e acesso Admin |
 | R18 — Campanhas e mensagens | R22 — Definir bruto, líquido e devoluções | — | R03 — Publicação com HTTPS e backup diário |
 | R20 — SaaS: provisionamento, planos e cobrança | R25 — Completar preços e pagamentos do histórico | — | R04 — Correções de celular e fotos |
@@ -235,6 +235,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 | — | — | — | R33 — Experiência do console de integrações |
 | — | — | — | R34 — Fonte alternativa de imagens de produtos |
 | — | — | — | R35 — Evento da venda e exemplos dos escopos da API |
+| — | — | — | R36 — Menu e filtros no celular |
 
 ### Pendências e dependências
 
@@ -249,7 +250,6 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 - [ ] **R29 — Vendas por hora nos dashboards:** Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json.
 - [ ] **R31 — API externa e webhooks de vendas:** Infraestrutura da API externa, documentação pública separada e console administrativo publicados na HostGator; coletor remoto ativo e worker local desativado. Primeiro acesso de leitura às 11 filiais validado em 14/11; substituição da chave confirmada em 16/11, com a anterior revogada. Console e manual revisados, MFA, concessões e auditoria preservados. Webhooks permanecem desativados. Teste assinado com a nova chave e homologação completa do consumidor/recursos adicionais continuam pendentes. Evidências: docs/validacao-publicacao-integracoes-hostgator.json, docs/validacao-acesso-integracao-filiais.json, docs/validacao-nova-chave-integracao.json e docs/validacao-console-integracoes-ux.json. Registros anteriores de recuperação e disco permanecem no histórico. Não conclui SaaS/R11/R22/R29.
-- [ ] **R36 — Menu e filtros no celular:** Menu lateral móvel com os mesmos links/permissões, foco e rolagem controlados, filtros e toque ajustados. 100 unitários e interface sintética aprovados; publicação pendente. Plano Web Push separado na R17. docs/NAVEGACAO_MOBILE.md.
 
 <!-- KANBAN:FIM -->
 

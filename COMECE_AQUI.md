@@ -4,7 +4,7 @@
 
 - [x] Menu sanduíche no cabeçalho até 760 px, com painel lateral, página atual e o mesmo conjunto de links/permissões. Fechamento por seleção, X, toque externo e Escape; foco contido/restaurado, fundo sem rolagem, opções roláveis e retorno ao topo ao navegar. Computador/tablet mantêm a barra lateral; sessão expirada fecha o menu.
 - [x] Filtros reorganizados no celular: período em linha inteira, datas lado a lado, ações próprias, campos de 16 px e botões com área de toque de 44 px. 100 unitários e interface sintética real em 320/390/430/760/900/1440 px aprovados; capturas revisadas. [Uso e plano de Web Push](docs/NAVEGACAO_MOBILE.md), [evidência](docs/validacao-navegacao-mobile-ui.json).
-- [ ] Publicar somente `api`, conferir assets/HTTPS e preservação dos demais serviços após backup. Notificações Web Push/PWA estudadas e documentadas, ainda não implementadas; R17 permanece separada. Worker local e envios de webhooks preservados.
+- [x] Publicada somente `api`, imagem `mobile-20261123`, após backup conferido. HTML/CSS/JS iguais por HTTPS, API saudável e navegador com assets públicos/dados sintéticos aprovado; outros 27 containers, Nginx, envs, clientes/chaves/autenticadores preservados. Sem migrations; worker local e webhooks preservados. [Publicação](docs/validacao-navegacao-mobile.json). Web Push/PWA apenas estudados, ainda não implementados; R17 permanece separada.
 
 ## Descrição do evento e exemplos dos escopos — 18/11/2026
 

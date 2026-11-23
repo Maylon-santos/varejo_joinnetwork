@@ -215,8 +215,8 @@
     {
       "id": "R36",
       "titulo": "Menu e filtros no celular",
-      "status": "validacao",
-      "detalhe": "Menu lateral móvel com os mesmos links/permissões, foco e rolagem controlados, filtros e toque ajustados. 100 unitários e interface sintética aprovados; publicação pendente. Plano Web Push separado na R17. docs/NAVEGACAO_MOBILE.md."
+      "status": "concluido",
+      "detalhe": "Menu lateral móvel e filtros publicados; foco, permissões, toque e sessão conferidos em 320–1440 px. API saudável e assets HTTPS iguais, backup e demais serviços preservados. PWA/Web Push seguem planejados na R17. docs/validacao-navegacao-mobile.json."
     }
   ]
 }

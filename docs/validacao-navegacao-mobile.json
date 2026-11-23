@@ -1,0 +1,71 @@
+{
+  "estado": "publicado_validado",
+  "publicacao": {
+    "publicadoEm": "2026-11-23T12:48:41.046698+00:00",
+    "imagem": "aeropostale-varejo-api:mobile-20261123",
+    "servicosAtualizados": [
+      "api"
+    ],
+    "outrosContainersPreservados": 27,
+    "nginxPreservado": true,
+    "envsPreservados": true,
+    "clientesChavesAutenticadoresPreservados": true,
+    "assetsHTTPSIguaisAFonte": [
+      "/",
+      "/assets/app.js",
+      "/assets/styles.css",
+      "/assets/navegacao.js"
+    ],
+    "apiSaudavel": true,
+    "filiaisSemToken": 401,
+    "arquivoPrivado": 401,
+    "semMigration": true,
+    "notificacoesPushAtivadas": false,
+    "backupConferido": "backup-20261123T124740Z-gg6Drs"
+  },
+  "testesUnitarios": 100,
+  "interfaceHTTPSComDadosSinteticos": {
+    "verificadoEm": "2026-11-23T12:49:20.627Z",
+    "ambiente": "PostgreSQL isolado e dados sintéticos; Chromium",
+    "assets": "HTTPS da produção; apenas respostas da API substituídas pela fixture local",
+    "viewports": [
+      {
+        "largura": 320,
+        "semOverflow": true,
+        "focoContido": true,
+        "opcoesAcessiveis": true
+      },
+      {
+        "largura": 390,
+        "semOverflow": true,
+        "focoContido": true,
+        "opcoesAcessiveis": true
+      },
+      {
+        "largura": 430,
+        "semOverflow": true,
+        "focoContido": true,
+        "opcoesAcessiveis": true
+      },
+      {
+        "largura": 760,
+        "semOverflow": true,
+        "focoContido": true,
+        "opcoesAcessiveis": true
+      }
+    ],
+    "desktopTabletPreservados": true,
+    "menuUnicoSemDuplicacao": true,
+    "permissoesPreservadas": true,
+    "escapeBackdropBotaoFechar": true,
+    "focoRestaurado": true,
+    "navegacaoFechaMenuEFocaConteudo": true,
+    "retornoAoTopo": true,
+    "rotacaoRestauraSidebar": true,
+    "sessaoExpiradaFechaMenu": true,
+    "alvosDeToque44px": true,
+    "camposDeFiltro16px": true,
+    "errors": []
+  },
+  "notificacoes": "PWA e Web Push apenas estudados; não implementados nem ativados."
+}

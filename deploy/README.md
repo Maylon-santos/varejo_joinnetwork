@@ -3,6 +3,14 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Menu e filtros no celular — 23/11/2026
+
+Imagem atual de `api`: `aeropostale-varejo-api:mobile-20261123`. Menu lateral modal até 760 px com o mesmo nav/permissões; computador/tablet mantêm a barra lateral. Filtros e alvos de toque ajustados. Novo módulo estático `/assets/navegacao.js` incluído na allowlist do servidor, com CSP e no-store preservados. Nenhuma mudança em regras comerciais, autenticação, migrations ou API externa. PWA/Web Push não implementados.
+
+Publicada somente `api`, com outros 27 containers, Nginx, envs, clientes/chaves/autenticadores preservados. Backup `backup-20261123T124740Z-gg6Drs` com COMPLETE/checksums dos dois bancos conferidos. API saudável e HTML/CSS/JS iguais por HTTPS; interface com assets de produção e respostas sintéticas aprovada em 320/390/430/760/900/1440 px. Não foi usado login comercial nessa verificação. Worker local e webhooks preservados.
+
+Fontes/override anteriores em `/opt/aeropostale-varejo/artifacts/navegacao-mobile-20261123T124740Z`. Para retorno, restaurar esses arquivos, remover somente o módulo novo `frontend/assets/navegacao.js`, usar a tag anterior `imagens-alternativas-20261116` e recriar somente `api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait api`. Não restaurar bancos para retornar esta alteração. Uma primeira tentativa voltou automaticamente por uma expectativa de HTTP 404 no teste de arquivo privado; o servidor bloqueia com HTTP 401. Checagem corrigida, publicação repetida e preservação conferida. [Uso](../docs/NAVEGACAO_MOBILE.md), [evidência](../docs/validacao-navegacao-mobile.json).
+
 ## Descrição do evento nas vendas — 18/11/2026
 
 Imagem atual de `integracoes-api`: `aeropostale-varejo-integracoes:eventos-vendas-20261118`. Lista e detalhe incluem `evento_descricao`, obtida do catálogo confirmado de dez códigos. Código ausente/desconhecido retorna null. Enriquecimento na leitura de projeções existentes; nenhuma migration, reimportação ou alteração de versão comercial. Cursores anteriores podem omitir o campo até expirar. Documentação pública e exemplos dos escopos publicados nos 25 caminhos permitidos, com igualdade de bytes por HTTPS.
@@ -13,7 +21,7 @@ Backup `backup-20261118T204038Z-sHkhP1` com COMPLETE/checksums dos dois bancos c
 
 ## Fonte alternativa de imagens — 16/11/2026
 
-Imagem atual de `api`: `aeropostale-varejo-api:imagens-alternativas-20261116`. A imagem importada continua prioritária. Sem URL ou com falha de download/decodificação, o painel consulta a segunda base por código e, quando disponível, cor do SKU. Permissões e restrições de filial/vendedor continuam obrigatórias; catálogo sem venda com foto usa uma rota autenticada de consulta ao estoque atual.
+Imagem desta publicação de `api`: `aeropostale-varejo-api:imagens-alternativas-20261116`. A imagem importada continua prioritária. Sem URL ou com falha de download/decodificação, o painel consulta a segunda base por código e, quando disponível, cor do SKU. Permissões e restrições de filial/vendedor continuam obrigatórias; catálogo sem venda com foto usa uma rota autenticada de consulta ao estoque atual.
 
 `PASSWORD_JOINKEY` foi acrescentada ao `.env` privado e fornecida somente à `api` pelo Compose. Nenhum valor foi incluído nas fontes ou nos assets do navegador. Sem token a segunda base fica desativada. Cache somente em memória; sem migrations ou alteração de registros comerciais. [Correspondência, limites e cobertura](../docs/IMAGENS_PRODUTOS.md).
 
@@ -75,7 +83,7 @@ Acesso Admin pelo menu **Integrações e API** ou https://aeropostale.joinnetwor
 
 Um convite individual de 24 horas foi criado para a conta administrativa configurada. O titular entra com sua senha, abre o Google Authenticator em **+ → Ler QR code**, escaneia o código mostrado no console e confirma os seis dígitos na própria interface. A inclusão manual da chave permanece disponível como alternativa. O QR é gerado localmente no navegador e apagado após confirmação, expiração ou saída; não usa serviço externo de imagens. Até essa confirmação não há operador ativo ou acesso ao manual. O desafio expira em cinco minutos, fica vinculado à sessão e não serve como autorização de MFA. Não cadastrar o autenticador, copiar chaves ou enviar códigos pelo chat em nome do titular.
 
-Imagens atuais: `aeropostale-varejo-api:imagens-alternativas-20261116` e `aeropostale-varejo-integracoes:eventos-vendas-20261118` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
+Imagens atuais: `aeropostale-varejo-api:mobile-20261123` e `aeropostale-varejo-integracoes:eventos-vendas-20261118` para `api` e `integracoes-api`, respectivamente. Coletor ERP e worker de projeções mantêm suas imagens. Operar via `bash deploy/integracoes-hostgator.sh`; atualizar somente esses dois serviços quando necessário. O Nginx do painel encaminha a lista de rotas administrativas para a porta local 3200 e usa log sem query/payload. Não abrir portas adicionais, alterar o vhost público da API ou servir o conteúdo do manual como arquivo estático.
 
 Sem migration. `deploy/integracoes-permissoes.sql` concede `UPDATE(ativo)` além de `UPDATE(ultimo_passo)` no registro administrativo; o LOGIN da API continua sem INSERT/DELETE de operadores ou UPDATE do segredo. A emissão do convite usa `scripts/autorizar-operador.mjs UUID` em processo operacional com as URLs dos owners e a chave existente disponibilizadas de forma privada; cria somente um registro inativo e auditoria. Não cria usuário do painel, não substitui cadastro de operador existente e não ativa consumidores ou entregas. Para matrícula/revogação/recuperação operacional já existente, consultar `docs/integracoes/operacao.md`.
 
