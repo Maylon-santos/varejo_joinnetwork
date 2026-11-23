@@ -76,6 +76,25 @@
   },
   "capturasCelularComputadorRevisadas": true,
   "configuracaoPrivadaCopiadaNoMacModo0600": true,
-  "limitesDaVerificacao": "Chromium e dados sintéticos; inscrição nativa simulada. Recebimento real no iPhone depende de instalação e autorização pelo titular. Não constitui teste de carga.",
-  "tentativaAnterior": "Retorno automático da API anterior por opção tmpfs dividida na lista YAML; configuração corrigida e segunda publicação reutilizou migration e chaves."
+  "limitesDaVerificacao": "Testes automatizados em Chromium com dados sintéticos e inscrição nativa simulada; recebimento real do teste confirmado pelo titular em seu iPhone. Primeiro resumo diário real ainda não conferido. Não constitui teste de carga.",
+  "tentativaAnterior": "Retorno automático da API anterior por opção tmpfs dividida na lista YAML; configuração corrigida e segunda publicação reutilizou migration e chaves.",
+  "pilotoIphone": {
+    "data": "2026-11-23",
+    "aparelhosAtivos": 1,
+    "resumoDiarioAtivadoPeloTitular": true,
+    "quantidadeFiliais": 11,
+    "testesAceitos": 2,
+    "statusHTTP": 201,
+    "tentativasPorTeste": [
+      1,
+      1
+    ],
+    "ultimoAceiteEm": "2026-11-23T17:32:52.141790+00:00",
+    "recebimentoConfirmadoPeloTitular": true,
+    "capturaDoAvisoApresentada": true,
+    "capturaPessoalForaDoGit": true,
+    "contextoDoTesteRecebido": "Após orientação de usar 4G/5G e sair para a Tela de Início sem encerrar a conta.",
+    "causaDaAusenciaInicial": "Não determinada; sucesso no segundo teste não prova bloqueio do Wi-Fi.",
+    "primeiroResumoDiarioRealConferido": false
+  }
 }

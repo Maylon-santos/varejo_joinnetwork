@@ -15,7 +15,7 @@ Metas atingidas, pendências de conferência e acontecimentos da Lista da Vez pe
 5. Toque em **Enviar teste**. A rotina verifica a fila a cada minuto. Confira o aviso com o painel fechado ou a tela bloqueada e toque nele para abrir o painel.
 6. Marque **Receber o resumo diário**, selecione inicialmente Itupeva e toque em **Salvar preferências**. A seleção inicial é uma sugestão; nada é salvo antes dessa ação.
 
-A primeira entrega real no iPhone precisa ser confirmada pelo titular; a inscrição nativa é simulada nos testes automatizados. No navegador, a área **Seus últimos avisos** distingue fila, aceite do serviço, falha, prazo encerrado e resultado incerto. O aceite do serviço não confirma a exibição no aparelho.
+Em 23/11/2026, o titular confirmou o recebimento real do teste e apresentou a captura do aviso às 14h33, após teste no 4G/5G. O servidor registrou dois testes aceitos com HTTP 201, em uma tentativa cada. O motivo da ausência inicial não foi determinado; o resultado não permite atribuí-lo ao Wi-Fi. Inscrição nativa segue simulada nos testes automatizados. No navegador, a área **Seus últimos avisos** distingue fila, aceite do serviço, falha, prazo encerrado e resultado incerto. O aceite do serviço não confirma a exibição no aparelho.
 
 Android e computador podem usar navegadores compatíveis, mas não integram o primeiro teste solicitado. No iPhone, abrir somente uma aba do Safari não habilita o Web Push: é necessário entrar pelo aplicativo adicionado à Tela de Início. Não é necessário número de telefone nem conta Apple Developer.
 
@@ -62,6 +62,6 @@ Consultar `deploy/README.md` para implantação, backup e retorno. Guardar as ch
 
 Testes verificam horários/data de São Paulo, cálculo monetário/PA, cancelamentos, atraso/versão parcial, opt-in, isolamento de conta/filial, logout, idempotência, concorrência, inscrição expirada, espera do serviço, resultado incerto e permissões do LOGIN restrito. Transporte real é cifrado/decifrado com chaves sintéticas e socket simulado, sem envio externo. Interface confere manifesto/service worker real com push sintético, instalação orientada, autorização simulada, preferências, teste, logout e abertura do resumo em computador/celular.
 
-Esses testes não substituem o recebimento no iPhone nem um teste de carga de todos os usuários. Metas, conferência e Lista da Vez terão validação própria quando implementados.
+O recebimento real do teste no iPhone foi confirmado pelo titular. O primeiro resumo diário real após 22h05 ainda precisa ser conferido; não foi realizado teste de carga de todos os usuários. Metas, conferência e Lista da Vez terão validação própria quando implementados.
 
 Referências: [Apple — Web Push](https://developer.apple.com/documentation/usernotifications/sending-web-push-notifications-in-web-apps-and-browsers), [WebKit — Web Push no iOS](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/), [web-push](https://github.com/web-push-libs/web-push).

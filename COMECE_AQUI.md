@@ -4,9 +4,10 @@
 
 - [x] Implementados manifesto/ícones, service worker sem cache de dados autenticados e área Notificações com instalação orientada, opt-in, filiais, aparelhos, teste pessoal e histórico. Piloto limitado à conta do titular; resumo diário desligado até adesão.
 - [x] Resumo após 22h05 de São Paulo, com vendas, peças, valor, PA e ticket; dados atrasados aguardam até 22h30 e geram versão parcial explícita. Outbox cifrada, idempotência, checagem de acesso e LOGIN restrito; nenhum aviso por atendimento ou webhook reativado.
-- [x] 111 unitários, 30 integrações PostgreSQL e interface aprovados. Transporte cifrado/decifrado com dados sintéticos; service worker real recebe push sintético. Instalação/inscrição nativa simuladas; recebimento real no iPhone ainda depende do titular. [Uso e operação](docs/ALERTAS_NOTIFICACOES.md), [interface](docs/validacao-notificacoes-ui.json).
+- [x] 111 unitários, 30 integrações PostgreSQL e interface aprovados. Transporte cifrado/decifrado com dados sintéticos; service worker real recebe push sintético. Instalação/inscrição nativa simuladas nos testes automatizados; recebimento real confirmado pelo titular no piloto abaixo. [Uso e operação](docs/ALERTAS_NOTIFICACOES.md), [interface](docs/validacao-notificacoes-ui.json).
 - [x] Publicados API e novo worker, imagem `pwa-20261123`, após backup conferido. Somente migration central aditiva; saúde, nove assets HTTPS e interface com dados sintéticos aprovados. Outros 27 containers, Nginx, envs anteriores e credenciais/permissões preservados. [Publicação](docs/validacao-notificacoes.json).
-- [ ] Titular instalar pelo Safari, autorizar o aparelho, enviar o teste e salvar as preferências. Na conferência de publicação: zero inscrições/envios e resumo desligado até adesão. Recebimento real no iPhone pendente; metas/conferência/Lista da Vez permanecem posteriores.
+- [x] Titular instalou/autorizou o iPhone e salvou o resumo para 11 filiais. Dois testes aceitos com HTTP 201; recebimento confirmado pelo titular e captura do aviso às 14h33, após teste no 4G/5G. A causa da ausência inicial não foi determinada. Evidência agregada em docs/validacao-notificacoes.json; captura pessoal fora do Git.
+- [ ] Conferir o primeiro resumo diário real após 22h05. Teste pessoal recebido não homologa os dados do fechamento nem os alertas posteriores de metas/conferência/Lista da Vez.
 
 
 ## Troca rápida de filiais e alertas — 23/11/2026

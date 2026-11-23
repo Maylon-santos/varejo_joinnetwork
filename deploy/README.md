@@ -5,7 +5,7 @@ Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt
 
 ## Aplicativo e resumo diário — 23/11/2026
 
-Imagem atual de `api` e `notificacoes-worker`: `aeropostale-varejo-api:pwa-20261123`. Instalável pela Tela de Início, com manifesto/ícones e service worker sem cache autenticado. Área Notificações com preferências por filial, inscrição pessoal, teste e histórico. Piloto limitado ao identificador da conta do titular; habilitar o servidor não inscreve aparelhos nem ativa preferências. Teste real no iPhone depende de instalação/consentimento pelo titular. [Uso e regras](../docs/ALERTAS_NOTIFICACOES.md).
+Imagem atual de `api` e `notificacoes-worker`: `aeropostale-varejo-api:pwa-20261123`. Instalável pela Tela de Início, com manifesto/ícones e service worker sem cache autenticado. Área Notificações com preferências por filial, inscrição pessoal, teste e histórico. Piloto limitado ao identificador da conta do titular; habilitar o servidor não inscreve aparelhos nem ativa preferências. Titular instalou/autorizou o iPhone e confirmou recebimento real do teste com captura às 14h33 de 23/11; resumo ativado por ele para 11 filiais. Primeiro resumo diário real após 22h05 ainda em validação. [Uso e regras](../docs/ALERTAS_NOTIFICACOES.md).
 
 Publicados somente `api` e novo `notificacoes-worker`; os outros 27 containers, Nginx, envs anteriores, contas/perfis/vínculos, clientes/chaves/autenticadores preservados. API e worker saudáveis, nove assets iguais por HTTPS e navegador com API/dados sintéticos aprovado. Na publicação, zero inscrições e envios, preferências desligadas até adesão. Worker local, relatórios antigos e webhooks preservados.
 
