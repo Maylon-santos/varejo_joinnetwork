@@ -143,3 +143,14 @@ body.mobile-menu-open{overflow:hidden}
  #filters input,#filters select{padding:0 5px;font-size:16px}
  .page-heading h1{font-size:26px}
 }
+
+/* Datas localizadas do Safari e mensagens não devem alargar a página. */
+.notice p{min-width:0;overflow-wrap:anywhere}
+@media(max-width:760px){
+ #page-error{flex-wrap:wrap;align-items:center}
+ #page-error p{flex:1 1 180px}
+ #page-error .button{min-height:44px;max-width:100%;white-space:normal}
+ #filters input[type=date]::-webkit-date-and-time-value{min-width:0;text-align:left}
+ #filters input[type=date]::-webkit-datetime-edit{min-width:0;padding:0}
+}
+@media(max-width:430px){#filters>div{grid-column:1/-1}}

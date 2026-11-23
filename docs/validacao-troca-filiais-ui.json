@@ -1,0 +1,15 @@
+{
+  "verificadoEm": "2026-11-23T13:43:05.257Z",
+  "ambiente": "PostgreSQL isolado e dados sintéticos; Chromium",
+  "assets": "Servidor local",
+  "dezSelecoesRapidasUmaConsulta": true,
+  "dozeTrocasSequenciaisSem429": true,
+  "respostaAntigaDescartada": true,
+  "rotuloDaFilialAplicada": true,
+  "fotosSomenteAoAproximarDaTela": true,
+  "tempoDeEsperaDoServidor": true,
+  "botaoLiberadoAposIntervalo": true,
+  "semRequisicaoPendenteNoLogout": true,
+  "celularSemOverflow": true,
+  "errors": []
+}

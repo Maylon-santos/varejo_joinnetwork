@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## Troca rápida de filiais e alertas — 23/11/2026
+
+- [x] Corrigida a causa do 429: cota de consultas por conta/tenant, separada das imagens; teto de entrada, anônimos e proteção de login mantidos. `Retry-After` real, contagem de espera, agrupamento por 250 ms, cancelamento de consultas/fotos antigas e fotos sob demanda. Legenda usa a filial aplicada. Datas e mensagem ajustadas para celular.
+- [x] 105 unitários e 30 integrações PostgreSQL aprovados. Interface sintética: dez seleções rápidas fazem uma consulta final; doze trocas sequenciais sem 429, isolamento de contas, resposta antiga descartada, espera/recuperação e logout. Navegação móvel revalidada. [Regras](docs/TROCA_FILIAIS.md), [interface](docs/validacao-troca-filiais-ui.json).
+- [ ] Publicar somente `api` após backup, verificar assets/saúde e preservação. Notificações/PWA não implementadas; requisitos de metas/conferência/Lista da Vez/resumo após 22h aprovados e [piloto documentado](docs/ALERTAS_NOTIFICACOES.md). Participantes e gatilho da fila solicitados ao titular; R17 separada da correção.
+
 ## Navegação no celular — 23/11/2026
 
 - [x] Menu sanduíche no cabeçalho até 760 px, com painel lateral, página atual e o mesmo conjunto de links/permissões. Fechamento por seleção, X, toque externo e Escape; foco contido/restaurado, fundo sem rolagem, opções roláveis e retorno ao topo ao navegar. Computador/tablet mantêm a barra lateral; sessão expirada fecha o menu.
@@ -207,18 +213,18 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-25 de 36 tarefas deste quadro concluídas. Atualização: 2026-11-23. A contagem não representa prazo ou esforço.
+25 de 37 tarefas deste quadro concluídas. Atualização: 2026-11-23. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
-| R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | — | R01 — Importação e banco do piloto |
-| R17 — Notificações internas e alertas | R19 — Produtos, estoque e indicadores adicionais | — | R02 — Painel e acesso Admin |
-| R18 — Campanhas e mensagens | R22 — Definir bruto, líquido e devoluções | — | R03 — Publicação com HTTPS e backup diário |
-| R20 — SaaS: provisionamento, planos e cobrança | R25 — Completar preços e pagamentos do histórico | — | R04 — Correções de celular e fotos |
-| — | R26 — Completar identificação e aniversários do histórico | — | R05 — Clientes importados junto com a venda |
-| — | R29 — Vendas por hora nos dashboards | — | R06 — Homologação de ITUPEVA |
-| — | R31 — API externa e webhooks de vendas | — | R07 — Autorizar 14 filiais no mesmo ambiente |
-| — | — | — | R08 — Exibir COD_FILIAL no seletor |
+| R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | R37 — Troca de filiais sem bloqueio indevido | R01 — Importação e banco do piloto |
+| R18 — Campanhas e mensagens | R17 — Notificações internas e alertas | — | R02 — Painel e acesso Admin |
+| R20 — SaaS: provisionamento, planos e cobrança | R19 — Produtos, estoque e indicadores adicionais | — | R03 — Publicação com HTTPS e backup diário |
+| — | R22 — Definir bruto, líquido e devoluções | — | R04 — Correções de celular e fotos |
+| — | R25 — Completar preços e pagamentos do histórico | — | R05 — Clientes importados junto com a venda |
+| — | R26 — Completar identificação e aniversários do histórico | — | R06 — Homologação de ITUPEVA |
+| — | R29 — Vendas por hora nos dashboards | — | R07 — Autorizar 14 filiais no mesmo ambiente |
+| — | R31 — API externa e webhooks de vendas | — | R08 — Exibir COD_FILIAL no seletor |
 | — | — | — | R09 — Sincronizar cadastro por trans_id |
 | — | — | — | R10 — Concluir históricos das novas filiais |
 | — | — | — | R12 — Cargos e permissões por filial |
@@ -241,7 +247,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 
 - [ ] **R11 — Conferir totais das novas filiais:** Maylon informou em 14/09 que os dias consultados estão batendo. Aceite parcial, sem período detalhado: falta conferir os totais do mês e do ano. Aguardar inclusão dos outros indicadores antes da conferência geral, conforme solicitado.
 - [ ] **R16 — Fila de atendimento:** R16.1 e relatórios/movimento intenso da R16.2 publicados em 15/09. Relatórios por filial/período (até 31 dias), vendedor/dia, tempos, motivos e histórico. Gestão liga/desliga ordem flexível com motivo, mantendo um atendimento aberto por vendedor. Permissão específica de relatórios; Vendas somente próprios dados. 52 testes unitários, 45 de integração, desktop/celular e leitura pública das 14 filiais aprovados. Manual v1.1 entregue; treinamento da equipe ainda deve ser realizado. Pendentes: definição de correções gerenciais do histórico e R16.3 associação/confirmação de venda no ERP. Nenhum atendimento real alterado pelos testes.
-- [ ] **R17 — Notificações internas e alertas:** Definir canais, destinatários e controle de repetição; integrar alertas de falhas de sincronização.
+- [ ] **R17 — Notificações internas e alertas:** Requisitos aprovados em 23/11: preferências de metas, conferência, Lista da Vez e resumo diário após 22h (São Paulo), respeitando conta/filial/permissões. PWA/Web Push ainda não implementados; participantes e gatilho da fila em definição para o piloto. R30 e webhooks não reativados. docs/ALERTAS_NOTIFICACOES.md.
 - [ ] **R18 — Campanhas e mensagens:** Preferências de contato, fila, deduplicação e histórico de envios; depende de cadastro unificado.
 - [ ] **R19 — Produtos, estoque e indicadores adicionais:** Tipo pelo cadastro publicado e estoque reprocessado em 01/11: migration 018, vínculo por produto com prioridade cadastral e tipo do saldo como alternativa. Recarga das 15 filiais concluída (16 tentativas); 7.337 produtos consultados e 7.301 atualizados. 38.558 SKUs AC entre 38.606 presentes; ITUPEVA 4.256 AC e 19 sem tipo. Restam 48 SKUs em 36 cadastros ausentes pelo ID; alternativa por código vazia em 33 e outro ID em 3, sem trocar identidades/inferir classificação. 73 testes unitários, 74 de integração e navegador sintético/público computador/celular aprovados. Backup backup-20261101T125720Z-scBjC3, hashes comerciais/checkpoints preservados, worker remoto e timer Talk ativos, local desativado. Indicadores, Top 20, produtos e estoque publicados; completar cadastros ausentes e demais indicadores de movimentos/pagamentos/estoque histórico/bruto-líquido depende da R22, com homologação mensal/anual na R11. Evidência docs/validacao-tipo-cadastro-producao.json.
 - [ ] **R20 — SaaS: provisionamento, planos e cobrança:** Etapa 7. Manter isolamento por tenant e automatizar subdomínios após fechar o produto.
@@ -250,6 +256,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 - [ ] **R29 — Vendas por hora nos dashboards:** Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json.
 - [ ] **R31 — API externa e webhooks de vendas:** Infraestrutura da API externa, documentação pública separada e console administrativo publicados na HostGator; coletor remoto ativo e worker local desativado. Primeiro acesso de leitura às 11 filiais validado em 14/11; substituição da chave confirmada em 16/11, com a anterior revogada. Console e manual revisados, MFA, concessões e auditoria preservados. Webhooks permanecem desativados. Teste assinado com a nova chave e homologação completa do consumidor/recursos adicionais continuam pendentes. Evidências: docs/validacao-publicacao-integracoes-hostgator.json, docs/validacao-acesso-integracao-filiais.json, docs/validacao-nova-chave-integracao.json e docs/validacao-console-integracoes-ux.json. Registros anteriores de recuperação e disco permanecem no histórico. Não conclui SaaS/R11/R22/R29.
+- [ ] **R37 — Troca de filiais sem bloqueio indevido:** Cotas por conta/tenant e mídia separadas, debounce/cancelamento, fotos sob demanda e espera real. 105 unitários, 30 integrações e interface aprovados; publicação pendente. docs/TROCA_FILIAIS.md.
 
 <!-- KANBAN:FIM -->
 

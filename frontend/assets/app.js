@@ -16,7 +16,7 @@ const dateBR=d=>d?d.slice(0,10).split('-').reverse().join('/'):'—';
 const when=d=>d?new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}).format(new Date(d)):'Ainda sem atualização';
 const today=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const errorText={COMPARATIVO_INVALIDO:'Escolha um ano e um período válidos para o comparativo.',ANO_EM_ANDAMENTO:'Para o ano atual, selecione o período acumulado.',META_INVALIDA:'Informe uma meta válida em reais, com até duas casas decimais.',META_DESATUALIZADA:'Esta meta foi alterada por outra pessoa. Feche e abra novamente para conferir o valor atual.',META_EM_EDICAO:'A meta está sendo atualizada. Tente novamente.',COMPETENCIA_INVALIDA:'Escolha um mês entre 2000 e 2099.',CONSOLIDADO_CARGO_INVALIDO:'O consolidado exige Admin, Diretoria ou Supervisão, sem limitar a vendas próprias.',METAS_REQUER_CONSOLIDADO:'Habilite o dashboard consolidado para permitir cadastrar metas.',REPROCESSAMENTO_AGUARDE:'Aguarde um minuto antes de solicitar outra consulta desta venda.',VENDA_SEM_PENDENCIA:'Esta venda já está conciliada. Atualize a tela.',FILIAL_EM_ATUALIZACAO:'A filial está sendo atualizada. Tente novamente em instantes.',REQUISICAO_REUTILIZADA:'Esta solicitação já foi utilizada. Atualize a tela.',FOTO_INVALIDA:'Escolha uma foto JPG, PNG ou WebP de até 2 MB, com até 20 megapixels.',ESTOQUE_REQUER_PRODUTOS:'Para consultar estoque, habilite também a consulta de produtos.',USUARIO_INVALIDO:'Confira os dados do usuário.',VINCULOS_INVALIDOS:'Confira as filiais e os vínculos.',SENHA_INVALIDA:'Use uma senha com pelo menos 16 caracteres e no máximo 256 bytes.',PROPRIO_ACESSO_PROTEGIDO:'Seu próprio acesso é protegido. Outro Admin deve alterá-lo.',FILIAL_OBRIGATORIA:'Selecione pelo menos uma filial.',VENDEDOR_OBRIGATORIO:'Selecione o vendedor em cada filial.',VENDEDOR_NAO_ENCONTRADO:'Vendedor não encontrado no histórico desta filial.',EMAIL_JA_CADASTRADO:'Este e-mail já está cadastrado nesta empresa.',PERFIL_INVALIDO:'Confira o nome e as opções do cargo.',PERMISSAO_DEPENDENTE_DE_VENDAS:'Clientes, fotos e conferência precisam de acesso às movimentações.',VENDAS_REQUER_ESCOPO_PROPRIO:'O cargo Vendas deve acessar apenas as próprias vendas.',ESCOPO_INCOMPATIVEL:'Escolha filiais atribuídas para limitar às próprias vendas.',PERFIL_ADMIN_PROTEGIDO:'O perfil Admin mantém o acesso completo.',RECURSO_NAO_AUTORIZADO:'Seu acesso não permite consultar este recurso.',LOGIN_INVALIDO:'E-mail ou senha incorretos. Confira os dados e tente novamente.',LIMITE_DE_LOGIN:'Muitas tentativas de acesso. Aguarde 15 minutos antes de tentar novamente.',NAO_AUTENTICADO:'Sua sessão expirou. Entre novamente para continuar.',FILIAL_NAO_AUTORIZADA:'Esta loja ainda não está disponível para o seu acesso.',PERIODO_INVALIDO:'Escolha um período válido de até 366 dias.',LIMITE_DE_REQUISICOES:'Muitas consultas em sequência. Aguarde um minuto e tente novamente.',ERRO_INTERNO:'Não foi possível consultar os dados agora. Tente novamente.'};
-let token=null,page='overview',filters=null,rankPage=1,salesPage=1,customerPage=1,abort=null,generation=0,refreshTimer=null,detailGeneration=0;
+let token=null,page='overview',filters=null,rankPage=1,salesPage=1,customerPage=1,abort=null,generation=0,refreshTimer=null,detailGeneration=0,filterTimer=null,rateTimer=null;
 let lastIndicators=null,permissoes=new Set(),isAdmin=false,userRole='',somenteProprias=false;
 const pode=recurso=>permissoes.has(recurso);
 const podeConsolidado=()=>['Admin','Diretoria','Supervisao'].includes(userRole)&&!somenteProprias&&pode('consolidado:ler');
@@ -26,15 +26,24 @@ function clearDetailMedia(){detailAbort?.abort();$('photo-dialog').close();for(c
 async function api(path,options={}){
  let response;try{response=await fetch('/api/v1'+path,{...options,headers:{...(options.body?{'Content-Type':'application/json'}:{}),...(token?{Authorization:`Bearer ${token}`} :{}),...options.headers}});}catch(e){if(e.name==='AbortError')throw e;throw new Error('Não foi possível conectar ao painel. Verifique sua conexão e tente novamente.');}
  const body=await response.json().catch(()=>({}));
- if(!response.ok){if(response.status===401&&path!=='/auth/login')exitSession(errorText.NAO_AUTENTICADO);throw new Error(errorText[body.erro]||'Não foi possível completar a consulta. Tente novamente.');}
+ if(!response.ok){if(response.status===401&&path!=='/auth/login')exitSession(errorText.NAO_AUTENTICADO);const erro=new Error(errorText[body.erro]||'Não foi possível completar a consulta. Tente novamente.');if(response.status===429){erro.retryAfter=Math.min(900,Math.max(1,Number(response.headers.get('Retry-After'))||60));}throw erro;}
  return body;
 }
 function showToast(text){$('toast').textContent=text;$('toast').hidden=false;setTimeout(()=>$('toast').hidden=true,4000);}
 function busy(active){$('loading').hidden=!active;$('overview-panel').hidden=active||page!=='overview';$('sales-panel').hidden=active||!['sales','quality'].includes(page);$('filters').setAttribute('aria-busy',String(active));}
-function resetError(){$('page-error').hidden=true;}
-function displayError(e){$('page-error-text').textContent=e.message;$('page-error').hidden=false;}
+function clearRateWait(){clearInterval(rateTimer);rateTimer=null;$('retry').disabled=false;$('retry').textContent='Tentar novamente';}
+function resetError(){clearRateWait();$('page-error').hidden=true;}
+function displayError(e){
+ clearRateWait();$('page-error-text').textContent=e.message;$('page-error').hidden=false;
+ if(!e.retryAfter)return;
+ $('page-error-text').textContent=`O painel recebeu muitas consultas. Aguarde até ${Math.ceil(e.retryAfter)} segundos para tentar novamente.`;
+ const deadline=Date.now()+e.retryAfter*1000;
+ const atualizar=()=>{const segundos=Math.max(0,Math.ceil((deadline-Date.now())/1000));if(!segundos){clearRateWait();$('page-error-text').textContent='O intervalo de proteção terminou. Você já pode tentar novamente.';return;}$('retry').disabled=true;$('retry').textContent=`Tentar novamente (${segundos}s)`;};
+ atualizar();rateTimer=setInterval(atualizar,1000);
+}
 function exitSession(message=''){
  navegacao.fechar();
+ clearTimeout(filterTimer);filterTimer=null;clearRateWait();
  crescimento.limpar();
  goalsGeneration++;goalsAbort?.abort();goalEditing=null;$('goal-dialog').close();for(const id of ['consolidated-body','consolidated-total','consolidated-metrics','goals-body','goals-metrics'])$(id).replaceChildren();userRole='';
  clearOverviewMedia();$('top-products-list').replaceChildren();$('products-list').replaceChildren();
@@ -79,11 +88,15 @@ $('today').textContent=new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Pa
 function applyFilters(){
  const start=$('start-date').value,end=$('end-date').value;
  if(!start||!end||start>end||(Date.parse(end)-Date.parse(start))/86400000>365){displayError(new Error('Escolha um período válido de até 366 dias.'));return;}
- filters={filial:$('branch').value,inicio:start,fim:end};rankPage=1;salesPage=1;customerPage=1;productPage=1;loadData();
+ filters={filial:$('branch').value,inicio:start,fim:end};rankPage=1;salesPage=1;customerPage=1;productPage=1;
+ $('scope-label').textContent=`${Array.from($('branch').options).find(o=>o.value===filters.filial)?.textContent||'Loja'} · ${dateBR(start)} a ${dateBR(end)}`;$('last-sync').textContent='Consultando atualização…';
+ scheduleFilterLoad();
 }
-$('filters').addEventListener('submit',e=>{e.preventDefault();applyFilters();});$('refresh').addEventListener('click',()=>loadData());$('retry').addEventListener('click',()=>loadData());
+function scheduleFilterLoad(){clearTimeout(filterTimer);generation++;abort?.abort();clearOverviewMedia();clearSellerPhotos();resetError();busy(true);filterTimer=setTimeout(()=>{filterTimer=null;loadData();},250);}
+$('filters').addEventListener('submit',e=>{e.preventDefault();applyFilters();});$('refresh').addEventListener('click',scheduleFilterLoad);$('retry').addEventListener('click',scheduleFilterLoad);
 function query(extra={}){return new URLSearchParams({...filters,...extra}).toString();}
 function setPage(next,load=true){
+ clearTimeout(filterTimer);filterTimer=null;resetError();
  clearTimeout(reprocessTimer);
  if(!podePagina(next))return;
  clearOverviewMedia();clearEmployeePhotos();clearSellerPhotos();
@@ -126,10 +139,10 @@ async function loadData(){
   if(version!==generation)return;
   lastIndicators=ind;renderContext(ind||data);document.querySelector('.metrics').hidden=!ind;document.querySelector('.overview-grid').hidden=!ind;document.querySelector('.ranking-panel').hidden=!pode('ranking:ler');if(page==='overview'){if(ind)renderOverview(ind);if(data)renderRanking(data);$('overview-summaries').hidden=!ind;renderTopProducts(top,version);renderStockSummary(stock);}else renderSales(data);
   busy(false);
- }catch(e){if(e.name==='AbortError'||version!==generation)return;busy(false);$('overview-panel').hidden=true;$('sales-panel').hidden=true;displayError(e);}
+ }catch(e){if(e.name==='AbortError'||version!==generation)return;busy(false);$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('last-sync').textContent='Consulta não concluída';displayError(e);}
 }
 function renderContext(d){
- $('scope-label').textContent=`${$('branch').selectedOptions[0]?.textContent||'Loja'}  ·  ${dateBR(filters.inicio)} a ${dateBR(filters.fim)}`;
+ $('scope-label').textContent=`${Array.from($('branch').options).find(o=>o.value===filters.filial)?.textContent||'Loja'}  ·  ${dateBR(filters.inicio)} a ${dateBR(filters.fim)}`;
  const vendas=d.sincronizacao.find(x=>x.recurso==='vendas');
  $('last-sync').textContent=`Última atualização: ${when(vendas?.ultimo_sucesso)}`;
  $('sync-side').textContent=vendas?.ultimo_erro_codigo?'Atualização em espera':'Dados conectados';$('sync-side-detail').textContent=when(vendas?.ultimo_sucesso);
@@ -632,7 +645,7 @@ async function openProductDetails(product,pagina=1){
 
 function smallProductPhoto(p,version,jobs,photoSignal){
  const photo=el('button',null,'product-photo top-product-photo');photo.type='button';photo.disabled=true;photo.setAttribute('aria-label','Foto não disponível');photo.title=p.imagem?'Carregando foto':pode('imagens:ler')?'Sem foto disponível':'Fotos sem permissão';photo.append(el('span',p.imagem?'…':'—'));
- if(p.imagem&&pode('imagens:ler'))jobs.push(async()=>{
+ if(p.imagem&&pode('imagens:ler')){const job=async()=>{
    try{const r=await fetch(p.imagem.catalogo?`/api/v1/produtos/${encodeURIComponent(p.imagem.filial)}/${encodeURIComponent(p.imagem.produto)}/imagem?sku=${encodeURIComponent(p.imagem.sku)}`:'/api/v1'+operationPath(p.imagem)+`/itens/${p.imagem.ordem}/imagem`,{headers:{Authorization:`Bearer ${token}`},signal:photoSignal});
     if(version!==generation)return;if(r.status===401){exitSession(errorText.NAO_AUTENTICADO);return;}if(!r.ok)throw Error('FOTO_INDISPONIVEL');
     const blob=await r.blob();if(version!==generation||photoSignal.aborted)return;
@@ -640,12 +653,17 @@ function smallProductPhoto(p,version,jobs,photoSignal){
     img.addEventListener('error',()=>{photo.replaceChildren(el('span','—'));photo.disabled=true;photo.title='Foto indisponível';photo.setAttribute('aria-label','Foto indisponível');});
     photo.addEventListener('click',()=>{$('photo-error').hidden=true;$('photo-large').hidden=false;$('photo-large').src=url;$('photo-large').alt=p.descricao||'Produto';$('photo-dialog').showModal();});
    }catch(e){if(version!==generation||photoSignal.aborted)return;photo.replaceChildren(el('span','—'));photo.disabled=true;photo.title='Foto indisponível';photo.setAttribute('aria-label','Foto indisponível');}
-  });
+  };job.alvo=photo;jobs.push(job);}
  return photo;
 }
 function runPhotoJobs(jobs,version,photoSignal){
- async function worker(){while(jobs.length&&version===generation&&!photoSignal.aborted)await jobs.shift()();}
- for(let i=0;i<4;i++)worker();
+ const fila=[];let ativos=0;
+ function executar(){while(fila.length&&ativos<4&&version===generation&&!photoSignal.aborted){ativos++;Promise.resolve(fila.shift()()).finally(()=>{ativos--;executar();});}}
+ if(!('IntersectionObserver'in window)){fila.push(...jobs);executar();return;}
+ const pendentes=new Map(jobs.map(job=>[job.alvo,job]));
+ const observer=new IntersectionObserver(entries=>{for(const entry of entries){if(!entry.isIntersecting)continue;const job=pendentes.get(entry.target);if(job){pendentes.delete(entry.target);observer.unobserve(entry.target);fila.push(job);}}executar();},{rootMargin:'180px'});
+ for(const alvo of pendentes.keys())observer.observe(alvo);
+ photoSignal.addEventListener('abort',()=>{observer.disconnect();pendentes.clear();fila.length=0;},{once:true});
 }
 function openCatalogDetails(p,estoque,sync){
  productDetailAbort?.abort();productDetailVersion++;

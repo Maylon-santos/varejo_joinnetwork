@@ -4,7 +4,7 @@ import {randomUUID} from 'node:crypto';
 import {ErroApi,filtros} from './painel.mjs';
 export function limitador({limite=120,janelaMs=60000,agora=Date.now}={}){
  const buckets=new Map();
- return chave=>{
+ const aceita=chave=>{
   const now=agora();
   for(const [k,b] of buckets)if(b.ate<=now)buckets.delete(k);
   if(!buckets.has(chave)){
@@ -13,6 +13,12 @@ export function limitador({limite=120,janelaMs=60000,agora=Date.now}={}){
   }
   const b=buckets.get(chave);b.total++;return b.total<=limite;
  };
+ aceita.retryAfter=chave=>Math.max(1,Math.ceil(((buckets.get(chave)?.ate??agora())-agora())/1000));
+ return aceita;
+}
+function limitarOuFalhar(aceita,chave,codigo='LIMITE_DE_REQUISICOES'){
+ if(aceita(chave))return;
+ const erro=new ErroApi(429,codigo);erro.retryAfter=aceita.retryAfter?.(chave)??60;throw erro;
 }
 async function lerJson(req,limite=4096){
  if((req.headers['content-type']??'').split(';')[0]!=='application/json')throw new ErroApi(415,'JSON_OBRIGATORIO');
@@ -21,7 +27,7 @@ async function lerJson(req,limite=4096){
  try{const v=JSON.parse(Buffer.concat(chunks).toString('utf8'));if(!v||typeof v!=='object'||Array.isArray(v))throw new Error();return v;}
  catch{throw new ErroApi(400,'JSON_INVALIDO');}
 }
-export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuarios,funcionarios,reprocessamentos,consolidado,fila,produtos,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
+export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuarios,funcionarios,reprocessamentos,consolidado,fila,produtos,frontend,imagemProduto,health=async()=>{},log=()=>{},limitar=limitador(),limitarImagens=limitador({limite:240}),limitarEntrada=limitador({limite:1800}),limitarAnonimo=limitador(),limitarLogin=limitador({limite:10,janelaMs:15*60000})}){
  const server=createServer(async(req,res)=>{
   const requestId=randomUUID();
   res.setHeader('Content-Type','application/json; charset=utf-8');res.setHeader('Cache-Control','no-store');
@@ -31,9 +37,11 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
    const url=new URL(req.url,'http://local');const path=url.pathname;
    if(path==='/health'&&req.method==='GET'){await health();return enviar(200,{status:'ok'});}
    if(frontend&&await frontend(req,res,path))return;
-   if(!limitar(req.socket.remoteAddress))throw new ErroApi(429,'LIMITE_DE_REQUISICOES');
+   // Não confiar em IPs/identidades declarados por headers. O teto de entrada
+   // protege a autenticação; as cotas funcionais usam a conta já autenticada.
+   limitarOuFalhar(limitarEntrada,req.socket.remoteAddress);
    if(path==='/api/v1/auth/login'&&req.method==='POST'){
-    if(!limitarLogin(req.socket.remoteAddress))throw new ErroApi(429,'LIMITE_DE_LOGIN');
+    limitarOuFalhar(limitarLogin,req.socket.remoteAddress,'LIMITE_DE_LOGIN');
     const body=await lerJson(req);
     if(typeof body.email!=='string'||body.email.length>254||typeof body.senha!=='string'||Buffer.byteLength(body.senha)>256)throw new ErroApi(400,'CREDENCIAIS_INVALIDAS');
     const session=await auth.login(body.email,body.senha);
@@ -42,7 +50,9 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
    }
    const token=/^Bearer ([a-f0-9]{64})$/.exec(req.headers.authorization??'')?.[1];
    const user=await auth.autenticar(token);
-   if(!user)throw new ErroApi(401,'NAO_AUTENTICADO');
+   if(!user){limitarOuFalhar(limitarAnonimo,req.socket.remoteAddress);throw new ErroApi(401,'NAO_AUTENTICADO');}
+   const conta=JSON.stringify([user.tenant_key,user.id]);
+   limitarOuFalhar(req.method==='GET'&&/\/(?:imagem|foto)$/.test(path)?limitarImagens:limitar,conta);
    const acesso=escopoUsuario(user,filiais);
    const painelUsuario=painel.restringir(acesso.filiais,acesso.vendedores);
    if(path==='/api/v1/auth/me'&&req.method==='GET')return enviar(200,{usuario:{id:user.id,email:user.email,role:user.role,role_nome:user.role_nome,tenant_key:user.tenant_key,permissoes:acesso.permissoes,filiais:acesso.filiais,somente_proprias_vendas:user.somente_proprias_vendas}});
@@ -173,7 +183,7 @@ export function criarServidor({auth,painel,filiais,gestaoPermissoes,gestaoUsuari
   }catch(error){
    const status=error instanceof ErroApi?error.status:500;
    if(status===500)log({evento:'api_erro',requestId,codigo:'ERRO_INTERNO'});
-   if(status===429)res.setHeader('Retry-After','60');
+   if(status===429)res.setHeader('Retry-After',String(error.retryAfter??60));
    if(!res.headersSent&&!res.destroyed)enviar(status,{erro:status===500?'ERRO_INTERNO':error.message,request_id:requestId});
   }
  });

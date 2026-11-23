@@ -1,5 +1,11 @@
 # Comece aqui — estado atual em 23/11/2026
 
+## Troca rápida de filiais e alertas — 23/11/2026
+
+- [x] Corrigida a causa do 429: cota de consultas por conta/tenant, separada das imagens; teto de entrada, anônimos e proteção de login mantidos. `Retry-After` real, contagem de espera, agrupamento por 250 ms, cancelamento de consultas/fotos antigas e fotos sob demanda. Legenda usa a filial aplicada. Datas e mensagem ajustadas para celular.
+- [x] 105 unitários e 30 integrações PostgreSQL aprovados. Interface sintética: dez seleções rápidas fazem uma consulta final; doze trocas sequenciais sem 429, isolamento de contas, resposta antiga descartada, espera/recuperação e logout. Navegação móvel revalidada. [Regras](docs/TROCA_FILIAIS.md), [interface](docs/validacao-troca-filiais-ui.json).
+- [ ] Publicar somente `api` após backup, verificar assets/saúde e preservação. Notificações/PWA não implementadas; requisitos de metas/conferência/Lista da Vez/resumo após 22h aprovados e [piloto documentado](docs/ALERTAS_NOTIFICACOES.md). Participantes e gatilho da fila solicitados ao titular; R17 separada da correção.
+
 ## Navegação no celular — 23/11/2026
 
 - [x] Menu sanduíche no cabeçalho até 760 px, com painel lateral, página atual e o mesmo conjunto de links/permissões. Fechamento por seleção, X, toque externo e Escape; foco contido/restaurado, fundo sem rolagem, opções roláveis e retorno ao topo ao navegar. Computador/tablet mantêm a barra lateral; sessão expirada fecha o menu.

@@ -6,7 +6,7 @@ O menu fecha pelo botão X, por **Voltar ao painel**, ao tocar fora ou com Escap
 
 Existe apenas um conjunto de links: ele é transferido da barra lateral para o diálogo móvel. As permissões continuam definidas pelo painel e validadas no servidor. Não são criadas opções adicionais ou permissões por meio do menu. Ao retornar à largura de computador/tablet, o diálogo fecha e os links retornam à barra lateral. Expiração de sessão também fecha o menu e restaura a navegação antes do próximo login.
 
-Os filtros no celular usam período em linha inteira, datas lado a lado e uma linha própria para aplicar filtros/atualizar. Campos com fonte de 16 px evitam o zoom de foco do Safari; os botões do cabeçalho e das ações têm área de toque de pelo menos 44 px. A seleção e a aplicação dos filtros preservam as regras existentes.
+Os filtros no celular usam período em linha inteira, datas em linhas próprias até 430 px (lado a lado acima disso) e uma linha própria para aplicar filtros/atualizar. Campos com fonte de 16 px evitam o zoom de foco do Safari; os botões do cabeçalho e das ações têm área de toque de pelo menos 44 px. A seleção e a aplicação dos filtros preservam as regras existentes.
 
 ## Verificação
 
@@ -15,6 +15,8 @@ Os filtros no celular usam período em linha inteira, datas lado a lado e uma li
 ## Notificações como aplicativo: próxima etapa
 
 O painel ainda não tem instalação como PWA, service worker, inscrições Web Push ou rotina de envio de notificações do navegador. Esta alteração do menu não implementa nem ativa essas funções. Os webhooks da API de terceiros são um mecanismo separado e continuam conforme sua configuração anterior.
+
+Em 23/11, foram aprovados os quatro tipos de alerta, incluindo o resumo após as 22h. [Requisitos e teste do piloto](ALERTAS_NOTIFICACOES.md).
 
 Uma implementação de Web Push precisa de:
 
