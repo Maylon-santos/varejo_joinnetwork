@@ -102,7 +102,7 @@
       "id": "R17",
       "titulo": "Notificações internas e alertas",
       "status": "em_andamento",
-      "detalhe": "Piloto de resumo diário implementado: PWA, preferências, filiais, aparelhos e outbox cifrada, restritos ao titular. 111 unitários, 30 integrações e interface aprovados; publicação e teste real no iPhone pendentes. Metas, conferência e Lista da Vez continuam posteriores, sem reativar R30/webhooks. docs/ALERTAS_NOTIFICACOES.md."
+      "detalhe": "Piloto de resumo diário publicado: PWA, preferências, filiais, aparelhos e outbox cifrada, restritos ao titular. 111 unitários, 30 integrações e interfaces local/HTTPS aprovados. Falta instalação/consentimento e recebimento real no iPhone. Metas, conferência e Lista da Vez continuam posteriores; R30/webhooks preservados. docs/validacao-notificacoes.json."
     },
     {
       "id": "R18",
@@ -228,7 +228,7 @@
       "id": "R38",
       "titulo": "Aplicativo e resumo diário no iPhone",
       "status": "validacao",
-      "detalhe": "PWA sem cache privado e Web Push com opt-in e LOGIN restrito. Resumo após 22h05, parcial explícito quando atrasado, cálculos do painel. Testes aprovados; publicação e recebimento no aparelho pendentes. docs/ALERTAS_NOTIFICACOES.md."
+      "detalhe": "API e novo worker publicados após backup, migration somente central aditiva, nove assets HTTPS e saúde aprovados. Outros 27 containers e credenciais preservados. Piloto somente titular; zero inscrições/envios na publicação, resumo desligado até adesão. Teste real no iPhone pendente. docs/validacao-notificacoes.json."
     }
   ]
 }

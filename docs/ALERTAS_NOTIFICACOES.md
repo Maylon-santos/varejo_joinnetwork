@@ -2,7 +2,7 @@
 
 ## Piloto
 
-Instalação como aplicativo web, preferências por filial e Web Push implementados em 23/11/2026. O piloto fica restrito à conta do titular, definida por identificador numa configuração privada. Nenhuma conta adicional é incluída automaticamente. Ativar o recurso no servidor não inscreve aparelhos nem habilita o resumo: cada aparelho precisa de consentimento, e o resumo diário exige salvar as preferências.
+Instalação como aplicativo web, preferências por filial e Web Push implementados e publicados em 23/11/2026. [Evidência de publicação](validacao-notificacoes.json). O piloto fica restrito à conta do titular, definida por identificador numa configuração privada. Nenhuma conta adicional é incluída automaticamente. Ativar o recurso no servidor não inscreve aparelhos nem habilita o resumo: cada aparelho precisa de consentimento, e o resumo diário exige salvar as preferências.
 
 Metas atingidas, pendências de conferência e acontecimentos da Lista da Vez permanecem para etapas posteriores. Esta entrega não reativa os relatórios da R30 nem os webhooks da API de integrações.
 

@@ -1,0 +1,81 @@
+{
+  "publicadoEm": "2026-11-23T17:16:57.873240+00:00",
+  "imagem": "aeropostale-varejo-api:pwa-20261123",
+  "servicosAtualizados": [
+    "api",
+    "notificacoes-worker"
+  ],
+  "outrosContainersPreservados": 27,
+  "nginxPreservado": true,
+  "envsAnterioresPreservados": true,
+  "clientesChavesAutenticadoresPermissoesPreservados": true,
+  "assetsHTTPSIguaisAFonte": [
+    "/",
+    "/assets/app.js",
+    "/assets/notificacoes.js",
+    "/assets/notificacoes.css",
+    "/manifest.webmanifest",
+    "/sw.js",
+    "/assets/app-icon-192.png",
+    "/assets/app-icon-512.png",
+    "/assets/apple-touch-icon.png"
+  ],
+  "apiSaudavel": true,
+  "workerSaudavel": true,
+  "migrationCentral": "008_notificacoes_push.sql",
+  "semMigrationTenant": true,
+  "pilotoUmaContaConfirmada": true,
+  "preferenciasDesligadasAteAdesao": true,
+  "dispositivosInscritos": 0,
+  "notificacoesEnviadas": 0,
+  "workerSemLeituraDeSenhasOuEscritaComercial": true,
+  "backupConferido": "backup-20261123T171556Z-AvDvEt",
+  "unitarios": {
+    "aprovados": 111,
+    "falhas": 0
+  },
+  "integracaoPostgreSQLIsolado": {
+    "aprovados": 30,
+    "falhas": 0
+  },
+  "interfaceLocal": {
+    "verificadoEm": "2026-11-23T17:03:12.661Z",
+    "ambiente": "Chromium e PostgreSQL isolado, dados sintéticos",
+    "assets": "Servidor local",
+    "manifestoEIcones": true,
+    "serviceWorkerRealRecebePush": true,
+    "semCacheOffline": true,
+    "urlExternaRejeitada": true,
+    "instalacaoIphoneOrientada": true,
+    "autorizacaoPorToqueSimulada": true,
+    "preferenciasEFiliais": true,
+    "testeNoAparelhoDaSessao": true,
+    "desativacaoELogout": true,
+    "acessoAoResumoValidado": true,
+    "contaForaDoPilotoSemAcesso": true,
+    "celularSemOverflow": true,
+    "errors": []
+  },
+  "interfaceAssetsProducao": {
+    "verificadoEm": "2026-11-23T17:17:54.712Z",
+    "ambiente": "Chromium e PostgreSQL isolado, dados sintéticos",
+    "assets": "HTTPS de produção, API substituída por fixture",
+    "manifestoEIcones": true,
+    "serviceWorkerRealRecebePush": true,
+    "semCacheOffline": true,
+    "urlExternaRejeitada": true,
+    "instalacaoIphoneOrientada": true,
+    "autorizacaoPorToqueSimulada": true,
+    "preferenciasEFiliais": true,
+    "testeNoAparelhoDaSessao": true,
+    "desativacaoELogout": true,
+    "acessoAoResumoValidado": true,
+    "contaForaDoPilotoSemAcesso": true,
+    "celularSemOverflow": true,
+    "errors": []
+  },
+  "capturasCelularComputadorRevisadas": true,
+  "configuracaoPrivadaCopiadaNoMacModo0600": true,
+  "limitesDaVerificacao": "Chromium e dados sintéticos; inscrição nativa simulada. Recebimento real no iPhone depende de instalação e autorização pelo titular. Não constitui teste de carga.",
+  "tentativaAnterior": "Retorno automático da API anterior por opção tmpfs dividida na lista YAML; configuração corrigida e segunda publicação reutilizou migration e chaves."
+}
