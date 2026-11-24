@@ -1,4 +1,4 @@
-# Comece aqui — estado atual em 23/11/2026
+# Comece aqui — estado atual em 24/11/2026
 
 ## Aplicativo e resumo diário — 23/11/2026
 
@@ -7,7 +7,8 @@
 - [x] 111 unitários, 30 integrações PostgreSQL e interface aprovados. Transporte cifrado/decifrado com dados sintéticos; service worker real recebe push sintético. Instalação/inscrição nativa simuladas nos testes automatizados; recebimento real confirmado pelo titular no piloto abaixo. [Uso e operação](docs/ALERTAS_NOTIFICACOES.md), [interface](docs/validacao-notificacoes-ui.json).
 - [x] Publicados API e novo worker, imagem `pwa-20261123`, após backup conferido. Somente migration central aditiva; saúde, nove assets HTTPS e interface com dados sintéticos aprovados. Outros 27 containers, Nginx, envs anteriores e credenciais/permissões preservados. [Publicação](docs/validacao-notificacoes.json).
 - [x] Titular instalou/autorizou o iPhone e salvou o resumo para 11 filiais. Dois testes aceitos com HTTP 201; recebimento confirmado pelo titular e captura do aviso às 14h33, após teste no 4G/5G. A causa da ausência inicial não foi determinada. Evidência agregada em docs/validacao-notificacoes.json; captura pessoal fora do Git.
-- [ ] Conferir o primeiro resumo diário real após 22h05. Teste pessoal recebido não homologa os dados do fechamento nem os alertas posteriores de metas/conferência/Lista da Vez.
+- [x] Em 24/11, titular confirmou o recebimento automático das notificações das 11 lojas programadas. Confirmação de recebimento, sem consulta adicional ao servidor nesta etapa.
+- [ ] Conferir os valores do fechamento e a abertura da filial/dia ao tocar no aviso. Alertas posteriores de metas/conferência/Lista da Vez e liberação a outras contas permanecem separados.
 
 
 ## Troca rápida de filiais e alertas — 23/11/2026

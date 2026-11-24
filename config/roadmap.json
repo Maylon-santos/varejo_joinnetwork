@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-11-23",
+  "atualizadoEm": "2026-11-24",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -102,7 +102,7 @@
       "id": "R17",
       "titulo": "Notificações internas e alertas",
       "status": "em_andamento",
-      "detalhe": "Piloto de resumo diário publicado: PWA, preferências, filiais, aparelhos e outbox cifrada, restritos ao titular. 111 unitários, 30 integrações e interfaces local/HTTPS aprovados. Titular confirmou teste recebido no iPhone; resumo ativo para 11 filiais. Primeiro fechamento real após 22h05 em validação. Metas, conferência e Lista da Vez posteriores; R30/webhooks preservados. docs/validacao-notificacoes.json."
+      "detalhe": "Piloto de resumo diário publicado: PWA, preferências, filiais, aparelhos e outbox cifrada, restritos ao titular. 111 unitários, 30 integrações e interfaces local/HTTPS aprovados. Titular confirmou teste recebido no iPhone; resumo ativo para 11 filiais. Em 24/11, titular confirmou recebimento automático das 11 lojas; valores e abertura da filial/dia ainda em validação. Metas, conferência e Lista da Vez posteriores; R30/webhooks preservados. docs/validacao-notificacoes.json."
     },
     {
       "id": "R18",
@@ -228,7 +228,7 @@
       "id": "R38",
       "titulo": "Aplicativo e resumo diário no iPhone",
       "status": "validacao",
-      "detalhe": "API/worker publicados com backup e migration central aditiva; demais serviços/credenciais preservados. Titular instalou/autorizou o iPhone, ativou resumo para 11 filiais e confirmou recebimento real do teste com captura às 14h33. Dois testes HTTP 201. Falta conferir o primeiro resumo diário real após 22h05. docs/validacao-notificacoes.json."
+      "detalhe": "API/worker publicados com backup e migration central aditiva; demais serviços/credenciais preservados. Titular instalou/autorizou o iPhone, ativou resumo para 11 filiais e confirmou recebimento real do teste com captura às 14h33. Dois testes HTTP 201. Em 24/11, titular confirmou recebimento automático das 11 lojas programadas. Falta conferir valores e abertura da filial/dia pelo aviso; piloto permanece restrito à conta do titular. docs/validacao-notificacoes.json."
     }
   ]
 }
