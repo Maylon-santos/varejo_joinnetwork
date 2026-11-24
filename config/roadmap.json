@@ -102,7 +102,7 @@
       "id": "R17",
       "titulo": "Notificações internas e alertas",
       "status": "em_andamento",
-      "detalhe": "Piloto de resumo diário (R38) homologado pelo titular em 24/11: recebimento das 11 lojas, valores e abertura corretos no iPhone. PWA, preferências e outbox cifrada publicados, restritos ao titular. Alertas de metas, conferência e Lista da Vez ainda posteriores; expansão a outras contas depende de liberação própria. R30/webhooks preservados. docs/validacao-notificacoes.json."
+      "detalhe": "Piloto de resumo diário (R38) homologado pelo titular em 24/11: recebimento das 11 lojas, valores e abertura corretos no iPhone. Mais três contas existentes liberadas expressamente, respeitando filiais/permissões; instalação/consentimento/testes nos novos aparelhos pendentes. Alertas de metas, conferência e Lista da Vez posteriores; R30/webhooks preservados. docs/validacao-expansao-notificacoes.json."
     },
     {
       "id": "R18",
@@ -228,7 +228,7 @@
       "id": "R38",
       "titulo": "Aplicativo e resumo diário no iPhone",
       "status": "concluido",
-      "detalhe": "Piloto de PWA/resumo diário homologado pelo titular em 24/11: recebimento automático das 11 lojas no iPhone, valores e abertura da filial/dia corretos. 111 unitários, 30 integrações e interfaces aprovados; publicação preservou demais serviços/credenciais. Confirmação sem amostra comercial detalhada ou conferência independente adicional. Liberação a outras contas e demais alertas separados. docs/validacao-notificacoes.json."
+      "detalhe": "Piloto de PWA/resumo diário homologado pelo titular em 24/11: recebimento automático das 11 lojas no iPhone, valores e abertura da filial/dia corretos. 111 unitários, 30 integrações e interfaces aprovados; publicação preservou demais serviços/credenciais. Confirmação sem amostra comercial detalhada ou conferência independente adicional. Liberação a outras contas e demais alertas separados. docs/validacao-notificacoes.json. Expansão autorizada para mais três contas aplicada em 24/11 sem ampliar permissões; recebimento nos novos aparelhos depende dos participantes. docs/validacao-expansao-notificacoes.json."
     }
   ]
 }

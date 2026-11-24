@@ -1,0 +1,26 @@
+{
+  "concluidoEm": "2026-11-24T13:05:08.571671+00:00",
+  "contasAdicionadas": 3,
+  "totalLiberado": 4,
+  "backupConferido": "backup-20261124T130410Z-Mlls6Z",
+  "outrosContainersPreservados": 27,
+  "identidadesPermissoesPreferenciasAparelhosPreservados": true,
+  "integracoesPreservadas": true,
+  "chavesPreservadas": true,
+  "nginxFontesEnvsAnterioresPreservados": true,
+  "semBuildOuMigration": true,
+  "httpsSaudavel": true,
+  "semAutenticacao401": true,
+  "apiEWorkerConfirmamMesmaLista": true,
+  "quantidadesFiliaisDasNovasContas": [
+    12,
+    15,
+    15
+  ],
+  "contasForaDaListaBloqueadas": true,
+  "chavePrivadaSomenteWorker": true,
+  "novasContasSemAparelhosOuPreferenciasCriadas": true,
+  "configuracaoPrivadaComCopiaLocal0600": true,
+  "workerLocalDesativado": true,
+  "recebimentoNosNovosAparelhos": "Pendente de instalação, autorização e teste por cada participante."
+}

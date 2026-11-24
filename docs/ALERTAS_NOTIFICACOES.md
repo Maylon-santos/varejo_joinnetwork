@@ -2,9 +2,13 @@
 
 ## Piloto
 
-Instalação como aplicativo web, preferências por filial e Web Push implementados e publicados em 23/11/2026. [Evidência de publicação](validacao-notificacoes.json). O piloto fica restrito à conta do titular, definida por identificador numa configuração privada. Nenhuma conta adicional é incluída automaticamente. Ativar o recurso no servidor não inscreve aparelhos nem habilita o resumo: cada aparelho precisa de consentimento, e o resumo diário exige salvar as preferências.
+Instalação como aplicativo web, preferências por filial e Web Push implementados e publicados em 23/11/2026. [Evidência de publicação](validacao-notificacoes.json). O piloto inicial ficou restrito à conta do titular, definida por identificador numa configuração privada. Em 24/11/2026, após homologação pelo titular, foram liberadas expressamente mais três contas existentes; total de quatro contas autorizadas na lista privada. Nenhuma conta adicional é incluída automaticamente. Ativar o recurso no servidor não inscreve aparelhos nem habilita o resumo: cada aparelho precisa de consentimento, e o resumo diário exige salvar as preferências.
 
 Metas atingidas, pendências de conferência e acontecimentos da Lista da Vez permanecem para etapas posteriores. Esta entrega não reativa os relatórios da R30 nem os webhooks da API de integrações.
+
+## Novos participantes
+
+Liberação de conta e adesão no aparelho são etapas distintas. As três contas acrescentadas em 24/11 já podem usar a área **Notificações** após atualizar o aplicativo ou entrar novamente. Cada participante precisa instalar/abrir pelo ícone, permitir notificações, enviar um teste e salvar as preferências de resumo/filiais. As opções seguem as permissões e vínculos existentes: uma conta com 12 filiais e duas com 15. Nenhuma inscrição ou preferência foi criada em nome dos participantes. [Evidência da expansão](validacao-expansao-notificacoes.json).
 
 ## Instalar no iPhone e testar
 
@@ -62,6 +66,6 @@ Consultar `deploy/README.md` para implantação, backup e retorno. Guardar as ch
 
 Testes verificam horários/data de São Paulo, cálculo monetário/PA, cancelamentos, atraso/versão parcial, opt-in, isolamento de conta/filial, logout, idempotência, concorrência, inscrição expirada, espera do serviço, resultado incerto e permissões do LOGIN restrito. Transporte real é cifrado/decifrado com chaves sintéticas e socket simulado, sem envio externo. Interface confere manifesto/service worker real com push sintético, instalação orientada, autorização simulada, preferências, teste, logout e abertura do resumo em computador/celular.
 
-O recebimento real do teste no iPhone foi confirmado pelo titular. Em 24/11/2026, o titular confirmou o recebimento automático dos resumos das 11 lojas programadas. Em seguida, confirmou também valores e abertura da filial/dia corretos ao tocar no aviso, concluindo a homologação do piloto. Confirmação do titular sem amostra comercial detalhada ou conferência independente adicional nesta etapa; demais contas e alertas continuam fora do piloto. Não foi realizado teste de carga de todos os usuários. Metas, conferência e Lista da Vez terão validação própria quando implementados.
+O recebimento real do teste no iPhone foi confirmado pelo titular. Em 24/11/2026, o titular confirmou o recebimento automático dos resumos das 11 lojas programadas. Em seguida, confirmou também valores e abertura da filial/dia corretos ao tocar no aviso, concluindo a homologação do piloto. Confirmação do titular sem amostra comercial detalhada ou conferência independente adicional nesta etapa; a confirmação do titular não comprova o recebimento em outros aparelhos ou de outros alertas. Não foi realizado teste de carga de todos os usuários. Metas, conferência e Lista da Vez terão validação própria quando implementados.
 
 Referências: [Apple — Web Push](https://developer.apple.com/documentation/usernotifications/sending-web-push-notifications-in-web-apps-and-browsers), [WebKit — Web Push no iOS](https://webkit.org/blog/13878/web-push-for-web-apps-on-ios-and-ipados/), [web-push](https://github.com/web-push-libs/web-push).

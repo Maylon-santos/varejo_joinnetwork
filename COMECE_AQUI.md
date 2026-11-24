@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 24/11/2026
 
+## Expansão do resumo diário — 24/11/2026
+
+- [x] Três contas solicitadas, existentes e ativas liberadas na lista privada; total de quatro contas contando o titular. Permissões de leitura já existentes confirmadas: 12 filiais para uma conta e 15 para cada uma das outras duas; sem ampliar vínculos ou perfis.
+- [x] Alterado somente `WEB_PUSH_PILOT_USERS`; VAPID/cofre preservados. Recriadas somente API e worker com a mesma imagem, sem build ou migration, após backup conferido. API/worker saudáveis, HTTPS e bloqueio sem autenticação conferidos, contas fora da lista bloqueadas; outros 27 containers, Nginx, fontes, envs anteriores, integrações, identidades, preferências e aparelhos preservados. [Evidência](docs/validacao-expansao-notificacoes.json).
+- [ ] Cada participante deve atualizar/abrir o aplicativo, autorizar o próprio aparelho, enviar teste e salvar o resumo/filiais. Liberação não cria inscrições nem ativa preferências; recebimento nos novos aparelhos ainda não confirmado. Metas/conferência/Lista da Vez, R30 e webhooks permanecem separados.
+
+
 ## Aplicativo e resumo diário — 23/11/2026
 
 - [x] Implementados manifesto/ícones, service worker sem cache de dados autenticados e área Notificações com instalação orientada, opt-in, filiais, aparelhos, teste pessoal e histórico. Piloto limitado à conta do titular; resumo diário desligado até adesão.

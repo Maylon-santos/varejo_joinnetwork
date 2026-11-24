@@ -3,6 +3,14 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Expansão autorizada das notificações — 24/11/2026
+
+Lista privada `WEB_PUSH_PILOT_USERS` ampliada de uma para quatro contas: titular preservado e três contas existentes solicitadas. Contas novas elegíveis para leitura de filial completa, com 12/15/15 filiais conforme vínculos atuais. Nenhum perfil, vínculo, inscrição ou preferência alterado. Cada participante precisa de consentimento no aparelho e opt-in do resumo. Nomes/identificadores mantidos na preparação privada.
+
+Recriadas somente API e worker com a mesma imagem `pwa-20261123`, sem build ou migration. Backup `backup-20261124T130410Z-Mlls6Z` conferido; arquivo privado anterior em `/opt/aeropostale-varejo/artifacts/notificacoes-expansao-20261124T130409Z/env.notificacoes.anterior`. VAPID/cofre preservados e cópia atual em `artifacts/notificacoes-20261123/configuracao-privada-expansao-20261124.env`, modo 0600 no Mac. API/worker saudáveis e lista idêntica conferida nos dois processos; conta fora da lista e consulta sem autenticação continuam bloqueadas. Outros 27 containers, Nginx, fontes/envs anteriores, credenciais, permissões e preferências preservados. [Evidência](../docs/validacao-expansao-notificacoes.json).
+
+Para retornar somente esta expansão, restaurar a cópia anterior de `.env.notificacoes` com modo 0600 e recriar somente `api`/`notificacoes-worker` pelo wrapper, sem trocar imagem ou restaurar bancos. Preserve quaisquer inscrições/preferências que os participantes venham a cadastrar; fora da lista, não recebem novos avisos. Não regenerar chaves nem afetar o titular ou outros serviços.
+
 ## Aplicativo e resumo diário — 23/11/2026
 
 Imagem atual de `api` e `notificacoes-worker`: `aeropostale-varejo-api:pwa-20261123`. Instalável pela Tela de Início, com manifesto/ícones e service worker sem cache autenticado. Área Notificações com preferências por filial, inscrição pessoal, teste e histórico. Piloto limitado ao identificador da conta do titular; habilitar o servidor não inscreve aparelhos nem ativa preferências. Titular instalou/autorizou o iPhone e confirmou recebimento real do teste com captura às 14h33 de 23/11; resumo ativado por ele para 11 filiais. Em 24/11, titular confirmou o recebimento automático das 11 lojas. Na mesma data, confirmou valores e abertura da filial/dia corretos; piloto homologado pelo titular, sem ampliação da allowlist ou ativação de outros alertas. [Uso e regras](../docs/ALERTAS_NOTIFICACOES.md).
