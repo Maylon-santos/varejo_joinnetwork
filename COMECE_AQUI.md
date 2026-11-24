@@ -8,7 +8,7 @@
 - [x] Publicados API e novo worker, imagem `pwa-20261123`, após backup conferido. Somente migration central aditiva; saúde, nove assets HTTPS e interface com dados sintéticos aprovados. Outros 27 containers, Nginx, envs anteriores e credenciais/permissões preservados. [Publicação](docs/validacao-notificacoes.json).
 - [x] Titular instalou/autorizou o iPhone e salvou o resumo para 11 filiais. Dois testes aceitos com HTTP 201; recebimento confirmado pelo titular e captura do aviso às 14h33, após teste no 4G/5G. A causa da ausência inicial não foi determinada. Evidência agregada em docs/validacao-notificacoes.json; captura pessoal fora do Git.
 - [x] Em 24/11, titular confirmou o recebimento automático das notificações das 11 lojas programadas. Confirmação de recebimento, sem consulta adicional ao servidor nesta etapa.
-- [ ] Conferir os valores do fechamento e a abertura da filial/dia ao tocar no aviso. Alertas posteriores de metas/conferência/Lista da Vez e liberação a outras contas permanecem separados.
+- [x] Em 24/11, titular confirmou valores e abertura da filial/dia corretos ao tocar no aviso. Piloto de aplicativo e resumo diário (R38) homologado pela confirmação do titular; sem amostra detalhada ou conferência independente adicional nesta etapa. Alertas de metas/conferência/Lista da Vez e liberação a outras contas continuam separados.
 
 
 ## Troca rápida de filiais e alertas — 23/11/2026

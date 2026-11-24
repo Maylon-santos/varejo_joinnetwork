@@ -76,7 +76,7 @@
   },
   "capturasCelularComputadorRevisadas": true,
   "configuracaoPrivadaCopiadaNoMacModo0600": true,
-  "limitesDaVerificacao": "Testes automatizados em Chromium com dados sintéticos e inscrição nativa simulada; recebimento real do teste e dos resumos automáticos das 11 lojas confirmado pelo titular no iPhone. Valores e abertura da filial/dia ainda não conferidos pelo titular. Não constitui teste de carga.",
+  "limitesDaVerificacao": "Testes automatizados em Chromium com dados sintéticos e inscrição nativa simulada. Titular confirmou no iPhone recebimento real do teste e dos resumos das 11 lojas, valores e abertura da filial/dia corretos. Homologação do piloto baseada nessa confirmação, sem amostra comercial detalhada ou conferência independente adicional. Não constitui teste de carga ou homologação das demais contas/alertas.",
   "tentativaAnterior": "Retorno automático da API anterior por opção tmpfs dividida na lista YAML; configuração corrigida e segunda publicação reutilizou migration e chaves.",
   "pilotoIphone": {
     "data": "2026-11-23",
@@ -95,14 +95,15 @@
     "capturaPessoalForaDoGit": true,
     "contextoDoTesteRecebido": "Após orientação de usar 4G/5G e sair para a Tela de Início sem encerrar a conta.",
     "causaDaAusenciaInicial": "Não determinada; sucesso no segundo teste não prova bloqueio do Wi-Fi.",
-    "primeiroResumoDiarioRealConferido": false,
+    "primeiroResumoDiarioRealConferido": true,
     "resumoAutomatico": {
       "confirmadoPeloTitularEm": "2026-11-24",
       "quantidadeLojasRecebidas": 11,
       "recebimentoConfirmado": true,
-      "valoresConferidosPeloTitular": false,
-      "aberturaDaFilialEDiaConfirmadaPeloTitular": false,
-      "fonte": "Relato do titular; sem consulta adicional ao servidor nesta etapa."
+      "valoresConferidosPeloTitular": true,
+      "aberturaDaFilialEDiaConfirmadaPeloTitular": true,
+      "fonte": "Titular confirmou recebimento das 11 lojas, valores e abertura corretos; sem amostra comercial detalhada ou consulta independente adicional nesta etapa.",
+      "homologacaoDoPilotoConfirmadaEm": "2026-11-24"
     }
   }
 }
