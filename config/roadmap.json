@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-11-24",
+  "atualizadoEm": "2026-11-25",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -192,7 +192,7 @@
       "id": "R32",
       "titulo": "Crescimento anual por filial",
       "status": "concluido",
-      "detalhe": "Dashboard publicado com comparação do ano anterior e de todos os anos, filtros, permissões e conferência contra o consolidado. Evidências em docs/validacao-crescimento-anual.json e docs/validacao-crescimento-todos-anos.json."
+      "detalhe": "Dashboard publicado com comparação do ano anterior e de todos os anos, filtros e permissões. Gráfico interativo por mouse/toque/teclado publicado em 25/11: valores mensais exatos, diferença e percentual, quatro indicadores e dois modos. Interface sintética local/HTTPS aprovada; API saudável e worker das notificações sem reinício. docs/validacao-crescimento-interativo.json. Conferência contra consolidado e demais evidências em docs/validacao-crescimento-anual.json e docs/validacao-crescimento-todos-anos.json."
     },
     {
       "id": "R33",

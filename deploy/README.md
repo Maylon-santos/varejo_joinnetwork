@@ -3,6 +3,14 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Gráfico interativo do crescimento — 25/11/2026
+
+Imagem atual de `api`: `aeropostale-varejo-api:crescimento-interativo-20261125`. Alterados somente `frontend/assets/crescimento.js` e `frontend/assets/styles.css`, com detalhes mensais por mouse/toque/teclado e suporte aos dois modos. Worker de notificações permanece na imagem `pwa-20261123`, sem reinício. Backend, regras, permissões, envs/chaves, Nginx e outros 28 containers preservados; sem migration ou chamada ao ERP.
+
+Backup `backup-20261126T004804Z-qJrqu9` com COMPLETE e checksums dos dois bancos conferidos. Publicação em 25/11 às 21h49 de São Paulo (26/11 em UTC); fontes/override anteriores em `/opt/aeropostale-varejo/artifacts/crescimento-interativo-20261126T004804Z`. CSS/JS iguais por HTTPS, API saudável e acesso sem sessão HTTP 401 conferidos. Interface em Chromium com dados sintéticos aprovada em computador/celular; repetida com assets publicados e API interceptada. [Uso](../docs/CRESCIMENTO_ANUAL.md), [evidência](../docs/validacao-crescimento-interativo.json).
+
+Para retorno, restaurar os dois arquivos de frontend e `deploy/integracoes-hostgator.yaml` dessa pasta, usando a tag anterior `pwa-20261123`, e recriar somente `api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait api`. Não restaurar bancos ou reiniciar os workers.
+
 ## Expansão autorizada das notificações — 24/11/2026
 
 Lista privada `WEB_PUSH_PILOT_USERS` ampliada de uma para quatro contas: titular preservado e três contas existentes solicitadas. Contas novas elegíveis para leitura de filial completa, com 12/15/15 filiais conforme vínculos atuais. Nenhum perfil, vínculo, inscrição ou preferência alterado. Cada participante precisa de consentimento no aparelho e opt-in do resumo. Nomes/identificadores mantidos na preparação privada.

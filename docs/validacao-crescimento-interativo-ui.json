@@ -1,0 +1,18 @@
+{
+  "verificadoEm": "2026-11-26T00:46:41.599Z",
+  "ambiente": "Chromium e PostgreSQL isolado, dados sintéticos",
+  "assets": "Servidor local",
+  "hoverComValoresExatos": true,
+  "diferencaEPercentual": true,
+  "zeroNegativoENulo": true,
+  "todosIndicadores": true,
+  "todosAnos": true,
+  "tecladoSetasHomeEndEnterEscape": true,
+  "toqueFixaEFecha": true,
+  "toqueForaFecha": true,
+  "mesFinalAposRolagem": true,
+  "tooltipContidoNaTela": true,
+  "semOverflow": true,
+  "limpezaFiltrosNavegacaoLogout": true,
+  "errors": []
+}

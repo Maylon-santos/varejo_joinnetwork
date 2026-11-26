@@ -1,4 +1,11 @@
-# Comece aqui — estado atual em 24/11/2026
+# Comece aqui — estado atual em 25/11/2026
+
+## Gráfico interativo do crescimento — 25/11/2026
+
+- [x] Mouse, toque e teclado mostram valores exatos por mês/ano, diferença e variação do indicador selecionado. Suporte ao ano anterior e a todos os anos; destaque do mês, fixação por toque/clique e fechamento por novo toque, fora ou Escape. Nulos e base zero/negativa mantêm o tratamento existente.
+- [x] Interface com PostgreSQL isolado e dados sintéticos aprovada em 1440/390 px: quatro indicadores, ambos os modos, teclado, toque, mês final após rolagem, limites da tela e limpeza ao filtrar/navegar/sair. Capturas revisadas; mesma verificação com assets HTTPS de produção e API interceptada aprovada. [Uso](docs/CRESCIMENTO_ANUAL.md), [evidência](docs/validacao-crescimento-interativo.json).
+- [x] Publicada somente `api`, imagem `crescimento-interativo-20261125`, após backup conferido. CSS/JS iguais por HTTPS e saúde aprovados; outros 28 containers, Nginx, envs, chaves/concessões/autenticadores e permissões preservados. Worker das notificações sem reinício, sem migration ou alteração de backend/dados comerciais.
+
 
 ## Expansão do resumo diário — 24/11/2026
 

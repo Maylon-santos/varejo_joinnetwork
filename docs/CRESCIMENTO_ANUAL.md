@@ -14,6 +14,14 @@ No painel, abra **Crescimento anual**. O dashboard mostra as filiais autorizadas
 
 No celular, o gráfico possui rolagem horizontal e as tabelas se adaptam a cartões. O detalhamento mensal apresenta os valores exatos; meses posteriores ao corte ficam fora do comparativo.
 
+## Consultar valores no gráfico
+
+Passe o mouse sobre um mês para mostrar um cartão com os valores exatos dos anos comparados, a diferença e a variação percentual. O conteúdo acompanha o indicador e as filiais selecionados. Em **Todos os anos**, cada ano mostra sua diferença e variação contra o anterior exibido. O primeiro ano não recebe variação. Base zero/negativa ou valor ausente mantém **Sem base percentual**, sem estimativa.
+
+No celular, toque no mês para manter o cartão aberto. Toque novamente ou fora para fechar; a rolagem horizontal continua disponível. No computador, clique também pode fixar a consulta. Pelo teclado, Tab entra no gráfico, setas esquerda/direita e Home/End selecionam o mês, Enter/Espaço fixa e Escape fecha. O cartão fica contido na tela; trocar filtros, navegar ou sair da conta remove os detalhes anteriores.
+
+A interação reutiliza os mesmos valores mensais já carregados para a tabela e não dispara novas consultas. Mesmos períodos de corte, precisão em centavos e permissões são preservados.
+
 ## Cálculos
 
 O valor de vendas, as peças e a elegibilidade seguem o consolidado existente: operações S não canceladas, incluindo cancelamento registrado em tabela separada. Utiliza valor e quantidade do cabeçalho; pendências de conferência continuam incluídas. Os textos de metodologia e o resumo de pendências foram retirados desta tela; os registros continuam disponíveis na Conferência e na apuração operacional. Entradas não são subtraídas como devoluções, cuja regra permanece em homologação.
@@ -50,3 +58,9 @@ Evidências: [publicação](validacao-crescimento-anual.json), [interface isolad
 Publicada a imagem `aeropostale-varejo-api:crescimento-todos-20261116` somente em `api`. A comparação de dois anos permanece como padrão da API e da interface, inclusive ao retornar à tela. A nova opção usa uma consulta agregada nos períodos autorizados e devolve o histórico anual, sem ampliar vínculos ou permissões.
 
 89 unitários, 28 de integração PostgreSQL e interface isolada aprovados. Em produção, 2023–2026 acumulados e 2023–2025 completos conferidos por filial e mês contra o consolidado; navegador verificou a opção, o padrão anterior, retorno pela navegação e computador/celular. Outros 24 containers, Nginx, dados históricos e credenciais preservados. Evidência: [Todos os anos](validacao-crescimento-todos-anos.json). O backup desta publicação foi conferido no servidor, sem afirmar nova cópia externa.
+
+## Atualização: gráfico interativo — 25/11/2026
+
+Publicada somente `api`, imagem `crescimento-interativo-20261125`. Hover, toque e teclado conferidos com dados sintéticos em 1440/390 px, incluindo quatro indicadores, todos os anos, valores nulos/zero/negativos, fechamento e limpeza dos detalhes. Capturas revisadas; repetição com assets HTTPS e API interceptada para banco isolado aprovada. Não foi realizado teste físico no Safari do iPhone nesta rodada.
+
+Outros 28 containers e configurações preservados; worker de notificações sem reinício. CSS/JS iguais à fonte por HTTPS, saúde e bloqueio sem autenticação conferidos após backup. Sem migration ou alteração comercial. [Evidência](validacao-crescimento-interativo.json), [interface sintética](validacao-crescimento-interativo-ui.json).
