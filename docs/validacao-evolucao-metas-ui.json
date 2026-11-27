@@ -1,0 +1,17 @@
+{
+  "verificadoEm": "2026-11-27T18:38:55.139Z",
+  "ambiente": "Chromium, PostgreSQL isolado e dados sintéticos",
+  "assets": "Servidor local",
+  "diarioEAcumulado": true,
+  "metasMensaisERateioExplicito": true,
+  "tooltipMouseToqueTeclado": true,
+  "semConsultasAoAlternarModo": true,
+  "metaZeroEAusenteDistintas": true,
+  "periodoParcialEMesesSemMeta": true,
+  "agrupamentoMensalECorteSincronizado": true,
+  "mobileSemOverflow": true,
+  "limpezaNavegacaoLogout": true,
+  "vendasPreservadas": true,
+  "totalSinteticoCentavos": 3366000,
+  "errors": []
+}

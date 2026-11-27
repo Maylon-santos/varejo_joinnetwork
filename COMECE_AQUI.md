@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 27/11/2026
 
+## Evolução das vendas com metas — 27/11/2026
+
+- [x] Gráfico da Visão geral modernizado: realizado em destaque, meta mensal, referência do intervalo e barra de ritmo. Modos Diário/Acumulado, linhas verde/lilás, área suave e detalhes por mouse/toque/teclado. Referência linear em dias corridos, com rateio exato em centavos; não cria metas diárias.
+- [x] Leitura interna de competência/valor apenas para a filial e os acessos de metas já autorizados; cargos, vínculos e restrição a vendas próprias preservados. Meses sem meta/zero distintos, acumulado a partir do filtro, lacunas sem inferir zero, agrupamento mensal e corte por sincronização/dia atual. API pública e regras comerciais preservadas. [Uso](docs/EVOLUCAO_VENDAS_METAS.md).
+- [x] 116 unitários, seis integrações PostgreSQL, interface local/HTTPS e regressões de cadastro de metas/crescimento/navegação aprovados. Capturas revisadas; menu revalidado em 320–1440 px. Consulta autenticada confirmou meta igual ao cadastro, sem gravações. [Evidência](docs/validacao-evolucao-metas.json).
+- [x] Publicada somente `api`, imagem `evolucao-metas-20261127-r2`, após backup conferido. HTML/CSS/JS e backend na imagem conferidos; API saudável, outros 28 containers/Nginx/envs/credenciais/permissões/metas/histórico preservados. Notificações sem reinício. A primeira revisão detectou regressão de estilo do menu móvel; restaurada e revalidada antes de concluir. Sem migration ou novos alertas.
+
 ## Metas mensais por loja — 27/11/2026
 
 - [x] Área **Menu → Metas**, com atalho em Visão das filiais, cadastro mensal em reais para as filiais do Millennium, edição/remoção com histórico e acompanhamento de realizado, percentual e falta. Filtros de loja/situação e cartões da seleção; meta zero distinta de ausente. Valores existentes, backend, regras e permissões preservados.

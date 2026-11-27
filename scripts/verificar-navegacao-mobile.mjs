@@ -37,7 +37,8 @@ try{
  await login('admin');
  assert.equal(await p.locator('.sidebar').isVisible(),true);
  assert.equal(await p.locator('#mobile-menu-toggle').isVisible(),false);
- assert.equal(await p.locator('#primary-navigation .nav-button:visible').count(),12);
+ assert.equal(await p.locator('#primary-navigation .nav-button:visible').count(),13);
+ assert.equal(await p.locator('#primary-navigation [data-page="goals"]').isVisible(),true);
  await p.screenshot({path:out+'/desktop.png'});
 
  const viewports=[];

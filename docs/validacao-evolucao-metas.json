@@ -1,0 +1,96 @@
+{
+  "verificadoEm": "2026-11-27T18:41:00.198Z",
+  "escopo": "Evolução das vendas com metas mensais, visual modernizado e interação",
+  "unitarios": {
+    "testes": 116,
+    "aprovados": 116
+  },
+  "integracoesPostgreSQL": {
+    "testes": 6,
+    "aprovados": 6,
+    "suites": [
+      "consolidado.test.mjs",
+      "evolucao-metas.test.mjs"
+    ]
+  },
+  "interfaceLocal": {
+    "verificadoEm": "2026-11-27T18:38:55.139Z",
+    "ambiente": "Chromium, PostgreSQL isolado e dados sintéticos",
+    "assets": "Servidor local",
+    "diarioEAcumulado": true,
+    "metasMensaisERateioExplicito": true,
+    "tooltipMouseToqueTeclado": true,
+    "semConsultasAoAlternarModo": true,
+    "metaZeroEAusenteDistintas": true,
+    "periodoParcialEMesesSemMeta": true,
+    "agrupamentoMensalECorteSincronizado": true,
+    "mobileSemOverflow": true,
+    "limpezaNavegacaoLogout": true,
+    "vendasPreservadas": true,
+    "totalSinteticoCentavos": 3366000,
+    "errors": []
+  },
+  "interfacePublicada": {
+    "verificadoEm": "2026-11-27T18:41:00.198Z",
+    "ambiente": "Chromium, PostgreSQL isolado e dados sintéticos",
+    "assets": "HTTPS de produção; API interceptada",
+    "diarioEAcumulado": true,
+    "metasMensaisERateioExplicito": true,
+    "tooltipMouseToqueTeclado": true,
+    "semConsultasAoAlternarModo": true,
+    "metaZeroEAusenteDistintas": true,
+    "periodoParcialEMesesSemMeta": true,
+    "agrupamentoMensalECorteSincronizado": true,
+    "mobileSemOverflow": true,
+    "limpezaNavegacaoLogout": true,
+    "vendasPreservadas": true,
+    "totalSinteticoCentavos": 3366000,
+    "errors": []
+  },
+  "regressoes": {
+    "cadastroMetas": true,
+    "crescimentoInterativo": true,
+    "menuMovelLocalEHTTPS": true
+  },
+  "consultaAutenticadaProducao": {
+    "verificadoEm": "2026-11-27T18:40:51.763Z",
+    "somenteLeituraComercial": true,
+    "indicadoresHTTP200": true,
+    "campoMetasMensaisPresente": true,
+    "metaIgualAoCadastro": true,
+    "semValoresComerciaisNoRelatorio": true
+  },
+  "publicacao": {
+    "publicadoEm": "2026-11-27T18:39:29.772846+00:00",
+    "imagem": "aeropostale-varejo-api:evolucao-metas-20261127-r2",
+    "servicoAtualizado": "api",
+    "apiSaudavel": true,
+    "assetsHTTPSIguaisAFonte": true,
+    "cacheNoStore": true,
+    "semAutenticacao401": true,
+    "semBuildDeWorkerOuMigration": true,
+    "outrosContainersPreservados": 28,
+    "workerNotificacoesSemReinicio": true,
+    "nginxEnvsChavesConcessoesAutenticadoresPermissoesPreservados": true,
+    "demaisFontesPreservadas": true,
+    "backendDeLeituraPreservado": true,
+    "navegacaoMovelRestaurada": true,
+    "metasEHistoricoPreservados": true,
+    "backupConferido": "backup-20261127T183831Z-dPkxuH",
+    "diretorioOperacional": "/opt/aeropostale-varejo/artifacts/evolucao-metas-20261127T183831Z"
+  },
+  "capturasSinteticasRevisadas": [
+    "computador: diário e acumulado",
+    "detalhes por mouse e teclado",
+    "celular 390 px com toque",
+    "menu móvel em 320/390/430/760 e computador/tablet"
+  ],
+  "limites": [
+    "Referência visual linear em dias corridos; não é calendário comercial nem nova meta diária.",
+    "Metas seguem os acessos existentes do consolidado; nenhuma concessão ampliada.",
+    "Sem nova meta, histórico comercial, migration, alerta ou envio de webhook.",
+    "Interface publicada testada com API interceptada para dados sintéticos; consulta real adicional somente leitura.",
+    "Sem teste físico adicional no Safari/iPhone."
+  ],
+  "ajusteDaPublicacao": "Revisão visual detectou remoção dos estilos da navegação móvel na primeira publicação. Bloco original integralmente restaurado, suíte de navegação repetida e imagem r2 publicada; metas, histórico e notificações preservados nas duas etapas."
+}

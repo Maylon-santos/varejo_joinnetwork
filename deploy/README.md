@@ -3,6 +3,14 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Evolução das vendas e metas — 27/11/2026
+
+Imagem atual de `api`: `aeropostale-varejo-api:evolucao-metas-20261127-r2`. Novo módulo estático `frontend/assets/evolucao.js`, componentes de gráfico/estilos no painel e leitura interna de metas em `consolidado.mjs`/`http-api.mjs`; allowlist estática em `frontend.mjs`. Somente competência/valor dos meses e filial consultados são devolvidos, conforme cargos/permissões/vínculos existentes. Sem migration, escrita comercial, novo alerta ou mudança na API pública de integrações.
+
+Publicação final às 15h39 de São Paulo, com backup `backup-20261127T183831Z-dPkxuH` conferido (COMPLETE/checksums dos dois bancos). Fontes/override anteriores dessa correção em `/opt/aeropostale-varejo/artifacts/evolucao-metas-20261127T183831Z`. A primeira publicação usou `evolucao-metas-20261127` e conferiu HTML/CSS/JS/backend; revisão visual detectou remoção dos estilos do menu móvel. Bloco original restaurado integralmente na r2, sem alterar o módulo ou a leitura de metas; navegação e gráfico local/HTTPS revalidados. API saudável, cache no-store e bloqueio sem autenticação conferidos; metas/histórico, Nginx/envs/credenciais/permissões e outros 28 containers preservados. Worker de notificações permanece `pwa-20261123`, sem reinício nas duas etapas. [Evidência](../docs/validacao-evolucao-metas.json).
+
+Para retornar toda esta funcionalidade, restaurar os sete arquivos anteriores da primeira publicação, em `/opt/aeropostale-varejo/artifacts/evolucao-metas-20261127T183325Z`: três fontes de backend, HTML, app.js, styles.css e override. Usar a tag anterior `metas-lojas-20261127` e recriar somente `api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait api`. O módulo novo deixa de ser importado/servido pela allowlist anterior. Não voltar à tag intermediária com a regressão móvel, restaurar bancos, remover metas/histórico ou reiniciar os workers. [Critérios do gráfico](../docs/EVOLUCAO_VENDAS_METAS.md).
+
 ## Metas mensais por loja — 27/11/2026
 
 Imagem atual de `api`: `aeropostale-varejo-api:metas-lojas-20261127`. Alterados somente `frontend/index.html`, `frontend/assets/app.js` e `frontend/assets/styles.css`: área Metas própria, filtros, acompanhamento e formulário mensal por loja. Reutiliza o backend e a auditoria existentes, sem migration ou mudança de permissões/regras. Metas e histórico preservados por hash, sem cadastro de valores reais durante a publicação. Worker de notificações permanece na imagem `pwa-20261123`, sem reinício; outros 28 containers, Nginx, envs, chaves/concessões/autenticadores e demais fontes preservados.

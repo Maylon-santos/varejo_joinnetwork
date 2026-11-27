@@ -1,4 +1,5 @@
 import {criarDashboardCrescimento} from './crescimento.js';
+import {criarEvolucaoVendas} from './evolucao.js';
 import {criarNavegacaoMovel} from './navegacao.js';
 import {criarNotificacoesUI} from './notificacoes.js';
 const $=id=>document.getElementById(id);
@@ -48,7 +49,7 @@ function exitSession(message=''){
  navegacao.fechar();
  notificacoesUI.limpar();notificacoesLiberadas=false;destinoNotificacao='';
  clearTimeout(filterTimer);filterTimer=null;clearRateWait();
- crescimento.limpar();
+ crescimento.limpar();evolucao.limpar();
  goalsGeneration++;goalsAbort?.abort();goalEditing=null;goalsData=null;$('goal-dialog').close();$('goal-value').value='';$('goals-status').textContent='';$('goals-count').textContent='';$('goals-branch').replaceChildren(new Option('Todas as autorizadas',''));$('goal-branch').replaceChildren(new Option('Selecione a loja',''));$('goals-state').value='';$('goals-new').hidden=true;for(const id of ['consolidated-body','consolidated-total','consolidated-metrics','goals-body','goals-metrics'])$(id).replaceChildren();userRole='';
  clearOverviewMedia();$('top-products-list').replaceChildren();$('products-list').replaceChildren();
  for(const id of ['monthly-body','monthly-total','payment-summary-body','payment-summary-total','stock-brand-body','stock-brand-total','stock-category-body','stock-category-total','top-products-status','payment-coverage','stock-summary-status'])$(id).replaceChildren();
@@ -105,7 +106,7 @@ function setPage(next,load=true){
  clearTimeout(filterTimer);filterTimer=null;resetError();
  clearTimeout(reprocessTimer);
  if(!podePagina(next))return;
- clearOverviewMedia();clearEmployeePhotos();clearSellerPhotos();
+ evolucao.cancelar();clearOverviewMedia();clearEmployeePhotos();clearSellerPhotos();
  clearInterval(queueTimer);if(next==='queue')queueTimer=setInterval(()=>{if(token&&!document.hidden&&!queueBusy&&!$('queue-action-dialog').open)loadQueue(true);},30000);
  goalsGeneration++;goalsAbort?.abort();$('goal-dialog').close();goalEditing=null;crescimento.cancelar();
  page=next;$('goals-panel').hidden=page!=='goals';$('notifications-panel').hidden=page!=='notifications';if(page==='growth')crescimento.abrir();$('growth-panel').hidden=page!=='growth';$('consolidated-panel').hidden=page!=='consolidated';$('branch').parentElement.hidden=page==='consolidated';salesPage=1;rankPage=1;customerPage=1;productPage=1;generation++;abort?.abort();
@@ -137,7 +138,7 @@ async function loadData(){
  if(page==='employees'){await loadEmployees();return;}
  if(page==='permissions'){await loadPermissions();return;}
  if(!filters)return;
- const version=++generation;abort?.abort();abort=new AbortController();resetError();busy(true);$('data-notice').hidden=true;
+ const version=++generation;abort?.abort();abort=new AbortController();evolucao.cancelar();resetError();busy(true);$('data-notice').hidden=true;
  try{
   const params=page==='quality'?{tipo:'S',estado:'ativas',conciliacao:$('quality-state').value}:{tipo:$('sales-type').value,estado:$('sales-state').value};
   clearOverviewMedia();
@@ -168,29 +169,7 @@ function renderOverview(d){
  renderChart(d);renderOverviewSummaries(d);
 }
 function emptyTable(tbody,colspan,title,text){const row=el('tr'),cell=el('td',null,'empty');cell.colSpan=colspan;cell.append(el('strong',title),el('span',text));row.append(cell);tbody.append(row);}
-function renderChart(d){
- const container=$('chart');container.replaceChildren();$('chart-period').textContent=`${dateBR(filters.inicio)} — ${dateBR(filters.fim)}`;
- if(!d.serie_diaria.length){const box=el('div',null,'empty');box.append(el('strong','Nenhuma venda neste período'),el('span','Escolha outras datas para explorar os resultados.'));container.append(box);return;}
- const end=[filters.fim,...d.sincronizacao.filter(x=>['vendas','cancelamentos'].includes(x.recurso)).map(x=>x.ate)].sort()[0];
- const map=new Map(d.serie_diaria.map(x=>[x.data,Number(x.valor_vendas_centavos)/100]));const points=[];
- for(let dt=new Date(filters.inicio+'T12:00:00Z');dt.toISOString().slice(0,10)<=end;dt.setUTCDate(dt.getUTCDate()+1)){const date=dt.toISOString().slice(0,10);points.push({date,value:map.get(date)||0});}
- let values=points;
- if(points.length>62){const groups=new Map();for(const p of points){const month=p.date.slice(0,7);const existing=groups.get(month)||{date:month+'-01',value:0};existing.value+=p.value;groups.set(month,existing);}values=[...groups.values()];}
- if(!values.length)return;
- const w=window.matchMedia('(max-width:760px)').matches?350:680,h=245,pad={left:53,right:12,top:18,bottom:36},plotW=w-pad.left-pad.right,plotH=h-pad.top-pad.bottom;
- const max=Math.max(...values.map(p=>p.value),1)*1.15;
- const x=i=>pad.left+(values.length===1?plotW/2:i*plotW/(values.length-1));const y=n=>h-pad.bottom-n/max*plotH;
- const svg=svgEl('svg',{viewBox:`0 0 ${w} ${h}`,role:'img','aria-label':`Evolução das vendas ${points.length>62?'por mês':'por dia'} em reais, no período selecionado`});
- const title=svgEl('title');title.textContent='Evolução do valor das vendas';svg.append(title);
- for(let i=0;i<=4;i++){const n=max*i/4,yy=y(n);svg.append(svgEl('line',{x1:pad.left,y1:yy,x2:w-pad.right,y2:yy,stroke:'#edf0f4','stroke-dasharray':'4 5'}));const label=svgEl('text',{x:pad.left-10,y:yy+3,'text-anchor':'end'});label.textContent=n>=1000?`${new Intl.NumberFormat('pt-BR',{maximumFractionDigits:1}).format(n/1000)} mil`:integers.format(Math.round(n));svg.append(label);}
- const defs=svgEl('defs'),gradient=svgEl('linearGradient',{id:'area-fill',x1:'0',y1:'0',x2:'0',y2:'1'});gradient.append(svgEl('stop',{offset:'0%','stop-color':'#3c5885','stop-opacity':'.16'}),svgEl('stop',{offset:'100%','stop-color':'#3c5885','stop-opacity':'.01'}));defs.append(gradient);svg.append(defs);
- const line=values.map((p,i)=>`${i?'L':'M'}${x(i)},${y(p.value)}`).join(' ');
- svg.append(svgEl('path',{d:`${line} L${x(values.length-1)},${h-pad.bottom} L${x(0)},${h-pad.bottom} Z`,fill:'url(#area-fill)'}));
- svg.append(svgEl('path',{d:line,fill:'none',stroke:'#263e64','stroke-width':'2','stroke-linejoin':'round','stroke-linecap':'round'}));
- const indexes=new Set([0,Math.round((values.length-1)*.25),Math.round((values.length-1)*.5),Math.round((values.length-1)*.75),values.length-1]);
- values.forEach((p,i)=>{const circle=svgEl('circle',{cx:x(i),cy:y(p.value),r:values.length>35?2:3,fill:'#263e64',stroke:'#fff','stroke-width':1});const tt=svgEl('title');tt.textContent=`${dateBR(p.date)}: ${new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(p.value)}`;circle.append(tt);svg.append(circle);if(indexes.has(i)){const label=svgEl('text',{x:x(i),y:h-10,'text-anchor':'middle'});label.textContent=points.length>62?new Intl.DateTimeFormat('pt-BR',{month:'short',timeZone:'UTC'}).format(new Date(p.date+'T12:00Z')).replace('.',''):p.date.slice(8)+'/'+p.date.slice(5,7);svg.append(label);}});
- container.append(svg);
-}
+function renderChart(d){evolucao.renderizar(d);}
 function initials(name){return(name||'?').split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();}
 function renderRanking(d){
  const body=$('ranking-body');body.replaceChildren();clearSellerPhotos();const photoVersion=++sellerPhotoVersion;
@@ -401,7 +380,7 @@ function renderPayment(operation,content){
 
 async function loadCustomers(){
  if(!filters)return;
- const version=++generation;abort?.abort();abort=new AbortController();resetError();busy(true);$('data-notice').hidden=true;$('customers-panel').hidden=false;$('customers-list').replaceChildren();$('customers-status').textContent='Carregando clientes…';
+ const version=++generation;abort?.abort();abort=new AbortController();evolucao.cancelar();resetError();busy(true);$('data-notice').hidden=true;$('customers-panel').hidden=false;$('customers-list').replaceChildren();$('customers-status').textContent='Carregando clientes…';
  try{
   const d=await api('/clientes?'+query({busca:$('customers-query').value,mes:$('customers-month').value,pagina:customerPage,limite:12}),{signal:abort.signal});if(version!==generation)return;
   renderContext(d);$('customers-status').textContent=`${number(d.total)} clientes identificados. ${number(d.operacoes_pendentes)} movimentações aguardam identificação; ${number(d.operacoes_sem_identificador)} foram recebidas sem código de cliente.`;
@@ -801,6 +780,7 @@ async function saveGoal(remover=false){
 }
 $('goal-form').addEventListener('submit',e=>{e.preventDefault();saveGoal();});$('goal-cancel').addEventListener('click',()=>$('goal-dialog').close());$('goal-dialog').addEventListener('close',()=>{goalEditing=null;$('goal-value').value='';$('goal-branch').replaceChildren(new Option('Selecione a loja',''));});$('goal-remove').addEventListener('click',()=>{if(confirm('Remover a meta deste mês? O histórico das alterações será preservado.'))saveGoal(true);});
 
+const evolucao=criarEvolucaoVendas();
 const crescimento=criarDashboardCrescimento({api,ativo:()=>!!token&&page==='growth',carregando:busy,erro:displayError,limparErro:resetError});
 function abrirNotificacao(valor){
  let u;try{u=new URL(valor,location.origin);}catch{return;}

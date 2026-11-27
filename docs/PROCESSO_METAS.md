@@ -28,7 +28,9 @@ Se outra pessoa salvar antes de você, a versão antiga é recusada. Feche e abr
 
 ## Base do realizado
 
-O realizado utiliza as vendas importadas do mês selecionado: operações de saída não canceladas, com valores do cabeçalho e incluindo pendências de conferência. Cancelamentos recebidos separadamente também são excluídos e podem reduzir o atingimento. Não há consulta ao ERP ao abrir a página, rateio diário ou projeção do fechamento do mês.
+O realizado utiliza as vendas importadas do mês selecionado: operações de saída não canceladas, com valores do cabeçalho e incluindo pendências de conferência. Cancelamentos recebidos separadamente também são excluídos e podem reduzir o atingimento. Na área Metas, não há consulta ao ERP ao abrir a página, rateio diário ou projeção do fechamento do mês.
+
+Em **Visão geral → Evolução das vendas**, a meta mensal também fornece uma referência visual distribuída por dias corridos, nos modos Diário e Acumulado. O ritmo do intervalo é comparado com essa referência proporcional, sem substituir o atingimento mensal da área Metas. [Leitura e critérios do gráfico](EVOLUCAO_VENDAS_METAS.md).
 
 Cobertura parcial aparece na loja; valores ainda não importados não entram no realizado. Esta base mantém a regra atual dos dashboards. A definição de faturamento bruto/líquido e devoluções continua na R22; entradas não são automaticamente descontadas como devoluções.
 

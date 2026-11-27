@@ -188,7 +188,11 @@ export function criarServidor({auth,painel,filiais,notificacoes,gestaoPermissoes
    const permitidos=new Set(['filial','inicio','fim','pagina','limite',...(path.endsWith('/vendas')?['tipo','estado','conciliacao']:[]),...(path.endsWith('/ranking')?['ordenar']:[]),...(path.endsWith('/clientes')?['busca','mes']:[])]);
    for(const k of url.searchParams.keys())if(!permitidos.has(k)||url.searchParams.getAll(k).length!==1)throw new ErroApi(400,'PARAMETRO_INVALIDO');
    const f=filtros(url.searchParams,acesso.filiais);
-   if(path.endsWith('/indicadores'))return enviar(200,await painelUsuario.indicadores(f));
+   if(path.endsWith('/indicadores')){
+    const resultado=await painelUsuario.indicadores(f);
+    if(consolidado?.referenciasMetas){const metas=await consolidado.referenciasMetas(user,f.filial,f.inicio,f.fim);if(metas!==null)resultado.metas_mensais=metas;}
+    return enviar(200,resultado);
+   }
    if(path.endsWith('/vendas'))return enviar(200,await painelUsuario.vendas(f,{tipo:url.searchParams.get('tipo')??'S',estado:url.searchParams.get('estado')??'ativas',conciliacao:url.searchParams.get('conciliacao')}));
    if(path.endsWith('/clientes')){exigirPermissao(acesso.permissoes,'clientes:ler');exigirPermissao(acesso.permissoes,'vendas:ler');return enviar(200,await painelUsuario.clientes(f,url.searchParams.get('busca')??'',url.searchParams.get('mes')??''));}
    return enviar(200,await painelUsuario.ranking(f,url.searchParams.get('ordenar')??'valor'));
