@@ -3,6 +3,14 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Metas pelo crescimento anual — 27/11/2026
+
+Imagem atual de `api`: `aeropostale-varejo-api:metas-crescimento-20261127`. Novo cálculo/validação em `backend/src/metas-crescimento.mjs`, rotas internas de prévia/confirmação em `http-api.mjs` e lote transacional em `consolidado.mjs`. Módulo `frontend/assets/metas-crescimento.js` incluído na allowlist estática; formulário manual preservado. Sem migration, nova permissão, API pública de integração ou worker de renovação.
+
+Publicada somente `api` às 16h06 de São Paulo, com backup `backup-20261127T190521Z-BLdAPI` (COMPLETE/checksums dos dois bancos conferidos). Outros 28 containers, Nginx, envs, credenciais/permissões, metas e histórico preservados; notificações sem reinício. HTML/CSS/JS e quatro fontes de backend na imagem conferidos. Interface HTTPS com todas as APIs interceptadas para fixture aprovada, além de consulta autenticada somente leitura: 12 bases iguais ao consolidado e sugestões exatas. Nenhuma meta de produção criada. [Evidência](../docs/validacao-metas-crescimento.json).
+
+Fontes/override anteriores em `/opt/aeropostale-varejo/artifacts/metas-crescimento-20261127T190521Z`. Para retorno, restaurar os sete arquivos anteriores (três fontes de backend, HTML, app.js, styles.css e override), usar a imagem `evolucao-metas-20261127-r2` e recriar somente `api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait api`. Os dois módulos novos deixam de ser importados/servidos pela versão anterior. Preserve metas e histórico criados após a publicação; não restaurar bancos nem reiniciar os workers. [Processo e critérios](../docs/PROCESSO_METAS.md).
+
 ## Evolução das vendas e metas — 27/11/2026
 
 Imagem atual de `api`: `aeropostale-varejo-api:evolucao-metas-20261127-r2`. Novo módulo estático `frontend/assets/evolucao.js`, componentes de gráfico/estilos no painel e leitura interna de metas em `consolidado.mjs`/`http-api.mjs`; allowlist estática em `frontend.mjs`. Somente competência/valor dos meses e filial consultados são devolvidos, conforme cargos/permissões/vínculos existentes. Sem migration, escrita comercial, novo alerta ou mudança na API pública de integrações.

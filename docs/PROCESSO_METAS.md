@@ -12,6 +12,22 @@ A primeira etapa permite cadastrar no painel uma **meta mensal de valor de venda
 
 Há uma meta por loja e mês. Se a loja já tiver meta naquele mês, o formulário mostra o valor atual para edição. O botão **Cadastrar meta** na linha da loja também inicia o cadastro.
 
+## Sugerir metas pelo crescimento anual
+
+1. Em **Menu → Metas**, escolha o mês inicial e abra **Definir meta mensal** ou **Editar meta** na loja desejada.
+2. Selecione **Crescimento anual**. Informe o percentual e, em **Aplicar até**, escolha o último mês do lote (até 12 meses, incluindo o inicial).
+3. Clique em **Gerar prévia**. Cada mês apresenta as vendas do mesmo mês do ano anterior, quantidade de vendas/peças, valor sugerido e eventuais avisos. A consulta não grava metas.
+4. Revise os meses marcados. Metas existentes e bases com cobertura parcial ficam desmarcadas. Selecionar um mês com esses avisos autoriza explicitamente sua substituição ou o uso da base parcial. Meses sem base positiva, com base ainda não encerrada ou com sugestão acima do limite não podem ser selecionados; use o cadastro manual quando necessário.
+5. Confira a quantidade de meses e a soma. Clique em **Confirmar e salvar N metas**. Apenas os meses selecionados serão gravados, de uma só vez, com histórico individual.
+
+Exemplo: novembro de 2025 teve R$ 200.000,00 em vendas. Com crescimento de 10%, a sugestão para novembro de 2026 é R$ 220.000,00. A meta de dezembro usa as vendas de dezembro de 2025; não aplica crescimento sobre a meta de novembro. O cálculo aceita de 0% a 1.000%, com até duas casas decimais e arredondamento para centavos.
+
+A base considera o mês completo de referência do ano anterior, mesmo quando o mês da meta está em andamento. Utiliza a regra vigente de vendas não canceladas importadas, incluindo pendências explicitadas na prévia. Não consulta o Millennium em tempo real. Cobertura sinalizada pelos checkpoints não comprova homologação financeira ou carga histórica integral.
+
+Se as vendas, a cobertura, as pendências ou uma meta selecionada mudarem depois da prévia, a confirmação será recusada e será necessário gerar outra prévia. Se um dos meses falhar, nenhum mês do lote é alterado. Repetir a mesma confirmação após uma falha de conexão não duplica o histórico.
+
+O histórico também guarda o percentual, a base consultada e a identificação do lote. As metas ficam fixas após a confirmação; **não há renovação agendada ou recálculo automático** quando as vendas históricas mudam. Para outro conjunto de meses, gere e confirme um novo lote. O modo **Valor informado** continua disponível.
+
 ## Acompanhar e ajustar
 
 A tabela apresenta realizado no mês, meta, percentual de atingimento, valor que falta e situação. Use os filtros **Loja** e **Situação** para localizar metas atingidas, abaixo da meta, ausentes ou com valor zero. Os cartões refletem a seleção; trocar esses dois filtros não consulta o servidor novamente. **Atualizar** busca os dados mais recentes.
@@ -56,3 +72,5 @@ As próximas etapas devem explicitar a origem do realizado, a cobertura dos iten
 ## Validação
 
 Cadastro, edição, remoção auditada, conflito de versão, permissões por filial, filtros, valores zero/ausentes, competências separadas e navegação em computador/celular foram verificados com PostgreSQL e dados sintéticos. O teste foi repetido com os arquivos HTTPS publicados e API interceptada para a base isolada, sem gravações comerciais em produção. [Evidência](validacao-metas-lojas.json).
+
+A extensão de crescimento anual também foi verificada com cálculo em centavos, intervalo cruzando o ano, seleção explícita, base parcial/ausente, prévia desatualizada, rollback do lote, autoria e repetição após perda de resposta. [Evidência do lote](validacao-metas-crescimento.json).

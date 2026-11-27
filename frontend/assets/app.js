@@ -1,4 +1,5 @@
 import {criarDashboardCrescimento} from './crescimento.js';
+import {criarSugestoesMetas} from './metas-crescimento.js';
 import {criarEvolucaoVendas} from './evolucao.js';
 import {criarNavegacaoMovel} from './navegacao.js';
 import {criarNotificacoesUI} from './notificacoes.js';
@@ -766,7 +767,7 @@ function fillGoal(row){
 function openGoal(row=null,mes=goalsData?.competencia){
  if(!goalsData?.pode_editar||page!=='goals')return;goalEditing={row:null,mes,requisicao:crypto.randomUUID()};$('goal-value').readOnly=false;$('goal-title').textContent='Definir meta mensal';$('goal-competence').value=mes;$('goal-value').value='';$('goal-error').textContent='';$('goal-save').disabled=false;$('goal-remove').disabled=false;$('goal-remove').hidden=true;
  $('goal-branch').replaceChildren(new Option('Selecione a loja',''),...goalsData.filiais.map(r=>new Option(branchLabel(r),r.filial)));$('goal-branch').disabled=!!row;$('goal-branch').value=row?.filial||'';$('goal-help').textContent='Selecione a loja e informe o valor de vendas esperado para o mês.';
- if(row)fillGoal(row);$('goal-dialog').showModal();(row?$('goal-value'):$('goal-branch')).focus();
+ if(row)fillGoal(row);sugestoesMetas.abrir(mes);$('goal-dialog').showModal();(row?$('goal-value'):$('goal-branch')).focus();
 }
 $('goals-new').addEventListener('click',()=>openGoal());
 $('goal-branch').addEventListener('change',()=>{if(!goalEditing)return;const row=goalsData?.filiais.find(r=>r.filial===$('goal-branch').value);if(row)fillGoal(row);else{goalEditing.row=null;$('goal-value').value='';$('goal-remove').hidden=true;}});
@@ -774,12 +775,14 @@ function parseGoalValue(value){const v=value.trim();if(!/^(?:\d{1,12}|\d{1,3}(?:
 async function saveGoal(remover=false){
  if(!goalEditing?.row)return;const edit=goalEditing;let valor;try{valor=remover?null:parseGoalValue($('goal-value').value);}catch(e){$('goal-error').textContent=e.message;return;}
  if(edit.solicitado!==undefined&&edit.solicitado!==valor)edit.requisicao=crypto.randomUUID();edit.solicitado=valor;
- const branchDisabled=$('goal-branch').disabled;$('goal-branch').disabled=true;$('goal-value').readOnly=true;$('goal-save').disabled=true;$('goal-remove').disabled=true;$('goal-error').textContent='Salvando…';
+ document.querySelectorAll('[data-goal-method]').forEach(b=>b.disabled=true);const branchDisabled=$('goal-branch').disabled;$('goal-branch').disabled=true;$('goal-value').readOnly=true;$('goal-save').disabled=true;$('goal-remove').disabled=true;$('goal-error').textContent='Salvando…';
  try{await api('/metas/'+edit.row.filial+'/'+edit.mes,{method:'PUT',body:JSON.stringify({valor,versao:edit.row.meta.versao,requisicao:edit.requisicao})});if(goalEditing!==edit||!token)return;$('goal-dialog').close();goalEditing=null;showToast(remover?'Meta removida; histórico preservado.':'Meta salva.');if(page==='goals')await loadGoals();}
- catch(e){if(goalEditing===edit){$('goal-error').textContent=e.message;if(e.codigo==='META_DESATUALIZADA'&&page==='goals')await loadGoals();if(goalEditing===edit){$('goal-branch').disabled=branchDisabled;$('goal-value').readOnly=false;$('goal-save').disabled=false;$('goal-remove').disabled=false;}}}
+ catch(e){if(goalEditing===edit){$('goal-error').textContent=e.message;if(e.codigo==='META_DESATUALIZADA'&&page==='goals')await loadGoals();if(goalEditing===edit){$('goal-branch').disabled=branchDisabled;$('goal-value').readOnly=false;$('goal-save').disabled=false;$('goal-remove').disabled=false;document.querySelectorAll('[data-goal-method]').forEach(b=>b.disabled=false);}}}
 }
-$('goal-form').addEventListener('submit',e=>{e.preventDefault();saveGoal();});$('goal-cancel').addEventListener('click',()=>$('goal-dialog').close());$('goal-dialog').addEventListener('close',()=>{goalEditing=null;$('goal-value').value='';$('goal-branch').replaceChildren(new Option('Selecione a loja',''));});$('goal-remove').addEventListener('click',()=>{if(confirm('Remover a meta deste mês? O histórico das alterações será preservado.'))saveGoal(true);});
+$('goal-form').addEventListener('submit',e=>{e.preventDefault();if(sugestoesMetas.automatico())sugestoesMetas.salvar();else saveGoal();});$('goal-cancel').addEventListener('click',()=>$('goal-dialog').close());$('goal-dialog').addEventListener('close',()=>{goalEditing=null;$('goal-value').value='';$('goal-branch').replaceChildren(new Option('Selecione a loja',''));});$('goal-remove').addEventListener('click',()=>{if(confirm('Remover a meta deste mês? O histórico das alterações será preservado.'))saveGoal(true);});
 
+Object.assign(errorText,{META_INTERVALO_INVALIDO:'Escolha um intervalo de até 12 meses, a partir de janeiro de 2001.',META_CRESCIMENTO_INVALIDO:'Informe um crescimento entre 0 e 1.000%, com até duas casas decimais.',META_LOTE_INVALIDO:'Confira os meses selecionados e gere uma nova prévia.',META_PREVIA_DESATUALIZADA:'As vendas ou metas mudaram desde a prévia. Gere uma nova prévia antes de confirmar.',META_BASE_INDISPONIVEL:'Um dos meses não possui base válida. Gere a prévia novamente.',META_EXISTENTE_PROTEGIDA:'Confirme a substituição da meta existente na prévia.',META_BASE_PARCIAL:'Confirme a utilização da base parcial na prévia.'});
+const sugestoesMetas=criarSugestoesMetas({api,estaAtivo:()=>!!token&&page==='goals',onSaved:async n=>{goalEditing=null;showToast(n+' '+(n===1?'meta salva.':'metas salvas.'));await loadGoals();}});
 const evolucao=criarEvolucaoVendas();
 const crescimento=criarDashboardCrescimento({api,ativo:()=>!!token&&page==='growth',carregando:busy,erro:displayError,limparErro:resetError});
 function abrirNotificacao(valor){

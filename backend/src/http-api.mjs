@@ -72,6 +72,15 @@ export function criarServidor({auth,painel,filiais,notificacoes,gestaoPermissoes
    if(path==='/api/v1/crescimento'||path==='/api/v1/consolidado'||path==='/api/v1/metas'||path.startsWith('/api/v1/metas/')){
     if(!['Admin','Diretoria','Supervisao'].includes(user.role))throw new ErroApi(403,'RECURSO_NAO_AUTORIZADO');
     if(!consolidado)throw new ErroApi(503,'CONSOLIDADO_INDISPONIVEL');
+    if(path==='/api/v1/metas/crescimento/previa'){
+     if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');
+     const campos=['filial','inicio','fim','crescimento'];if([...url.searchParams.keys()].some(k=>!campos.includes(k))||campos.some(k=>url.searchParams.getAll(k).length!==1))throw new ErroApi(400,'PARAMETRO_INVALIDO');
+     return enviar(200,await consolidado.previaCrescimento(user,...campos.map(k=>url.searchParams.get(k))));
+    }
+    if(path==='/api/v1/metas/crescimento/confirmar'){
+     if(req.method!=='POST')throw new ErroApi(405,'METODO_NAO_PERMITIDO');if(url.search)throw new ErroApi(400,'PARAMETRO_INVALIDO');
+     return enviar(200,await consolidado.salvarCrescimento(user,await lerJson(req,8192),()=>auth.autenticar(token)));
+    }
     const meta=/^\/api\/v1\/metas\/(\d+)\/(20\d{2}-\d{2})$/.exec(path);
     if(meta){if(url.search)throw new ErroApi(400,'PARAMETRO_INVALIDO');if(req.method!=='PUT')throw new ErroApi(405,'METODO_NAO_PERMITIDO');return enviar(200,await consolidado.salvarMeta(user,meta[1],meta[2],await lerJson(req),()=>auth.autenticar(token)));}
     if(!['/api/v1/crescimento','/api/v1/consolidado','/api/v1/metas'].includes(path))throw new ErroApi(404,'ROTA_NAO_ENCONTRADA');

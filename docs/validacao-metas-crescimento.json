@@ -1,0 +1,91 @@
+{
+  "verificadoEm": "2026-11-27T19:06:23.030607+00:00",
+  "escopo": "Metas mensais por loja com sugestão pelo mesmo mês do ano anterior, percentual e lote revisado de até 12 meses",
+  "testes": {
+    "unitarios": 119,
+    "integracaoPostgreSQL": 11,
+    "novosCenariosDeIntegracao": 5,
+    "regressoes": "consolidado, leitura de metas nos indicadores, cadastro manual e navegação móvel 320–1440 px",
+    "local": {
+      "verificadoEm": "2026-11-27T19:04:10.828Z",
+      "ambiente": "Chromium e PostgreSQL isolado com dados sintéticos",
+      "assets": "Local",
+      "previaSemEscritaECancelar": true,
+      "mesesDoAnoAnterior": true,
+      "percentualDecimal": true,
+      "atravessaAno": true,
+      "existentesEParciaisDesmarcadas": true,
+      "semBaseDesabilitada": true,
+      "trocaDeLojaInvalidaPrevia": true,
+      "selecaoExplicita": true,
+      "loteAtomico": true,
+      "baseMudouExigeNovaPrevia": true,
+      "retentativaAposCommitSemDuplicidade": true,
+      "manualPreservado": true,
+      "telas": [
+        1440,
+        390,
+        320
+      ],
+      "semOverflow": true,
+      "errors": []
+    },
+    "httpsComAPISinteticaInterceptada": {
+      "verificadoEm": "2026-11-27T19:06:54.343Z",
+      "ambiente": "Chromium e PostgreSQL isolado com dados sintéticos",
+      "assets": "HTTPS de produção; todas as APIs interceptadas para fixture",
+      "previaSemEscritaECancelar": true,
+      "mesesDoAnoAnterior": true,
+      "percentualDecimal": true,
+      "atravessaAno": true,
+      "existentesEParciaisDesmarcadas": true,
+      "semBaseDesabilitada": true,
+      "trocaDeLojaInvalidaPrevia": true,
+      "selecaoExplicita": true,
+      "loteAtomico": true,
+      "baseMudouExigeNovaPrevia": true,
+      "retentativaAposCommitSemDuplicidade": true,
+      "manualPreservado": true,
+      "telas": [
+        1440,
+        390,
+        320
+      ],
+      "semOverflow": true,
+      "errors": []
+    }
+  },
+  "conferenciaSomenteLeitura": {
+    "consultaAutenticadaHTTPS": true,
+    "mesesConferidos": 12,
+    "baseIgualConsolidado": true,
+    "sugestoesEmCentavosConferidas": true,
+    "somenteLeituraSemMetasCriadas": true
+  },
+  "publicacao": {
+    "publicadoEm": "2026-11-27T19:06:23.030607+00:00",
+    "imagem": "aeropostale-varejo-api:metas-crescimento-20261127",
+    "servicoAtualizado": "api",
+    "apiSaudavel": true,
+    "assetsHTTPSIguaisAFonte": true,
+    "cacheNoStore": true,
+    "semAutenticacao401": true,
+    "semBuildDeWorkerOuMigration": true,
+    "outrosContainersPreservados": 28,
+    "workerNotificacoesSemReinicio": true,
+    "nginxEnvsChavesConcessoesAutenticadoresPermissoesPreservados": true,
+    "demaisFontesPreservadas": true,
+    "backendDeLeituraNaImagem": true,
+    "metasEHistoricoPreservados": true,
+    "backupConferido": "backup-20261127T190521Z-BLdAPI",
+    "diretorioOperacional": "/opt/aeropostale-varejo/artifacts/metas-crescimento-20261127T190521Z"
+  },
+  "limites": [
+    "Nenhum valor comercial de meta criado pela automação.",
+    "Sem recálculo ou renovação agendada.",
+    "Vendas não canceladas importadas; pendências explicitadas; bases parciais dependem de seleção explícita.",
+    "Checkpoint não comprova cobertura histórica integral ou homologação financeira.",
+    "Sem teste físico adicional no Safari/iPhone nesta rodada.",
+    "Vendedor/produto/classificação e alertas de metas permanecem separados."
+  ]
+}

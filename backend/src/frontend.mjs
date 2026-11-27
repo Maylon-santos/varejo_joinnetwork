@@ -7,6 +7,7 @@ export async function criarFrontend(root=new URL('../../frontend/',import.meta.u
   ['/assets/styles.css','assets/styles.css','text/css; charset=utf-8'],
   ['/assets/app.js','assets/app.js','text/javascript; charset=utf-8'],
   ['/assets/crescimento.js','assets/crescimento.js','text/javascript; charset=utf-8'],
+  ['/assets/metas-crescimento.js','assets/metas-crescimento.js','text/javascript; charset=utf-8'],
   ['/assets/evolucao.js','assets/evolucao.js','text/javascript; charset=utf-8'],
   ['/assets/navegacao.js','assets/navegacao.js','text/javascript; charset=utf-8'],
   ['/assets/favicon.svg','assets/favicon.svg','image/svg+xml'],

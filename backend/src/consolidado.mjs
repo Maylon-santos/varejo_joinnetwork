@@ -2,6 +2,7 @@ import {ErroApi, elegivel} from './painel.mjs';
 import {validarDia} from './sincronizar-cancelamentos.mjs';
 import {centavos} from './reconciliar-venda.mjs';
 import {consultarCrescimento,hojeSaoPaulo} from './crescimento.mjs';
+import {parametrosCrescimento,sugestaoCrescimento,hashMeta,uuidMeta,requisicaoMensal} from './metas-crescimento.mjs';
 export const cargosConsolidado=['Admin','Diretoria','Supervisao'];
 const metaCampos='filial::text,competencia::text,valor_centavos::text,versao,atualizado_em';
 export function periodoConsolidado(inicio,fim){
@@ -44,7 +45,57 @@ export function criarConsolidado(pool,tenant,autorizadas,{hoje=hojeSaoPaulo}={})
   return {inicio,fim,filiais:rows,total,filiais_sem_cobertura:rows.filter(r=>!r.cobertura_completa).length,
    regra:'Vendas S não canceladas, com valores e peças do cabeçalho ERP. Inclui pendências sinalizadas. Devoluções e faturamento bruto/líquido aguardam validação; entradas não são subtraídas.'};
  }
+ async function previaCrescimento(db,filial,p){
+  const meses=[];
+  for(const competencia of p.meses){
+   const baseMes=String(Number(competencia.slice(0,4))-1)+competencia.slice(4),periodo=periodoMeta(baseMes),r=(await resumo(db,[filial],periodo.inicio,periodo.fim)).filiais[0];
+   const atual=(await db.query(`SELECT ${metaCampos} FROM metas_filiais WHERE filial=$1 AND competencia=$2`,[filial,competencia+'-01'])).rows[0]??{valor_centavos:null,versao:0};
+   const base={inicio:periodo.inicio,fim:periodo.fim,valor_centavos:r.valor_centavos,vendas:r.vendas,pecas:r.pecas,pendencias:r.pendencias,cobertura_completa:r.cobertura_completa};
+   const sugestao=sugestaoCrescimento(base.valor_centavos,p.pontos);
+   const impedimento=periodo.fim>=hoje()?'MES_BASE_NAO_ENCERRADO':!r.vendas||BigInt(base.valor_centavos)<=0n?'SEM_BASE_POSITIVA':sugestao===null?'SUGESTAO_ACIMA_DO_LIMITE':null;
+   const item={competencia,base,meta_atual:{valor_centavos:atual.valor_centavos,versao:atual.versao},sugestao_centavos:impedimento?null:sugestao,impedimento};
+   item.assinatura=hashMeta({filial,crescimento:p.crescimento_percentual,...item});meses.push(item);
+  }
+  return {filial,inicio:p.inicio,fim:p.fim,crescimento_percentual:p.crescimento_percentual,meses};
+ }
  return {
+  previaCrescimento:async(user,filial,inicio,fim,crescimento)=>{
+   if(!escopo(user,'metas:gerenciar').includes(filial))throw new ErroApi(403,'FILIAL_NAO_AUTORIZADA');
+   const p=parametrosCrescimento(inicio,fim,crescimento);return transacao(db=>previaCrescimento(db,filial,p));
+  },
+  salvarCrescimento:async(user,body,revalidar=async()=>user)=>{
+   if(!body||Object.keys(body).sort().join(',')!=='crescimento,filial,fim,inicio,meses,requisicao'||typeof body.filial!=='string'||!uuidMeta(body.requisicao)||!Array.isArray(body.meses)||!body.meses.length||body.meses.length>12)throw new ErroApi(400,'META_LOTE_INVALIDO');
+   const p=parametrosCrescimento(body.inicio,body.fim,body.crescimento),filial=body.filial;
+   if(!escopo(user,'metas:gerenciar').includes(filial))throw new ErroApi(403,'FILIAL_NAO_AUTORIZADA');
+   const meses=[...body.meses].sort((a,b)=>String(a?.competencia).localeCompare(String(b?.competencia)));
+   if(new Set(meses.map(m=>m?.competencia)).size!==meses.length||meses.some(m=>!m||Object.keys(m).sort().join(',')!=='aceitar_base_parcial,assinatura,competencia,substituir'||!p.meses.includes(m.competencia)||typeof m.assinatura!=='string'||!/^[a-f0-9]{64}$/.test(m.assinatura)||typeof m.substituir!=='boolean'||typeof m.aceitar_base_parcial!=='boolean'))throw new ErroApi(400,'META_LOTE_INVALIDO');
+   const assinatura=hashMeta({filial,inicio:p.inicio,fim:p.fim,crescimento:p.crescimento_percentual,meses});
+   const ids=meses.map(m=>requisicaoMensal(body.requisicao,m.competencia,meses[0].competencia));
+   return transacao(async db=>{
+    await db.query("SET LOCAL lock_timeout='5s'");await db.query("SELECT pg_advisory_xact_lock(hashtextextended(current_schema() || ':meta-lote:' || $1,0))",[body.requisicao]);
+    for(const m of meses)await db.query("SELECT pg_advisory_xact_lock(hashtextextended(current_schema() || ':meta:' || $1 || ':' || $2,0))",[filial,m.competencia]);
+    const atualUser=await revalidar();if(!atualUser||atualUser.id!==user.id||!escopo(atualUser,'metas:gerenciar').includes(filial))throw new ErroApi(403,'FILIAL_NAO_AUTORIZADA');
+    const anteriores=(await db.query('SELECT requisicao,ator_id,filial::text,depois FROM metas_filiais_historico WHERE requisicao=ANY($1::uuid[])',[ids])).rows;
+    if(anteriores.length){if(anteriores.length!==ids.length||anteriores.some(h=>h.ator_id!==user.id||h.filial!==filial||h.depois.calculo?.lote_hash!==assinatura))throw new ErroApi(409,'REQUISICAO_REUTILIZADA');return {metas:meses.map((m,i)=>anteriores.find(h=>h.requisicao===ids[i]).depois),repetida:true};}
+    const previa=await previaCrescimento(db,filial,p),selecionadas=meses.map(m=>({pedido:m,item:previa.meses.find(r=>r.competencia===m.competencia)}));
+    for(const {pedido,item} of selecionadas){
+     if(item.assinatura!==pedido.assinatura)throw new ErroApi(409,'META_PREVIA_DESATUALIZADA');
+     if(item.impedimento)throw new ErroApi(400,'META_BASE_INDISPONIVEL');
+     if(item.meta_atual.valor_centavos!==null&&!pedido.substituir)throw new ErroApi(409,'META_EXISTENTE_PROTEGIDA');
+     if(!item.base.cobertura_completa&&!pedido.aceitar_base_parcial)throw new ErroApi(400,'META_BASE_PARCIAL');
+    }
+    const gravadas=[];
+    for(let i=0;i<selecionadas.length;i++){
+     const {item}=selecionadas[i],inicio=item.competencia+'-01';
+     const antes=(await db.query(`SELECT ${metaCampos} FROM metas_filiais WHERE filial=$1 AND competencia=$2 FOR UPDATE`,[filial,inicio])).rows[0]??null;
+     const depois=(await db.query(`INSERT INTO metas_filiais(filial,competencia,valor_centavos,versao,atualizado_por) VALUES($1,$2,$3,1,$4)
+      ON CONFLICT(filial,competencia) DO UPDATE SET valor_centavos=EXCLUDED.valor_centavos,versao=metas_filiais.versao+1,atualizado_por=EXCLUDED.atualizado_por,atualizado_em=now() RETURNING ${metaCampos}`,[filial,inicio,item.sugestao_centavos,user.id])).rows[0];
+     depois.calculo={origem:'crescimento_ano_anterior',crescimento_percentual:p.crescimento_percentual,base:item.base,lote:body.requisicao,lote_hash:assinatura};
+     await db.query('INSERT INTO metas_filiais_historico(requisicao,filial,competencia,ator_id,valor_solicitado_centavos,versao_esperada,antes,depois) VALUES($1,$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb)',[ids[i],filial,inicio,user.id,item.sugestao_centavos,item.meta_atual.versao,JSON.stringify(antes),JSON.stringify(depois)]);gravadas.push(depois);
+    }
+    return {metas:gravadas,repetida:false};
+   },true).catch(e=>{if(e.code==='23505')throw new ErroApi(409,'REQUISICAO_REUTILIZADA');if(e.code==='55P03')throw new ErroApi(409,'META_EM_EDICAO');throw e;});
+  },
   referenciasMetas:async(user,filial,inicio,fim)=>{
    let permitidas;try{permitidas=escopo(user);}catch(e){if(e.status===403)return null;throw e;}
    if(!permitidas.includes(filial))return null;periodoConsolidado(inicio,fim);

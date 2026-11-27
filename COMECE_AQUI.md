@@ -1,5 +1,12 @@
 # Comece aqui — estado atual em 27/11/2026
 
+## Metas sugeridas por crescimento anual — 27/11/2026
+
+- [x] Cadastro com modos **Valor informado / Crescimento anual**, percentual e mês final (até 12 meses). Prévia por mês com vendas/peças/valor do mesmo mês do ano anterior, sugestão, meta vigente e avisos; grava somente os meses selecionados após confirmação. Valor manual mantido. [Processo](docs/PROCESSO_METAS.md).
+- [x] Metas existentes e bases parciais desmarcadas, sem base positiva/mês-base ainda aberto bloqueados. Cálculo exato em centavos, sem composição entre meses. Lote transacional, autorização revalidada, proteção contra prévia alterada e repetição; histórico individual com base/percentual/lote. Nenhuma renovação agendada ou nova regra financeira.
+- [x] 119 unitários, 11 integrações PostgreSQL e interface sintética local/HTTPS em 1440/390/320 px aprovados; regressões do cadastro manual e menu 320–1440 px. Capturas revisadas, botões contidos e datas legíveis no celular. Consulta autenticada somente leitura conferiu 12 bases com o consolidado e suas sugestões; nenhuma meta real criada. [Evidência](docs/validacao-metas-crescimento.json).
+- [x] Publicada somente `api`, imagem `metas-crescimento-20261127`, após backup conferido. Assets/backend na imagem e HTTPS/saúde conferidos; outros 28 containers, Nginx/envs/credenciais/permissões/metas/histórico preservados, notificações sem reinício. Sem migration. Metas por vendedor/produto (R39), alertas e homologação financeira continuam separados.
+
 ## Evolução das vendas com metas — 27/11/2026
 
 - [x] Gráfico da Visão geral modernizado: realizado em destaque, meta mensal, referência do intervalo e barra de ritmo. Modos Diário/Acumulado, linhas verde/lilás, área suave e detalhes por mouse/toque/teclado. Referência linear em dias corridos, com rateio exato em centavos; não cria metas diárias.

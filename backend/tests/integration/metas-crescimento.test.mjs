@@ -1,0 +1,36 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {randomUUID} from 'node:crypto';
+import {ambienteFila} from '../fixtures/fila.mjs';import {dadosMetasCrescimento} from '../fixtures/metas-crescimento.mjs';import {criarConsolidado} from '../../src/consolidado.mjs';
+const hoje=()=> '2026-11-27',preview='/api/v1/metas/crescimento/previa',confirmar='/api/v1/metas/crescimento/confirmar';
+async function req(e,path,{method='GET',body,role='admin'}={}){const r=await fetch(e.base+path,{method,headers:{Authorization:'Bearer '+e.tokens[role],'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});return {status:r.status,body:await r.json()};}
+const previa=(e,fim='2027-02',filial='1',role='admin')=>req(e,preview+'?'+new URLSearchParams({filial,inicio:'2026-11',fim,crescimento:'10.00'}),{role});
+const lote=(p,indices=[0,1])=>({filial:p.filial,inicio:p.inicio,fim:p.fim,crescimento:p.crescimento_percentual,requisicao:randomUUID(),meses:indices.map(i=>({competencia:p.meses[i].competencia,assinatura:p.meses[i].assinatura,substituir:false,aceitar_base_parcial:false}))});
+const salvar=(e,body)=>req(e,confirmar,{method:'POST',body});
+const total=async(e)=>(await e.pool.query('SELECT count(*)::int AS n FROM metas_filiais_historico')).rows[0].n;
+test('prévia usa mês completo do ano anterior, cancelamentos e regra vigente, sinaliza meta existente e base parcial sem gravar',async()=>{
+ const e=await ambienteFila({hoje});try{await dadosMetasCrescimento(e);const p=await previa(e);assert.equal(p.status,200);assert.equal(p.body.meses.length,4);const [nov,dez,jan,fev]=p.body.meses;assert.deepEqual(nov.base,{inicio:'2025-11-01',fim:'2025-11-30',valor_centavos:'1010000',vendas:2,pecas:'12',pendencias:1,cobertura_completa:true});assert.equal(nov.sugestao_centavos,'1111000');assert.equal(dez.meta_atual.valor_centavos,'2500000');assert.equal(jan.base.cobertura_completa,false);assert.equal(fev.impedimento,'SEM_BASE_POSITIVA');assert.equal(fev.sugestao_centavos,null);assert.equal(await total(e),0);
+ const futur=await req(e,preview+'?filial=1&inicio=2027-11&fim=2027-11&crescimento=10.00');assert.equal(futur.body.meses[0].impedimento,'MES_BASE_NAO_ENCERRADO');
+ }finally{await e.close();}
+});
+test('lote grava apenas selecionados, guarda cálculo e autoria, preserva vendas e repetição não duplica',async()=>{
+ const e=await ambienteFila({hoje});try{await dadosMetasCrescimento(e);const vendas=(await e.pool.query('SELECT row_to_json(o)::text AS r FROM operacoes o ORDER BY filial,cod_operacao')).rows,p=(await previa(e)).body,b=lote(p,[0,2]);b.meses[1].aceitar_base_parcial=true;const [a,c]=await Promise.all([salvar(e,b),salvar(e,b)]);assert.equal(a.status,200);assert.equal(c.status,200);assert.notEqual(a.body.repetida,c.body.repetida);assert.equal(await total(e),2);const h=(await e.pool.query('SELECT antes,depois,ator_id FROM metas_filiais_historico ORDER BY competencia')).rows;assert.equal(h[0].ator_id,e.usuarios.admin);assert.equal(h[0].depois.calculo.base.valor_centavos,'1010000');assert.equal(h[0].depois.calculo.crescimento_percentual,'10.00');assert.equal(h[0].antes,null);assert.equal((await e.pool.query("SELECT valor_centavos::text FROM metas_filiais WHERE competencia='2026-12-01'")).rows[0].valor_centavos,'2500000');
+ assert.equal((await salvar(e,{...b,meses:[b.meses[0]]})).status,409);assert.deepEqual((await e.pool.query('SELECT row_to_json(o)::text AS r FROM operacoes o ORDER BY filial,cod_operacao')).rows,vendas);
+ }finally{await e.close();}
+});
+test('proteção exige escolha explícita de substituição e base parcial, sem escrita parcial',async()=>{
+ const e=await ambienteFila({hoje});try{await dadosMetasCrescimento(e);const p=(await previa(e)).body,b=lote(p);assert.equal((await salvar(e,b)).body.erro,'META_EXISTENTE_PROTEGIDA');assert.equal(await total(e),0);b.meses[1].substituir=true;assert.equal((await salvar(e,b)).status,200);assert.equal(await total(e),2);const p2=(await previa(e)).body,b2=lote(p2,[2]);assert.equal((await salvar(e,b2)).body.erro,'META_BASE_PARCIAL');assert.equal(await total(e),2);b2.meses[0].aceitar_base_parcial=true;assert.equal((await salvar(e,b2)).status,200);
+ const h=(await e.pool.query("SELECT antes,depois FROM metas_filiais_historico WHERE competencia='2026-12-01'")).rows[0];assert.equal(h.antes.valor_centavos,'2500000');assert.equal(h.depois.valor_centavos,'2200000');assert.equal(h.depois.versao,2);
+ }finally{await e.close();}
+});
+test('mudança de vendas ou meta após prévia recusa o lote inteiro; falha no segundo mês desfaz o primeiro',async()=>{
+ const e=await ambienteFila({hoje});try{await dadosMetasCrescimento(e);let p=(await previa(e)).body,b=lote(p);b.meses[1].substituir=true;await e.pool.query('UPDATE operacoes SET valor_final_centavos=1000001 WHERE cod_operacao=2');assert.equal((await salvar(e,b)).body.erro,'META_PREVIA_DESATUALIZADA');assert.equal(await total(e),0);
+ p=(await previa(e)).body;b=lote(p);b.meses[1].substituir=true;await e.pool.query("UPDATE metas_filiais SET versao=versao+1 WHERE competencia='2026-12-01'");assert.equal((await salvar(e,b)).status,409);assert.equal(await total(e),0);
+ p=(await previa(e)).body;b=lote(p);b.meses[1].substituir=true;await e.pool.query("ALTER TABLE metas_filiais ADD CONSTRAINT teste_falha_lote CHECK(competencia<>'2026-12-01' OR versao=2)");assert.equal((await salvar(e,b)).status,500);assert.equal(await total(e),0);assert.equal((await e.pool.query("SELECT count(*)::int AS n FROM metas_filiais WHERE competencia='2026-11-01'")).rows[0].n,0);
+ }finally{await e.close();}
+});
+test('valida intervalo, contrato, limites e permissões atuais de tenant/filial/cargo, incluindo revogação antes de gravar',async()=>{
+ const e=await ambienteFila({hoje});try{await dadosMetasCrescimento(e);assert.equal((await previa(e,'2027-11')).status,400);assert.equal((await req(e,preview+'?filial=1&inicio=2026-11&fim=2026-11&crescimento=10.00&crescimento=20.00')).status,400);assert.equal((await previa(e,'2026-11','999')).status,403);for(const role of ['vendas','leitor'])assert.equal((await previa(e,'2026-11','1',role)).status,403);
+ await e.control.query("UPDATE admin_users SET role='Supervisao' WHERE email='leitor@fila.local'");await e.control.query('DELETE FROM user_branches WHERE user_id=$1 AND filial<>1',[e.usuarios.leitor]);assert.equal((await previa(e,'2026-11','1','leitor')).status,200);assert.equal((await previa(e,'2026-11','2','leitor')).status,403);
+ const p=(await previa(e)).body,b=lote(p,[0]),u=await e.auth.autenticar(e.tokens.leitor),s=criarConsolidado(e.pool,'teste',e.filiais,{hoje});await assert.rejects(s.salvarCrescimento(u,b,async()=>({...u,vinculos:[]})),{status:403});await assert.rejects(s.previaCrescimento({...u,tenant_key:'outro'},'1','2026-11','2026-11','10.00'),{status:403});await assert.rejects(s.previaCrescimento({...u,somente_proprias_vendas:true},'1','2026-11','2026-11','10.00'),{status:403});
+ await e.control.query("UPDATE access_roles SET permissoes='[\"consolidado:ler\"]'::jsonb WHERE role='Supervisao'");assert.equal((await previa(e,'2026-11','1','leitor')).status,403);assert.equal((await salvar(e,{...b,valor:'1.00'})).status,400);assert.equal((await salvar(e,{...b,meses:[b.meses[0],b.meses[0]]})).status,400);assert.equal(await total(e),0);
+ }finally{await e.close();}
+});
