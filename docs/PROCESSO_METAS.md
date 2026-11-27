@@ -58,13 +58,14 @@ As permissões são conferidas no servidor em cada gravação. O histórico regi
 
 Esta entrega reorganiza o cadastro existente em uma área própria; nenhum valor de produção foi criado ou modificado durante a publicação. Não adiciona aprovação ou rascunho: salvar torna a meta vigente. Alertas de metas atingidas permanecem em etapa separada das notificações de resumo diário.
 
-## Próximas etapas
+## Metas individuais e próximas etapas
 
-Os dois tipos abaixo estão planejados e **ainda não estão disponíveis**:
+**Metas por vendedor** estão disponíveis em **Menu → Metas → Por vendedor**, com vendas, PA e ticket médio informados individualmente. Admissão e função são referências manuais do cadastro mensal; sem rateio automático. [Processo de metas por vendedor](METAS_VENDEDORES.md).
+
+Metas por produto ou classificação continuam planejadas e **ainda não estão disponíveis**:
 
 | Tipo | Identificação e definições necessárias |
 | --- | --- |
-| Vendedor por loja | Filial e código exato do vendedor no Millennium; definir período, afastamentos e tratamento de transferências. Não dividir automaticamente a meta da loja entre vendedores. |
 | Produto ou classificação | Produto/SKU ou identificador confirmado de marca, categoria ou outra classificação disponível no catálogo; definir se a meta será em reais ou unidades e como tratar descontos, devoluções e classificações alteradas após a venda. |
 
 As próximas etapas devem explicitar a origem do realizado, a cobertura dos itens e o tratamento de produtos sem classificação. Metas sobre classificações que se sobrepõem não devem ser somadas como objetivos independentes sem uma regra para evitar dupla contagem.

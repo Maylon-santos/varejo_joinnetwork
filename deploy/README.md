@@ -3,6 +3,14 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Metas individuais por vendedor — 27/11/2026
+
+Imagem atual de `api`: `aeropostale-varejo-api:metas-vendedores-20261127`. Módulo interno `metas-vendedores.mjs` integrado ao consolidado, rotas autenticadas de consulta/gravação, módulo estático `metas-vendedores.js` e aba **Por vendedor** na área Metas. Identidade por filial/código/mês, valores individuais manuais, histórico e versão; API pública de integrações preservada.
+
+Publicada somente `api` às 16h56 de São Paulo, após backup `backup-20261127T195500Z-h86ctM` (COMPLETE/checksums dos dois bancos conferidos). Migration tenant `020_metas_vendedores.sql` aplicada com hash conferido: somente duas tabelas e índice, vazias na publicação. Nenhuma migration central, permissão nova ou valor do exemplo importado. Outros 28 containers, Nginx, envs/credenciais/permissões e metas anteriores/histórico preservados; notificações sem reinício. API saudável, quatro assets HTTPS e quatro fontes de backend na imagem conferidos. Navegador com assets publicados e API sintética aprovada; consulta somente leitura em três filiais coincidiu com os indicadores (01–15/11). [Evidência](../docs/validacao-metas-vendedores.json).
+
+Fontes/override anteriores em `/opt/aeropostale-varejo/artifacts/metas-vendedores-20261127T195500Z`. Para retorno, restaurar os sete arquivos anteriores (três fontes de backend, HTML, app.js, styles.css e override), usar `metas-crescimento-20261127` e recriar somente `api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait api`. Preserve a migration aditiva, tabelas e qualquer meta/histórico criado após a publicação; não desfazer bancos, remover dados individuais ou reiniciar workers. Os módulos novos deixam de ser importados/servidos pela versão anterior. [Uso e limites](../docs/METAS_VENDEDORES.md).
+
 ## Metas pelo crescimento anual — 27/11/2026
 
 Imagem atual de `api`: `aeropostale-varejo-api:metas-crescimento-20261127`. Novo cálculo/validação em `backend/src/metas-crescimento.mjs`, rotas internas de prévia/confirmação em `http-api.mjs` e lote transacional em `consolidado.mjs`. Módulo `frontend/assets/metas-crescimento.js` incluído na allowlist estática; formulário manual preservado. Sem migration, nova permissão, API pública de integração ou worker de renovação.

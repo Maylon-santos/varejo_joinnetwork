@@ -1,3 +1,4 @@
+import {criarMetasVendedores} from './metas-vendedores.mjs';
 import {ErroApi, elegivel} from './painel.mjs';
 import {validarDia} from './sincronizar-cancelamentos.mjs';
 import {centavos} from './reconciliar-venda.mjs';
@@ -59,6 +60,7 @@ export function criarConsolidado(pool,tenant,autorizadas,{hoje=hojeSaoPaulo}={})
   return {filial,inicio:p.inicio,fim:p.fim,crescimento_percentual:p.crescimento_percentual,meses};
  }
  return {
+  ...criarMetasVendedores({escopo,transacao}),
   previaCrescimento:async(user,filial,inicio,fim,crescimento)=>{
    if(!escopo(user,'metas:gerenciar').includes(filial))throw new ErroApi(403,'FILIAL_NAO_AUTORIZADA');
    const p=parametrosCrescimento(inicio,fim,crescimento);return transacao(db=>previaCrescimento(db,filial,p));

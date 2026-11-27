@@ -1,5 +1,12 @@
 # Roadmap — Aeropostale Varejo
 
+## Metas mensais por vendedor — 27/11/2026
+
+- [x] **Menu → Metas → Por vendedor**, com metas individuais de vendas em reais, PA e ticket médio por filial/código Millennium/mês. Período parcial dentro do mês, busca, histórico sem movimento, função/admissão opcionais e manuais. Ajustes individuais sem rateio ou divisão da meta da loja, conforme confirmado. [Processo](docs/METAS_VENDEDORES.md).
+- [x] Metas mensais integrais distintas do realizado no intervalo; PA e ticket pelas somas, sem média de médias. Vendas sem código separadas, peças/vendas identificadas corretamente, pendências sinalizadas e cancelamentos excluídos. Mesmos cargos/permissões/vínculos explícitos das metas por loja; histórico, versão e idempotência, sem ampliar contas ou acesso à API pública.
+- [x] 121 unitários, 15 integrações PostgreSQL e interface local/HTTPS em 1440/390/320 px aprovados; regressões de metas por loja/menu. Capturas revisadas, ações contidas no celular. Consulta autenticada somente leitura de três filiais (01–15/11) coincidiu com os indicadores em vendas, peças e valores. Nenhuma meta do exemplo criada. [Evidência](docs/validacao-metas-vendedores.json).
+- [x] Publicada somente `api`, imagem `metas-vendedores-20261127`, após backup conferido e migration tenant aditiva `020_metas_vendedores.sql`. Novas tabelas vazias na publicação; metas anteriores/histórico, outros 28 containers, Nginx/envs/credenciais/permissões preservados, notificações sem reinício. R39 atendida para vendedor manual; produto/classificação, rateio, cadastro de RH, alertas e homologação financeira permanecem separados.
+
 ## Metas sugeridas por crescimento anual — 27/11/2026
 
 - [x] Cadastro com modos **Valor informado / Crescimento anual**, percentual e mês final (até 12 meses). Prévia por mês com vendas/peças/valor do mesmo mês do ano anterior, sugestão, meta vigente e avisos; grava somente os meses selecionados após confirmação. Valor manual mantido. [Processo](docs/PROCESSO_METAS.md).

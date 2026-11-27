@@ -1,0 +1,96 @@
+{
+  "verificadoEm": "2026-11-27T19:56:04.588907+00:00",
+  "escopo": "Metas individuais mensais de vendas, PA e ticket por filial/código de vendedor; valores e ajustes informados manualmente",
+  "testes": {
+    "unitarios": 121,
+    "integracaoPostgreSQL": 15,
+    "novosCenariosDeIntegracao": 4,
+    "regressoes": "Consolidado, metas por loja/crescimento, indicadores, cadastro manual e navegação 320–1440 px",
+    "local": {
+      "verificadoEm": "2026-11-27T19:50:16.959Z",
+      "ambiente": "Chromium com PostgreSQL isolado e dados sintéticos",
+      "assets": "Local",
+      "telas": [
+        1440,
+        390,
+        320
+      ],
+      "cadastroTresMetas": true,
+      "funcaoEAdmissaoManuais": true,
+      "periodoParcialComMetaMensal": true,
+      "atingimentosConferidos": true,
+      "buscaEHistoricoSemMovimento": true,
+      "versaoConcorrente": true,
+      "retentativaSemDuplicar": true,
+      "remocaoAuditada": true,
+      "trocaDeAbaELogoutLimpam": true,
+      "supervisaoSomenteAtribuidas": true,
+      "consultaSemEdicao": true,
+      "vendasEObjetivosDeLojaPreservados": true,
+      "semOverflow": true,
+      "errors": []
+    },
+    "httpsComAPISinteticaInterceptada": {
+      "verificadoEm": "2026-11-27T19:56:33.894Z",
+      "ambiente": "Chromium com PostgreSQL isolado e dados sintéticos",
+      "assets": "HTTPS com todas as APIs interceptadas para fixture",
+      "telas": [
+        1440,
+        390,
+        320
+      ],
+      "cadastroTresMetas": true,
+      "funcaoEAdmissaoManuais": true,
+      "periodoParcialComMetaMensal": true,
+      "atingimentosConferidos": true,
+      "buscaEHistoricoSemMovimento": true,
+      "versaoConcorrente": true,
+      "retentativaSemDuplicar": true,
+      "remocaoAuditada": true,
+      "trocaDeAbaELogoutLimpam": true,
+      "supervisaoSomenteAtribuidas": true,
+      "consultaSemEdicao": true,
+      "vendasEObjetivosDeLojaPreservados": true,
+      "semOverflow": true,
+      "errors": []
+    }
+  },
+  "consultaSomenteLeitura": {
+    "consultaAutenticadaHTTPS": true,
+    "filiaisConferidas": 3,
+    "periodo": "2026-11-01 a 2026-11-15",
+    "vendasPecasValoresIguaisIndicadores": true,
+    "semVendedorSeparado": true,
+    "nenhumaMetaCriadaOuAlterada": true
+  },
+  "publicacao": {
+    "publicadoEm": "2026-11-27T19:56:04.588907+00:00",
+    "imagem": "aeropostale-varejo-api:metas-vendedores-20261127",
+    "servicoAtualizado": "api",
+    "apiSaudavel": true,
+    "assetsHTTPSIguaisAFonte": true,
+    "cacheNoStore": true,
+    "semAutenticacao401": true,
+    "semBuildDeWorker": true,
+    "migrationTenantAditiva": "020_metas_vendedores.sql",
+    "semMetaIndividualCriada": true,
+    "outrosContainersPreservados": 28,
+    "workerNotificacoesSemReinicio": true,
+    "nginxEnvsChavesConcessoesAutenticadoresPermissoesPreservados": true,
+    "demaisFontesPreservadas": true,
+    "backendDeLeituraNaImagem": true,
+    "metasEHistoricoPreservados": true,
+    "backupConferido": "backup-20261127T195500Z-h86ctM",
+    "diretorioOperacional": "/opt/aeropostale-varejo/artifacts/metas-vendedores-20261127T195500Z"
+  },
+  "limites": [
+    "Admissão e função manuais, como referência do cadastro mensal; sem importação do cadastro de RH.",
+    "Sem rateio, divisão da meta da loja, cálculo de comissão ou novos alertas.",
+    "Vendedores identificados no histórico importado; não presume cadastro ativo do ERP.",
+    "Realizado segue regra vigente de vendas não canceladas importadas, incluindo pendências explícitas.",
+    "API pública de integração preservada.",
+    "Sem teste físico adicional no Safari/iPhone nesta rodada.",
+    "Nenhuma meta real ou informação pessoal do PDF cadastrada pela automação.",
+    "Metas por produto/classificação e homologação financeira continuam separadas."
+  ]
+}

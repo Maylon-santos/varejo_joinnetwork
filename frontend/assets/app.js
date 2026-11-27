@@ -1,3 +1,4 @@
+import {criarMetasVendedoresUI} from './metas-vendedores.js';
 import {criarDashboardCrescimento} from './crescimento.js';
 import {criarSugestoesMetas} from './metas-crescimento.js';
 import {criarEvolucaoVendas} from './evolucao.js';
@@ -50,7 +51,7 @@ function exitSession(message=''){
  navegacao.fechar();
  notificacoesUI.limpar();notificacoesLiberadas=false;destinoNotificacao='';
  clearTimeout(filterTimer);filterTimer=null;clearRateWait();
- crescimento.limpar();evolucao.limpar();
+ crescimento.limpar();evolucao.limpar();metasVendedores.limpar();
  goalsGeneration++;goalsAbort?.abort();goalEditing=null;goalsData=null;$('goal-dialog').close();$('goal-value').value='';$('goals-status').textContent='';$('goals-count').textContent='';$('goals-branch').replaceChildren(new Option('Todas as autorizadas',''));$('goal-branch').replaceChildren(new Option('Selecione a loja',''));$('goals-state').value='';$('goals-new').hidden=true;for(const id of ['consolidated-body','consolidated-total','consolidated-metrics','goals-body','goals-metrics'])$(id).replaceChildren();userRole='';
  clearOverviewMedia();$('top-products-list').replaceChildren();$('products-list').replaceChildren();
  for(const id of ['monthly-body','monthly-total','payment-summary-body','payment-summary-total','stock-brand-body','stock-brand-total','stock-category-body','stock-category-total','top-products-status','payment-coverage','stock-summary-status'])$(id).replaceChildren();
@@ -81,7 +82,7 @@ $('login-form').addEventListener('submit',async e=>{
   $('login-view').hidden=true;$('app-view').hidden=false;page=inicial;rankPage=1;salesPage=1;$('period').value='month';setPeriod();setPage(inicial,false);applyFilters();
   if(notificacoesLiberadas)notificacoesUI.iniciar(branches.filiais).catch(()=>showToast('As preferências de notificações estão temporariamente indisponíveis.'));
   if(destinoNotificacao)abrirNotificacao(destinoNotificacao);
-  clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&!['permissions','users','employees','notifications'].includes(page)&&!document.hidden&&!$('detail-dialog').open&&!$('product-dialog').open&&!$('goal-dialog').open)loadData();},360000);
+  clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(token&&!['permissions','users','employees','notifications'].includes(page)&&!document.hidden&&!$('detail-dialog').open&&!$('product-dialog').open&&!$('goal-dialog').open&&!$('seller-goal-dialog').open)loadData();},360000);
  }catch(e){if(token){await api('/auth/logout',{method:'POST'}).catch(()=>{});token=null;}$('login-error').textContent=e.message;$('login-error').hidden=false;}
  finally{$('login-submit').disabled=false;$('login-submit').replaceChildren(document.createTextNode('Entrar no painel '),el('span','→'));}
 });
@@ -109,7 +110,7 @@ function setPage(next,load=true){
  if(!podePagina(next))return;
  evolucao.cancelar();clearOverviewMedia();clearEmployeePhotos();clearSellerPhotos();
  clearInterval(queueTimer);if(next==='queue')queueTimer=setInterval(()=>{if(token&&!document.hidden&&!queueBusy&&!$('queue-action-dialog').open)loadQueue(true);},30000);
- goalsGeneration++;goalsAbort?.abort();$('goal-dialog').close();goalEditing=null;crescimento.cancelar();
+ goalsGeneration++;goalsAbort?.abort();$('goal-dialog').close();goalEditing=null;crescimento.cancelar();metasVendedores.limpar();$('goals-stores').hidden=false;$('seller-goals-panel').hidden=true;document.querySelectorAll('[data-goals-mode]').forEach(b=>{b.classList.toggle('primary',b.dataset.goalsMode==='lojas');b.setAttribute('aria-pressed',String(b.dataset.goalsMode==='lojas'));});
  page=next;$('goals-panel').hidden=page!=='goals';$('notifications-panel').hidden=page!=='notifications';if(page==='growth')crescimento.abrir();$('growth-panel').hidden=page!=='growth';$('consolidated-panel').hidden=page!=='consolidated';$('branch').parentElement.hidden=page==='consolidated';salesPage=1;rankPage=1;customerPage=1;productPage=1;generation++;abort?.abort();
  $('products-panel').hidden=page!=='products';$('employees-panel').hidden=page!=='employees';
  for(const id of ['period','start-date','end-date'])$(id).parentElement.hidden=page==='products'&&$('products-mode').value==='catalogo';
@@ -130,7 +131,7 @@ async function loadData(){
  if(!token)return;
  if(page==='notifications'){busy(false);notificacoesUI.abrir();return;}
  if(page==='growth'){await crescimento.carregar();return;}
- if(page==='goals'){await loadGoals();return;}
+ if(page==='goals'){if(metasVendedores.ativo())await metasVendedores.carregar();else await loadGoals();return;}
  if(page==='consolidated'){await loadConsolidated();return;}
  if(page==='products'){await loadProducts();return;}
  if(page==='queue'){await loadQueue();return;}
@@ -782,6 +783,8 @@ async function saveGoal(remover=false){
 $('goal-form').addEventListener('submit',e=>{e.preventDefault();if(sugestoesMetas.automatico())sugestoesMetas.salvar();else saveGoal();});$('goal-cancel').addEventListener('click',()=>$('goal-dialog').close());$('goal-dialog').addEventListener('close',()=>{goalEditing=null;$('goal-value').value='';$('goal-branch').replaceChildren(new Option('Selecione a loja',''));});$('goal-remove').addEventListener('click',()=>{if(confirm('Remover a meta deste mês? O histórico das alterações será preservado.'))saveGoal(true);});
 
 Object.assign(errorText,{META_INTERVALO_INVALIDO:'Escolha um intervalo de até 12 meses, a partir de janeiro de 2001.',META_CRESCIMENTO_INVALIDO:'Informe um crescimento entre 0 e 1.000%, com até duas casas decimais.',META_LOTE_INVALIDO:'Confira os meses selecionados e gere uma nova prévia.',META_PREVIA_DESATUALIZADA:'As vendas ou metas mudaram desde a prévia. Gere uma nova prévia antes de confirmar.',META_BASE_INDISPONIVEL:'Um dos meses não possui base válida. Gere a prévia novamente.',META_EXISTENTE_PROTEGIDA:'Confirme a substituição da meta existente na prévia.',META_BASE_PARCIAL:'Confirme a utilização da base parcial na prévia.'});
+const metasVendedores=criarMetasVendedoresUI({api,estaNaPagina:()=>!!token&&page==='goals',toast:showToast});
+document.querySelectorAll('[data-goals-mode]').forEach(b=>b.addEventListener('click',()=>{const vendedor=b.dataset.goalsMode==='vendedores';document.querySelectorAll('[data-goals-mode]').forEach(x=>{x.classList.toggle('primary',x===b);x.setAttribute('aria-pressed',String(x===b));});$('goals-stores').hidden=vendedor;$('seller-goals-panel').hidden=!vendedor;if(vendedor)metasVendedores.abrir();else{metasVendedores.limpar();loadGoals();}}));
 const sugestoesMetas=criarSugestoesMetas({api,estaAtivo:()=>!!token&&page==='goals',onSaved:async n=>{goalEditing=null;showToast(n+' '+(n===1?'meta salva.':'metas salvas.'));await loadGoals();}});
 const evolucao=criarEvolucaoVendas();
 const crescimento=criarDashboardCrescimento({api,ativo:()=>!!token&&page==='growth',carregando:busy,erro:displayError,limparErro:resetError});

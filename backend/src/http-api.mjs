@@ -72,6 +72,13 @@ export function criarServidor({auth,painel,filiais,notificacoes,gestaoPermissoes
    if(path==='/api/v1/crescimento'||path==='/api/v1/consolidado'||path==='/api/v1/metas'||path.startsWith('/api/v1/metas/')){
     if(!['Admin','Diretoria','Supervisao'].includes(user.role))throw new ErroApi(403,'RECURSO_NAO_AUTORIZADO');
     if(!consolidado)throw new ErroApi(503,'CONSOLIDADO_INDISPONIVEL');
+    if(path==='/api/v1/metas/vendedores'){
+     if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');const campos=['filial','competencia','inicio','fim'];
+     if([...url.searchParams.keys()].some(k=>!campos.includes(k))||campos.some(k=>url.searchParams.getAll(k).length!==1))throw new ErroApi(400,'PARAMETRO_INVALIDO');
+     return enviar(200,await consolidado.metasVendedores(user,...campos.map(k=>url.searchParams.get(k))));
+    }
+    const metaVendedor=/^\/api\/v1\/metas\/vendedores\/(\d+)\/([^/]+)\/(20\d{2}-\d{2})$/.exec(path);
+    if(metaVendedor){if(req.method!=='PUT')throw new ErroApi(405,'METODO_NAO_PERMITIDO');if(url.search)throw new ErroApi(400,'PARAMETRO_INVALIDO');let codigo;try{codigo=decodeURIComponent(metaVendedor[2]);}catch{throw new ErroApi(400,'VENDEDOR_INVALIDO');}return enviar(200,await consolidado.salvarMetaVendedor(user,metaVendedor[1],codigo,metaVendedor[3],await lerJson(req),()=>auth.autenticar(token)));}
     if(path==='/api/v1/metas/crescimento/previa'){
      if(req.method!=='GET')throw new ErroApi(405,'METODO_NAO_PERMITIDO');
      const campos=['filial','inicio','fim','crescimento'];if([...url.searchParams.keys()].some(k=>!campos.includes(k))||campos.some(k=>url.searchParams.getAll(k).length!==1))throw new ErroApi(400,'PARAMETRO_INVALIDO');
