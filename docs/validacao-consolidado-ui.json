@@ -1,5 +1,5 @@
 {
-  "verificadoEm": "2026-09-21T00:08:20.020Z",
+  "verificadoEm": "2026-11-27T16:35:05.623Z",
   "ambiente": "schemas isolados, dados sintéticos",
   "desktopMobile": true,
   "semOverflow": true,
@@ -8,5 +8,6 @@
   "supervisaoFilialAtribuida": true,
   "gerenteSemAcesso": true,
   "limpezaLogout": true,
-  "errors": []
+  "errors": [],
+  "areaMetasDedicada": true
 }

@@ -3,6 +3,7 @@ import {criarNavegacaoMovel} from './navegacao.js';
 import {criarNotificacoesUI} from './notificacoes.js';
 const $=id=>document.getElementById(id);
 const icons={grid:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',receipt:'M6 3h12v18l-3-2-3 2-3-2-3 2z M9 8h6 M9 12h6',check:'M12 3 3 7v6c0 4 9 8 9 8s9-4 9-8V7z M8 12l3 3 5-6',store:'M4 10v11h16V10 M3 10l2-7h14l2 7 M3 10h18 M9 21v-7h6v7',logout:'M10 4H4v16h6 M8 12h13 M17 8l4 4-4 4',filter:'M4 6h16 M7 12h10 M10 18h4',refresh:'M20 7v5h-5 M4 17v-5h5 M5 8a7 7 0 0 1 12-3l3 3 M19 16a7 7 0 0 1-12 3l-3-3',info:'M12 8h.01 M12 11v6 M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0',alert:'M12 3 2 21h20z M12 9v5 M12 17h.01',trend:'M3 17l6-6 4 4 8-10 M15 5h6v6',bag:'M5 7h14l2 14H3z M8 8V6a4 4 0 0 1 8 0v2',cart:'M2 3h3l3 12h11l3-9H6 M9 20h.01 M18 20h.01'};
+icons.target='M12 3a9 9 0 1 0 9 9 M12 7a5 5 0 1 0 5 5 M12 12l9-9 M16 3h5v5';
 icons.menu='M4 6h16 M4 12h16 M4 18h16';icons.close='M6 6l12 12 M18 6 6 18';icons.bell='M18 8a6 6 0 0 0-12 0c0 8-3 8-3 10h18c0-2-3-2-3-10 M10 21h4';
 function svgEl(name,attrs={}){const e=document.createElementNS('http://www.w3.org/2000/svg',name);for(const[k,v]of Object.entries(attrs))e.setAttribute(k,String(v));return e;}
 for(const el of document.querySelectorAll('[data-icon]')){const svg=svgEl('svg',{viewBox:'0 0 24 24','aria-hidden':'true'});svg.append(svgEl('path',{d:icons[el.dataset.icon]}));el.append(svg);}
@@ -22,7 +23,7 @@ let lastIndicators=null,permissoes=new Set(),isAdmin=false,userRole='',somentePr
 let destinoNotificacao=location.search;
 const pode=recurso=>permissoes.has(recurso);
 const podeConsolidado=()=>['Admin','Diretoria','Supervisao'].includes(userRole)&&!somenteProprias&&pode('consolidado:ler');
-const podePagina=next=>next==='notifications'?notificacoesLiberadas:['consolidated','growth'].includes(next)?podeConsolidado():next==='products'?pode('produtos:ler'):next==='queue'?pode('fila:ler'):['permissions','users','employees'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='customers'?(pode('clientes:ler')&&pode('vendas:ler')):next==='sales'&&pode('vendas:ler');
+const podePagina=next=>next==='notifications'?notificacoesLiberadas:['consolidated','growth','goals'].includes(next)?podeConsolidado():next==='products'?pode('produtos:ler'):next==='queue'?pode('fila:ler'):['permissions','users','employees'].includes(next)?isAdmin:next==='overview'?(pode('indicadores:ler')||pode('ranking:ler')):next==='quality'?(pode('vendas:ler')&&pode('conferencia:ler')):next==='customers'?(pode('clientes:ler')&&pode('vendas:ler')):next==='sales'&&pode('vendas:ler');
 let detailAbort=null;const detailImageUrls=new Set();
 function clearDetailMedia(){detailAbort?.abort();$('photo-dialog').close();for(const url of detailImageUrls)URL.revokeObjectURL(url);detailImageUrls.clear();}
 async function api(path,options={}){
@@ -48,7 +49,7 @@ function exitSession(message=''){
  notificacoesUI.limpar();notificacoesLiberadas=false;destinoNotificacao='';
  clearTimeout(filterTimer);filterTimer=null;clearRateWait();
  crescimento.limpar();
- goalsGeneration++;goalsAbort?.abort();goalEditing=null;$('goal-dialog').close();for(const id of ['consolidated-body','consolidated-total','consolidated-metrics','goals-body','goals-metrics'])$(id).replaceChildren();userRole='';
+ goalsGeneration++;goalsAbort?.abort();goalEditing=null;goalsData=null;$('goal-dialog').close();$('goal-value').value='';$('goals-status').textContent='';$('goals-count').textContent='';$('goals-branch').replaceChildren(new Option('Todas as autorizadas',''));$('goal-branch').replaceChildren(new Option('Selecione a loja',''));$('goals-state').value='';$('goals-new').hidden=true;for(const id of ['consolidated-body','consolidated-total','consolidated-metrics','goals-body','goals-metrics'])$(id).replaceChildren();userRole='';
  clearOverviewMedia();$('top-products-list').replaceChildren();$('products-list').replaceChildren();
  for(const id of ['monthly-body','monthly-total','payment-summary-body','payment-summary-total','stock-brand-body','stock-brand-total','stock-category-body','stock-category-total','top-products-status','payment-coverage','stock-summary-status'])$(id).replaceChildren();
  queueReportGeneration++;queueReportAbort?.abort();$('queue-report-content').replaceChildren();$('queue-report-section').open=false;queueReportFilters=null;
@@ -107,12 +108,12 @@ function setPage(next,load=true){
  clearOverviewMedia();clearEmployeePhotos();clearSellerPhotos();
  clearInterval(queueTimer);if(next==='queue')queueTimer=setInterval(()=>{if(token&&!document.hidden&&!queueBusy&&!$('queue-action-dialog').open)loadQueue(true);},30000);
  goalsGeneration++;goalsAbort?.abort();$('goal-dialog').close();goalEditing=null;crescimento.cancelar();
- page=next;$('notifications-panel').hidden=page!=='notifications';if(page==='growth')crescimento.abrir();$('growth-panel').hidden=page!=='growth';$('consolidated-panel').hidden=page!=='consolidated';$('branch').parentElement.hidden=page==='consolidated';salesPage=1;rankPage=1;customerPage=1;productPage=1;generation++;abort?.abort();
+ page=next;$('goals-panel').hidden=page!=='goals';$('notifications-panel').hidden=page!=='notifications';if(page==='growth')crescimento.abrir();$('growth-panel').hidden=page!=='growth';$('consolidated-panel').hidden=page!=='consolidated';$('branch').parentElement.hidden=page==='consolidated';salesPage=1;rankPage=1;customerPage=1;productPage=1;generation++;abort?.abort();
  $('products-panel').hidden=page!=='products';$('employees-panel').hidden=page!=='employees';
  for(const id of ['period','start-date','end-date'])$(id).parentElement.hidden=page==='products'&&$('products-mode').value==='catalogo';
- $('queue-panel').hidden=page!=='queue';$('customers-panel').hidden=page!=='customers';$('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users','employees','queue','growth','notifications'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users','employees','queue','growth','notifications'].includes(page);
- if(['permissions','users','employees','queue','growth','notifications'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
- const info={notifications:['Notificações','Escolha o que receber e acompanhe os resumos das suas filiais.'],growth:['Crescimento anual','Compare cada filial com o ano anterior e acompanhe a evolução mês a mês.'],consolidated:['Visão das filiais','Compare os resultados das filiais autorizadas e acompanhe as metas mensais.'],employees:['Funcionários','Administre as fotos dos vendedores por filial.'],products:['Produtos e estoque','Consulte o saldo atual e os produtos vendidos na loja.'],queue:['Lista da Vez','Organize a equipe e acompanhe os atendimentos da loja.'],customers:['Clientes','Consulte o cadastro e os contatos dos seus clientes.'],users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
+ $('queue-panel').hidden=page!=='queue';$('customers-panel').hidden=page!=='customers';$('users-panel').hidden=page!=='users';$('permissions-panel').hidden=page!=='permissions';$('filters').hidden=['permissions','users','employees','queue','growth','notifications','goals'].includes(page);document.querySelector('.data-caption').hidden=['permissions','users','employees','queue','growth','notifications','goals'].includes(page);
+ if(['permissions','users','employees','queue','growth','notifications','goals'].includes(page)){$('overview-panel').hidden=true;$('sales-panel').hidden=true;$('data-notice').hidden=true;}
+ const info={goals:['Metas','Planeje o mês de cada loja e acompanhe a evolução das vendas.'],notifications:['Notificações','Escolha o que receber e acompanhe os resumos das suas filiais.'],growth:['Crescimento anual','Compare cada filial com o ano anterior e acompanhe a evolução mês a mês.'],consolidated:['Visão das filiais','Compare os resultados das filiais autorizadas e acompanhe as metas mensais.'],employees:['Funcionários','Administre as fotos dos vendedores por filial.'],products:['Produtos e estoque','Consulte o saldo atual e os produtos vendidos na loja.'],queue:['Lista da Vez','Organize a equipe e acompanhe os atendimentos da loja.'],customers:['Clientes','Consulte o cadastro e os contatos dos seus clientes.'],users:['Usuários','Gerencie os acessos da sua empresa.'],overview:['Visão geral','Um olhar completo sobre os resultados da sua loja.'],sales:['Movimentações','Acompanhe as operações e consulte os detalhes de cada venda.'],quality:['Conferência','Mais clareza para validar os números da sua loja.'],permissions:['Permissões por cargo','Defina o acesso de cada equipe nesta empresa.']}[page];
  $('page-title').textContent=info[0];$('breadcrumb-page').textContent=info[0];$('page-subtitle').textContent=info[1];
  $('mobile-menu-page').textContent=info[0];
  for(const button of document.querySelectorAll('[data-page]')){const active=button.dataset.page===page;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');}
@@ -127,6 +128,7 @@ async function loadData(){
  if(!token)return;
  if(page==='notifications'){busy(false);notificacoesUI.abrir();return;}
  if(page==='growth'){await crescimento.carregar();return;}
+ if(page==='goals'){await loadGoals();return;}
  if(page==='consolidated'){await loadConsolidated();return;}
  if(page==='products'){await loadProducts();return;}
  if(page==='queue'){await loadQueue();return;}
@@ -727,7 +729,7 @@ function reprocessControl(o,detail=false){
  return box;
 }
 
-let goalsGeneration=0,goalsAbort=null,goalEditing=null;
+let goalsGeneration=0,goalsAbort=null,goalEditing=null,goalsData=null;
 function consolidatedMetrics(root,items){root.replaceChildren();for(const [label,value,note] of items){const card=el('article',null,'consolidated-metric');card.append(el('span',label),el('strong',value));if(note)card.append(el('small',note));root.append(card);}}
 function labeledRow(cells,labels){const row=el('tr');cells.forEach((cell,i)=>{const td=cell instanceof HTMLElement?cell:el('td',cell);td.dataset.label=labels[i];row.append(td);});return row;}
 async function loadConsolidated(){
@@ -740,33 +742,64 @@ async function loadConsolidated(){
   const root=$('consolidated-body');root.replaceChildren();const labels=['Posição / Filial','Vendas','Peças','Valor de vendas','Participação','Conferência / Atualização'];
   for(const r of d.filiais){const name=el('td'),status=el('td');name.append(el('strong',r.posicao+'º · '+branchLabel(r)));status.append(el('span',r.cobertura_completa?'Cobertura do período':'Cobertura parcial','status-badge '+(r.cobertura_completa?'':'pending')),el('small',number(r.pendencias)+' pendências'),el('small',when(r.atualizado_em)));root.append(labeledRow([name,number(r.vendas),number(r.pecas),money(r.valor_centavos),r.participacao_percentual===null?'—':decimal(r.participacao_percentual)+'%',status],labels));}
   if(!d.filiais.length)emptyTable(root,6,'Nenhuma filial atribuída','Solicite a atribuição de filiais ao administrador.');
-  $('consolidated-total').replaceChildren(labeledRow(['Total das filiais',number(d.total.vendas),number(d.total.pecas),money(d.total.valor_centavos),BigInt(d.total.valor_centavos)>0n?'100,00%':'—',''],labels));$('consolidated-panel').hidden=false;busy(false);await loadGoals();
+  $('consolidated-total').replaceChildren(labeledRow(['Total das filiais',number(d.total.vendas),number(d.total.pecas),money(d.total.valor_centavos),BigInt(d.total.valor_centavos)>0n?'100,00%':'—',''],labels));$('consolidated-panel').hidden=false;busy(false);
  }catch(e){if(e.name==='AbortError'||version!==generation)return;busy(false);displayError(e);}
 }
-async function loadGoals(){
- const version=++goalsGeneration;goalsAbort?.abort();goalsAbort=new AbortController();$('goals-status').textContent='Consultando metas…';$('goals-body').replaceChildren();$('goals-metrics').replaceChildren();
- try{
-  const d=await api('/metas?'+new URLSearchParams({competencia:$('goals-month').value}),{signal:goalsAbort.signal});if(version!==goalsGeneration||page!=='consolidated')return;
-  $('goals-status').textContent=`Mês completo: ${dateBR(d.inicio)} a ${dateBR(d.fim)}. ${d.filiais_com_meta} de ${d.filiais.length} filiais com meta. Valores ainda não importados não entram no realizado. Devoluções aguardam homologação.`;
-  consolidatedMetrics($('goals-metrics'),[['Metas cadastradas',money(d.meta_total_centavos),d.filiais_com_meta+' filiais'],['Vendas nas filiais com meta',money(d.realizado_com_meta_centavos),'Mês completo selecionado'],['Atingimento conjunto',d.atingimento_percentual===null?'—':decimal(d.atingimento_percentual)+'%','Apenas filiais com meta cadastrada']]);
-  const labels=['Filial','Vendas do mês','Meta mensal','Atingimento','Falta para a meta','Ações'];
-  for(const r of d.filiais){const name=el('td'),action=el('td'),progress=el('td');name.append(el('strong',branchLabel(r)));if(!r.cobertura_completa)name.append(el('small','Realizado com cobertura parcial'));progress.append(el('strong',r.atingimento_percentual===null?'—':decimal(r.atingimento_percentual)+'%'));if(r.atingimento_percentual!==null){const bar=el('progress');bar.max=100;bar.value=Math.max(0,Math.min(100,Number(r.atingimento_percentual)));bar.setAttribute('aria-label','Atingimento da meta de '+branchLabel(r));progress.append(bar);}
-   if(d.pode_editar){const b=el('button',r.meta.valor_centavos===null?'Cadastrar meta':'Editar meta','button goal-edit');b.type='button';b.setAttribute('aria-label',(r.meta.valor_centavos===null?'Cadastrar':'Editar')+' meta de '+branchLabel(r));b.addEventListener('click',()=>openGoal(r,d.competencia));action.append(b);}else action.textContent='Consulta';
-   $('goals-body').append(labeledRow([name,money(r.valor_centavos),r.meta.valor_centavos===null?'Não cadastrada':money(r.meta.valor_centavos),progress,money(r.falta_centavos),action],labels));
-  }
-  if(!d.filiais.length)emptyTable($('goals-body'),6,'Nenhuma filial atribuída','O administrador pode ajustar seu acesso.');
- }catch(e){if(e.name!=='AbortError'&&version===goalsGeneration)$('goals-status').textContent=e.message;}
+const goalState=r=>r.meta.valor_centavos===null?'sem_meta':BigInt(r.meta.valor_centavos)===0n?'sem_base':BigInt(r.valor_centavos)>=BigInt(r.meta.valor_centavos)?'atingida':'abaixo';
+const goalStateLabel={sem_meta:'Sem meta cadastrada',sem_base:'Meta zero · sem percentual',atingida:'Meta atingida',abaixo:'Abaixo da meta'};
+const goalPercent=(valor,meta)=>{if(meta<=0n)return null;const n=valor*10000n/meta,a=n<0n?-n:n;return `${n<0n?'-':''}${a/100n}.${String(a%100n).padStart(2,'0')}`;};
+function renderGoals(){
+ if(!goalsData||page!=='goals')return;const d=goalsData;
+ const rows=d.filiais.filter(r=>(!$('goals-branch').value||r.filial===$('goals-branch').value)&&(!$('goals-state').value||goalState(r)===$('goals-state').value));
+ const comMeta=rows.filter(r=>r.meta.valor_centavos!==null),meta=comMeta.reduce((a,r)=>a+BigInt(r.meta.valor_centavos),0n),realizado=comMeta.reduce((a,r)=>a+BigInt(r.valor_centavos),0n),percentual=goalPercent(realizado,meta);
+ $('goals-status').textContent=`Mês de ${dateBR(d.inicio)} a ${dateBR(d.fim)} · ${d.filiais_com_meta} de ${d.filiais.length} lojas autorizadas com meta. Realizado conforme as vendas não canceladas importadas.`;
+ $('goals-count').textContent=`${rows.length} lojas nesta seleção · metas mensais de valor de vendas em reais`;
+ consolidatedMetrics($('goals-metrics'),[['Meta da seleção',money(meta.toString()),comMeta.length+' lojas com meta cadastrada'],['Realizado com meta',money(realizado.toString()),'Somente lojas com meta nesta seleção'],['Atingimento',percentual===null?'—':decimal(percentual)+'%','Realizado dividido pela meta da seleção']]);
+ $('goals-body').replaceChildren();$('goals-new').hidden=!d.pode_editar;$('goals-new').disabled=!d.filiais.length;
+ const labels=['Loja / Situação','Realizado no mês','Meta mensal','Atingimento','Falta para a meta','Ações'];
+ for(const r of rows){
+  const name=el('td'),action=el('td'),progress=el('td'),state=goalState(r);name.append(el('strong',branchLabel(r)),el('span',goalStateLabel[state],'goal-state '+state));
+  if(r.meta.atualizado_em)name.append(el('small','Alterada em '+when(r.meta.atualizado_em)));
+  if(!r.cobertura_completa)name.append(el('small','Realizado com cobertura parcial'));
+  progress.append(el('strong',r.atingimento_percentual===null?'—':decimal(r.atingimento_percentual)+'%'));
+  if(r.atingimento_percentual!==null){const bar=el('progress');bar.max=100;bar.value=Math.max(0,Math.min(100,Number(r.atingimento_percentual)));bar.setAttribute('aria-label','Atingimento da meta de '+branchLabel(r));progress.append(bar);}
+  if(d.pode_editar){const b=el('button',r.meta.valor_centavos===null?'Cadastrar meta':'Editar meta','button goal-edit');b.type='button';b.setAttribute('aria-label',(r.meta.valor_centavos===null?'Cadastrar':'Editar')+' meta de '+branchLabel(r));b.addEventListener('click',()=>openGoal(r,d.competencia));action.append(b);}else action.textContent='Consulta';
+  $('goals-body').append(labeledRow([name,money(r.valor_centavos),r.meta.valor_centavos===null?'Não cadastrada':money(r.meta.valor_centavos),progress,money(r.falta_centavos),action],labels));
+ }
+ if(!rows.length)emptyTable($('goals-body'),6,d.filiais.length?'Nenhuma loja nesta seleção':'Nenhuma filial atribuída',d.filiais.length?'Altere os filtros de loja ou situação.':'Solicite a atribuição de filiais ao administrador.');
 }
-$('goals-month').addEventListener('change',()=>{if(token&&page==='consolidated')loadGoals();});
-function openGoal(row,mes){goalEditing={row,mes,requisicao:crypto.randomUUID()};$('goal-title').textContent=row.meta.valor_centavos===null?'Cadastrar meta':'Editar meta';$('goal-branch').value=branchLabel(row);$('goal-competence').value=mes;$('goal-value').value=row.meta.valor_centavos===null?'':(BigInt(row.meta.valor_centavos)/100n).toString()+','+String(BigInt(row.meta.valor_centavos)%100n).padStart(2,'0');$('goal-remove').hidden=row.meta.valor_centavos===null;$('goal-error').textContent='';$('goal-save').disabled=false;$('goal-remove').disabled=false;$('goal-dialog').showModal();$('goal-value').focus();}
+async function loadGoals(){
+ if(!token||page!=='goals')return;const version=++goalsGeneration;goalsAbort?.abort();goalsAbort=new AbortController();resetError();busy(true);goalsData=null;$('goals-new').hidden=true;$('goals-status').textContent='Consultando metas…';$('goals-body').replaceChildren();$('goals-metrics').replaceChildren();$('goals-count').textContent='';
+ try{
+  const d=await api('/metas?'+new URLSearchParams({competencia:$('goals-month').value}),{signal:goalsAbort.signal});if(version!==goalsGeneration||page!=='goals')return;
+  goalsData=d;const filial=$('goals-branch').value;$('goals-branch').replaceChildren(new Option('Todas as autorizadas',''),...d.filiais.map(r=>new Option(branchLabel(r),r.filial)));$('goals-branch').value=d.filiais.some(r=>r.filial===filial)?filial:'';renderGoals();
+ }catch(e){if(e.name!=='AbortError'&&version===goalsGeneration&&page==='goals'){$('goals-status').textContent='Não foi possível carregar as metas.';displayError(e);}}
+ finally{if(version===goalsGeneration&&page==='goals')busy(false);}
+}
+$('goals-filters').addEventListener('submit',e=>{e.preventDefault();loadGoals();});
+$('goals-month').addEventListener('change',()=>{if(token&&page==='goals')loadGoals();});
+for(const id of ['goals-branch','goals-state'])$(id).addEventListener('change',renderGoals);
+function fillGoal(row){
+ goalEditing.row=row;goalEditing.requisicao=crypto.randomUUID();goalEditing.solicitado=undefined;
+ $('goal-title').textContent=row.meta.valor_centavos===null?'Cadastrar meta':'Editar meta';$('goal-value').value=row.meta.valor_centavos===null?'':(BigInt(row.meta.valor_centavos)/100n).toString()+','+String(BigInt(row.meta.valor_centavos)%100n).padStart(2,'0');$('goal-remove').hidden=row.meta.valor_centavos===null;$('goal-error').textContent='';
+ $('goal-help').textContent=row.meta.valor_centavos===null?'A meta fica disponível ao salvar. Alterações e remoções preservam o histórico.':'Esta loja já possui uma meta para o mês. Ao salvar, o valor será atualizado e o histórico preservado.';
+}
+function openGoal(row=null,mes=goalsData?.competencia){
+ if(!goalsData?.pode_editar||page!=='goals')return;goalEditing={row:null,mes,requisicao:crypto.randomUUID()};$('goal-value').readOnly=false;$('goal-title').textContent='Definir meta mensal';$('goal-competence').value=mes;$('goal-value').value='';$('goal-error').textContent='';$('goal-save').disabled=false;$('goal-remove').disabled=false;$('goal-remove').hidden=true;
+ $('goal-branch').replaceChildren(new Option('Selecione a loja',''),...goalsData.filiais.map(r=>new Option(branchLabel(r),r.filial)));$('goal-branch').disabled=!!row;$('goal-branch').value=row?.filial||'';$('goal-help').textContent='Selecione a loja e informe o valor de vendas esperado para o mês.';
+ if(row)fillGoal(row);$('goal-dialog').showModal();(row?$('goal-value'):$('goal-branch')).focus();
+}
+$('goals-new').addEventListener('click',()=>openGoal());
+$('goal-branch').addEventListener('change',()=>{if(!goalEditing)return;const row=goalsData?.filiais.find(r=>r.filial===$('goal-branch').value);if(row)fillGoal(row);else{goalEditing.row=null;$('goal-value').value='';$('goal-remove').hidden=true;}});
 function parseGoalValue(value){const v=value.trim();if(!/^(?:\d{1,12}|\d{1,3}(?:\.\d{3}){1,3})(?:,\d{1,2})?$/.test(v))throw new Error(errorText.META_INVALIDA);const [n,d='']=v.replaceAll('.','').split(',');return n+'.'+d.padEnd(2,'0');}
 async function saveGoal(remover=false){
- if(!goalEditing)return;const edit=goalEditing;let valor;try{valor=remover?null:parseGoalValue($('goal-value').value);}catch(e){$('goal-error').textContent=e.message;return;}
- $('goal-save').disabled=true;$('goal-remove').disabled=true;$('goal-error').textContent='Salvando…';
- try{await api('/metas/'+edit.row.filial+'/'+edit.mes,{method:'PUT',body:JSON.stringify({valor,versao:edit.row.meta.versao,requisicao:edit.requisicao})});if(goalEditing!==edit||!token)return;$('goal-dialog').close();goalEditing=null;showToast(remover?'Meta removida; histórico preservado.':'Meta salva.');if(page==='consolidated')await loadGoals();}
- catch(e){if(goalEditing===edit){$('goal-error').textContent=e.message;if(e.message===errorText.META_DESATUALIZADA)await loadGoals();$('goal-save').disabled=false;$('goal-remove').disabled=false;}}
+ if(!goalEditing?.row)return;const edit=goalEditing;let valor;try{valor=remover?null:parseGoalValue($('goal-value').value);}catch(e){$('goal-error').textContent=e.message;return;}
+ if(edit.solicitado!==undefined&&edit.solicitado!==valor)edit.requisicao=crypto.randomUUID();edit.solicitado=valor;
+ const branchDisabled=$('goal-branch').disabled;$('goal-branch').disabled=true;$('goal-value').readOnly=true;$('goal-save').disabled=true;$('goal-remove').disabled=true;$('goal-error').textContent='Salvando…';
+ try{await api('/metas/'+edit.row.filial+'/'+edit.mes,{method:'PUT',body:JSON.stringify({valor,versao:edit.row.meta.versao,requisicao:edit.requisicao})});if(goalEditing!==edit||!token)return;$('goal-dialog').close();goalEditing=null;showToast(remover?'Meta removida; histórico preservado.':'Meta salva.');if(page==='goals')await loadGoals();}
+ catch(e){if(goalEditing===edit){$('goal-error').textContent=e.message;if(e.codigo==='META_DESATUALIZADA'&&page==='goals')await loadGoals();if(goalEditing===edit){$('goal-branch').disabled=branchDisabled;$('goal-value').readOnly=false;$('goal-save').disabled=false;$('goal-remove').disabled=false;}}}
 }
-$('goal-form').addEventListener('submit',e=>{e.preventDefault();saveGoal();});$('goal-cancel').addEventListener('click',()=>$('goal-dialog').close());$('goal-dialog').addEventListener('close',()=>{goalEditing=null;});$('goal-remove').addEventListener('click',()=>{if(confirm('Remover a meta deste mês? O histórico das alterações será preservado.'))saveGoal(true);});
+$('goal-form').addEventListener('submit',e=>{e.preventDefault();saveGoal();});$('goal-cancel').addEventListener('click',()=>$('goal-dialog').close());$('goal-dialog').addEventListener('close',()=>{goalEditing=null;$('goal-value').value='';$('goal-branch').replaceChildren(new Option('Selecione a loja',''));});$('goal-remove').addEventListener('click',()=>{if(confirm('Remover a meta deste mês? O histórico das alterações será preservado.'))saveGoal(true);});
 
 const crescimento=criarDashboardCrescimento({api,ativo:()=>!!token&&page==='growth',carregando:busy,erro:displayError,limparErro:resetError});
 function abrirNotificacao(valor){

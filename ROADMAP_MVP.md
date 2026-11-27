@@ -1,5 +1,12 @@
 # Roadmap — Aeropostale Varejo
 
+## Metas mensais por loja — 27/11/2026
+
+- [x] Área **Menu → Metas**, com atalho em Visão das filiais, cadastro mensal em reais para as filiais do Millennium, edição/remoção com histórico e acompanhamento de realizado, percentual e falta. Filtros de loja/situação e cartões da seleção; meta zero distinta de ausente. Valores existentes, backend, regras e permissões preservados.
+- [x] Quatro testes de integração PostgreSQL e interface sintética em 1440/390 px aprovados: cadastro/edição/remoção, conflito de versão, meses independentes, vínculos, consulta sem edição, filtros sem novas consultas e recuperação de falha. Regressões do consolidado e gráfico interativo aprovadas; capturas revisadas. Mesma interface com assets HTTPS e API interceptada aprovada, sem cadastro comercial em produção. [Processo](docs/PROCESSO_METAS.md), [evidência](docs/validacao-metas-lojas.json).
+- [x] Publicada somente `api`, imagem `metas-lojas-20261127`, após backup conferido. HTML/CSS/JS iguais por HTTPS, saúde e bloqueio sem autenticação conferidos. Metas/histórico, outros 28 containers, Nginx, envs, credenciais e permissões preservados; notificações sem reinício. Sem migration ou novos alertas.
+- [ ] Metas por vendedor/loja e produto/classificação ficam na R39; definir origem, unidade e regras comerciais antes de implementar. A primeira etapa é mensal por loja, com cadastro no painel, conforme confirmado.
+
 ## Gráfico interativo do crescimento — 25/11/2026
 
 - [x] Mouse, toque e teclado mostram valores exatos por mês/ano, diferença e variação do indicador selecionado. Suporte ao ano anterior e a todos os anos; destaque do mês, fixação por toque/clique e fechamento por novo toque, fora ou Escape. Nulos e base zero/negativa mantêm o tratamento existente.
@@ -239,14 +246,14 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-27 de 38 tarefas deste quadro concluídas. Atualização: 2026-11-25. A contagem não representa prazo ou esforço.
+27 de 39 tarefas deste quadro concluídas. Atualização: 2026-11-27. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
 | R11 — Conferir totais das novas filiais | R16 — Fila de atendimento | — | R01 — Importação e banco do piloto |
 | R18 — Campanhas e mensagens | R17 — Notificações internas e alertas | — | R02 — Painel e acesso Admin |
 | R20 — SaaS: provisionamento, planos e cobrança | R19 — Produtos, estoque e indicadores adicionais | — | R03 — Publicação com HTTPS e backup diário |
-| — | R22 — Definir bruto, líquido e devoluções | — | R04 — Correções de celular e fotos |
+| R39 — Metas por vendedor e produto/classificação | R22 — Definir bruto, líquido e devoluções | — | R04 — Correções de celular e fotos |
 | — | R25 — Completar preços e pagamentos do histórico | — | R05 — Clientes importados junto com a venda |
 | — | R26 — Completar identificação e aniversários do histórico | — | R06 — Homologação de ITUPEVA |
 | — | R29 — Vendas por hora nos dashboards | — | R07 — Autorizar 14 filiais no mesmo ambiente |
@@ -284,6 +291,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 - [ ] **R26 — Completar identificação e aniversários do histórico:** Após R15: preencher um dia por filial/rodada, com espera de 360 segundos e backoff, sem alterar campos comerciais ou checkpoints. Em 14/09 às 23h20 de Brasília: 217 operações preenchidas, 25.880 pendentes; primeira rodada das 14 filiais sem erro. A tela mostra cobertura parcial. Ausência de código não é deduplicada por nome/telefone.
 - [ ] **R29 — Vendas por hora nos dashboards:** Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json.
 - [ ] **R31 — API externa e webhooks de vendas:** Infraestrutura da API externa, documentação pública separada e console administrativo publicados na HostGator; coletor remoto ativo e worker local desativado. Primeiro acesso de leitura às 11 filiais validado em 14/11; substituição da chave confirmada em 16/11, com a anterior revogada. Console e manual revisados, MFA, concessões e auditoria preservados. Webhooks permanecem desativados. Teste assinado com a nova chave e homologação completa do consumidor/recursos adicionais continuam pendentes. Evidências: docs/validacao-publicacao-integracoes-hostgator.json, docs/validacao-acesso-integracao-filiais.json, docs/validacao-nova-chave-integracao.json e docs/validacao-console-integracoes-ux.json. Registros anteriores de recuperação e disco permanecem no histórico. Não conclui SaaS/R11/R22/R29.
+- [ ] **R39 — Metas por vendedor e produto/classificação:** Pedido de 27/11: etapas posteriores à meta mensal por loja (R27). Definir vendedor por filial/código Millennium e produto/SKU ou classificação confirmada, período, reais/unidades, atribuição histórica, descontos/devoluções e dupla contagem. Não implementadas nesta primeira entrega; não dividir automaticamente metas de lojas. Plano: docs/PROCESSO_METAS.md.
 
 <!-- KANBAN:FIM -->
 

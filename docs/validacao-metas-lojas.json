@@ -1,0 +1,84 @@
+{
+  "verificadoEm": "2026-11-27T16:41:11.019Z",
+  "escopo": "Metas mensais em reais cadastradas no painel por filial do Millennium",
+  "integracoesPostgreSQL": {
+    "testes": 4,
+    "aprovados": 4,
+    "suite": "backend/tests/integration/consolidado.test.mjs"
+  },
+  "interfaceLocal": {
+    "verificadoEm": "2026-11-27T16:35:03.012Z",
+    "ambiente": "Chromium com PostgreSQL isolado e dados sintéticos",
+    "assets": "Servidor local",
+    "menuEAtalho": true,
+    "mesEFilialMillennium": true,
+    "cadastrarEditarRemover": true,
+    "historicoEValoresPreservados": true,
+    "conflitoDeVersao": true,
+    "metaZeroENaoCadastradaDistintas": true,
+    "filtrosSemNovasConsultas": true,
+    "indicadoresDaSelecao": true,
+    "competenciasSeparadas": true,
+    "supervisaoSomenteAtribuidas": true,
+    "consultaSemEdicao": true,
+    "gerenteSemAcesso": true,
+    "desktopMobileSemOverflow": true,
+    "erroRetentativa": true,
+    "limpezaLogout": true,
+    "errors": []
+  },
+  "interfaceAssetsPublicados": {
+    "verificadoEm": "2026-11-27T16:41:11.019Z",
+    "ambiente": "Chromium com PostgreSQL isolado e dados sintéticos",
+    "assets": "HTTPS de produção; API interceptada para fixture local",
+    "menuEAtalho": true,
+    "mesEFilialMillennium": true,
+    "cadastrarEditarRemover": true,
+    "historicoEValoresPreservados": true,
+    "conflitoDeVersao": true,
+    "metaZeroENaoCadastradaDistintas": true,
+    "filtrosSemNovasConsultas": true,
+    "indicadoresDaSelecao": true,
+    "competenciasSeparadas": true,
+    "supervisaoSomenteAtribuidas": true,
+    "consultaSemEdicao": true,
+    "gerenteSemAcesso": true,
+    "desktopMobileSemOverflow": true,
+    "erroRetentativa": true,
+    "limpezaLogout": true,
+    "errors": []
+  },
+  "regressoes": {
+    "consolidado": true,
+    "crescimentoInterativo": true
+  },
+  "capturasRevisadas": [
+    "desktop 1440 px",
+    "mobile 390 px",
+    "modal mobile 390 px"
+  ],
+  "publicacao": {
+    "publicadoEm": "2026-11-27T16:37:54.452062+00:00",
+    "imagem": "aeropostale-varejo-api:metas-lojas-20261127",
+    "servicoAtualizado": "api",
+    "apiSaudavel": true,
+    "assetsHTTPSIguaisAFonte": true,
+    "cacheNoStore": true,
+    "semAutenticacao401": true,
+    "semBuildDeWorkerOuMigration": true,
+    "outrosContainersPreservados": 28,
+    "workerNotificacoesSemReinicio": true,
+    "nginxEnvsChavesConcessoesAutenticadoresPermissoesPreservados": true,
+    "backendEDemaisFontesPreservados": true,
+    "metasEHistoricoPreservados": true,
+    "backupConferido": "backup-20261127T163655Z-HvRTn6",
+    "diretorioOperacional": "/opt/aeropostale-varejo/artifacts/metas-lojas-20261127T163655Z"
+  },
+  "limites": [
+    "Dados sintéticos e API interceptada na verificação de interface publicada; sem gravações financeiras em produção.",
+    "Sem teste físico adicional no Safari/iPhone nesta rodada.",
+    "Vendedor por loja e produto/classificação planejados, ainda não implementados.",
+    "Regras comerciais do realizado preservadas; R11/R22 continuam separadas.",
+    "Sem ativação de alertas de metas ou alteração de preferências de notificações."
+  ]
+}

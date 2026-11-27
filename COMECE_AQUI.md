@@ -1,4 +1,11 @@
-# Comece aqui — estado atual em 25/11/2026
+# Comece aqui — estado atual em 27/11/2026
+
+## Metas mensais por loja — 27/11/2026
+
+- [x] Área **Menu → Metas**, com atalho em Visão das filiais, cadastro mensal em reais para as filiais do Millennium, edição/remoção com histórico e acompanhamento de realizado, percentual e falta. Filtros de loja/situação e cartões da seleção; meta zero distinta de ausente. Valores existentes, backend, regras e permissões preservados.
+- [x] Quatro testes de integração PostgreSQL e interface sintética em 1440/390 px aprovados: cadastro/edição/remoção, conflito de versão, meses independentes, vínculos, consulta sem edição, filtros sem novas consultas e recuperação de falha. Regressões do consolidado e gráfico interativo aprovadas; capturas revisadas. Mesma interface com assets HTTPS e API interceptada aprovada, sem cadastro comercial em produção. [Processo](docs/PROCESSO_METAS.md), [evidência](docs/validacao-metas-lojas.json).
+- [x] Publicada somente `api`, imagem `metas-lojas-20261127`, após backup conferido. HTML/CSS/JS iguais por HTTPS, saúde e bloqueio sem autenticação conferidos. Metas/histórico, outros 28 containers, Nginx, envs, credenciais e permissões preservados; notificações sem reinício. Sem migration ou novos alertas.
+- [ ] Metas por vendedor/loja e produto/classificação ficam na R39; definir origem, unidade e regras comerciais antes de implementar. A primeira etapa é mensal por loja, com cadastro no painel, conforme confirmado.
 
 ## Gráfico interativo do crescimento — 25/11/2026
 

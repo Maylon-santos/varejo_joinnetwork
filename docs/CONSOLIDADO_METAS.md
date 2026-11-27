@@ -1,6 +1,6 @@
 # Visão das filiais e metas mensais
 
-A tela **Visão das filiais** reúne vendas de várias lojas no período selecionado e acompanha suas metas mensais. Disponível somente para **Admin, Diretoria e Supervisão**. Diretoria e Supervisão enxergam e editam apenas filiais atribuídas ao próprio usuário. Admin acessa todas as filiais autorizadas da empresa.
+A tela **Visão das filiais** reúne vendas de várias lojas no período selecionado. As metas mensais têm área própria em **Menu → Metas**, acessível também pelo atalho **Consultar metas** do consolidado. Disponíveis somente para **Admin, Diretoria e Supervisão**. Diretoria e Supervisão enxergam e editam apenas filiais atribuídas ao próprio usuário. Admin acessa todas as filiais autorizadas da empresa.
 
 ## Consultar resultados
 
@@ -16,7 +16,7 @@ A cobertura é informada por filial: datas não cobertas pelos checkpoints ou an
 
 ## Cadastrar e editar uma meta
 
-No bloco **Metas por filial**, selecione o mês em **Mês da meta**. Pressione **Cadastrar meta** ou **Editar meta** na loja desejada, informe o valor em reais e salve. Exemplo de formato: `200.000,00`. Cadastro e edição são permitidos aos três cargos, dentro do mesmo escopo de filiais.
+Em **Menu → Metas**, selecione o mês em **Mês da meta**. Pressione **Definir meta mensal**, escolha a loja, informe o valor em reais e salve. Também é possível usar **Cadastrar meta** ou **Editar meta** na linha da loja desejada. Exemplo de formato: `200.000,00`. Cadastro e edição são permitidos aos três cargos com a permissão correspondente, dentro do mesmo escopo de filiais. Filtros de loja e situação e cartões resumem a seleção. O [processo de metas](PROCESSO_METAS.md) detalha o uso e as futuras etapas de vendedor e produto/classificação, ainda não implementadas.
 
 Os campos identificam filial, competência e valor mensal. A competência selecionada é independente das datas do ranking. A comparação usa todas as vendas já importadas daquele mês, sem dividir a meta por dia nem extrapolar o resultado. Uma consulta diária no ranking não muda a base mensal das metas.
 

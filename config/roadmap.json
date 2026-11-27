@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-11-25",
+  "atualizadoEm": "2026-11-27",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -162,7 +162,7 @@
       "id": "R27",
       "titulo": "Dashboard de filiais e metas mensais",
       "status": "concluido",
-      "detalhe": "Visão das filiais publicada: ranking e totais por período; Admin nas 14 filiais e Diretoria/Supervisão apenas nas atribuídas. Cadastro/edição de metas pelos três cargos, com auditoria e controle de versão. Nove metas de setembro/2026 cadastradas, total R$ 1.490.000,00; OUTLET 729 em AERO-019 e TIVOLI em AERO-009 conforme confirmação. 132 testes, navegador/celular e comparação pública das 14 filiais aprovados. Bruto/líquido e devoluções continuam na R22; homologação mensal/anual na R11."
+      "detalhe": "Visão das filiais publicada: ranking e totais por período; Admin nas 14 filiais e Diretoria/Supervisão apenas nas atribuídas. Cadastro/edição de metas pelos três cargos, com auditoria e controle de versão. Nove metas de setembro/2026 cadastradas, total R$ 1.490.000,00; OUTLET 729 em AERO-019 e TIVOLI em AERO-009 conforme confirmação. 132 testes, navegador/celular e comparação pública das 14 filiais aprovados. Bruto/líquido e devoluções continuam na R22; homologação mensal/anual na R11. Em 27/11, cadastro reorganizado em Menu → Metas: mês/loja/situação, cartões da seleção, criar/editar/remover auditado e proteção de versão, com mesmos vínculos e backend. Meta mensal em reais cadastrada no painel para filiais do Millennium, conforme confirmação; nenhum valor existente alterado na publicação. Quatro integrações e interface local/HTTPS aprovadas, com regressões do consolidado/crescimento. docs/PROCESSO_METAS.md e docs/validacao-metas-lojas.json. Metas por vendedor e produto/classificação planejadas na R39."
     },
     {
       "id": "R28",
@@ -229,6 +229,12 @@
       "titulo": "Aplicativo e resumo diário no iPhone",
       "status": "concluido",
       "detalhe": "Piloto de PWA/resumo diário homologado pelo titular em 24/11: recebimento automático das 11 lojas no iPhone, valores e abertura da filial/dia corretos. 111 unitários, 30 integrações e interfaces aprovados; publicação preservou demais serviços/credenciais. Confirmação sem amostra comercial detalhada ou conferência independente adicional. Liberação a outras contas e demais alertas separados. docs/validacao-notificacoes.json. Expansão autorizada para mais três contas aplicada em 24/11 sem ampliar permissões; recebimento nos novos aparelhos depende dos participantes. docs/validacao-expansao-notificacoes.json."
+    },
+    {
+      "id": "R39",
+      "titulo": "Metas por vendedor e produto/classificação",
+      "status": "pendente",
+      "detalhe": "Pedido de 27/11: etapas posteriores à meta mensal por loja (R27). Definir vendedor por filial/código Millennium e produto/SKU ou classificação confirmada, período, reais/unidades, atribuição histórica, descontos/devoluções e dupla contagem. Não implementadas nesta primeira entrega; não dividir automaticamente metas de lojas. Plano: docs/PROCESSO_METAS.md."
     }
   ]
 }

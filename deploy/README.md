@@ -3,6 +3,14 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Metas mensais por loja — 27/11/2026
+
+Imagem atual de `api`: `aeropostale-varejo-api:metas-lojas-20261127`. Alterados somente `frontend/index.html`, `frontend/assets/app.js` e `frontend/assets/styles.css`: área Metas própria, filtros, acompanhamento e formulário mensal por loja. Reutiliza o backend e a auditoria existentes, sem migration ou mudança de permissões/regras. Metas e histórico preservados por hash, sem cadastro de valores reais durante a publicação. Worker de notificações permanece na imagem `pwa-20261123`, sem reinício; outros 28 containers, Nginx, envs, chaves/concessões/autenticadores e demais fontes preservados.
+
+Backup `backup-20261127T163655Z-HvRTn6` com COMPLETE e checksums dos dois bancos conferidos. Publicação às 13h37 de São Paulo. Fontes/override anteriores em `/opt/aeropostale-varejo/artifacts/metas-lojas-20261127T163655Z`. HTML/CSS/JS iguais por HTTPS e saúde aprovados; acesso sem sessão HTTP 401. Quatro testes de integração PostgreSQL, interface local e com assets publicados/API interceptada aprovados, além das regressões de consolidado e crescimento. Capturas sintéticas 1440/390 px revisadas; sem teste físico adicional no Safari/iPhone. [Processo](../docs/PROCESSO_METAS.md), [evidência](../docs/validacao-metas-lojas.json).
+
+Para retorno, restaurar os três arquivos de frontend e `deploy/integracoes-hostgator.yaml` dessa pasta, usando a tag anterior `crescimento-interativo-20261125`, e recriar somente `api` com `bash deploy/integracoes-hostgator.sh up -d --no-build --no-deps --wait api`. Não restaurar bancos, remover metas/histórico ou reiniciar os workers.
+
 ## Gráfico interativo do crescimento — 25/11/2026
 
 Imagem atual de `api`: `aeropostale-varejo-api:crescimento-interativo-20261125`. Alterados somente `frontend/assets/crescimento.js` e `frontend/assets/styles.css`, com detalhes mensais por mouse/toque/teclado e suporte aos dois modos. Worker de notificações permanece na imagem `pwa-20261123`, sem reinício. Backend, regras, permissões, envs/chaves, Nginx e outros 28 containers preservados; sem migration ou chamada ao ERP.

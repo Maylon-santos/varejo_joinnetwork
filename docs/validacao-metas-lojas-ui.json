@@ -1,0 +1,21 @@
+{
+  "verificadoEm": "2026-11-27T16:35:03.012Z",
+  "ambiente": "Chromium com PostgreSQL isolado e dados sintéticos",
+  "assets": "Servidor local",
+  "menuEAtalho": true,
+  "mesEFilialMillennium": true,
+  "cadastrarEditarRemover": true,
+  "historicoEValoresPreservados": true,
+  "conflitoDeVersao": true,
+  "metaZeroENaoCadastradaDistintas": true,
+  "filtrosSemNovasConsultas": true,
+  "indicadoresDaSelecao": true,
+  "competenciasSeparadas": true,
+  "supervisaoSomenteAtribuidas": true,
+  "consultaSemEdicao": true,
+  "gerenteSemAcesso": true,
+  "desktopMobileSemOverflow": true,
+  "erroRetentativa": true,
+  "limpezaLogout": true,
+  "errors": []
+}
