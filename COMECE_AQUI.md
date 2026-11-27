@@ -1,5 +1,11 @@
 # Comece aqui — estado atual em 27/11/2026
 
+## Fotos da BAW-001 verificadas — 27/11/2026
+
+- [x] Estoque atualizado na consulta: 2.258 SKUs, 1.237 códigos de produto e 637 SKUs com URL principal. Das 452 URLs distintas encontradas, 27 abriram como imagem válida. Oito exemplos no painel retornaram 404; duas imagens positivas abriram por HTTPS/WebP e foram inspecionadas visualmente. [Evidência](docs/validacao-fotos-baw.json).
+- [x] Alternativa verificada parcialmente: 429 interrompeu o teste; retomada a 1.100 ms, sem novo bloqueio. Total de 142 códigos com respostas finais. Na retomada de 53 grupos produto/cor: 35 com imagens sem cor compatível, sete sem fotos cadastradas e 11 sem produto. Três exemplos confirmaram ID interno de cor no estoque versus código comercial/descrição na segunda base.
+- [ ] R40: validar equivalência de cores e corrigir o cruzamento antes de repetir a conferência. Não houve alteração do carregador, permissão, dados comerciais ou implantação; detalhes e fotos reais permanecem privados. Fotos sob demanda/cache, sem cópia integral no banco. A cobertura da alternativa não foi integralmente apurada.
+
 ## Metas mensais por vendedor — 27/11/2026
 
 - [x] **Menu → Metas → Por vendedor**, com metas individuais de vendas em reais, PA e ticket médio por filial/código Millennium/mês. Período parcial dentro do mês, busca, histórico sem movimento, função/admissão opcionais e manuais. Ajustes individuais sem rateio ou divisão da meta da loja, conforme confirmado. [Processo](docs/METAS_VENDEDORES.md).

@@ -1,0 +1,48 @@
+{
+  "verificadoEm": "2026-11-27T22:01:30.810Z",
+  "filial": "BAW-001",
+  "somenteLeituraSemPublicacao": true,
+  "inventario": {
+    "skus": 2258,
+    "produtosPorCodigo": 1237,
+    "gruposProdutoCor": 1279,
+    "skusComReferenciaPrincipal": 637,
+    "estoqueSemFalhasDeSincronizacao": true,
+    "ultimaSincronizacaoObservada": "2026-11-27T21:38:16.847092+00:00"
+  },
+  "origemPrincipal": {
+    "total": 452,
+    "testadas": 452,
+    "validas": 27
+  },
+  "alternativa": {
+    "varreduraIntegral": false,
+    "consultaInicialInterrompidaPorHTTP429": true,
+    "retomadaComIntervaloMinimoMs": 1100,
+    "retomadaSemNovo429": true,
+    "codigosComRespostaFinal200Ou404": 142,
+    "codigosComHTTP200": 39,
+    "codigosComHTTP404": 103,
+    "retomadaGruposTestados": 53,
+    "retomadaGruposComImagemValida": 0,
+    "retomadaGruposSemFotosCadastradas": 7,
+    "retomadaGruposComFotosSemCorCompativel": 35,
+    "exemplosDeIdentificadoresDeCorConferidos": 3,
+    "descricaoCausa": "ID interno de cor do estoque comparado diretamente ao codigo comercial ou nome da cor da segunda base. Equivalencia ainda nao corrigida."
+  },
+  "painelHTTPS": {
+    "amostraInicial": 8,
+    "amostraInicialIndisponiveis": 8,
+    "confirmacaoPositiva": 2,
+    "confirmacaoPositivaHTTP200WebP": 2,
+    "duasImagensInspecionadasVisualmente": true
+  },
+  "limites": [
+    "Cobertura alternativa parcial: nao concluir ausencia de fotos nos produtos nao testados.",
+    "URLs distintas nao representam percentual de todos os SKUs com foto.",
+    "Arquivos sob demanda/cache; sem copia integral no banco.",
+    "Decodificacao valida nao comprova variante correta; regra de cor foi preservada.",
+    "Sem alteracao de dados comerciais, credenciais, permissoes, worker ou implantacao.",
+    "Detalhes individuais, codigos, URLs e imagens reais somente em artifacts, ignorados pelo Git."
+  ]
+}

@@ -1,5 +1,11 @@
 # Roadmap — Aeropostale Varejo
 
+## Fotos da BAW-001 verificadas — 27/11/2026
+
+- [x] Estoque atualizado na consulta: 2.258 SKUs, 1.237 códigos de produto e 637 SKUs com URL principal. Das 452 URLs distintas encontradas, 27 abriram como imagem válida. Oito exemplos no painel retornaram 404; duas imagens positivas abriram por HTTPS/WebP e foram inspecionadas visualmente. [Evidência](docs/validacao-fotos-baw.json).
+- [x] Alternativa verificada parcialmente: 429 interrompeu o teste; retomada a 1.100 ms, sem novo bloqueio. Total de 142 códigos com respostas finais. Na retomada de 53 grupos produto/cor: 35 com imagens sem cor compatível, sete sem fotos cadastradas e 11 sem produto. Três exemplos confirmaram ID interno de cor no estoque versus código comercial/descrição na segunda base.
+- [ ] R40: validar equivalência de cores e corrigir o cruzamento antes de repetir a conferência. Não houve alteração do carregador, permissão, dados comerciais ou implantação; detalhes e fotos reais permanecem privados. Fotos sob demanda/cache, sem cópia integral no banco. A cobertura da alternativa não foi integralmente apurada.
+
 ## Metas mensais por vendedor — 27/11/2026
 
 - [x] **Menu → Metas → Por vendedor**, com metas individuais de vendas em reais, PA e ticket médio por filial/código Millennium/mês. Período parcial dentro do mês, busca, histórico sem movimento, função/admissão opcionais e manuais. Ajustes individuais sem rateio ou divisão da meta da loja, conforme confirmado. [Processo](docs/METAS_VENDEDORES.md).
@@ -267,7 +273,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 <!-- KANBAN:INICIO -->
 ## Kanban — progresso das tarefas
 
-27 de 39 tarefas deste quadro concluídas. Atualização: 2026-11-27. A contagem não representa prazo ou esforço.
+27 de 40 tarefas deste quadro concluídas. Atualização: 2026-11-27. A contagem não representa prazo ou esforço.
 
 | A fazer | Em andamento | Em validação | Concluído |
 | --- | --- | --- | --- |
@@ -275,7 +281,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 | R18 — Campanhas e mensagens | R17 — Notificações internas e alertas | — | R02 — Painel e acesso Admin |
 | R20 — SaaS: provisionamento, planos e cobrança | R19 — Produtos, estoque e indicadores adicionais | — | R03 — Publicação com HTTPS e backup diário |
 | R39 — Metas por vendedor e produto/classificação | R22 — Definir bruto, líquido e devoluções | — | R04 — Correções de celular e fotos |
-| — | R25 — Completar preços e pagamentos do histórico | — | R05 — Clientes importados junto com a venda |
+| R40 — Corrigir correspondência de cores das fotos BAW | R25 — Completar preços e pagamentos do histórico | — | R05 — Clientes importados junto com a venda |
 | — | R26 — Completar identificação e aniversários do histórico | — | R06 — Homologação de ITUPEVA |
 | — | R29 — Vendas por hora nos dashboards | — | R07 — Autorizar 14 filiais no mesmo ambiente |
 | — | R31 — API externa e webhooks de vendas | — | R08 — Exibir COD_FILIAL no seletor |
@@ -313,6 +319,7 @@ Uso: [Exportações CSV](docs/EXPORTACAO_CSV.md). Evidência: `docs/validacao-ex
 - [ ] **R29 — Vendas por hora nos dashboards:** Preparação iniciada em 28/09. Conferida a fonte: 21 operações de ITUPEVA de 27/09 com data às 00:00, sem horário real da venda. Aguardar campo específico na LISTAVENDAS (proposto hora_venda HH:mm:ss, horário de Brasília). Depois persistir e preencher histórico, agregar 24 faixas por valor/vendas/peças na Visão geral e Visão das filiais, com permissões e grupo sem horário. Ainda não publicado. Plano: docs/VENDAS_POR_HORA.md; evidência: docs/validacao-fonte-horarios.json.
 - [ ] **R31 — API externa e webhooks de vendas:** Infraestrutura da API externa, documentação pública separada e console administrativo publicados na HostGator; coletor remoto ativo e worker local desativado. Primeiro acesso de leitura às 11 filiais validado em 14/11; substituição da chave confirmada em 16/11, com a anterior revogada. Console e manual revisados, MFA, concessões e auditoria preservados. Webhooks permanecem desativados. Teste assinado com a nova chave e homologação completa do consumidor/recursos adicionais continuam pendentes. Evidências: docs/validacao-publicacao-integracoes-hostgator.json, docs/validacao-acesso-integracao-filiais.json, docs/validacao-nova-chave-integracao.json e docs/validacao-console-integracoes-ux.json. Registros anteriores de recuperação e disco permanecem no histórico. Não conclui SaaS/R11/R22/R29.
 - [ ] **R39 — Metas por vendedor e produto/classificação:** Pedido de 27/11: etapas posteriores à meta mensal por loja (R27). Definir vendedor por filial/código Millennium e produto/SKU ou classificação confirmada, período, reais/unidades, atribuição histórica, descontos/devoluções e dupla contagem. Não implementadas nesta primeira entrega; não dividir automaticamente metas de lojas. Plano: docs/PROCESSO_METAS.md.
+- [ ] **R40 — Corrigir correspondência de cores das fotos BAW:** Verificação em 27/11: estoque BAW-001 atualizado, mas 27 de 452 URLs principais válidas. Alternativa parcialmente consultada (429 interrompido; retomada a 1.100 ms): imagens existentes em 35 casos não combinam com o ID interno de cor do estoque. Validar código/descrição comercial por SKU e equivalência com a segunda base, preservando cor/permissões/cache, e revalidar pelo painel. Não escolher primeira foto nem tratar ID interno como código comercial. Diagnóstico docs/validacao-fotos-baw.json; regra ainda não corrigida.
 
 <!-- KANBAN:FIM -->
 

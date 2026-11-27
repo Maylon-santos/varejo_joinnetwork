@@ -2,6 +2,14 @@
 
 O painel mantém a imagem recebida na importação como primeira opção. Se a URL estiver ausente, retornar erro, exceder os limites ou não contiver uma imagem decodificável, o servidor consulta a base alternativa. O mesmo fluxo atende miniaturas e ampliação no catálogo, nos rankings e nos detalhes das vendas.
 
+## Verificação da BAW-001 em 27/11/2026
+
+O estoque estava atualizado, mas as fotos permanecem incompletas. Das 452 URLs principais distintas encontradas no histórico elegível do estoque atual, 27 produziram imagem válida. Oito exemplos amostrados pelo painel retornaram 404; dois exemplos positivos conhecidos abriram por HTTPS e foram inspecionados visualmente. Isso não mede a percentagem de todos os SKUs com foto.
+
+A segunda base foi consultada parcialmente: houve HTTP 429 e o teste foi interrompido, depois retomado com intervalo mínimo de 1.100 ms. Foram obtidas respostas finais 200/404 para 142 códigos. Na retomada de 53 grupos produto/cor, 35 tinham imagens sem cor compatível; sete retornaram cadastro sem fotos e 11 retornaram 404. Não declarar que os demais produtos não possuem imagens.
+
+Três exemplos confirmaram a diferença de identificadores: `estoque_atual.cor` guarda o ID interno do saldo do Millennium; a segunda base fornece código comercial e descrição da cor. O carregador compara diretamente esses valores. A correção R40 precisa validar a equivalência por SKU com dados da origem, como código/descrição comercial confirmados; não supor que remover zeros ou escolher a primeira foto comprova a variante. A regra não foi relaxada durante a análise. [Evidência](validacao-fotos-baw.json).
+
 ## Correspondência
 
 A consulta usa exatamente o `cod_produto` do cadastro/item em `GET https://ragabesh.joinnetwork.com.br/api/integrations/products/{codigo}/images`. Não usa o identificador interno numérico do cadastro, SKU ou código de barras como substituto. A resposta precisa confirmar o mesmo código.
