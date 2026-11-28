@@ -1,0 +1,6 @@
+# Atualização restrita do coletor já homologado: preservar as demais dependências/fontes.
+ARG WORKER_BASE=aeropostale-varejo-sync-worker:integracoes-b8d8448
+FROM ${WORKER_BASE}
+WORKDIR /app
+COPY --chown=node:node backend/src/vendas.mjs backend/src/repositorio-postgres.mjs backend/src/cores-imagens.mjs ./backend/src/
+COPY --chown=node:node scripts/preencher-cores-imagens.mjs ./scripts/

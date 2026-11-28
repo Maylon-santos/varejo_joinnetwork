@@ -3,6 +3,7 @@ import {clientesDaVenda} from './clientes.mjs';
 import {chaveOperacao} from './cancelamentos.mjs';
 import {validarDia} from './sincronizar-cancelamentos.mjs';
 import {centavos,reconciliarVenda} from './reconciliar-venda.mjs';
+import {corDaImagem} from './cores-imagens.mjs';
 export function diaMillennium(valor) {
  const m=/^\/Date\((-?\d+)(?:[+-]\d+)?\)\/$/.exec(valor??'');
  const ms=m?Number(m[1]):NaN;
@@ -18,7 +19,7 @@ export function normalizarVenda(v,filial,inicio,fim){
  if(!Array.isArray(v.produtos)||!v.produtos.length)throw new Error('ITENS_AUSENTES');
  const produtos=v.produtos.map((p,i)=>{
   if(!Number.isSafeInteger(p.quantidade)||p.quantidade<=0)throw new Error('QUANTIDADE_INVALIDA');
-  return {...precosComplementares(p),imagem_url:imagemProduto(p),ordem:i,sku:p.sku??null,cod_produto:p.cod_produto==null?null:String(p.cod_produto),descricao:p.descricao??null,quantidade:p.quantidade,preco_centavos:centavos(p.preco).toString()};
+  return {...precosComplementares(p),...corDaImagem(p),imagem_url:imagemProduto(p),ordem:i,sku:p.sku??null,cod_produto:p.cod_produto==null?null:String(p.cod_produto),descricao:p.descricao??null,quantidade:p.quantidade,preco_centavos:centavos(p.preco).toString()};
  });
  const reconciliacao=reconciliarVenda(v);
  const vendedor=Array.isArray(v.vendedor)&&v.vendedor.length===1?v.vendedor[0]:null;

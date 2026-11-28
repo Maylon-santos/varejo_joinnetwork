@@ -1,10 +1,18 @@
-# Comece aqui — estado atual em 27/11/2026
+# Comece aqui — estado atual em 28/11/2026
+
+## Fotos da BAW-001: cores corrigidas — 28/11/2026
+
+- [x] Cor comercial confirmada nos itens do Millennium (`cod_cor`/`desc_cor`), vinculada ao ID interno somente por filial/SKU/código de produto coincidentes. Tabela visual auxiliar, reuso entre tamanhos do mesmo produto/cor e bloqueio de conflitos; sem remover zeros ou escolher foto de outra cor. Cache distingue a confirmação; HTTP 429 suspende novas chamadas à alternativa conforme Retry-After. [Regras](docs/IMAGENS_PRODUTOS.md).
+- [x] 123 unitários e 12 integrações PostgreSQL aprovados. As 14 variantes da amostra antes incompatível foram recuperadas pela alternativa e pelo HTTPS do painel (sete SKUs sem URL principal). Quatro referências de vendas retornadas pelo catálogo abriram como WebP; três fotos reais inspecionadas. [Evidência](docs/validacao-cores-imagens.json).
+- [x] Releitura somente visual em dois lotes/182 janelas diárias. Conferência posterior: 628 de 2.258 SKUs com cor comercial confirmada, zero conflitos. Isso não representa quantidade de fotos. Ainda há 158 grupos com venda histórica sem correspondência; em dois exemplos, o SKU salvo não reapareceu na consulta atual do ERP. Histórico preservado, sem inventar associação ou prometer cobertura integral.
+- [x] Publicadas API e coletor `cores-imagens-20261128` após backup conferido e migration tenant aditiva 021. Overlay do coletor preservou as demais fontes/dependências; parada graciosa, sem coletor financeiro concorrente. API saudável, outros 27 containers, notificações, Nginx/envs/credenciais/permissões/metas/histórico preservados. Trinta recursos de vendas/cancelamentos com sucesso após a publicação e sem falhas. R40 concluída para a correspondência; fotos ausentes na origem e variantes não confirmadas continuam limitadas.
+
 
 ## Fotos da BAW-001 verificadas — 27/11/2026
 
 - [x] Estoque atualizado na consulta: 2.258 SKUs, 1.237 códigos de produto e 637 SKUs com URL principal. Das 452 URLs distintas encontradas, 27 abriram como imagem válida. Oito exemplos no painel retornaram 404; duas imagens positivas abriram por HTTPS/WebP e foram inspecionadas visualmente. [Evidência](docs/validacao-fotos-baw.json).
 - [x] Alternativa verificada parcialmente: 429 interrompeu o teste; retomada a 1.100 ms, sem novo bloqueio. Total de 142 códigos com respostas finais. Na retomada de 53 grupos produto/cor: 35 com imagens sem cor compatível, sete sem fotos cadastradas e 11 sem produto. Três exemplos confirmaram ID interno de cor no estoque versus código comercial/descrição na segunda base.
-- [ ] R40: validar equivalência de cores e corrigir o cruzamento antes de repetir a conferência. Não houve alteração do carregador, permissão, dados comerciais ou implantação; detalhes e fotos reais permanecem privados. Fotos sob demanda/cache, sem cópia integral no banco. A cobertura da alternativa não foi integralmente apurada.
+- [x] R40 corrigida e verificada em 28/11, conforme a atualização acima. Este diagnóstico foi somente leitura em 27/11; detalhes/fotos reais permanecem privados. A cobertura integral da alternativa não foi apurada.
 
 ## Metas mensais por vendedor — 27/11/2026
 

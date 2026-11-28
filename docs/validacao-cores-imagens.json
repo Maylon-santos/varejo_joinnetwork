@@ -1,0 +1,96 @@
+{
+  "verificadoEm": "2026-11-28T05:26:30.702755+00:00",
+  "filial": "BAW-001",
+  "correcaoPublicada": true,
+  "regra": {
+    "origemCorComercial": "MILLENIUM!JOINNETWORK.VAREJO.LISTAVENDAS: itens.cod_cor/desc_cor",
+    "confirmacaoPorFilialSkuECodigoProduto": true,
+    "reusoSomenteMesmoProdutoECorInterna": true,
+    "conflitosBloqueados": true,
+    "zerosPreservados": true,
+    "semEscolhaDeOutraCor": true,
+    "historicoFinanceiroNaoReimportado": true
+  },
+  "testes": {
+    "unitarios": 123,
+    "integracaoPostgreSQL": 12,
+    "aprovados": true
+  },
+  "alternativa": {
+    "variantesAntesSemCorrespondenciaTestadas": 14,
+    "imagensValidas": 14,
+    "HTTP": {
+      "200": 28
+    },
+    "semHTTP429NaAmostra": true,
+    "intervaloMinimoTesteMs": 1100
+  },
+  "painelHTTPS": {
+    "testadas": 14,
+    "HTTP200WebP": 14,
+    "skusComUrlPrincipal": 7,
+    "skusSemUrlPrincipal": 7,
+    "referenciasDeVendaDoCatalogo": 4,
+    "referenciasDeVendaHTTP200WebP": 4,
+    "fotosInspecionadasVisualmente": 3,
+    "sessaoPropriaEncerrada": true
+  },
+  "metadadosVisuais": {
+    "janelasDiariasRelidas": 182,
+    "lotes": 2,
+    "skus": 2258,
+    "corConfirmada": 628,
+    "corConflitante": 0,
+    "diasComCorrespondenciaPendente": 114,
+    "gruposComVendaSemCorrespondencia": 158,
+    "exemplosPendentesSemSkuNoRetornoAtualERP": 2,
+    "corConfirmadaNaoRepresentaQuantidadeDeFotos": true
+  },
+  "coletor": {
+    "executando": true,
+    "reinicios": 0,
+    "ciclosConcluidosObservados": 120,
+    "novosEventosFalha": 0,
+    "sincronizacaoVendasECancelamentos": {
+      "recursos": 30,
+      "falhas": 0,
+      "sucessosAposPublicacao": 30
+    },
+    "modulosAlteradosConferidos": [
+      "backend/src/cores-imagens.mjs",
+      "backend/src/repositorio-postgres.mjs",
+      "backend/src/vendas.mjs",
+      "scripts/preencher-cores-imagens.mjs"
+    ]
+  },
+  "publicacao": {
+    "publicadoEm": "2026-11-28T04:45:26.936675+00:00",
+    "imagem": "aeropostale-varejo-api:cores-imagens-20261128",
+    "servicosAtualizados": [
+      "api",
+      "sync-worker"
+    ],
+    "apiSaudavel": true,
+    "HTMLHTTPSPreservado": true,
+    "cacheNoStore": true,
+    "semAutenticacao401": true,
+    "coletorAtualizadoSemConcorrente": true,
+    "imagemColetor": "aeropostale-varejo-sync-worker:cores-imagens-20261128",
+    "migrationTenantAditiva": "021_cores_imagens.sql",
+    "tabelaVisualNovaInicialmenteVazia": true,
+    "outrosContainersPreservados": 27,
+    "workerNotificacoesSemReinicio": true,
+    "nginxEnvsChavesConcessoesAutenticadoresPermissoesPreservados": true,
+    "demaisFontesPreservadas": true,
+    "backendDeLeituraNaImagem": true,
+    "metasEHistoricoPreservados": true,
+    "backupConferido": "backup-20261128T044423Z-Q194zh"
+  },
+  "limites": [
+    "A cobertura de fotos da base alternativa não foi integralmente apurada.",
+    "Sem cor comercial confirmada, a variante não recebe foto alternativa; uma URL principal válida continua atendida.",
+    "SKUs históricos ausentes no retorno atual do ERP não foram associados por suposição.",
+    "Detalhes individuais, códigos, URLs e fotos reais permanecem em artifacts, fora do Git.",
+    "A releitura visual não reimporta operações, itens, valores, saldos ou checkpoints."
+  ]
+}

@@ -24,7 +24,7 @@ test('ausência, erro HTTP e conteúdo corrompido na origem principal acionam a 
    if(path.startsWith('/fotosaero/'))return modo==='http'?new Response(null,{status:404}):new Response('invalido',{headers:{'Content-Type':'image/jpeg'}});
    return path.includes('/products/')?json(dados()):foto();
   }});
-  const asset=await carregar(modo==='ausente'?null:principal,{cod_produto:'CAM',cor:'azul'});assert.equal(asset.type,'image/webp');
+  const asset=await carregar(modo==='ausente'?null:principal,{cod_produto:'CAM',cor_descricao:'azul'});assert.equal(asset.type,'image/webp');
   assert.equal(calls.filter(c=>c.path.includes('/products/')).length,1);assert.equal(calls.filter(c=>c.path.includes('/images/exemplo/')).length,1);
   for(const call of calls.filter(c=>c.path.startsWith('/api/')))assert.equal(call.options.headers.Authorization,'Bearer segredo-sintetico');
  }
@@ -33,7 +33,7 @@ test('ausência, erro HTTP e conteúdo corrompido na origem principal acionam a 
 test('metadados e arquivos compartilhados são consultados uma vez entre solicitações simultâneas',async()=>{
  let consultas=0;const carregar=criarImagensProduto({token:'teste',fetchImpl:async url=>{consultas++;await new Promise(r=>setTimeout(r,2));return String(url).includes('/products/')?json(dados()):foto();}});
  const results=await Promise.all(Array.from({length:12},()=>carregar(null,{cod_produto:'CAM'})));assert.equal(consultas,2);assert.ok(results.every(r=>r.body.equals(results[0].body)));
- await carregar(null,{cod_produto:'CAM',cor:'AZ'});assert.equal(consultas,2);
+ await carregar(null,{cod_produto:'CAM',cor_codigo:'AZ'});assert.equal(consultas,2);
 });
 
 test('falhas têm cache curto, expiram e permitem uma nova tentativa',async()=>{
@@ -45,8 +45,8 @@ test('falhas têm cache curto, expiram e permitem uma nova tentativa',async()=>{
 test('seleção por cor exige correspondência e não usa imagem de outro produto',async()=>{
  let arquivos=0;const data=dados();data.colors.push({code:'VM',name:'Vermelho',images:[{url:origem+'/uploads/vermelho.png',position:0}]});
  const carregar=criarImagensProduto({token:'teste',fetchImpl:async url=>{if(String(url).includes('/products/'))return json(data);arquivos++;assert.ok(String(url).endsWith('/vermelho.png'));return foto();}});
- await carregar(null,{cod_produto:'CAM',cor:'Vermelho'});assert.equal(arquivos,1);
- await assert.rejects(carregar(null,{cod_produto:'CAM',cor:'Verde'}));assert.equal(arquivos,1);
+ await carregar(null,{cod_produto:'CAM',cor_descricao:'Vermelho'});assert.equal(arquivos,1);
+ await assert.rejects(carregar(null,{cod_produto:'CAM',cor_descricao:'Verde'}));assert.equal(arquivos,1);
  const outro=criarImagensProduto({token:'teste',fetchImpl:async()=>json(dados('OUTRO'))});await assert.rejects(outro(null,{cod_produto:'CAM'}));
 });
 
@@ -82,4 +82,28 @@ test('consultas de diferentes produtos limitam a concorrência de rede a quatro'
   const code=new URL(url).pathname.split('/')[4];return String(url).includes('/products/')?json(dados(code,[{url:origem+'/uploads/'+code+'.png'}])):foto();
  }});
  await Promise.all(Array.from({length:12},(_,i)=>carregar(null,{cod_produto:'P'+i})));assert.equal(maximo,4);
+});
+
+test('ID interno não é código comercial; cor confirmada mantém zeros e cache por variante',async()=>{
+ let downloads=0;const data=dados();data.colors=[
+  {code:'000078',name:'Creme',images:[{url:origem+'/uploads/creme.png'}]},
+  {code:'78',name:'Outra cor',images:[{url:origem+'/uploads/outra.png'}]}
+ ];
+ const carregar=criarImagensProduto({token:'teste',fetchImpl:async url=>{
+  if(String(url).includes('/products/'))return json(data);downloads++;assert.ok(String(url).endsWith('/creme.png'));return foto();
+ }});
+ await assert.rejects(carregar(null,{cod_produto:'CAM',sku:'SKU',cor:'2000000'}),/COR_NAO_CONFIRMADA/);
+ await carregar(null,{cod_produto:'CAM',sku:'SKU',cor:'2000000',cor_codigo:'000078'});assert.equal(downloads,1);
+ await assert.rejects(carregar(null,{cod_produto:'CAM',sku:'SKU',cor:'2000000',cor_codigo:'999',cor_descricao:'Creme'}));assert.equal(downloads,1);
+ await assert.rejects(carregar(null,{cod_produto:'CAM',sku:'SKU'}));
+ const duplicado=criarImagensProduto({token:'teste',fetchImpl:async()=>json({...data,colors:[data.colors[0],data.colors[0]]})});
+ await assert.rejects(duplicado(null,{cod_produto:'CAM',cor_codigo:'000078'}),/COR_AMBIGUA/);
+});
+test('429 da alternativa respeita Retry-After entre produtos e não impede a fonte principal',async()=>{
+ let tempo=0,calls=0;
+ const carregar=criarImagensProduto({token:'teste',agora:()=>tempo,primaria:async()=>({body:png}),fetchImpl:async()=>{calls++;return new Response(null,{status:429,headers:{'Retry-After':'120'}});}});
+ await assert.rejects(carregar(null,{cod_produto:'A'}));
+ await assert.rejects(carregar(null,{cod_produto:'B'}));assert.equal(calls,1);
+ assert.equal((await carregar(principal,{cod_produto:'C'})).type,'image/webp');
+ tempo=121000;await assert.rejects(carregar(null,{cod_produto:'D'}));assert.equal(calls,2);
 });

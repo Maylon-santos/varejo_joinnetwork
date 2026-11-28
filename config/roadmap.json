@@ -1,5 +1,5 @@
 {
-  "atualizadoEm": "2026-11-27",
+  "atualizadoEm": "2026-11-28",
   "etapa": "6 de 7 — Filiais e permissões",
   "tarefas": [
     {
@@ -239,8 +239,8 @@
     {
       "id": "R40",
       "titulo": "Corrigir correspondência de cores das fotos BAW",
-      "status": "pendente",
-      "detalhe": "Verificação em 27/11: estoque BAW-001 atualizado, mas 27 de 452 URLs principais válidas. Alternativa parcialmente consultada (429 interrompido; retomada a 1.100 ms): imagens existentes em 35 casos não combinam com o ID interno de cor do estoque. Validar código/descrição comercial por SKU e equivalência com a segunda base, preservando cor/permissões/cache, e revalidar pelo painel. Não escolher primeira foto nem tratar ID interno como código comercial. Diagnóstico docs/validacao-fotos-baw.json; regra ainda não corrigida."
+      "status": "concluido",
+      "detalhe": "Corrigida/publicada em 28/11: cor comercial confirmada por filial/SKU/produto, tabela visual auxiliar, conflitos bloqueados e zeros preservados. 123 unitários/12 integrações; 14/14 fotos antes incompatíveis recuperadas na alternativa e HTTPS, sete sem URL principal; quatro referências reais de vendas válidas. API/coletor atualizados com backup, migration aditiva e demais serviços preservados. Cobertura de metadados parcial: 628/2.258 SKUs com cor confirmada; não representa total com fotos. SKUs ausentes no retorno ERP e fotos ausentes na origem seguem limitados. docs/validacao-cores-imagens.json e docs/IMAGENS_PRODUTOS.md."
     }
   ]
 }

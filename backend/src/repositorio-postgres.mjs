@@ -1,6 +1,7 @@
 import {associarItensComplementares,faltamComplementos} from './complementos-venda.mjs';
 import { aplicarCancelamentos, chaveOperacao } from './cancelamentos.mjs';
 import { validarDia } from './sincronizar-cancelamentos.mjs';
+import {registrarCoresImagens} from './cores-imagens.mjs';
 
 export class RepositorioPostgres {
   constructor(pool, tenant) { this.pool = pool; this.tenant = tenant; }
@@ -182,6 +183,7 @@ export class RepositorioPostgres {
               }
             }
           }
+          await registrarCoresImagens(client,filial,operacoes.flatMap(op=>op.produtos??[]));
         },
       };
       const resultado = await executar(tx);

@@ -120,8 +120,11 @@ export function criarPainel(pool,tenant,filiais,vendedores=null){
     WHERE o.cod_operacao=$1 AND o.tipo_operacao=$2 AND o.filial=$3 AND ($4::text IS NULL OR o.vendedor_codigo=$4)`,args);
    if(!r.rowCount)throw new ErroApi(404,'OPERACAO_NAO_ENCONTRADA');
    const itens=(await db.query(`SELECT i.ordem,i.sku,i.cod_produto,i.descricao,i.quantidade,i.imagem_url,i.preco_centavos::text,i.preco_tabela_centavos::text,i.desconto_informado::text,i.preco_aplicado_centavos::text,
-    (SELECT e.cor FROM estoque_atual e JOIN cadastro_produtos p USING(produto) WHERE e.filial=i.filial AND e.sku=i.sku AND p.cod_produto=i.cod_produto AND e.presente_ultima_carga LIMIT 1) AS cor
-    FROM operacao_itens i WHERE i.cod_operacao=$1 AND i.tipo_operacao=$2 AND i.filial=$3 ORDER BY i.ordem`,args.slice(0,3))).rows;
+    e.cor,c.cor_codigo,c.cor_descricao
+    FROM operacao_itens i
+    LEFT JOIN estoque_atual e ON e.filial=i.filial AND e.sku=i.sku AND e.presente_ultima_carga AND EXISTS(SELECT 1 FROM cadastro_produtos p WHERE p.produto=e.produto AND p.cod_produto=i.cod_produto)
+    LEFT JOIN produto_cores_imagem c ON c.produto=e.produto AND c.cod_produto=i.cod_produto AND c.cor=e.cor AND NOT c.conflitante
+    WHERE i.cod_operacao=$1 AND i.tipo_operacao=$2 AND i.filial=$3 ORDER BY i.ordem`,args.slice(0,3))).rows;
    const cancelamento=(await db.query('SELECT data_cancelou FROM cancelamentos WHERE cod_operacao=$1 AND tipo_operacao=$2 AND filial=$3',args.slice(0,3))).rows[0]??null;
    return {operacao:r.rows[0],itens,cancelamento};
   }),

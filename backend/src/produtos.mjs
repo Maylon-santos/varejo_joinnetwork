@@ -33,7 +33,8 @@ export function criarProdutos(pool,tenant,filiais,{imagensAlternativas=false}={}
    const produto=params.get('produto'),sku=params.get('sku');
    if(!imagensAlternativas||!/^\d{1,18}$/.test(produto??'')||!sku||sku.length>100)throw new ErroApi(404,'IMAGEM_INDISPONIVEL');
    const vendedor=acesso.vendedores===null?null:(acesso.vendedores[f.filial]??'');
-   const item=(await db.query(`SELECT p.cod_produto,e.cor FROM estoque_atual e JOIN cadastro_produtos p USING(produto)
+   const item=(await db.query(`SELECT p.cod_produto,e.sku,e.cor,c.cor_codigo,c.cor_descricao FROM estoque_atual e JOIN cadastro_produtos p USING(produto)
+    LEFT JOIN produto_cores_imagem c ON c.produto=e.produto AND c.cod_produto=p.cod_produto AND c.cor=e.cor AND NOT c.conflitante
     WHERE e.filial=$1 AND e.produto=$2 AND e.sku=$3 AND e.presente_ultima_carga
     AND ($4::text IS NULL OR EXISTS(SELECT 1 FROM operacoes o JOIN operacao_itens i USING(cod_operacao,tipo_operacao,filial) WHERE o.filial=$1 AND i.sku=e.sku AND i.cod_produto=p.cod_produto AND o.vendedor_codigo=$4 AND ${elegivel}))`,[f.filial,produto,sku,vendedor])).rows[0];
    if(!item)throw new ErroApi(404,'IMAGEM_INDISPONIVEL');

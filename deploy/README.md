@@ -3,6 +3,16 @@
 URL: https://aeropostale.joinnetwork.com.br
 Servidor atual: alias SSH `Hostgator`, `143.95.219.212:22022`. Diretório: `/opt/aeropostale-varejo`.
 
+## Correspondência das cores das fotos — 28/11/2026
+
+Imagens atuais: `aeropostale-varejo-api:cores-imagens-20261128` e `aeropostale-varejo-sync-worker:cores-imagens-20261128`. Publicadas às 01h45 de São Paulo. A API usa a cor comercial confirmada por SKU; o coletor registra os campos visuais das vendas na tabela auxiliar criada pela migration tenant aditiva `021_cores_imagens.sql`. Nenhuma migration central, concessão, credencial ou regra financeira nova. [Regras, releitura e limites](../docs/IMAGENS_PRODUTOS.md).
+
+O coletor foi construído com `deploy/Dockerfile.worker-cores`, sobre a imagem anterior `integracoes-b8d8448`, para preservar suas outras dependências/fontes. Comparação dos arquivos confirmou diferenças somente em `vendas.mjs`, `repositorio-postgres.mjs`, no novo `cores-imagens.mjs` e no novo script `preencher-cores-imagens.mjs`. As opções de normalizador/histórico presentes no repositório mantêm o comportamento padrão do coletor. A imagem nova foi iniciada após parada graciosa da anterior; nenhum segundo coletor financeiro foi executado. O Dockerfile padrão também inclui o script para builds futuros.
+
+Backup `backup-20261128T044423Z-Q194zh`, COMPLETE e checksums dos dois bancos conferidos. Fontes/override anteriores em `/opt/aeropostale-varejo/artifacts/cores-imagens-20261128T044423Z`. API saudável, HTML HTTPS preservado, backend na imagem e bloqueio sem sessão conferidos. Outros 27 containers, Nginx, envs/credenciais/permissões e metas/histórico preservados; notificações sem reinício. Conferência posterior: coletor sem reinícios ou novos eventos de falha, 30 recursos de vendas/cancelamentos com sucesso após a publicação e sem falhas. [Evidência](../docs/validacao-cores-imagens.json).
+
+Para retorno, restaurar os arquivos anteriores e o override dessa pasta, usar `metas-vendedores-20261127` para API e `integracoes-b8d8448` para coletor, e recriar somente `api`/`sync-worker` pelo wrapper com `up -d --no-build --no-deps --wait api sync-worker`. Preserve a migration/tabela visual e suas confirmações; não restaurar bancos ou checkpoints, nem reiniciar notificações/integrações. Os módulos/script novos podem permanecer sem uso na fonte, pois as imagens anteriores não os importam.
+
 ## Metas individuais por vendedor — 27/11/2026
 
 Imagem atual de `api`: `aeropostale-varejo-api:metas-vendedores-20261127`. Módulo interno `metas-vendedores.mjs` integrado ao consolidado, rotas autenticadas de consulta/gravação, módulo estático `metas-vendedores.js` e aba **Por vendedor** na área Metas. Identidade por filial/código/mês, valores individuais manuais, histórico e versão; API pública de integrações preservada.
